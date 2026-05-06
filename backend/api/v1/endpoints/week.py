@@ -112,18 +112,18 @@ async def week_fixtures(
     # ── 1. Check local Sportradar cache (instant if fresh) ──────────────────
     sr_all: list[dict] | None = _load_cache()
 
-    # ── 2. If cache stale/missing, try Sportradar (cap at 4 s total) ───────
+    # ── 2. If cache stale/missing, try Sportradar (cap at 20 s total) ──────
     if sr_all is None and settings.sportradar_api_key:
         try:
             fetched = await asyncio.wait_for(
                 _fetch_all_sr_fixtures(),
-                timeout=4.0,
+                timeout=20.0,
             )
             if fetched:
                 sr_all = fetched
                 _save_cache(sr_all)  # persist for next 6 h
-        except Exception:
-            logger.warning("Sportradar fetch failed/timed-out; using CSV fallback")
+        except Exception as exc:
+            logger.warning("Sportradar fetch failed/timed-out; using CSV fallback: %s", exc)
 
     # ── 3. Slice the cached/live Sportradar list to this week + nearest ─────
     if sr_all:

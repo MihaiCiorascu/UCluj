@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/color_tokens.dart';
+import '../theme/app_colors.dart';
+import '../theme/theme_notifier.dart';
 import '../theme/spacing_tokens.dart';
 import 'app_bottom_nav.dart';
 
@@ -22,32 +23,37 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
+    final isDark = ThemeNotifier.instance.isDark;
+
     return Scaffold(
+      backgroundColor: c.surface,
       body: SafeArea(
         child: Column(
           children: [
+            // ── Header ──────────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 SpacingTokens.md,
-                SpacingTokens.md,
-                SpacingTokens.md,
                 SpacingTokens.sm,
+                SpacingTokens.md,
+                SpacingTokens.xs,
               ),
               child: Row(
                 children: [
+                  // Club crest
                   Container(
-                    width: 32,
-                    height: 32,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
+                    width: 30,
+                    height: 30,
+                    decoration: const BoxDecoration(shape: BoxShape.circle),
                     child: Image.asset(
                       'assets/teams/universitatea_cluj.png',
                       fit: BoxFit.contain,
                     ),
                   ),
                   const SizedBox(width: SpacingTokens.xs),
-                  const Column(
+                  // Brand wordmark
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -55,65 +61,63 @@ class AppScaffold extends StatelessWidget {
                         'U CLUJ',
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
-                          fontSize: 20,
+                          fontSize: 18,
                           height: 1.0,
-                          letterSpacing: 1.5,
-                          color: ColorTokens.accent,
+                          letterSpacing: 2.0,
+                          color: c.accent,
                         ),
                       ),
                       Text(
                         'TACTICAL INTELLIGENCE',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 8,
+                          fontSize: 7,
                           height: 1.2,
-                          letterSpacing: 2.0,
-                          color: ColorTokens.textMuted,
+                          letterSpacing: 2.5,
+                          color: c.textMuted,
                         ),
                       ),
                     ],
                   ),
                   const Spacer(),
+                  // Theme toggle
+                  _HeaderIconButton(
+                    onTap: ThemeNotifier.instance.toggle,
+                    icon: isDark
+                        ? Icons.light_mode_outlined
+                        : Icons.dark_mode_outlined,
+                    iconColor: c.accent,
+                    c: c,
+                  ),
+                  const SizedBox(width: SpacingTokens.xs),
+                  // Profile
                   trailing ??
-                      GestureDetector(
+                      _HeaderIconButton(
                         onTap: onProfileTap,
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: ColorTokens.surfaceHigh,
-                            border: Border.all(color: ColorTokens.divider),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Icon(
-                            Icons.person_outline,
-                            size: 16,
-                            color: ColorTokens.textPrimary,
-                          ),
-                        ),
+                        icon: Icons.person_outline,
+                        iconColor: c.textPrimary,
+                        c: c,
                       ),
                 ],
               ),
             ),
+            // Gold accent rule
             Container(
               height: 2,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    ColorTokens.accent,
-                    ColorTokens.accentStrong,
-                    Color(0x00000000),
-                  ],
+                  colors: [c.accent, c.accentStrong, const Color(0x00000000)],
                 ),
               ),
             ),
+            // ── Body ────────────────────────────────────────────────────────
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(
-                  SpacingTokens.xl,
-                  SpacingTokens.xl,
-                  SpacingTokens.xl,
                   SpacingTokens.md,
+                  SpacingTokens.md,
+                  SpacingTokens.md,
+                  SpacingTokens.xs,
                 ),
                 child: body,
               ),
@@ -124,6 +128,38 @@ class AppScaffold extends StatelessWidget {
       bottomNavigationBar: AppBottomNav(
         current: currentTab,
         onSelected: onTabSelected,
+      ),
+    );
+  }
+}
+
+/// Compact 32×32 icon button for the scaffold header.
+class _HeaderIconButton extends StatelessWidget {
+  const _HeaderIconButton({
+    required this.icon,
+    required this.iconColor,
+    required this.c,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final AppColorTokens c;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: c.surfaceHigh,
+          border: Border.all(color: c.divider),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Icon(icon, size: 15, color: iconColor),
       ),
     );
   }

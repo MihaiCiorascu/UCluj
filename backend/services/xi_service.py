@@ -10,8 +10,10 @@ from ml.pipeline import load_player_profiles, build_dataset_from_files, _format_
 from ml.xi_predictor import StartingXIPredictor
 
 # Maps fixture CSV team names → WyScout team IDs used in player profiles
+# NOTE: U Cluj's WyScout ID in the player profiles is 60374 (not 11571 which was the
+# old/stale ID associated with players who have since transferred to Otelul Galati).
 FIXTURE_NAME_TO_ID: dict[str, int] = {
-    "U Cluj": 11571,
+    "U Cluj": 60374,
     "CFR Cluj": 11611,
     "FCSB": 8164,
     "Rapid Bucuresti": 11566,
@@ -67,7 +69,7 @@ class XiService:
             raise RuntimeError("XI Model not loaded")
             
         df = self._get_feature_df()
-        my_team_id = 11571  # Hardcoded Universitatea Cluj
+        my_team_id = 60374  # FC Universitatea Cluj WyScout team ID
         
         my_team_df = df[df["teamId"] == my_team_id].copy()
         if my_team_df.empty:
@@ -97,7 +99,7 @@ class XiService:
         opp_id = FIXTURE_NAME_TO_ID.get(opponent_name)
 
         df = self._get_feature_df()
-        my_team_id = 11571
+        my_team_id = 60374
 
         my_team_df = df[df["teamId"] == my_team_id].copy()
         if my_team_df.empty:
@@ -159,8 +161,62 @@ class XiService:
                         ).clip(0, 100).round(1)
             return target
 
-        xi_norm    = _league_normalize(result["xi"])
-        bench_norm = _league_normalize(result["bench"])
+        def _recompute_composite(frame: pd.DataFrame) -> pd.DataFrame:
+            """Recompute composite/predicted score from the already-normalized (0-100)
+            stat values so the card score is consistent with the attribute bars."""
+            if frame.empty:
+                return frame
+            frame = frame.copy()
+
+            def _score(row: pd.Series) -> float:
+                matches = int(row.get("matches_played", 0) or 0)
+                base = 0.35 if matches >= 3 else 0.0
+                perf = (row.get("performance_score", 0) or 0) / 100
+                form = (row.get("recent_form_score", 0) or 0) / 100
+                base_vars = (
+                    0.22 * perf
+                    + 0.15 * form
+                    + 0.03 * min(matches / 20.0, 1.0)
+                )
+                role = str(row.get("role_group", "")).upper()
+                if role == "GK":
+                    bonus = (
+                        0.07 * min((row.get("per90_gkSaves", 0) or 0) / 100, 1.0)
+                        + 0.05 * min((row.get("per90_gkCleanSheets", 0) or 0) / 100, 1.0)
+                        + 0.03 * (row.get("pass_accuracy", 0) or 0) / 100
+                    )
+                elif role == "DEF":
+                    bonus = (
+                        0.07 * (row.get("def_action_success", 0) or 0) / 100
+                        + 0.05 * (row.get("duel_win_rate", 0) or 0) / 100
+                        + 0.03 * (row.get("pass_accuracy", 0) or 0) / 100
+                    )
+                elif role == "MID":
+                    bonus = (
+                        0.07 * (row.get("pass_accuracy", 0) or 0) / 100
+                        + 0.05 * (row.get("duel_win_rate", 0) or 0) / 100
+                        + 0.03 * min((row.get("per90_keyPasses", 0) or 0) / 100, 1.0)
+                    )
+                elif role == "FWD":
+                    bonus = (
+                        0.07 * min((row.get("per90_goals", 0) or 0) / 100, 1.0)
+                        + 0.05 * (row.get("shot_accuracy", 0) or 0) / 100
+                        + 0.03 * (row.get("dribble_success", 0) or 0) / 100
+                    )
+                else:
+                    bonus = (
+                        0.05 * (row.get("pass_accuracy", 0) or 0) / 100
+                        + 0.05 * (row.get("duel_win_rate", 0) or 0) / 100
+                        + 0.05 * (row.get("def_action_success", 0) or 0) / 100
+                    )
+                return round(base + base_vars + bonus, 4)
+
+            frame["composite_score"] = frame.apply(_score, axis=1)
+            frame["predicted_score"] = frame["composite_score"]
+            return frame
+
+        xi_norm    = _recompute_composite(_league_normalize(result["xi"]))
+        bench_norm = _recompute_composite(_league_normalize(result["bench"]))
 
         def _fmt(frame: pd.DataFrame) -> List[Dict]:
             if frame is None or frame.empty:
@@ -295,7 +351,7 @@ class XiService:
                 key=lambda item: item["name"],
             )
 
-        my_team_id = 11571
+        my_team_id = 60374
         team_counts = (
             df["teamId"]
             .dropna()

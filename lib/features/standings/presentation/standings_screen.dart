@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/services/api_client.dart';
-import '../../../core/theme/color_tokens.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
@@ -184,9 +184,9 @@ class _StandingsScreenState extends State<StandingsScreen>
     setState(() { _loading = true; _error = null; });
     try {
       final raw = await _api.get('/standings');
-      final data = raw as Map<String, dynamic>;
+      final Map<String, dynamic> data = raw;
 
-      List<_TeamStanding> _parseList(String key) {
+      List<_TeamStanding> parseList(String key) {
         final list = data[key] as List<dynamic>? ?? [];
         return list.asMap().entries.map((e) =>
           _TeamStanding.fromJson(e.value as Map<String, dynamic>, fallbackRank: e.key + 1),
@@ -195,9 +195,9 @@ class _StandingsScreenState extends State<StandingsScreen>
 
       if (mounted) {
         setState(() {
-          _regular = _parseList('regular');
-          _championship = _parseList('championship');
-          _relegation = _parseList('relegation');
+          _regular = parseList('regular');
+          _championship = parseList('championship');
+          _relegation = parseList('relegation');
           _loading = false;
         });
       }
@@ -212,7 +212,7 @@ class _StandingsScreenState extends State<StandingsScreen>
     if (t == null) {
       for (final team in list) {
         if (team.name.toLowerCase().contains('cluj') &&
-            !team.name.toLowerCase().contains('cfr')) return team;
+            !team.name.toLowerCase().contains('cfr')) { return team; }
       }
       return list.first;
     }
@@ -224,38 +224,39 @@ class _StandingsScreenState extends State<StandingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return AppScaffold(
       currentTab: AppTab.standings,
       onTabSelected: widget.onTabSelected,
       onProfileTap: widget.onProfileTap,
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: ColorTokens.accent))
+          ? Center(child: CircularProgressIndicator(color: c.accent))
           : _error != null
-              ? _buildError()
-              : _buildContent(),
+              ? _buildError(c)
+              : _buildContent(c),
     );
   }
 
-  Widget _buildError() {
+  Widget _buildError(AppColorTokens c) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(SpacingTokens.xl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline, size: 40, color: ColorTokens.negative),
+            Icon(Icons.error_outline, size: 40, color: c.negative),
             const SizedBox(height: SpacingTokens.md),
             Text('Could not load standings',
-                style: TypographyTokens.headline.copyWith(color: ColorTokens.negative)),
+                style: TypographyTokens.headline.copyWith(color: c.negative)),
             const SizedBox(height: SpacingTokens.sm),
             Text(_error!,
-                style: TypographyTokens.body.copyWith(color: ColorTokens.textMuted),
+                style: TypographyTokens.body.copyWith(color: c.textMuted),
                 textAlign: TextAlign.center),
             const SizedBox(height: SpacingTokens.lg),
             TextButton(
               onPressed: _loadData,
               child: Text('RETRY',
-                  style: TypographyTokens.sectionLabel.copyWith(color: ColorTokens.accent)),
+                  style: TypographyTokens.sectionLabel.copyWith(color: c.accent)),
             ),
           ],
         ),
@@ -263,10 +264,10 @@ class _StandingsScreenState extends State<StandingsScreen>
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(AppColorTokens c) {
     return RefreshIndicator(
-      color: ColorTokens.accent,
-      backgroundColor: ColorTokens.surfaceLow,
+      color: c.accent,
+      backgroundColor: c.surfaceLow,
       onRefresh: _loadData,
       child: NestedScrollView(
         headerSliverBuilder: (_, __) => [
@@ -279,17 +280,17 @@ class _StandingsScreenState extends State<StandingsScreen>
                 children: [
                   Text('LEAGUE',
                       style: TypographyTokens.displayHero
-                          .copyWith(fontSize: 72, height: 0.9)),
+                          .copyWith(fontSize: 72, height: 0.9, color: c.textPrimary)),
                   Text('STANDINGS',
                       style: TypographyTokens.displayHero.copyWith(
                         fontSize: 72,
                         height: 0.9,
-                        color: ColorTokens.textMuted.withValues(alpha: 0.18),
+                        color: c.textMuted.withValues(alpha: 0.15),
                       )),
                   const SizedBox(height: SpacingTokens.sm),
                   Text('SUPERLIGA ROMANIA  ·  2025/26',
                       style: TypographyTokens.sectionLabel.copyWith(
-                        color: ColorTokens.accent,
+                        color: c.accent,
                         letterSpacing: 2.0,
                       )),
                   const SizedBox(height: SpacingTokens.lg),
@@ -300,17 +301,17 @@ class _StandingsScreenState extends State<StandingsScreen>
           SliverPersistentHeader(
             pinned: true,
             delegate: _TabBarDelegate(
-              TabBar(
+              tabBar: TabBar(
                 controller: _tabController,
                 isScrollable: true,
                 tabAlignment: TabAlignment.start,
                 indicator: BoxDecoration(
-                  color: ColorTokens.accent,
+                  color: c.accent,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: Colors.black,
-                unselectedLabelColor: ColorTokens.textMuted,
+                labelColor: c.onAccent,
+                unselectedLabelColor: c.textMuted,
                 labelStyle: TypographyTokens.sectionLabel.copyWith(fontSize: 11),
                 unselectedLabelStyle: TypographyTokens.sectionLabel.copyWith(fontSize: 11),
                 padding: const EdgeInsets.symmetric(
@@ -321,6 +322,7 @@ class _StandingsScreenState extends State<StandingsScreen>
                   Tab(text: 'GRUPĂ RETROGRADARE'),
                 ],
               ),
+              surfaceColor: c.surface,
             ),
           ),
         ],
@@ -370,6 +372,7 @@ class _StandingsTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     if (rows.isEmpty) {
       return Center(
         child: Padding(
@@ -377,11 +380,10 @@ class _StandingsTabView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.table_chart_outlined,
-                  size: 32, color: ColorTokens.textMuted),
+              Icon(Icons.table_chart_outlined, size: 32, color: c.textMuted),
               const SizedBox(height: SpacingTokens.md),
               Text(emptyLabel,
-                  style: TypographyTokens.body.copyWith(color: ColorTokens.textMuted),
+                  style: TypographyTokens.body.copyWith(color: c.textMuted),
                   textAlign: TextAlign.center),
             ],
           ),
@@ -415,7 +417,7 @@ class _StandingsTabView extends StatelessWidget {
               label: 'POINTS TO LEADER',
               value: '${rows.first.points - tracked!.points}',
               note: '${rows.first.shortName} leads with ${rows.first.points} pts.',
-              valueColor: tracked!.pos == 1 ? ColorTokens.positive : ColorTokens.negative,
+              isPositive: tracked!.pos == 1,
             ),
           ),
         ],
@@ -430,8 +432,9 @@ class _StandingsTabView extends StatelessWidget {
 // =============================================================================
 
 class _TabBarDelegate extends SliverPersistentHeaderDelegate {
-  const _TabBarDelegate(this.tabBar);
+  const _TabBarDelegate({required this.tabBar, required this.surfaceColor});
   final TabBar tabBar;
+  final Color surfaceColor;
 
   @override
   double get minExtent => tabBar.preferredSize.height + 16;
@@ -441,13 +444,14 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: ColorTokens.surface,
+      color: surfaceColor,
       child: tabBar,
     );
   }
 
   @override
-  bool shouldRebuild(_TabBarDelegate oldDelegate) => tabBar != oldDelegate.tabBar;
+  bool shouldRebuild(_TabBarDelegate oldDelegate) =>
+      tabBar != oldDelegate.tabBar || surfaceColor != oldDelegate.surfaceColor;
 }
 
 // =============================================================================
@@ -460,8 +464,20 @@ class _HeroClubCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Container(
-      color: ColorTokens.surfaceLow,
+      decoration: BoxDecoration(
+        color: c.surfaceLow,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: c.accent.withValues(alpha: 0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: c.cardGlow,
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       padding: const EdgeInsets.fromLTRB(
         SpacingTokens.lg, SpacingTokens.xl,
         SpacingTokens.lg, SpacingTokens.xl,
@@ -474,19 +490,27 @@ class _HeroClubCard extends StatelessWidget {
               SizedBox(width: 44, height: 44,
                   child: Image.asset(team.logoAsset, fit: BoxFit.contain))
             else
-              Container(width: 44, height: 44, color: ColorTokens.surfaceHigh,
-                  child: const Icon(Icons.shield_outlined,
-                      color: ColorTokens.textMuted, size: 24)),
+              Container(
+                width: 44, height: 44,
+                decoration: BoxDecoration(
+                  color: c.surfaceHigh,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Icon(Icons.shield_outlined, color: c.textMuted, size: 24),
+              ),
             const SizedBox(width: SpacingTokens.md),
             Expanded(child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(team.shortName.toUpperCase(),
-                    style: TypographyTokens.headline.copyWith(fontSize: 18)),
+                    style: TypographyTokens.headline.copyWith(
+                      fontSize: 18,
+                      color: c.textPrimary,
+                    )),
                 const SizedBox(height: 2),
                 Text('YOUR CLUB  ·  SUPERLIGA',
                     style: TypographyTokens.sectionLabel
-                        .copyWith(fontSize: 8, letterSpacing: 1.8)),
+                        .copyWith(fontSize: 8, letterSpacing: 1.8, color: c.textMuted)),
               ],
             )),
           ]),
@@ -494,33 +518,33 @@ class _HeroClubCard extends StatelessWidget {
           Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('#${team.pos}', style: TypographyTokens.displayHero.copyWith(
-                  fontSize: 64, height: 0.85, color: ColorTokens.accent)),
+                  fontSize: 64, height: 0.85, color: c.accent)),
               const SizedBox(height: 2),
               Text('RANK',
                   style: TypographyTokens.sectionLabel
-                      .copyWith(fontSize: 9, letterSpacing: 2.0)),
+                      .copyWith(fontSize: 9, letterSpacing: 2.0, color: c.textMuted)),
             ]),
             const SizedBox(width: 32),
-            _metric('${team.points}', 'PTS'),
+            _metric('${team.points}', 'PTS', c),
             const SizedBox(width: SpacingTokens.xl),
-            _metric('${team.gd > 0 ? "+" : ""}${team.gd}', 'GD'),
+            _metric('${team.gd > 0 ? "+" : ""}${team.gd}', 'GD', c),
             const SizedBox(width: SpacingTokens.xl),
-            _metric('${team.wins}-${team.draws}-${team.losses}', 'V-E-Î'),
+            _metric('${team.wins}-${team.draws}-${team.losses}', 'V-E-Î', c),
           ]),
         ],
       ),
     );
   }
 
-  Widget _metric(String value, String label) {
+  Widget _metric(String value, String label, AppColorTokens c) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(value,
           style: TypographyTokens.headline
-              .copyWith(fontSize: 22, color: ColorTokens.textPrimary)),
+              .copyWith(fontSize: 22, color: c.textPrimary)),
       const SizedBox(height: 2),
       Text(label,
           style: TypographyTokens.sectionLabel
-              .copyWith(fontSize: 8, letterSpacing: 1.4)),
+              .copyWith(fontSize: 8, letterSpacing: 1.4, color: c.textMuted)),
     ]);
   }
 }
@@ -530,13 +554,14 @@ class _TableHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final s = TypographyTokens.sectionLabel.copyWith(
       fontSize: 8,
       letterSpacing: 1.0,
-      color: ColorTokens.textMuted.withValues(alpha: 0.6),
+      color: c.textMuted.withValues(alpha: 0.6),
     );
     return Container(
-      color: ColorTokens.surfaceLow,
+      color: c.surfaceLow,
       padding: const EdgeInsets.symmetric(vertical: SpacingTokens.xs),
       child: Row(children: [
         SizedBox(width: 28, child: Text('#', style: s, textAlign: TextAlign.center)),
@@ -566,10 +591,11 @@ class _StandingsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final hl = _hl;
-    final bg = hl ? ColorTokens.surfaceHigh : Colors.transparent;
-    final primary = hl ? ColorTokens.accent : ColorTokens.textPrimary;
-    final muted = hl ? ColorTokens.accent.withValues(alpha: 0.7) : ColorTokens.textMuted;
+    final bg = hl ? c.surfaceHigh : Colors.transparent;
+    final primary = hl ? c.accent : c.textPrimary;
+    final muted = hl ? c.accent.withValues(alpha: 0.7) : c.textMuted;
 
     final nameStyle = TypographyTokens.body.copyWith(
       fontSize: 12,
@@ -582,6 +608,14 @@ class _StandingsRow extends StatelessWidget {
       color: primary,
       fontWeight: hl ? FontWeight.w700 : FontWeight.w400,
     );
+
+    final gdColor = hl
+        ? c.accent
+        : team.gd > 0
+            ? c.positive
+            : team.gd < 0
+                ? c.negative
+                : primary;
 
     return Container(
       color: bg,
@@ -617,15 +651,7 @@ class _StandingsRow extends StatelessWidget {
           width: 34,
           child: Text(
             '${team.gd > 0 ? "+" : ""}${team.gd}',
-            style: numStyle.copyWith(
-              color: hl
-                  ? ColorTokens.accent
-                  : team.gd > 0
-                      ? ColorTokens.positive
-                      : team.gd < 0
-                          ? ColorTokens.negative
-                          : primary,
-            ),
+            style: numStyle.copyWith(color: gdColor),
             textAlign: TextAlign.center,
           ),
         ),
@@ -643,30 +669,38 @@ class _ContextCard extends StatelessWidget {
     required this.label,
     required this.value,
     required this.note,
-    this.valueColor,
+    this.isPositive = false,
   });
 
   final String label, value, note;
-  final Color? valueColor;
+  final bool isPositive;
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
+    final valueColor = isPositive ? c.positive : c.negative;
+
     return Container(
       width: double.infinity,
-      color: ColorTokens.surfaceLow,
+      decoration: BoxDecoration(
+        color: c.surfaceLow,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: c.divider),
+      ),
       padding: const EdgeInsets.fromLTRB(
         SpacingTokens.lg, SpacingTokens.lg,
         SpacingTokens.lg, SpacingTokens.md,
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: TypographyTokens.sectionLabel),
+        Text(label,
+            style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted)),
         const SizedBox(height: SpacingTokens.xs),
         Text(value,
             style: TypographyTokens.displayHero.copyWith(
-                fontSize: 48, height: 0.9,
-                color: valueColor ?? ColorTokens.accent)),
+                fontSize: 48, height: 0.9, color: valueColor)),
         const SizedBox(height: SpacingTokens.sm),
-        Text(note, style: TypographyTokens.body.copyWith(fontSize: 13)),
+        Text(note,
+            style: TypographyTokens.body.copyWith(color: c.textSecondary, fontSize: 13)),
       ]),
     );
   }

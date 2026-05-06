@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     jwt_refresh_days: int = 7
     sportradar_api_key: str = ""
     sportradar_base_url: str = "https://api.sportradar.com/soccer/trial/v4/en"
-    sportradar_rate_delay: float = 1.1
+    sportradar_rate_delay: float = 0.5
     firebase_project_id: str = ""
     firebase_credentials_path: str = ""
 

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/strings.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/services/api_client.dart' show ApiException;
-import '../../../core/theme/color_tokens.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../data/models/week_fixture.dart';
+import '../../../data/repositories/match_details_repository.dart';
 import '../../../data/repositories/week_repository.dart';
 import 'match_stats_sheet.dart';
 
@@ -29,6 +31,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   late final WeekRepository _repo;
+  late final MatchDetailsRepository _detailsRepo;
   bool _loading = true;
   String? _error;
   int _weekOffset = 0;
@@ -39,13 +42,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   static const String _myTeam = 'Universitatea Cluj';
 
+  // All fixtures returned by the backend for this offset
   List<WeekFixture> get _fixtures => _cache[_weekOffset] ?? [];
+
+  // The Monday (UTC midnight) of the currently displayed week
+  DateTime _weekMonday() {
+    final now = DateTime.now().toUtc();
+    final today = DateTime.utc(now.year, now.month, now.day);
+    final thisMonday = today.subtract(Duration(days: today.weekday - 1));
+    return thisMonday.add(Duration(days: _weekOffset * 7));
+  }
+
+  // Only fixtures whose match date falls within the displayed Mon–Sun window
+  List<WeekFixture> get _thisWeekFixtures {
+    final monday = _weekMonday();
+    final nextMonday = monday.add(const Duration(days: 7));
+    return _fixtures.where((f) {
+      final dt = DateTime.tryParse(f.matchDate)?.toUtc();
+      if (dt == null) return false;
+      final matchDay = DateTime.utc(dt.year, dt.month, dt.day);
+      return !matchDay.isBefore(monday) && matchDay.isBefore(nextMonday);
+    }).toList();
+  }
 
   @override
   void initState() {
     super.initState();
     _repo = WeekRepository(apiClient: widget.authState.api);
+    _detailsRepo = MatchDetailsRepository(apiClient: widget.authState.api);
     _loadAll();
+  }
+
+  /// Silently warm the backend disk cache for completed U Cluj matches.
+  void _prefetchMatchDetails() {
+    final completed = _cache.values
+        .expand((fixtures) => fixtures)
+        .where((f) => f.isCompleted && f.involvesUCluj && f.matchId.isNotEmpty)
+        .map((f) => f.matchId)
+        .toSet();
+
+    for (final id in completed) {
+      _detailsRepo.fetchMatchDetails(id).catchError((_) => throw _);
+    }
   }
 
   /// Fetch all 5 weeks in parallel and populate the cache.
@@ -61,6 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _cache[_cachedOffsets[i]] = results[i];
         }
         setState(() => _loading = false);
+        _prefetchMatchDetails();
       }
     } catch (e) {
       if (mounted) {
@@ -75,9 +114,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _changeWeek(int delta) {
     final next = _weekOffset + delta;
-    if (!_cachedOffsets.contains(next)) return; // stay within cached range
+    if (!_cachedOffsets.contains(next)) return;
     setState(() => _weekOffset = next);
-    // No network call — data is already in _cache
   }
 
   void _openStats(WeekFixture f) {
@@ -95,6 +133,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return AppScaffold(
       currentTab: AppTab.dashboard,
       onTabSelected: widget.onTabSelected,
@@ -106,72 +145,79 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (details.primaryVelocity! > 200) _changeWeek(-1);
         },
         child: _loading
-            ? const Center(child: CircularProgressIndicator(color: ColorTokens.accent))
+            ? Center(child: CircularProgressIndicator(color: c.accent))
             : _error != null
-                ? _buildError()
-                : _buildContent(),
+                ? _buildError(c)
+                : _buildContent(c),
       ),
     );
   }
 
-  Widget _buildError() {
+  Widget _buildError(AppColorTokens c) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Eroare la încărcare', style: TypographyTokens.headline.copyWith(color: ColorTokens.negative)),
+          Text(L10n.t('dashboard.errorTitle'),
+              style: TypographyTokens.headline.copyWith(color: c.negative)),
           const SizedBox(height: SpacingTokens.sm),
-          Text(_error!, style: TypographyTokens.body.copyWith(color: ColorTokens.textMuted), textAlign: TextAlign.center),
+          Text(_error!,
+              style: TypographyTokens.body.copyWith(color: c.textMuted),
+              textAlign: TextAlign.center),
           const SizedBox(height: SpacingTokens.lg),
-          TextButton(onPressed: _loadAll, child: Text('RETRY', style: TypographyTokens.sectionLabel.copyWith(color: ColorTokens.accent))),
+          TextButton(
+            onPressed: _loadAll,
+            child: Text(L10n.t('dashboard.retry'),
+                style: TypographyTokens.sectionLabel.copyWith(color: c.accent)),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildContent() {
-    // Sort: UCL fixtures first, then others
-    final uclFixtures = _fixtures.where((f) => f.involvesUCluj).toList();
-    final otherFixtures = _fixtures.where((f) => !f.involvesUCluj).toList();
+  Widget _buildContent(AppColorTokens c) {
+    final weekFixtures = _thisWeekFixtures;
+    final uclFixtures   = weekFixtures.where((f) => f.involvesUCluj).toList();
+    final otherFixtures = weekFixtures.where((f) => !f.involvesUCluj).toList();
 
     return RefreshIndicator(
-      color: ColorTokens.accent,
-      backgroundColor: ColorTokens.surfaceHigh,
+      color: c.accent,
+      backgroundColor: c.surfaceHigh,
       onRefresh: () => _loadAll(forceRefresh: true),
       child: ListView(
         children: [
-          // Week header
-          _buildWeekHeader(),
-          const SizedBox(height: SpacingTokens.xl),
+          _buildWeekHeader(c),
+          const SizedBox(height: SpacingTokens.lg),
 
           // U Cluj section
           if (uclFixtures.isNotEmpty) ...[
             _buildSectionLabel(
               _weekOffset < 0
-                  ? 'U CLUJ — REZULTATE'
+                  ? L10n.t('dashboard.uclujResults')
                   : _weekOffset == 0
-                      ? 'U CLUJ — ACEASTĂ SĂPTĂMÂNĂ'
-                      : 'U CLUJ — RUNDA VIITOARE',
-              ColorTokens.accent,
+                      ? L10n.t('dashboard.uclujThisWeek')
+                      : L10n.t('dashboard.uclujNextRound'),
+              c.accent,
+              c,
             ),
             const SizedBox(height: SpacingTokens.sm),
-            ...uclFixtures.map((f) => _buildMatchCard(f, highlight: true)),
+            ...uclFixtures.map((f) => _buildMatchCard(f, highlight: true, c: c)),
             const SizedBox(height: SpacingTokens.xl),
           ],
 
           // Other Liga 1 matches
           if (otherFixtures.isNotEmpty) ...[
-            _buildSectionLabel('LIGA 1 — ALTE MECIURI', ColorTokens.textMuted),
+            _buildSectionLabel(L10n.t('dashboard.otherMatches'), c.textMuted, c),
             const SizedBox(height: SpacingTokens.sm),
-            ...otherFixtures.map((f) => _buildMatchCard(f, highlight: false)),
+            ...otherFixtures.map((f) => _buildMatchCard(f, highlight: false, c: c)),
           ],
 
-          if (_fixtures.isEmpty)
+          if (weekFixtures.isEmpty)
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(SpacingTokens.xxl),
-                child: Text('Nu există meciuri această săptămână.',
-                    style: TypographyTokens.body.copyWith(color: ColorTokens.textMuted),
+                child: Text(L10n.t('dashboard.empty'),
+                    style: TypographyTokens.body.copyWith(color: c.textMuted),
                     textAlign: TextAlign.center),
               ),
             ),
@@ -182,51 +228,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildWeekHeader() {
+  Widget _buildWeekHeader(AppColorTokens c) {
     final label = _visibleRangeLabel();
+    final weekWord = L10n.t('dashboard.weekRelative');
     final weekLabel = _weekOffset == 0
-        ? 'SĂPTĂMÂNA CURENTĂ'
+        ? L10n.t('dashboard.weekCurrent')
         : _weekOffset > 0
-            ? 'SĂPTĂMÂNA +$_weekOffset'
-            : 'SĂPTĂMÂNA $_weekOffset';
+            ? '$weekWord +$_weekOffset'
+            : '$weekWord $_weekOffset';
 
     return Container(
-      color: ColorTokens.surfaceLow,
+      decoration: BoxDecoration(
+        color: c.surfaceLow,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: c.divider),
+      ),
       padding: const EdgeInsets.symmetric(
-          horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
+          horizontal: SpacingTokens.xs, vertical: SpacingTokens.xs),
       child: Row(
         children: [
-          // Prev week arrow — disabled at boundary
           IconButton(
             icon: Icon(Icons.chevron_left,
                 color: _weekOffset > _cachedOffsets.first
-                    ? ColorTokens.accent
-                    : ColorTokens.textMuted,
+                    ? c.accent
+                    : c.textMuted,
                 size: 20),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
             onPressed: _weekOffset > _cachedOffsets.first ? () => _changeWeek(-1) : null,
           ),
-          const Icon(Icons.calendar_today, color: ColorTokens.accent, size: 14),
+          Icon(Icons.calendar_today, color: c.accent, size: 13),
           const SizedBox(width: SpacingTokens.xs),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(weekLabel,
-                    style: TypographyTokens.sectionLabel.copyWith(fontSize: 9)),
+                    style: TypographyTokens.sectionLabel
+                        .copyWith(color: c.textMuted, fontSize: 9)),
                 Text(label,
                     style: TypographyTokens.sectionLabel
-                        .copyWith(color: ColorTokens.accent, fontSize: 10)),
+                        .copyWith(color: c.accent, fontSize: 10)),
               ],
             ),
           ),
-          // Next week arrow — disabled at boundary
           IconButton(
             icon: Icon(Icons.chevron_right,
                 color: _weekOffset < _cachedOffsets.last
-                    ? ColorTokens.accent
-                    : ColorTokens.textMuted,
+                    ? c.accent
+                    : c.textMuted,
                 size: 20),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
@@ -238,20 +288,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   String _visibleRangeLabel() {
-    final parsed = _fixtures
-        .map((f) => DateTime.tryParse(f.matchDate))
-        .whereType<DateTime>()
-        .toList()
-      ..sort();
-
-    if (parsed.isNotEmpty) {
-      final start = parsed.first;
-      final end = parsed.last;
-      return '${_fmtDate(start, withYear: start.year != end.year)} — ${_fmtDate(end, withYear: true)}';
-    }
-
-    final now = DateTime.now();
-    final monday = now.subtract(Duration(days: now.weekday - 1));
+    final monday = _weekMonday();
     final sunday = monday.add(const Duration(days: 6));
     return '${_fmtDate(monday)} — ${_fmtDate(sunday, withYear: true)}';
   }
@@ -263,150 +300,206 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return '$dd.$mm';
   }
 
-  Widget _buildSectionLabel(String text, Color color) {
+  Widget _buildSectionLabel(String text, Color color, AppColorTokens c) {
     return Row(
       children: [
-        Container(width: 3, height: 14, color: color),
+        Container(
+          width: 3,
+          height: 14,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(1.5),
+          ),
+        ),
         const SizedBox(width: SpacingTokens.xs),
         Text(text, style: TypographyTokens.sectionLabel.copyWith(color: color)),
       ],
     );
   }
 
-  Widget _buildMatchCard(WeekFixture f, {required bool highlight}) {
+  Widget _buildMatchCard(WeekFixture f, {required bool highlight, required AppColorTokens c}) {
     final isHome = f.isUCLujHome;
-    // Backend returns P(U Cluj Win) already — use directly, no flip needed.
     final prob = f.homeWinProbability;
     final uclProb = highlight ? prob : prob;
 
     final probPct = uclProb != null ? '${(uclProb * 100).round()}%' : '--';
     final probColor = uclProb == null
-        ? ColorTokens.textMuted
+        ? c.textMuted
         : uclProb >= 0.55
-            ? ColorTokens.positive
+            ? c.positive
             : uclProb >= 0.40
-                ? ColorTokens.accent
-                : ColorTokens.negative;
+                ? c.accent
+                : c.negative;
 
     String result = '';
-    Color resultColor = ColorTokens.textMuted;
+    Color resultColor = c.textMuted;
     if (f.isCompleted && highlight) {
       final myScore = isHome ? f.homeScore! : f.awayScore!;
       final theirScore = isHome ? f.awayScore! : f.homeScore!;
-      if (myScore > theirScore) { result = 'V'; resultColor = ColorTokens.positive; }
-      else if (myScore < theirScore) { result = 'Î'; resultColor = ColorTokens.negative; }
-      else { result = 'E'; resultColor = ColorTokens.accent; }
+      if (myScore > theirScore) { result = 'V'; resultColor = c.positive; }
+      else if (myScore < theirScore) { result = 'Î'; resultColor = c.negative; }
+      else { result = 'E'; resultColor = c.accent; }
     }
 
     return GestureDetector(
       onTap: () => _openStats(f),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 2),
+        margin: const EdgeInsets.only(bottom: 3),
         decoration: BoxDecoration(
-          color: highlight ? ColorTokens.surfaceLow : ColorTokens.surfaceLow,
+          color: c.surfaceLow,
+          borderRadius: BorderRadius.circular(6),
           border: highlight
-              ? const Border(left: BorderSide(color: ColorTokens.accent, width: 3))
+              ? Border.all(color: c.accent.withValues(alpha: 0.4))
+              : Border.all(color: c.divider),
+          boxShadow: highlight
+              ? [
+                  BoxShadow(
+                    color: c.cardGlow,
+                    blurRadius: 12,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
               : null,
         ),
-        padding: const EdgeInsets.symmetric(
-            horizontal: SpacingTokens.md, vertical: SpacingTokens.md),
-        child: Column(
-          children: [
-            Row(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Result badge (if completed)
-                if (result.isNotEmpty) ...[
+                // Gold accent left bar for highlighted card
+                if (highlight)
                   Container(
-                    width: 24,
-                    height: 24,
-                    color: resultColor.withValues(alpha: 0.15),
-                    child: Center(
-                      child: Text(result,
-                          style: TypographyTokens.sectionLabel
-                              .copyWith(color: resultColor, fontSize: 10)),
+                    width: 3,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [c.accent, c.accentStrong],
+                      ),
                     ),
                   ),
-                  const SizedBox(width: SpacingTokens.sm),
-                ],
-
-                // Teams
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _teamRow(f.homeTeam, highlight && isHome),
-                      const SizedBox(height: 4),
-                      _teamRow(f.awayTeam, highlight && !isHome),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            // Result badge
+                            if (result.isNotEmpty) ...[
+                              Container(
+                                width: 22,
+                                height: 22,
+                                decoration: BoxDecoration(
+                                  color: resultColor.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                                child: Center(
+                                  child: Text(result,
+                                      style: TypographyTokens.sectionLabel
+                                          .copyWith(color: resultColor, fontSize: 10)),
+                                ),
+                              ),
+                              const SizedBox(width: SpacingTokens.sm),
+                            ],
+
+                            // Teams
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _teamRow(f.homeTeam, highlight && isHome, c),
+                                  const SizedBox(height: 3),
+                                  _teamRow(f.awayTeam, highlight && !isHome, c),
+                                ],
+                              ),
+                            ),
+
+                            // Score or probability
+                            f.isCompleted
+                                ? _scoreBlock(f, c)
+                                : _probabilityBlock(probPct, probColor, highlight, c),
+                          ],
+                        ),
+
+                        // Date + venue
+                        const SizedBox(height: SpacingTokens.xs),
+                        Row(
+                          children: [
+                            Text(f.displayDate,
+                                style: TypographyTokens.meta
+                                    .copyWith(color: c.textMuted, fontSize: 10)),
+                            if (f.venue != null) ...[
+                              Text('  ·  ${f.venue}',
+                                  style: TypographyTokens.meta
+                                      .copyWith(color: c.textMuted, fontSize: 10)),
+                            ],
+                            const Spacer(),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(L10n.t('dashboard.analysis'),
+                                    style: TypographyTokens.sectionLabel
+                                        .copyWith(color: c.accent, fontSize: 9)),
+                                Icon(Icons.chevron_right, size: 10, color: c.accent),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-
-                // Score or probability
-                f.isCompleted
-                    ? _scoreBlock(f)
-                    : _probabilityBlock(probPct, probColor, highlight),
               ],
             ),
-
-            // Date + venue
-            const SizedBox(height: SpacingTokens.xs),
-            Row(
-              children: [
-                Text(f.displayDate,
-                    style: TypographyTokens.body
-                        .copyWith(color: ColorTokens.textMuted, fontSize: 10)),
-                if (f.venue != null) ...[
-                  Text('  ·  ${f.venue}',
-                      style: TypographyTokens.body
-                          .copyWith(color: ColorTokens.textMuted, fontSize: 10)),
-                ],
-                const Spacer(),
-                Text('ANALIZĂ  ›',
-                    style: TypographyTokens.sectionLabel
-                        .copyWith(color: ColorTokens.accent, fontSize: 9)),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _teamRow(String name, bool isMine) {
-    // Normalize display name
+  Widget _teamRow(String name, bool isMine, AppColorTokens c) {
     final display = name.replaceAll('Universitatea Cluj', 'U CLUJ');
     return Text(
       display.toUpperCase(),
-      style: TypographyTokens.body.copyWith(
+      style: TypographyTokens.cardTitle.copyWith(
         fontWeight: isMine ? FontWeight.w800 : FontWeight.w400,
-        color: isMine ? ColorTokens.textPrimary : ColorTokens.textMuted,
-        fontSize: 13,
+        color: isMine ? c.textPrimary : c.textSecondary,
+        fontSize: 12,
       ),
     );
   }
 
-  Widget _scoreBlock(WeekFixture f) {
+  Widget _scoreBlock(WeekFixture f, AppColorTokens c) {
     return Container(
-      color: ColorTokens.surfaceHigh,
       padding: const EdgeInsets.symmetric(
           horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
+      decoration: BoxDecoration(
+        color: c.surfaceHigh,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: c.divider),
+      ),
       child: Text(
         '${f.homeScore} — ${f.awayScore}',
-        style: TypographyTokens.headline.copyWith(fontSize: 18, letterSpacing: 2),
+        style: TypographyTokens.statValue.copyWith(
+            fontSize: 16, letterSpacing: 2, color: c.textPrimary),
       ),
     );
   }
 
-  Widget _probabilityBlock(String pct, Color color, bool highlight) {
+  Widget _probabilityBlock(String pct, Color color, bool highlight, AppColorTokens c) {
     if (!highlight) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(pct,
-            style: TypographyTokens.headline.copyWith(
-                color: color, fontSize: 22, letterSpacing: 0)),
-        Text('ȘANSĂ CÂȘTIG',
-            style: TypographyTokens.sectionLabel.copyWith(fontSize: 8)),
+            style: TypographyTokens.statValue.copyWith(
+                color: color, fontSize: 20, letterSpacing: 0)),
+        Text(L10n.t('dashboard.winChance'),
+            style: TypographyTokens.sectionLabel
+                .copyWith(color: c.textMuted, fontSize: 8)),
       ],
     );
   }

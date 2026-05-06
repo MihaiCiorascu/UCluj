@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:umbraro/core/config/app_config.dart';
+import 'package:umbraro/core/l10n/strings.dart';
 import 'package:umbraro/core/observability/app_logger.dart';
 import 'package:umbraro/core/observability/global_error_reporter.dart';
 import 'package:umbraro/core/services/api_client.dart';
@@ -14,11 +15,15 @@ import 'package:umbraro/core/observability/enable_crashlytics_if_supported.dart'
 import 'package:umbraro/firebase_options.dart';
 
 import 'app.dart';
+import '../core/theme/theme_notifier.dart';
 
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   installGlobalErrorHandlers();
   await AppConfig.load();
+  await L10n.instance.load();
+  // ignore: unawaited_futures — fire-and-forget, default dark used until ready
+  ThemeNotifier.instance.init();
 
   if (AppConfig.useFirebaseAuth) {
     try {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/supported_formations.dart';
+import '../../../core/l10n/strings.dart';
 import '../../../core/theme/color_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
@@ -43,7 +44,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
                 const Icon(Icons.auto_awesome,
                     color: ColorTokens.accent, size: 14),
                 const SizedBox(width: SpacingTokens.xs),
-                Text('PLAN TACTIC OPTIM',
+                Text(L10n.t('sheet.optimalPlan'),
                     style: TypographyTokens.sectionLabel
                         .copyWith(color: ColorTokens.accent, fontSize: 11)),
                 const Spacer(),
@@ -78,10 +79,12 @@ class _PrescriptionBlueprint extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('PROBABILITATE',
-                        style: TypographyTokens.sectionLabel.copyWith(fontSize: 8)),
-                    Text('PROIECTATĂ',
-                        style: TypographyTokens.sectionLabel.copyWith(fontSize: 8)),
+                    Text(L10n.t('sheet.projectedProb'),
+                        style: TypographyTokens.sectionLabel.copyWith(
+                            fontSize: 8, color: ColorTokens.textMuted)),
+                    Text(L10n.t('sheet.projected'),
+                        style: TypographyTokens.sectionLabel.copyWith(
+                            fontSize: 8, color: ColorTokens.textMuted)),
                   ],
                 ),
               ],
@@ -109,7 +112,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(
                 SpacingTokens.md, 0, SpacingTokens.md, SpacingTokens.sm),
             child: Text(
-              'CatBoost · 800 simulări · date Liga 1 2020–2025',
+              L10n.t('sheet.modelFooter'),
               style: TypographyTokens.sectionLabel
                   .copyWith(color: ColorTokens.textMuted, fontSize: 8),
             ),
@@ -278,13 +281,13 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     )
                   else if (_matchDetails != null) ...[
                     if (_matchDetails!.hasStats) ...[
-                      _sectionLabel('STATISTICI OFICIALE'),
+                      _sectionLabel(L10n.t('sheet.officialStats')),
                       const SizedBox(height: SpacingTokens.sm),
                       _buildTeamStats(f, _matchDetails!),
                       const SizedBox(height: SpacingTokens.xl),
                     ],
                     if (_matchDetails!.hasLineups) ...[
-                      _sectionLabel('ECHIPE DE START'),
+                      _sectionLabel(L10n.t('sheet.startingLineups')),
                       const SizedBox(height: SpacingTokens.sm),
                       _buildLineupPitchSection(f, _matchDetails!),
                       const SizedBox(height: SpacingTokens.xl),
@@ -298,26 +301,26 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   ],
 
                   if (f.keyDrivers.isNotEmpty) ...[
-                    _sectionLabel('FACTORI CHEIE AI'),
+                    _sectionLabel(L10n.t('sheet.keyDrivers')),
                     const SizedBox(height: SpacingTokens.sm),
                     ...f.keyDrivers.map(_buildDriverRow),
                     const SizedBox(height: SpacingTokens.md),
                   ],
 
                   if (f.topRisks.isNotEmpty) ...[
-                    _sectionLabel('RISCURI'),
+                    _sectionLabel(L10n.t('sheet.risks')),
                     const SizedBox(height: SpacingTokens.sm),
                     ...f.topRisks.map((r) => _buildDriverRow(r, isRisk: true)),
                     const SizedBox(height: SpacingTokens.md),
                   ],
 
                   if (f.prescription != null) ...[
-                    _sectionLabel('DIAGNOSTIC — PLAN TACTIC'),
+                    _sectionLabel(L10n.t('sheet.diagnosticPlan')),
                     const SizedBox(height: SpacingTokens.sm),
                     _PrescriptionBlueprint(prescription: f.prescription!),
                     const SizedBox(height: SpacingTokens.xl),
                   ] else if (f.narrative.isNotEmpty) ...[
-                    _sectionLabel('DIAGNOSTIC'),
+                    _sectionLabel(L10n.t('sheet.diagnostic')),
                     const SizedBox(height: SpacingTokens.sm),
                     Container(
                       color: ColorTokens.surfaceLow,
@@ -352,8 +355,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
         children: [
           Expanded(
             child: Text(homeDisplay,
-                style: TypographyTokens.body
-                    .copyWith(fontWeight: FontWeight.w800, fontSize: 13),
+                style: TypographyTokens.body.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13,
+                    color: ColorTokens.textPrimary),
                 textAlign: TextAlign.center),
           ),
           Container(
@@ -366,8 +371,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           ),
           Expanded(
             child: Text(awayDisplay,
-                style: TypographyTokens.body
-                    .copyWith(fontWeight: FontWeight.w800, fontSize: 13),
+                style: TypographyTokens.body.copyWith(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13,
+                    color: ColorTokens.textPrimary),
                 textAlign: TextAlign.center),
           ),
         ],
@@ -382,9 +389,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       final theirScore = isHome ? f.awayScore! : f.homeScore!;
       String result;
       Color col;
-      if (myScore > theirScore) { result = 'VICTORIE'; col = ColorTokens.positive; }
-      else if (myScore < theirScore) { result = 'ÎNFRÂNGERE'; col = ColorTokens.negative; }
-      else { result = 'EGAL'; col = ColorTokens.accent; }
+      if (myScore > theirScore) { result = L10n.t('sheet.win'); col = ColorTokens.positive; }
+      else if (myScore < theirScore) { result = L10n.t('sheet.loss'); col = ColorTokens.negative; }
+      else { result = L10n.t('sheet.draw'); col = ColorTokens.accent; }
 
       return Column(
         children: [
@@ -392,7 +399,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('${f.homeScore}',
-                  style: TypographyTokens.displayHero.copyWith(fontSize: 64)),
+                  style: TypographyTokens.displayHero.copyWith(
+                      fontSize: 64, color: ColorTokens.textPrimary)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
                 child: Text('—',
@@ -400,7 +408,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                         fontSize: 32, color: ColorTokens.textMuted)),
               ),
               Text('${f.awayScore}',
-                  style: TypographyTokens.displayHero.copyWith(fontSize: 64)),
+                  style: TypographyTokens.displayHero.copyWith(
+                      fontSize: 64, color: ColorTokens.textPrimary)),
             ],
           ),
           const SizedBox(height: SpacingTokens.xs),
@@ -427,7 +436,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               style: TypographyTokens.sectionLabel.copyWith(color: ColorTokens.accent)),
           if (f.venue != null) ...[
             Text('  ·  ${f.venue}',
-                style: TypographyTokens.sectionLabel),
+                style: TypographyTokens.sectionLabel
+                    .copyWith(color: ColorTokens.textMuted)),
           ],
         ],
       ),
@@ -482,7 +492,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
           if (h.ballPossession != null || a.ballPossession != null)
             _buildStatRow(
-              'POSESIE',
+              L10n.t('sheet.statPossession'),
               '${h.ballPossession?.toStringAsFixed(0) ?? '—'}%',
               '${a.ballPossession?.toStringAsFixed(0) ?? '—'}%',
               homeVal: h.ballPossession ?? 50,
@@ -490,33 +500,33 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               higherIsBetter: true,
               isUCLujHome: f.isUCLujHome,
             ),
-          _buildStatRowRaw('ȘUTURI PE POARTĂ',
+          _buildStatRowRaw(L10n.t('sheet.statShotsOnTarget'),
               '${h.shotsOnTarget ?? '—'}', '${a.shotsOnTarget ?? '—'}',
               homeVal: (h.shotsOnTarget ?? 0).toDouble(),
               awayVal: (a.shotsOnTarget ?? 0).toDouble(),
               higherIsBetter: true, isUCLujHome: f.isUCLujHome),
-          _buildStatRowRaw('ȘUTURI TOTALE',
+          _buildStatRowRaw(L10n.t('sheet.statShotsTotal'),
               '${h.totalShots}', '${a.totalShots}',
               homeVal: h.totalShots.toDouble(),
               awayVal: a.totalShots.toDouble(),
               higherIsBetter: true, isUCLujHome: f.isUCLujHome),
-          _buildStatRowRaw('CORNERE',
+          _buildStatRowRaw(L10n.t('sheet.statCorners'),
               '${h.cornerKicks ?? '—'}', '${a.cornerKicks ?? '—'}',
               homeVal: (h.cornerKicks ?? 0).toDouble(),
               awayVal: (a.cornerKicks ?? 0).toDouble(),
               higherIsBetter: true, isUCLujHome: f.isUCLujHome),
-          _buildStatRowRaw('OFSAIDURI',
+          _buildStatRowRaw(L10n.t('sheet.statOffsides'),
               '${h.offsides ?? '—'}', '${a.offsides ?? '—'}',
               homeVal: (h.offsides ?? 0).toDouble(),
               awayVal: (a.offsides ?? 0).toDouble(),
               higherIsBetter: false, isUCLujHome: f.isUCLujHome),
-          _buildStatRowRaw('FAULTURI',
+          _buildStatRowRaw(L10n.t('sheet.statFouls'),
               '${h.fouls ?? '—'}', '${a.fouls ?? '—'}',
               homeVal: (h.fouls ?? 0).toDouble(),
               awayVal: (a.fouls ?? 0).toDouble(),
               higherIsBetter: false, isUCLujHome: f.isUCLujHome),
           if (h.yellowCards != null || a.yellowCards != null)
-            _buildStatRowRaw('CARTONAȘE GALBENE',
+            _buildStatRowRaw(L10n.t('sheet.statYellow'),
                 '${h.yellowCards ?? '—'}', '${a.yellowCards ?? '—'}',
                 homeVal: (h.yellowCards ?? 0).toDouble(),
                 awayVal: (a.yellowCards ?? 0).toDouble(),
@@ -686,7 +696,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             color: ColorTokens.surfaceLow,
             padding: const EdgeInsets.symmetric(
                 horizontal: SpacingTokens.md, vertical: 4),
-            child: Text('REZERVE',
+            child: Text(L10n.t('sheet.subs'),
                 style: TypographyTokens.sectionLabel
                     .copyWith(fontSize: 8, color: ColorTokens.textMuted)),
           ),
@@ -870,8 +880,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('ȘANSĂ DE CÂȘTIG — U CLUJ',
-                    style: TypographyTokens.sectionLabel),
+                Text(L10n.t('sheet.winChanceUcluj'),
+                    style: TypographyTokens.sectionLabel
+                        .copyWith(color: ColorTokens.textMuted)),
                 const SizedBox(height: SpacingTokens.xs),
                 Text('$winPct%',
                     style: TypographyTokens.displayHero
@@ -879,17 +890,18 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 const SizedBox(height: SpacingTokens.xs),
                 Row(
                   children: [
-                    _OutcomePill(label: 'CÂȘTIG', pct: winPct, color: col),
+                    _OutcomePill(label: L10n.t('sheet.outcomeWin'), pct: winPct, color: col),
                     const SizedBox(width: SpacingTokens.xs),
                     _OutcomePill(
-                        label: 'EGAL + ÎNFRÂNGERE',
+                        label: L10n.t('sheet.outcomeRest'),
                         pct: restPct,
                         color: ColorTokens.textMuted),
                   ],
                 ),
                 const SizedBox(height: SpacingTokens.xs),
-                Text('CatBoost · model binar (câștig vs. rest)',
-                    style: TypographyTokens.sectionLabel.copyWith(fontSize: 8)),
+                Text(L10n.t('sheet.modelCaption'),
+                    style: TypographyTokens.sectionLabel.copyWith(
+                        fontSize: 8, color: ColorTokens.textMuted)),
               ],
             ),
           ),
@@ -916,7 +928,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           const SizedBox(width: SpacingTokens.xs),
           Expanded(
               child: Text(d.label.toUpperCase(),
-                  style: TypographyTokens.body.copyWith(fontSize: 12))),
+                  style: TypographyTokens.body.copyWith(
+                      fontSize: 12, color: ColorTokens.textPrimary))),
           Text(
             '${(d.importance * 100).toStringAsFixed(0)}%',
             style: TypographyTokens.body
@@ -940,7 +953,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       return Container(
         color: ColorTokens.surfaceLow,
         padding: const EdgeInsets.all(SpacingTokens.md),
-        child: Text('XI indisponibil: $_xiError',
+        child: Text('${L10n.t('sheet.xiUnavailable')}: $_xiError',
             style: TypographyTokens.body
                 .copyWith(color: ColorTokens.textMuted, fontSize: 12)),
       );
@@ -952,7 +965,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       children: [
         Row(
           children: [
-            _sectionLabel('XI RECOMANDAT'),
+            _sectionLabel(L10n.t('sheet.recommendedXi')),
             const Spacer(),
             DropdownButtonHideUnderline(
               child: DropdownButton<String>(
@@ -988,7 +1001,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
         children: [
           Container(width: 2, height: 12, color: ColorTokens.accent),
           const SizedBox(width: SpacingTokens.xs),
-          Text(text, style: TypographyTokens.sectionLabel),
+          Text(text,
+              style: TypographyTokens.sectionLabel
+                  .copyWith(color: ColorTokens.textMuted)),
         ],
       );
 }
@@ -1096,8 +1111,12 @@ class _ActualPlayerChip extends StatelessWidget {
   }
 
   String get _lastName {
-    final parts = player.name.trim().split(' ');
-    return parts.length > 1 ? parts.last : player.name;
+    final name = player.name.trim();
+    // Data arrives as "Surname, Firstname" — take the part before the comma
+    if (name.contains(',')) return name.split(',').first.trim();
+    // Fallback: "Firstname Surname" — take the last word
+    final parts = name.split(' ');
+    return parts.length > 1 ? parts.last : name;
   }
 
   @override

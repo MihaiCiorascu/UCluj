@@ -90,8 +90,9 @@ class XIPredictor:
         Blends performance score, recent form, and efficiency metrics based on position.
         Scaled to 0-1 range (multiplied by 100 in UI for 0-100 scale).
         """
-        # Base floor ensures even players with minimal data have a professional rating (e.g., 45/100)
-        base_floor = 0.45
+        # Improvement 3: floor = 0.35 for ≥3 matches, 0.0 for sparse data
+        matches = int(row.get("matches_played", 0) or 0)
+        base_floor = 0.35 if matches >= 3 else 0.0
 
         # Available capacity for variable stats: 0.55
         # Weights for variable components:
@@ -156,26 +157,40 @@ class XIPredictor:
         df_opponent_players: pd.DataFrame,
     ) -> Dict[str, float]:
         """
-        Analyse opponent squad to identify their strengths and weaknesses.
-        Returns a dict of adjustment factors per role/feature.
+        Improvement 4: Meaningful opponent adjustment (up to ±15 %).
+        Analyses opponent attackers/midfielders to derive threat metrics,
+        then boosts our DEF/MID/FWD weights accordingly.
         """
         if df_opponent_players.empty:
             return {}
 
-        opp_stats = df_opponent_players.agg(
-            {
-                "pass_accuracy": "mean",
-                "shot_accuracy": "mean",
-                "def_action_success": "mean",
-            }
-        ).to_dict()
+        opp = df_opponent_players[
+            df_opponent_players["role_group"].isin(["FWD", "MID"])
+        ]
+        if opp.empty:
+            opp = df_opponent_players
 
-        # Adjustments: if opponent is strong in passing, we might want higher def_action_success
-        adjustments = {
-            "def_weight": 1.0 + (opp_stats.get("pass_accuracy", 50) / 1000),
-            "mid_weight": 1.0 + (opp_stats.get("def_action_success", 50) / 1000),
+        def _mean(col: str, default: float) -> float:
+            try:
+                v = opp[col].mean()
+                return float(v) if not pd.isna(v) else default
+            except Exception:
+                return default
+
+        shot_acc      = _mean("shot_accuracy",      40.0)
+        pass_acc      = _mean("pass_accuracy",       60.0)
+        def_success   = _mean("def_action_success",  50.0)
+
+        # 0-1 threat scalars
+        attack_threat  = min(max((shot_acc - 30.0) / 70.0, 0.0), 1.0)
+        press_quality  = min(max((pass_acc  - 50.0) / 40.0, 0.0), 1.0)
+        def_strength   = min(max(def_success / 100.0,        0.0), 1.0)
+
+        return {
+            "def_weight": 1.0 + 0.15 * attack_threat,   # up to +15 % DEF boost
+            "mid_weight": 1.0 + 0.10 * press_quality,   # up to +10 % MID boost
+            "fwd_weight": 1.0 - 0.05 * def_strength,    # up to −5 % FWD penalty
         }
-        return adjustments
 
     # ── Selection Engine ───────────────────────────────────────────────────────
 
@@ -184,12 +199,29 @@ class XIPredictor:
         df_players: pd.DataFrame,
         formation: str = "4-3-3",
         opponent_adjustments: Optional[Dict[str, float]] = None,
+        your_team_id: Optional[int] = None,
     ) -> Dict[str, Any]:
         """
         Selects the best 11 players for a given formation.
+
+        Args:
+            df_players: Pre-filtered DataFrame of candidates
+            formation: e.g. "4-3-3"
+            opponent_adjustments: Role-based scoring multipliers
+            your_team_id: If provided, validate team membership to guard against stale profile data
         """
         adj = opponent_adjustments or {}
         pool = df_players.copy()
+
+        # Team validation: ensure no stale profile data contaminates XI selection
+        if your_team_id is not None and "teamId" in pool.columns:
+            pool = pool[pool["teamId"] == your_team_id]
+            if pool.empty:
+                raise ValueError(f"No players found for team {your_team_id} after filtering")
+
+        # Improvement 6: exclude players at suspension risk before scoring
+        if "yellow_card_risk" in pool.columns:
+            pool = pool[pool["yellow_card_risk"] == 0]
 
         # 1. Scoring — always compute composite for display/fallback
         pool["composite_score"] = pool.apply(self._composite_score, axis=1)
@@ -206,9 +238,12 @@ class XIPredictor:
             pool["predicted_score"] = pool["composite_score"].copy()
 
         # 2. Apply adjustments
-        # (e.g., if opponent is strong, boost defensive importance)
         def_adj = adj.get("def_weight", 1.0)
+        mid_adj = adj.get("mid_weight", 1.0)
+        fwd_adj = adj.get("fwd_weight", 1.0)
         pool.loc[pool["role_group"] == "DEF", "predicted_score"] *= def_adj
+        pool.loc[pool["role_group"] == "MID", "predicted_score"] *= mid_adj
+        pool.loc[pool["role_group"] == "FWD", "predicted_score"] *= fwd_adj
 
         # 3. Formation logic (supports multi-segment patterns like 4-2-3-1).
         resolved_formation = normalize_formation_key(formation)
@@ -301,4 +336,5 @@ class StartingXIPredictor(XIPredictor):
             df_players=df,
             formation=formation,
             opponent_adjustments=adjustments,
+            your_team_id=your_team_id,
         )

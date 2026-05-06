@@ -38,6 +38,12 @@ origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://mortgages-treaty-trinity-rely.trycloudflare.com",
+        "https://feeling-avoiding-attribute-lisa.trycloudflare.com",
+        "https://raleigh-science-edwards-illustrated.trycloudflare.com",
+        "https://hospitality-maintenance-alias-perl.trycloudflare.com",
+        "https://environments-internal-hudson-analytical.trycloudflare.com",
+        "https://holidays-isbn-hybrid-unified.trycloudflare.com",
         "https://becomes-exercises-stick-textbooks.trycloudflare.com",
         "https://uhack26-8050e.web.app",
         "https://hackatonu.web.app",
@@ -57,4 +63,10 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 app.include_router(v1_router, prefix="/api/v1")
 app.include_router(sr_admin_router, prefix="/api/v1")
+
+
+
+
+
+
 

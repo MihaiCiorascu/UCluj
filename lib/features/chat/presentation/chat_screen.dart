@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/strings.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/theme/color_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
@@ -95,7 +96,11 @@ class _ChatScreenState extends State<ChatScreen> {
   WebSocketChannel? _channel;
   
   String _currentChannelId = '';
-  String _currentChannelName = 'CHAT ECHIPĂ';
+  // Empty default — getter below resolves to localized "TEAM CHAT"/"CHAT ECHIPĂ".
+  String _currentChannelName = '';
+
+  String get _displayChannelName =>
+      _currentChannelName.isNotEmpty ? _currentChannelName : L10n.t('chat.title');
   List<Map<String, dynamic>> _teamUsers = [];
   List<Map<String, dynamic>> _groups = [];
 
@@ -280,7 +285,7 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Header(channelName: _currentChannelName),
+          _Header(channelName: _displayChannelName),
           _buildChannelsList(),
           const SizedBox(height: SpacingTokens.md),
           Expanded(child: _buildList()),
@@ -301,7 +306,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           _buildChannelChip(
             id: genId,
-            name: 'CHAT ECHIPĂ',
+            name: L10n.t('chat.title'),
             isSelected: _currentChannelId == genId,
           ),
           ..._groups.map((g) {
@@ -351,7 +356,7 @@ class _ChatScreenState extends State<ChatScreen> {
         return StatefulBuilder(builder: (ctx, setDialogState) {
           return AlertDialog(
             backgroundColor: const Color(0xFF1E293B),
-            title: Text('CREEAZĂ GRUP', style: TypographyTokens.body.copyWith(color: Colors.white, fontSize: 18)),
+            title: Text(L10n.t('chat.createGroup'), style: TypographyTokens.body.copyWith(color: Colors.white, fontSize: 18)),
             content: SizedBox(
               width: double.maxFinite,
               child: Column(
@@ -360,11 +365,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   TextField(
                     controller: groupNameCtrl,
                     style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: 'Nume grup',
-                      hintStyle: TextStyle(color: Colors.white54),
-                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorTokens.accent)),
-                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorTokens.accent)),
+                    decoration: InputDecoration(
+                      hintText: L10n.t('chat.groupName'),
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: ColorTokens.accent)),
+                      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: ColorTokens.accent)),
                     ),
                   ),
                   const SizedBox(height: SpacingTokens.md),
@@ -401,7 +406,7 @@ class _ChatScreenState extends State<ChatScreen> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: const Text('Anulează', style: TextStyle(color: Colors.white54)),
+                child: Text(L10n.t('chat.cancel'), style: const TextStyle(color: Colors.white54)),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: ColorTokens.accent),
@@ -423,7 +428,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                   if (mounted) Navigator.pop(ctx);
                 },
-                child: const Text('Creează', style: TextStyle(color: ColorTokens.onAccent)),
+                child: Text(L10n.t('chat.create'), style: const TextStyle(color: ColorTokens.onAccent)),
               ),
             ],
           );
@@ -457,7 +462,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 size: 40, color: ColorTokens.textMuted),
             const SizedBox(height: SpacingTokens.sm),
             Text(
-              'NICIUN MESAJ ÎNCĂ',
+              L10n.t('chat.empty'),
               style: TypographyTokens.sectionLabel
                   .copyWith(color: ColorTokens.textMuted),
             ),
@@ -486,7 +491,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Container(width: 2, height: 14, color: ColorTokens.accent),
           const SizedBox(width: SpacingTokens.xs),
           Text(
-            '$_senderName SCRIE...',
+            '$_senderName ${L10n.t('chat.typing')}',
             style: TypographyTokens.sectionLabel
                 .copyWith(color: ColorTokens.accent),
           ),
@@ -522,7 +527,7 @@ class _ChatScreenState extends State<ChatScreen> {
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => _send(),
               decoration: InputDecoration(
-                hintText: 'Scrie un mesaj...',
+                hintText: L10n.t('chat.writeMessage'),
                 hintStyle: TypographyTokens.body
                     .copyWith(color: ColorTokens.textMuted, fontSize: 14),
                 border: InputBorder.none,
@@ -552,7 +557,7 @@ class _Header extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'CANAL',
+            L10n.t('chat.channel'),
             style: TypographyTokens.sectionLabel
                 .copyWith(color: ColorTokens.accent),
           ),

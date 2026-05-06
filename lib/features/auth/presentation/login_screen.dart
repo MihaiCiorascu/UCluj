@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/strings.dart';
 import '../../../core/state/auth_state.dart';
-import '../../../core/theme/color_tokens.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 
@@ -43,8 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Scaffold(
-      backgroundColor: ColorTokens.surface,
+      backgroundColor: c.surface,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -58,8 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 100,
-                          width: 100,
+                          height: 96,
+                          width: 96,
                           child: Image.asset(
                             'assets/teams/universitatea_cluj.png',
                             fit: BoxFit.contain,
@@ -69,80 +71,101 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           'U CLUJ',
                           style: TypographyTokens.headline.copyWith(
-                            color: ColorTokens.accent,
+                            color: c.accent,
                             letterSpacing: 4,
                             fontSize: 28,
+                          ),
+                        ),
+                        const SizedBox(height: SpacingTokens.xxs),
+                        Text(
+                          'TACTICAL INTELLIGENCE',
+                          style: TypographyTokens.sectionLabel.copyWith(
+                            color: c.textMuted,
+                            letterSpacing: 3,
+                            fontSize: 9,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: SpacingTokens.sm),
-                  Text(
-                    'PLATFORMĂ DE INTELLIGENCE TACTICĂ',
-                    textAlign: TextAlign.center,
-                    style: TypographyTokens.sectionLabel,
-                  ),
                   const SizedBox(height: 48),
-                  Text('AUTENTIFICARE', style: TypographyTokens.sectionLabel),
+                  Text(L10n.t('login.tagline'),
+                      textAlign: TextAlign.center,
+                      style: TypographyTokens.sectionLabel
+                          .copyWith(color: c.textMuted)),
+                  const SizedBox(height: 40),
+                  Text(L10n.t('login.title'),
+                      style: TypographyTokens.sectionLabel
+                          .copyWith(color: c.textSecondary)),
                   const SizedBox(height: SpacingTokens.md),
-                  _buildField(_emailCtrl, 'EMAIL', false),
+                  _buildField(context, _emailCtrl, L10n.t('login.email'), false),
                   const SizedBox(height: SpacingTokens.md),
-                  _buildField(_passCtrl, 'PAROLĂ', true),
+                  _buildField(context, _passCtrl, L10n.t('login.password'), true),
                   const SizedBox(height: SpacingTokens.xl),
+
+                  // Error banner
                   if (widget.authState.error != null) ...[
                     Container(
                       padding: const EdgeInsets.all(SpacingTokens.sm),
-                      color: ColorTokens.negative.withValues(alpha: 0.15),
+                      decoration: BoxDecoration(
+                        color: c.negativeSubtle,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: c.negative.withValues(alpha: 0.3)),
+                      ),
                       child: Text(
                         widget.authState.error!,
-                        style: TypographyTokens.body.copyWith(
-                          color: ColorTokens.negative,
-                          fontSize: 13,
-                        ),
+                        style: TypographyTokens.body
+                            .copyWith(color: c.negative, fontSize: 13),
                       ),
                     ),
                     const SizedBox(height: SpacingTokens.md),
                   ],
+
+                  // Submit button
                   SizedBox(
                     height: 48,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        backgroundColor: ColorTokens.accent,
-                        foregroundColor: ColorTokens.onAccent,
-                        shape: const RoundedRectangleBorder(),
+                        backgroundColor: c.accent,
+                        foregroundColor: c.onAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                       onPressed: _submitting ? null : _submit,
                       child: _submitting
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: ColorTokens.onAccent,
+                                color: c.onAccent,
                               ),
                             )
                           : Text(
-                              'INTRĂ',
-                              style: TypographyTokens.sectionLabel
-                                  .copyWith(color: ColorTokens.onAccent),
+                              L10n.t('login.submit'),
+                              style: TypographyTokens.buttonLabel
+                                  .copyWith(color: c.onAccent),
                             ),
                     ),
                   ),
                   const SizedBox(height: SpacingTokens.lg),
+
+                  // Register link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'NU AI CONT? ',
-                        style: TypographyTokens.sectionLabel,
+                        '${L10n.t('login.noAccount')} ',
+                        style: TypographyTokens.sectionLabel
+                            .copyWith(color: c.textMuted),
                       ),
                       GestureDetector(
                         onTap: widget.onRegisterTap,
                         child: Text(
-                          'ÎNREGISTREAZĂ-TE',
+                          L10n.t('login.register'),
                           style: TypographyTokens.sectionLabel.copyWith(
-                            color: ColorTokens.accent,
+                            color: c.accent,
                           ),
                         ),
                       ),
@@ -158,38 +181,41 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildField(
+    BuildContext context,
     TextEditingController controller,
     String label,
     bool obscure,
   ) {
+    final c = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TypographyTokens.sectionLabel),
+        Text(label,
+            style: TypographyTokens.sectionLabel.copyWith(color: c.textSecondary)),
         const SizedBox(height: SpacingTokens.xs),
         TextField(
           controller: controller,
           obscureText: obscure,
-          style: TypographyTokens.body,
-          cursorColor: ColorTokens.accent,
+          style: TypographyTokens.body.copyWith(color: c.textPrimary),
+          cursorColor: c.accent,
           decoration: InputDecoration(
             filled: true,
-            fillColor: ColorTokens.surfaceLow,
+            fillColor: c.surfaceLow,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: SpacingTokens.md,
               vertical: SpacingTokens.sm,
             ),
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(color: ColorTokens.divider),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide: BorderSide(color: c.divider),
             ),
-            enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(color: ColorTokens.divider),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide: BorderSide(color: c.divider),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(color: ColorTokens.accent),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide: BorderSide(color: c.accent, width: 1.5),
             ),
           ),
         ),

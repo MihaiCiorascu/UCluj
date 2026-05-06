@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../core/l10n/strings.dart';
 import '../core/state/auth_state.dart';
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_theme.dart';
-import '../core/theme/color_tokens.dart';
+import '../core/theme/theme_notifier.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
 import '../core/routing/app_router.dart';
@@ -39,26 +41,41 @@ class _UmbraRoAppState extends State<UmbraRoApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'U Cluj — Tactical Intelligence',
-      theme: AppTheme.themeData,
-      builder: (context, child) {
-        return ColoredBox(
-          color: ColorTokens.surface,
-          child: child ?? const SizedBox.shrink(),
+    return ListenableBuilder(
+      listenable: Listenable.merge([L10n.instance, ThemeNotifier.instance]),
+      builder: (context, _) {
+        final isDark = ThemeNotifier.instance.isDark;
+        return AppColorsScope(
+          isDark: isDark,
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'U Cluj — Tactical Intelligence',
+            theme: AppTheme.lightThemeData,
+            darkTheme: AppTheme.darkThemeData,
+            themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+            builder: (context, child) {
+              return ColoredBox(
+                color: context.colors.surface,
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
+            home: _buildRoot(isDark),
+          ),
         );
       },
-      home: _buildRoot(),
     );
   }
 
-  Widget _buildRoot() {
+  Widget _buildRoot(bool isDark) {
     if (_authState.loading) {
-      return const Scaffold(
-        backgroundColor: ColorTokens.surface,
+      return Scaffold(
+        backgroundColor: isDark
+            ? AppColorTokens.dark.surface
+            : AppColorTokens.light.surface,
         body: Center(
-          child: CircularProgressIndicator(color: ColorTokens.accent),
+          child: CircularProgressIndicator(
+            color: AppColorTokens.dark.accent,
+          ),
         ),
       );
     }

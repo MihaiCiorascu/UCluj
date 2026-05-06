@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/color_tokens.dart';
+import '../l10n/strings.dart';
+import '../theme/app_colors.dart';
 import '../theme/typography_tokens.dart';
 
 enum AppTab { dashboard, standings, chat }
@@ -17,33 +18,42 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      currentIndex: current.index,
-      onTap: (index) => onSelected(AppTab.values[index]),
-      elevation: 0,
-      backgroundColor: ColorTokens.surface,
-      selectedItemColor: ColorTokens.accent,
-      unselectedItemColor: ColorTokens.textMuted,
-      selectedLabelStyle: TypographyTokens.navLabel,
-      unselectedLabelStyle: TypographyTokens.navLabel,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.dashboard_outlined),
-          activeIcon: Icon(Icons.dashboard),
-          label: 'PANOU',
+    final c = context.colors;
+    return Container(
+      decoration: BoxDecoration(
+        color: c.surface,
+        border: Border(
+          top: BorderSide(color: c.divider, width: 1),
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.leaderboard_outlined),
-          activeIcon: Icon(Icons.leaderboard),
-          label: 'CLASAMENT',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat_bubble_outline),
-          activeIcon: Icon(Icons.chat_bubble),
-          label: 'CHAT',
-        ),
-      ],
+      ),
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: current.index,
+        onTap: (index) => onSelected(AppTab.values[index]),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        selectedItemColor: c.accent,
+        unselectedItemColor: c.textMuted,
+        selectedLabelStyle: TypographyTokens.navLabel,
+        unselectedLabelStyle: TypographyTokens.navLabel,
+        items: [
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.dashboard_outlined),
+            activeIcon: const Icon(Icons.dashboard),
+            label: L10n.t('nav.dashboard'),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.leaderboard_outlined),
+            activeIcon: const Icon(Icons.leaderboard),
+            label: L10n.t('nav.standings'),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.chat_bubble_outline),
+            activeIcon: const Icon(Icons.chat_bubble),
+            label: L10n.t('nav.chat'),
+          ),
+        ],
+      ),
     );
   }
 }

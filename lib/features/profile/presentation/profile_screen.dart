@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/config/app_config.dart';
+import '../../../core/l10n/strings.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/theme/color_tokens.dart';
@@ -23,13 +24,13 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   int _tabIndex = 0;
   bool _uploadingAvatar = false;
-  static const _tabs = ['OVERVIEW', 'ACCOUNT'];
 
   AuthUser? get _user => widget.authState.user;
   String get _name => _user?.fullName ?? _user?.email ?? '—';
   String get _team => _user?.teamName ?? 'Universitatea Cluj';
   String get _email => _user?.email ?? '—';
-  String get _userRole => _user?.role.toUpperCase() ?? 'COACH';
+  String get _userRole =>
+      _user?.role.toUpperCase() ?? L10n.t('profile.coach');
   String? get _avatarUrl => _user?.avatarUrl;
 
   String _fullAvatarUrl(String relative) {
@@ -67,6 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tabs = [L10n.t('profile.tabOverview'), L10n.t('profile.tabAccount')];
     return Scaffold(
       backgroundColor: ColorTokens.surface,
       body: SafeArea(
@@ -97,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: SpacingTokens.xl),
                   _SegmentedControl(
-                    tabs: _tabs,
+                    tabs: tabs,
                     selected: _tabIndex,
                     onChanged: (i) => setState(() => _tabIndex = i),
                   ),
@@ -121,12 +123,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('WORKSPACE', style: TypographyTokens.sectionLabel),
+        Text(L10n.t('profile.workspace'), style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.md),
-        _InfoRow(label: 'DEFAULT CLUB', value: _team),
-        _InfoRow(label: 'EMAIL', value: _email),
-        _InfoRow(label: 'ROLE', value: _userRole),
-        const _InfoRow(label: 'LANGUAGE', value: 'English'),
+        _InfoRow(label: L10n.t('profile.defaultClub'), value: _team),
+        _InfoRow(label: L10n.t('profile.email'), value: _email),
+        _InfoRow(label: L10n.t('profile.role'), value: _userRole),
+        const SizedBox(height: SpacingTokens.md),
+        const _LanguageSelector(),
       ],
     );
   }
@@ -139,18 +142,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('PLAN & ACCESS', style: TypographyTokens.sectionLabel),
+        Text(L10n.t('profile.planAccess'), style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.md),
-        _InfoRow(label: 'EMAIL', value: _email),
-        _InfoRow(label: 'ROLE', value: _userRole),
-        _InfoRow(label: 'CLUB', value: _team),
-        const _InfoRow(label: 'SECURITY', value: 'Standard JWT Access'),
-        const _InfoRow(label: 'NOTIFICATIONS', value: 'Enabled'),
+        _InfoRow(label: L10n.t('profile.email'), value: _email),
+        _InfoRow(label: L10n.t('profile.role'), value: _userRole),
+        _InfoRow(label: L10n.t('profile.club'), value: _team),
+        _InfoRow(
+            label: L10n.t('profile.security'),
+            value: L10n.t('profile.securityValue')),
+        _InfoRow(
+            label: L10n.t('profile.notifications'),
+            value: L10n.t('profile.notificationsValue')),
 
         const SizedBox(height: SpacingTokens.xxl),
 
         _ActionButton(
-          label: 'LOG OUT',
+          label: L10n.t('profile.logout'),
           icon: Icons.logout,
           isDestructive: true,
           onTap: () async {
@@ -164,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: SpacingTokens.xl),
         Center(
           child: Text(
-            'UMBRARO v0.1.0  ·  THESIS BUILD',
+            L10n.t('profile.footer'),
             style: TypographyTokens.sectionLabel.copyWith(
               color: ColorTokens.textMuted.withValues(alpha: 0.4),
               fontSize: 9,
@@ -173,6 +180,91 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+// =============================================================================
+// LANGUAGE SELECTOR
+// =============================================================================
+
+class _LanguageSelector extends StatelessWidget {
+  const _LanguageSelector();
+
+  @override
+  Widget build(BuildContext context) {
+    final isRo = L10n.instance.isRomanian;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(L10n.t('profile.language'),
+              style: TypographyTokens.sectionLabel),
+          const SizedBox(height: SpacingTokens.sm),
+          Container(
+            decoration: BoxDecoration(
+              color: ColorTokens.surfaceLow,
+              border: Border.all(color: ColorTokens.divider),
+            ),
+            child: Row(
+              children: [
+                _langOption(
+                  label: L10n.t('profile.languageRomanian'),
+                  short: 'RO',
+                  active: isRo,
+                  onTap: () => L10n.instance.setLocale('ro'),
+                ),
+                Container(width: 1, color: ColorTokens.divider),
+                _langOption(
+                  label: L10n.t('profile.languageEnglish'),
+                  short: 'EN',
+                  active: !isRo,
+                  onTap: () => L10n.instance.setLocale('en'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _langOption({
+    required String label,
+    required String short,
+    required bool active,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          color: active ? ColorTokens.surfaceHigh : Colors.transparent,
+          padding: const EdgeInsets.symmetric(
+              vertical: SpacingTokens.md, horizontal: SpacingTokens.sm),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(short,
+                  style: TypographyTokens.sectionLabel.copyWith(
+                    color: active ? ColorTokens.accent : ColorTokens.textMuted,
+                    fontSize: 11,
+                    letterSpacing: 1.6,
+                  )),
+              const SizedBox(width: SpacingTokens.xs),
+              Text(label,
+                  style: TypographyTokens.body.copyWith(
+                    color:
+                        active ? ColorTokens.textPrimary : ColorTokens.textMuted,
+                    fontWeight: active ? FontWeight.w700 : FontWeight.w400,
+                    fontSize: 12,
+                  )),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -200,7 +292,7 @@ class _ProfileHeader extends StatelessWidget {
           ),
           const SizedBox(width: SpacingTokens.sm),
           Text(
-            'PROFILE',
+            L10n.t('profile.title'),
             style: TypographyTokens.sectionLabel.copyWith(
               color: ColorTokens.textPrimary,
               letterSpacing: 2.4,
@@ -369,9 +461,9 @@ class _IdentitySummary extends StatelessWidget {
       child: IntrinsicHeight(
         child: Row(
           children: [
-            _cell('CLUB', club),
+            _cell(L10n.t('profile.club'), club),
             const VerticalDivider(width: 1, color: ColorTokens.divider),
-            _cell('ACCESS', 'Pro'),
+            _cell(L10n.t('profile.access'), 'Pro'),
           ],
         ),
       ),

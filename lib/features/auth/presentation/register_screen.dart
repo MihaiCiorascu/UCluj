@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/strings.dart';
 import '../../../core/services/api_client.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/theme/color_tokens.dart';
@@ -56,15 +57,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final confirm = _confirmCtrl.text;
 
     if (name.isEmpty || email.isEmpty || pass.isEmpty) {
-      setState(() => _localError = 'Toate câmpurile sunt obligatorii');
+      setState(() => _localError = L10n.t('register.errorRequired'));
       return;
     }
     if (pass.length < 8) {
-      setState(() => _localError = 'Parola trebuie să aibă cel puțin 8 caractere');
+      setState(() => _localError = L10n.t('register.errorPasswordLen'));
       return;
     }
     if (pass != confirm) {
-      setState(() => _localError = 'Parolele nu coincid');
+      setState(() => _localError = L10n.t('register.errorPasswordMatch'));
       return;
     }
 
@@ -129,18 +130,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: SpacingTokens.sm),
                   Text(
-                    'CREEAZĂ CONTUL',
+                    L10n.t('register.title'),
                     textAlign: TextAlign.center,
                     style: TypographyTokens.sectionLabel,
                   ),
                   const SizedBox(height: 48),
-                  _buildField(_nameCtrl, 'NUME COMPLET', false),
+                  _buildField(_nameCtrl, L10n.t('register.fullName'), false),
                   const SizedBox(height: SpacingTokens.md),
-                  _buildField(_emailCtrl, 'EMAIL', false),
+                  _buildField(_emailCtrl, L10n.t('register.email'), false),
                   const SizedBox(height: SpacingTokens.md),
-                  _buildField(_passCtrl, 'PAROLĂ', true),
+                  _buildField(_passCtrl, L10n.t('register.password'), true),
                   const SizedBox(height: SpacingTokens.md),
-                  _buildField(_confirmCtrl, 'CONFIRMĂ PAROLA', true),
+                  _buildField(_confirmCtrl, L10n.t('register.confirmPassword'), true),
 
                   const SizedBox(height: SpacingTokens.xl),
                   if (displayError != null) ...[
@@ -176,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             )
                           : Text(
-                              'ÎNREGISTREAZĂ-TE',
+                              L10n.t('register.submit'),
                               style: TypographyTokens.sectionLabel
                                   .copyWith(color: ColorTokens.onAccent),
                             ),
@@ -187,13 +188,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'AI DEJA CONT? ',
+                        '${L10n.t('register.haveAccount')} ',
                         style: TypographyTokens.sectionLabel,
                       ),
                       GestureDetector(
                         onTap: widget.onLoginTap,
                         child: Text(
-                          'AUTENTIFICĂ-TE',
+                          L10n.t('register.signIn'),
                           style: TypographyTokens.sectionLabel.copyWith(
                             color: ColorTokens.accent,
                           ),

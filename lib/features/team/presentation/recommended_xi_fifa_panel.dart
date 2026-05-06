@@ -2,26 +2,25 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/color_tokens.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../data/models/match_preview.dart';
 
-Color recommendedXiRoleColor(String g) {
+Color recommendedXiRoleColor(String g, AppColorTokens c) {
   switch (g) {
     case 'GK':
-      return ColorTokens.accent;
+      return c.accent;
     case 'DEF':
-      return ColorTokens.accentBlue;
+      return c.accentBlue;
     case 'MID':
-      return ColorTokens.positive;
+      return c.positive;
     case 'FWD':
-      return ColorTokens.negative;
+      return c.negative;
     default:
-      return ColorTokens.textMuted;
+      return c.textMuted;
   }
 }
-
 
 /// FIFA-style pitch + bench + player detail (dashboard sheet & match preview).
 class RecommendedXiFifaPanel extends StatefulWidget {
@@ -68,13 +67,14 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final p = widget.preview;
     final rf = widget.ratingForDisplay;
 
     return LayoutBuilder(
-      builder: (context, c) {
-        final wide = c.maxWidth >= 640;
-        final statsRow = _statsBar(p.teamStats);
+      builder: (context, constraints) {
+        final wide = constraints.maxWidth >= 640;
+        final statsRow = _statsBar(p.teamStats, c);
         final left = Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
@@ -92,10 +92,15 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
               ),
             ),
             const SizedBox(height: SpacingTokens.md),
-            Text('SUBSTITUTES',
-                style: TypographyTokens.sectionLabel.copyWith(fontSize: 9)),
+            Text(
+              'SUBSTITUTES',
+              style: TypographyTokens.sectionLabel.copyWith(
+                fontSize: 9,
+                color: c.textMuted,
+              ),
+            ),
             const SizedBox(height: SpacingTokens.sm),
-            _benchWrap(p.bench, rf),
+            _benchWrap(p.bench, rf, c),
           ],
         );
 
@@ -114,7 +119,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
                   flex: 11,
                   child: SingleChildScrollView(child: left),
                 ),
-                Container(width: 1, color: ColorTokens.divider),
+                Container(width: 1, color: c.divider),
                 Expanded(
                   flex: 9,
                   child: detail,
@@ -128,7 +133,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             left,
-            const Divider(color: ColorTokens.divider, height: 1),
+            Divider(color: c.divider, height: 1),
             SizedBox(height: 360, child: detail),
           ],
         );
@@ -136,41 +141,56 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
     );
   }
 
-  Widget _statsBar(MatchTeamStats s) {
+  Widget _statsBar(MatchTeamStats s, AppColorTokens c) {
     return Row(
       children: [
-        _statCell('FORMĂ', s.avgRecentForm.toStringAsFixed(1)),
-        _statCell('PERF', s.avgPerformanceScore.toStringAsFixed(1)),
-        _statCell('PAS%', '${s.avgPassAccuracy.toStringAsFixed(0)}%'),
-        _statCell('DUEL%', '${s.avgDuelWinRate.toStringAsFixed(0)}%'),
+        _statCell('FORMĂ', s.avgRecentForm.toStringAsFixed(1), c),
+        _statCell('PERF', s.avgPerformanceScore.toStringAsFixed(1), c),
+        _statCell('PAS%', '${s.avgPassAccuracy.toStringAsFixed(0)}%', c),
+        _statCell('DUEL%', '${s.avgDuelWinRate.toStringAsFixed(0)}%', c),
       ],
     );
   }
 
-  Widget _statCell(String label, String value) {
+  Widget _statCell(String label, String value, AppColorTokens c) {
     return Expanded(
       child: Container(
         margin: const EdgeInsets.only(right: 2),
-        color: ColorTokens.surfaceHigh,
+        color: c.surfaceHigh,
         padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
         child: Column(
           children: [
-            Text(value,
-                style: TypographyTokens.headline.copyWith(fontSize: 15)),
-            Text(label,
-                style: TypographyTokens.body
-                    .copyWith(color: ColorTokens.textMuted, fontSize: 9),
-                textAlign: TextAlign.center),
+            Text(
+              value,
+              style: TypographyTokens.headline.copyWith(
+                fontSize: 15,
+                color: c.textPrimary,
+              ),
+            ),
+            Text(
+              label,
+              style: TypographyTokens.body.copyWith(
+                color: c.textMuted,
+                fontSize: 9,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _benchWrap(List<MatchPreviewPlayer> bench, double Function(MatchPreviewPlayer p) rf) {
+  Widget _benchWrap(
+    List<MatchPreviewPlayer> bench,
+    double Function(MatchPreviewPlayer p) rf,
+    AppColorTokens c,
+  ) {
     if (bench.isEmpty) {
-      return Text('—',
-          style: TypographyTokens.body.copyWith(color: ColorTokens.textMuted));
+      return Text(
+        '—',
+        style: TypographyTokens.body.copyWith(color: c.textMuted),
+      );
     }
     return Wrap(
       spacing: 6,
@@ -183,9 +203,9 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
             width: 88,
             padding: const EdgeInsets.all(SpacingTokens.xs),
             decoration: BoxDecoration(
-              color: sel ? ColorTokens.surfaceHigh : ColorTokens.surfaceLow,
+              color: sel ? c.surfaceHigh : c.surfaceLow,
               border: Border.all(
-                color: sel ? ColorTokens.accent : ColorTokens.divider,
+                color: sel ? c.accent : c.divider,
               ),
             ),
             child: Column(
@@ -195,20 +215,25 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
                   pl.roleGroup,
                   style: TypographyTokens.body.copyWith(
                     fontSize: 9,
-                    color: recommendedXiRoleColor(pl.roleGroup),
+                    color: recommendedXiRoleColor(pl.roleGroup, c),
                   ),
                 ),
                 Text(
                   pl.shortName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TypographyTokens.body
-                      .copyWith(fontWeight: FontWeight.w700, fontSize: 10),
+                  style: TypographyTokens.body.copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 10,
+                    color: c.textPrimary,
+                  ),
                 ),
                 Text(
                   rf(pl).toStringAsFixed(0),
-                  style: TypographyTokens.headline
-                      .copyWith(color: ColorTokens.accent, fontSize: 14),
+                  style: TypographyTokens.headline.copyWith(
+                    color: c.accent,
+                    fontSize: 14,
+                  ),
                 ),
               ],
             ),
@@ -273,10 +298,10 @@ List<_FifaAttr> _fifaAttrs(MatchPreviewPlayer p) {
   ];
 }
 
-Color _attrColor(double v) {
-  if (v >= 70) return ColorTokens.positive;
-  if (v >= 45) return ColorTokens.accent;
-  return ColorTokens.negative;
+Color _attrColor(double v, AppColorTokens c) {
+  if (v >= 70) return c.positive;
+  if (v >= 45) return c.accent;
+  return c.negative;
 }
 
 // ---------------------------------------------------------------------------
@@ -293,11 +318,14 @@ class _PlayerDetailColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final p = player;
     if (p == null) {
       return Center(
-        child: Text('Select a player',
-            style: TypographyTokens.body.copyWith(color: ColorTokens.textMuted)),
+        child: Text(
+          'Select a player',
+          style: TypographyTokens.body.copyWith(color: c.textMuted),
+        ),
       );
     }
     final rating = ratingForDisplay(p).clamp(0, 100).toInt();
@@ -316,8 +344,10 @@ class _PlayerDetailColumn extends StatelessWidget {
                 // Left: position card
                 Container(
                   width: 90,
-                  color: ColorTokens.surfaceHigh,
-                  padding: const EdgeInsets.symmetric(vertical: SpacingTokens.md),
+                  color: c.surfaceHigh,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: SpacingTokens.md,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -325,7 +355,7 @@ class _PlayerDetailColumn extends StatelessWidget {
                         p.roleGroup,
                         style: TypographyTokens.sectionLabel.copyWith(
                           fontSize: 10,
-                          color: recommendedXiRoleColor(p.roleGroup),
+                          color: recommendedXiRoleColor(p.roleGroup, c),
                           letterSpacing: 1.5,
                         ),
                       ),
@@ -334,7 +364,7 @@ class _PlayerDetailColumn extends StatelessWidget {
                         style: TypographyTokens.displayHero.copyWith(
                           fontSize: 52,
                           height: 0.95,
-                          color: ColorTokens.textPrimary,
+                          color: c.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -347,13 +377,14 @@ class _PlayerDetailColumn extends StatelessWidget {
                           fontSize: 9,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.4,
+                          color: c.textPrimary,
                         ),
                       ),
                       Text(
                         p.role.toUpperCase(),
                         style: TypographyTokens.body.copyWith(
                           fontSize: 8,
-                          color: ColorTokens.textMuted,
+                          color: c.textMuted,
                         ),
                       ),
                     ],
@@ -364,7 +395,11 @@ class _PlayerDetailColumn extends StatelessWidget {
                 Expanded(
                   child: SizedBox(
                     height: 170,
-                    child: FifaPlayerRadar(player: p),
+                    child: FifaPlayerRadar(
+                      player: p,
+                      accentColor: c.accent,
+                      labelColor: c.textMuted,
+                    ),
                   ),
                 ),
               ],
@@ -378,21 +413,21 @@ class _PlayerDetailColumn extends StatelessWidget {
             'PLAYER INFO COMPARISON',
             style: TypographyTokens.sectionLabel.copyWith(
               fontSize: 9,
-              color: ColorTokens.accent,
+              color: c.accent,
               letterSpacing: 1.5,
             ),
           ),
           const SizedBox(height: SpacingTokens.sm),
-          for (final a in attrs) _fifaAttrRow(a),
+          for (final a in attrs) _fifaAttrRow(a, c),
         ],
       ),
     );
   }
 
-  Widget _fifaAttrRow(_FifaAttr a) {
-    final v    = a.value.clamp(0, 100).toDouble();
-    final t    = v / 100;
-    final col  = _attrColor(v);
+  Widget _fifaAttrRow(_FifaAttr a, AppColorTokens c) {
+    final v   = a.value.clamp(0, 100).toDouble();
+    final t   = v / 100;
+    final col = _attrColor(v, c);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 9),
@@ -416,7 +451,7 @@ class _PlayerDetailColumn extends StatelessWidget {
           Expanded(
             child: Container(
               height: 5,
-              color: ColorTokens.surfaceHigh,
+              color: c.surfaceHigh,
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: t,
@@ -433,7 +468,7 @@ class _PlayerDetailColumn extends StatelessWidget {
               a.label,
               style: TypographyTokens.body.copyWith(
                 fontSize: 11,
-                color: ColorTokens.textMuted,
+                color: c.textMuted,
               ),
             ),
           ),
@@ -496,7 +531,6 @@ class FifaRecommendedXiPitch extends StatelessWidget {
   List<_PitchLine> _formationTemplate(String key) {
     switch (key) {
       case '3-1-4-2':
-        // GK + 3 DEF + 1 CDM + 4 wide/central MID + 2 FWD
         return const [
           _PitchLine(role: 'DEF', y: 0.73, xs: [0.26, 0.50, 0.74]),
           _PitchLine(role: 'MID', y: 0.58, xs: [0.50]),
@@ -594,7 +628,7 @@ class FifaRecommendedXiPitch extends StatelessWidget {
     final maxLineCount = _maxLineCountFor(formation);
 
     return LayoutBuilder(
-      builder: (context, c) {
+      builder: (ctx, c) {
         final chipSize = _chipSizeFor(c.maxWidth, maxLineCount);
         return Stack(
           fit: StackFit.expand,
@@ -712,13 +746,14 @@ class FifaPitchPlayerChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: ColorTokens.surface,
+          color: c.surfaceHigh,
           border: Border.all(
-            color: selected ? ColorTokens.accent : ColorTokens.divider,
+            color: selected ? c.accent : c.divider,
             width: selected ? 2 : 1,
           ),
         ),
@@ -730,7 +765,7 @@ class FifaPitchPlayerChip extends StatelessWidget {
               player.roleGroup,
               style: TypographyTokens.body.copyWith(
                 fontSize: chipSize * 0.13,
-                color: recommendedXiRoleColor(player.roleGroup),
+                color: recommendedXiRoleColor(player.roleGroup, c),
               ),
             ),
             Text(
@@ -740,12 +775,13 @@ class FifaPitchPlayerChip extends StatelessWidget {
               style: TypographyTokens.body.copyWith(
                 fontSize: chipSize * 0.16,
                 fontWeight: FontWeight.w800,
+                color: c.textPrimary,
               ),
             ),
             Text(
               rating.toStringAsFixed(0),
               style: TypographyTokens.headline.copyWith(
-                color: ColorTokens.accent,
+                color: c.accent,
                 fontSize: chipSize * 0.22,
               ),
             ),
@@ -757,27 +793,47 @@ class FifaPitchPlayerChip extends StatelessWidget {
 }
 
 class FifaPlayerRadar extends StatelessWidget {
-  const FifaPlayerRadar({super.key, required this.player});
+  const FifaPlayerRadar({
+    super.key,
+    required this.player,
+    this.accentColor,
+    this.labelColor,
+  });
 
   final MatchPreviewPlayer player;
+  final Color? accentColor;
+  final Color? labelColor;
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final attrs = _fifaAttrs(player);
     final values = attrs.map((a) => (a.value / 100).clamp(0.0, 1.0)).toList();
     final labels = attrs.map((a) => a.label.toUpperCase()).toList();
     return CustomPaint(
-      painter: FifaRadarPainter(values: values, labels: labels),
+      painter: FifaRadarPainter(
+        values: values,
+        labels: labels,
+        accentColor: accentColor ?? c.accent,
+        labelColor: labelColor ?? c.textMuted,
+      ),
       child: const SizedBox.expand(),
     );
   }
 }
 
 class FifaRadarPainter extends CustomPainter {
-  FifaRadarPainter({required this.values, required this.labels});
+  FifaRadarPainter({
+    required this.values,
+    required this.labels,
+    required this.accentColor,
+    required this.labelColor,
+  });
 
   final List<double> values;
   final List<String> labels;
+  final Color accentColor;
+  final Color labelColor;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -813,10 +869,10 @@ class FifaRadarPainter extends CustomPainter {
     }
 
     final fill = Paint()
-      ..color = ColorTokens.accent.withValues(alpha: 0.25)
+      ..color = accentColor.withValues(alpha: 0.25)
       ..style = PaintingStyle.fill;
     final border = Paint()
-      ..color = ColorTokens.accent
+      ..color = accentColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
@@ -835,8 +891,8 @@ class FifaRadarPainter extends CustomPainter {
       final ly = c.dy + (r + 14) * math.sin(ang);
       tp.text = TextSpan(
         text: labels[i],
-        style: const TextStyle(
-          color: ColorTokens.textMuted,
+        style: TextStyle(
+          color: labelColor,
           fontSize: 8,
         ),
       );
@@ -847,5 +903,7 @@ class FifaRadarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant FifaRadarPainter oldDelegate) =>
-      oldDelegate.values != values;
+      oldDelegate.values != values ||
+      oldDelegate.accentColor != accentColor ||
+      oldDelegate.labelColor != labelColor;
 }
