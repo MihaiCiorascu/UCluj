@@ -35,23 +35,15 @@ origins = [
     "http://127.0.0.1:8000",
 ]
 
+_extra_origins = [o.strip() for o in os.environ.get("EXTRA_CORS_ORIGINS", "").split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://mortgages-treaty-trinity-rely.trycloudflare.com",
-        "https://feeling-avoiding-attribute-lisa.trycloudflare.com",
-        "https://raleigh-science-edwards-illustrated.trycloudflare.com",
-        "https://hospitality-maintenance-alias-perl.trycloudflare.com",
-        "https://environments-internal-hudson-analytical.trycloudflare.com",
-        "https://holidays-isbn-hybrid-unified.trycloudflare.com",
-        "https://becomes-exercises-stick-textbooks.trycloudflare.com",
-        "https://uhack26-8050e.web.app",
-        "https://hackatonu.web.app",
-        "https://modifications-upon-gravity-nursery.trycloudflare.com",
-        "https://jpeg-inf-statistical-argument.trycloudflare.com",
-        "https://offices-family-resume-crest.trycloudflare.com",
         "http://localhost:8080",
+        "http://localhost:3000",
         "http://127.0.0.1:8080",
+        *_extra_origins,
     ],
     allow_credentials=True,
     allow_methods=["*"],

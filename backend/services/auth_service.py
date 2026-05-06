@@ -84,22 +84,22 @@ class AuthService:
             "token_type": "bearer",
         }
 
-    async def exchange_firebase_id_token(self, id_token: str) -> dict:
-        from services.firebase_id_token import verify_id_token
+    async def exchange_cognito_id_token(self, id_token: str) -> dict:
+        from services.cognito_id_token import verify_id_token
 
         try:
             claims = verify_id_token(id_token)
         except Exception as exc:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Firebase token"
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Cognito token"
             ) from exc
 
-        uid = claims.get("uid")
+        sub = claims.get("sub")
         email = (claims.get("email") or "").strip().lower()
-        if not uid or not email:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token missing uid or email")
+        if not sub or not email:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token missing sub or email")
 
-        r = await self._session.execute(select(User).where(User.firebase_uid == uid))
+        r = await self._session.execute(select(User).where(User.cognito_sub == sub))
         user = r.scalar_one_or_none()
         if user is not None:
             return self._tokens_for(user)
@@ -107,12 +107,7 @@ class AuthService:
         r = await self._session.execute(select(User).where(func.lower(User.email) == email))
         user = r.scalar_one_or_none()
         if user is not None:
-            if user.firebase_uid and user.firebase_uid != uid:
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail="This account is already linked to a different Firebase sign-in",
-                )
-            user.firebase_uid = uid
+            user.cognito_sub = sub
             await self._session.commit()
             await self._session.refresh(user)
             return self._tokens_for(user)
@@ -121,26 +116,26 @@ class AuthService:
             status_code=status.HTTP_404_NOT_FOUND,
             detail={
                 "code": "NEEDS_REGISTRATION",
-                "message": "No UmbraRo account for this sign-in yet.",
+                "message": "No account for this sign-in yet.",
             },
         )
 
-    async def register_with_firebase(self, id_token: str, team_name: str | None = None) -> dict:
-        from services.firebase_id_token import verify_id_token
+    async def register_with_cognito(self, id_token: str, team_name: str | None = None) -> dict:
+        from services.cognito_id_token import verify_id_token
 
         try:
             claims = verify_id_token(id_token)
         except Exception as exc:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Firebase token"
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Cognito token"
             ) from exc
 
-        uid = claims.get("uid")
+        sub = claims.get("sub")
         email = (claims.get("email") or "").strip()
-        if not uid or not email:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token missing uid or email")
+        if not sub or not email:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token missing sub or email")
 
-        r = await self._session.execute(select(User).where(User.firebase_uid == uid))
+        r = await self._session.execute(select(User).where(User.cognito_sub == sub))
         if r.scalar_one_or_none() is not None:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Sign-in already registered")
 
@@ -157,7 +152,7 @@ class AuthService:
             email=email,
             password_hash=hash_password(secrets.token_urlsafe(48)),
             team_name=clean_team_name,
-            firebase_uid=uid,
+            cognito_sub=sub,
             full_name=claims.get("name"),
         )
         self._session.add(user)

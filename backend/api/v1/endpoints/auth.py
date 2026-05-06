@@ -63,22 +63,22 @@ def _bearer_id_token(request: Request) -> str:
     return h[7:].strip()
 
 
-@router.post("/firebase", response_model=TokenResponse)
-async def auth_firebase(request: Request, db: AsyncSession = Depends(_get_db)):
+@router.post("/cognito", response_model=TokenResponse)
+async def auth_cognito(request: Request, db: AsyncSession = Depends(_get_db)):
     id_token = _bearer_id_token(request)
     svc = AuthService(db)
     try:
-        tokens = await svc.exchange_firebase_id_token(id_token)
+        tokens = await svc.exchange_cognito_id_token(id_token)
     except RuntimeError as e:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Firebase backend not configured (set FIREBASE_PROJECT_ID)",
+            detail="Cognito not configured (set COGNITO_USER_POOL_ID)",
         ) from e
     return TokenResponse(**tokens)
 
 
-@router.post("/register_with_firebase", response_model=TokenResponse)
-async def register_with_firebase(
+@router.post("/register_with_cognito", response_model=TokenResponse)
+async def register_with_cognito(
     request: Request,
     body: FirebaseRegisterRequest,
     db: AsyncSession = Depends(_get_db),
@@ -86,11 +86,11 @@ async def register_with_firebase(
     id_token = _bearer_id_token(request)
     svc = AuthService(db)
     try:
-        tokens = await svc.register_with_firebase(id_token, body.team_name)
+        tokens = await svc.register_with_cognito(id_token, body.team_name)
     except RuntimeError as e:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Firebase backend not configured (set FIREBASE_PROJECT_ID)",
+            detail="Cognito not configured (set COGNITO_USER_POOL_ID)",
         ) from e
     return TokenResponse(**tokens)
 

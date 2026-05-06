@@ -10,15 +10,16 @@ class Settings(BaseSettings):
     model_bundle_path: str = "ml/umbraro_catboost_bundle.joblib"
     tracked_team: str = "UMBRARO"
     cors_origins: str = "http://localhost:3000,http://localhost:8080,http://localhost:5555"
-    database_url: str = "sqlite+aiosqlite:///./umbraro.db"
+    database_url: str = "postgresql+asyncpg://postgres:password@localhost:5432/ucluj"
     jwt_secret: str = "CHANGE-ME-IN-PRODUCTION"
     jwt_access_minutes: int = 15
     jwt_refresh_days: int = 7
     sportradar_api_key: str = ""
     sportradar_base_url: str = "https://api.sportradar.com/soccer/trial/v4/en"
     sportradar_rate_delay: float = 0.5
-    firebase_project_id: str = ""
-    firebase_credentials_path: str = ""
+    cognito_user_pool_id: str = ""
+    cognito_app_client_id: str = ""
+    cognito_region: str = "eu-central-1"
 
     @property
     def cors_origin_list(self) -> list[str]:
