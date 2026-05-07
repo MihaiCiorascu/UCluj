@@ -3,6 +3,7 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
+import httpx
 from fastapi import APIRouter
 
 from app.config import settings
@@ -75,6 +76,47 @@ async def sportradar_diag() -> dict:
     info["groups_count"] = len(group_names)
     info["groups"] = group_names
     return info
+
+
+@router.get("/sportradar/raw")
+async def sportradar_raw() -> dict:
+    """Single raw httpx call to Sportradar, no retries, 30s timeout.
+
+    Bypasses SportradarClient so we see exactly what one call does from inside
+    App Runner: real status code, body snippet, elapsed time.
+    """
+    info: dict = {
+        "base_url": settings.sportradar_base_url,
+        "api_key_configured": bool(settings.sportradar_api_key),
+        "api_key_length": len(settings.sportradar_api_key or ""),
+    }
+    if not settings.sportradar_api_key:
+        info["status"] = "error"
+        info["error_message"] = "SPORTRADAR_API_KEY is empty"
+        return info
+
+    url = f"{settings.sportradar_base_url.rstrip('/')}/seasons/sr%3Aseason%3A131507/standings.json"
+    started = time.monotonic()
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.get(url, params={"api_key": settings.sportradar_api_key})
+        info["latency_ms"] = int((time.monotonic() - started) * 1000)
+        info["status_code"] = resp.status_code
+        body = resp.text or ""
+        info["body_length"] = len(body)
+        info["body_snippet"] = body[:300]
+        return info
+    except httpx.TimeoutException as exc:
+        info["latency_ms"] = int((time.monotonic() - started) * 1000)
+        info["status"] = "timeout"
+        info["error_message"] = str(exc)[:300]
+        return info
+    except Exception as exc:
+        info["latency_ms"] = int((time.monotonic() - started) * 1000)
+        info["status"] = "error"
+        info["error_type"] = type(exc).__name__
+        info["error_message"] = str(exc)[:500]
+        return info
 
 
 @router.post("/cache/clear")
