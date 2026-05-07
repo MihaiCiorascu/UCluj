@@ -7,7 +7,7 @@ import 'package:umbraro/core/config/app_config.dart';
 class ApiClient {
   ApiClient({String? baseUrl}) : _baseUrl = baseUrl ?? AppConfig.apiBaseUrl;
 
-  static const Duration _requestTimeout = Duration(seconds: 15);
+  static const Duration _requestTimeout = Duration(seconds: 35);
 
   final String _baseUrl;
   String? _accessToken;
