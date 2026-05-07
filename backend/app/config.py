@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     def resolved_model_path(self) -> Path:
         return (Path(__file__).parent.parent / self.model_bundle_path).resolve()
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 
 settings = Settings()

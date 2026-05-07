@@ -40,13 +40,13 @@ class SportradarClient:
 
     async def get(self, path: str, params: dict[str, Any] | None = None) -> dict[str, Any] | None:
         url = f"{self._base}/{path.lstrip('/')}"
-        headers = {"x-api-key": self._key}
+        all_params = {"api_key": self._key, **(params or {})}
 
         for attempt in range(1, self._max_retries + 1):
             await self._throttle()
             try:
                 async with httpx.AsyncClient(timeout=self._timeout) as client:
-                    resp = await client.get(url, headers=headers, params=params)
+                    resp = await client.get(url, params=all_params)
 
                 logger.info("SR %s %s -> %d", "GET", path, resp.status_code)
 

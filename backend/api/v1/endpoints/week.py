@@ -25,6 +25,7 @@ router = APIRouter()
 TRACKED_TEAM_ID = "sr:competitor:7734"
 SUPERLIGA_COMPETITION_ID = "sr:competition:152"
 TRACKED_TEAM_NAME = "Universitatea Cluj"
+CSV_TEAM_NAME = "U Cluj"  # name as it appears in All_Data.csv
 
 # Cache file next to this module; TTL of 6 h (matches happen every few days)
 _CACHE_PATH = Path(__file__).parent / "_sr_fixtures_cache.json"
@@ -271,7 +272,7 @@ def _slice_fixtures(all_fixtures: list[dict], monday: datetime, sunday: datetime
 
 def _csv_week_fixtures(fix_svc: FixtureService, monday: datetime, sunday: datetime) -> list[dict]:
     """Return fixtures involving U Cluj within [monday, sunday) from in-memory CSV."""
-    all_f = fix_svc.list_fixtures(team=TRACKED_TEAM_NAME, limit=500)
+    all_f = fix_svc.list_fixtures(team=CSV_TEAM_NAME, limit=500)
     week = [f for f in all_f if monday <= _parse_dt(f.get("match_date", "")) < sunday]
     if week:
         return sorted(week, key=lambda f: f.get("match_date", ""))

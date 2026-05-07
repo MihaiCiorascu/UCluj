@@ -130,7 +130,7 @@ async def standings(
     # 2. Fetch from Sportradar (cap at 5 s)
     if settings.sportradar_api_key:
         try:
-            sr_data = await asyncio.wait_for(_fetch_sr_standings(), timeout=5.0)
+            sr_data = await asyncio.wait_for(_fetch_sr_standings(), timeout=25.0)
             if sr_data:
                 _save_cache(sr_data)
                 return sr_data

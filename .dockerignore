@@ -1,0 +1,15 @@
+backend/__pycache__/
+backend/*.pyc
+backend/*.pyo
+backend/.env
+backend/*.db
+backend/uploads/
+backend/catboost_info/
+backend/_sr_fixtures_cache.json
+backend/_sr_standings_cache.json
+backend/secrets/
+backend/.uvicorn.log
+build/
+.dart_tool/
+.flutter-plugins-dependencies
+.git/
