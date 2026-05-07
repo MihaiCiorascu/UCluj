@@ -221,7 +221,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TypographyTokens.sectionLabel),
+        Text(label, style: TypographyTokens.sectionLabel.copyWith(color: ColorTokens.textPrimary)),
         const SizedBox(height: SpacingTokens.xs),
         TextField(
           controller: controller,
