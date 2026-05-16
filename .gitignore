@@ -32,6 +32,8 @@ backend/secrets/
 backend/uploads/
 backend/catboost_info/
 data/catboost_info/
+data/artifacts/
+data/TheNotebook.executed.ipynb
 _sr_fixtures_cache.json
 _sr_standings_cache.json
 
