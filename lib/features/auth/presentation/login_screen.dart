@@ -68,16 +68,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             fit: BoxFit.contain,
                           ),
                         ),
-                        const SizedBox(height: SpacingTokens.sm),
-                        Text(
-                          BrandingConfig.appName.toUpperCase(),
-                          style: TypographyTokens.headline.copyWith(
-                            color: c.primary,
-                            letterSpacing: 4,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
                       ],
                     ),
                   ),
