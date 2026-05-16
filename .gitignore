@@ -31,6 +31,7 @@ backend/secrets/
 # Backend runtime
 backend/uploads/
 backend/catboost_info/
+data/catboost_info/
 _sr_fixtures_cache.json
 _sr_standings_cache.json
 
