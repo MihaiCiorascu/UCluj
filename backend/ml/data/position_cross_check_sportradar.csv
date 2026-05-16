@@ -1,0 +1,28 @@
+wyId,wyscout_name,wyscout_fine,wyscout_coarse,sportradar_id,sportradar_name,sportradar_position,sportradar_coarse,match
+759616,O. El Sawy,AM,MID,sr:player:2446655,"El Sawy, Omar",midfielder,MID,True
+1047336,A. Chintes,FB,DEF,sr:player:2639451,"Chintes, Alin Marian",defender,DEF,True
+779379,Ş. Lefter,GK,GK,sr:player:2779009,"Lefter, Ștefan",goalkeeper,GK,True
+778883,A. Gheorghiță,AM,MID,sr:player:2645359,"Gheorghita, Andrei",midfielder,MID,True
+630268,A. Coubis,CB,DEF,sr:player:2249161,"Coubis, Andrei",defender,DEF,True
+619309,O. Mendy,AM,MID,sr:player:2121882,"Mendy, Oucasse",forward,FWD,False
+577452,D. Codrea,DM,MID,sr:player:1560588,"Codrea, Dorin",midfielder,MID,True
+560364,J. Lukić,ST,FWD,sr:player:1022329,"Lukic, Jovo",forward,FWD,True
+83590,A. Chipciu,FB,DEF,sr:player:44435,"Chipciu, Alexandru",forward,FWD,False
+83838,D. Nistor,AM,MID,sr:player:93842,"Nistor, Dan Nicolae",midfielder,MID,True
+169037,O. Bic,DM,MID,sr:player:236844,"Bic, Ovidiu",midfielder,MID,True
+220694,D. Mikanović,FB,DEF,sr:player:245249,"Mikanovic, Dino",defender,DEF,True
+239290,E. Capradossi,CB,DEF,sr:player:284355,"Capradossi, Elio",defender,DEF,True
+240507,E. Gertmonas,GK,GK,sr:player:285953,"Gertmonas, Edvinas",goalkeeper,GK,True
+270356,I. Cristea,CB,DEF,sr:player:578526,"Cristea, Iulian Lucian",defender,DEF,True
+338220,Miguel Silva,FB,DEF,sr:player:867634,"Silva, Miguel",defender,DEF,True
+346908,A. Murgia,DM,MID,sr:player:559470,"Murgia, Alessandro",midfielder,MID,True
+445824,A. Fábry,AM,MID,sr:player:926778,"Fabry, Andrej",midfielder,MID,True
+462140,J. Cissé,CB,DEF,sr:player:1865742,"Cisse, Jonathan",defender,DEF,True
+506853,M. Drammeh,DM,MID,sr:player:944414,"Drammeh, Mouhamadou",midfielder,MID,True
+526387,I. Macalou,AM,MID,sr:player:2120884,"Macalou, Issouf",forward,FWD,False
+532568,V. Postolachi,ST,FWD,sr:player:1297462,"Postolachi, Virgiliu",forward,FWD,True
+541971,J. Stanojev,AM,MID,sr:player:1240964,"Stanojev, Jug",forward,FWD,False
+748513,A. Trică,ST,FWD,sr:player:2162060,"Trica-Balaci, Atanas Ioan",forward,FWD,True
+227952,A. Artean,DM,MID,sr:player:301512,"Artean, Andrei",midfielder,MID,True
+441683,G. Simion,DM,MID,sr:player:1008455,"Simion, Gabriel",defender,DEF,False
+278515,M. Thiam,ST,FWD,,,,,False

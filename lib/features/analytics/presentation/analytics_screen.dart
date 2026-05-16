@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/primitives/app_card.dart';
-import '../../../core/theme/color_tokens.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
@@ -20,6 +20,7 @@ class AnalyticsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return AppScaffold(
       currentTab: AppTab.dashboard,
       onTabSelected: onTabSelected,
@@ -28,17 +29,17 @@ class AnalyticsScreen extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: ColorTokens.surfaceHigh,
-          border: Border.all(color: ColorTokens.divider),
+          color: c.surfaceHigh,
+          border: Border.all(color: c.divider),
         ),
-        child: const Icon(Icons.person_outline,
-            size: 16, color: ColorTokens.textPrimary),
+        child: Icon(Icons.person_outline,
+            size: 16, color: c.textPrimary),
       ),
       body: ListView(
         children: [
           Container(
             width: double.infinity,
-            color: ColorTokens.surface,
+            color: c.surface,
             padding: const EdgeInsets.all(SpacingTokens.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +53,7 @@ class AnalyticsScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: SpacingTokens.lg),
-          const Divider(height: 1, color: ColorTokens.divider),
+          Divider(height: 1, color: c.divider),
           const SizedBox(height: SpacingTokens.lg),
           Text('TACTICAL FORM',
               style: TypographyTokens.headline.copyWith(fontSize: 42)),
@@ -78,7 +79,7 @@ class AnalyticsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: SpacingTokens.md),
                 Container(
-                  color: ColorTokens.textPrimary,
+                  color: c.textPrimary,
                   padding:
                       const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
                   width: double.infinity,
@@ -95,7 +96,7 @@ class AnalyticsScreen extends StatelessWidget {
                       child: Text(
                         'EXECUTE SIMULATION',
                         style: TypographyTokens.sectionLabel
-                            .copyWith(color: ColorTokens.surface),
+                            .copyWith(color: c.surface),
                       ),
                     ),
                   ),
@@ -104,16 +105,16 @@ class AnalyticsScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: SpacingTokens.lg),
-          Row(
-            children: const [
+          const Row(
+            children: [
               Expanded(child: _MetricLine(label: 'XG DELTA', value: '+0.42')),
               SizedBox(width: SpacingTokens.sm),
               Expanded(child: _MetricLine(label: 'PASS CHAIN', value: '8.4')),
             ],
           ),
           const SizedBox(height: SpacingTokens.sm),
-          Row(
-            children: const [
+          const Row(
+            children: [
               Expanded(child: _MetricLine(label: 'VERT. INDEX', value: '0.72')),
               SizedBox(width: SpacingTokens.sm),
               Expanded(child: _MetricLine(label: 'REC. PHASE', value: '4.2s')),
@@ -133,6 +134,7 @@ class _MetricLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
       child: Row(
@@ -142,7 +144,7 @@ class _MetricLine extends StatelessWidget {
           Text(
             value,
             style: TypographyTokens.body.copyWith(
-              color: ColorTokens.textPrimary,
+              color: c.textPrimary,
               fontWeight: FontWeight.w700,
             ),
           ),

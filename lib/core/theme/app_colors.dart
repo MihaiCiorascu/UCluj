@@ -1,90 +1,188 @@
 import 'package:flutter/material.dart';
 
-/// Theme-aware color palette.
-/// Access via [BuildContext.colors] inside any widget build method.
+/// Theme-aware colour palette — Iteration N glossy + Iteration L+ scope merge.
+///
+/// The class structure is preserved from the earlier dark-theme migration
+/// (constructor-based ``AppColorTokens`` distributed via the
+/// ``AppColorsScope`` InheritedWidget) so the existing screens that read
+/// ``c.textSecondary`` / ``c.cardGlow`` / ``c.negativeSubtle`` keep
+/// compiling. The colour *values* and the additional glossy fields
+/// (``primary``, ``primaryDeep``, ``chrome``, ``glow``, ``surface*Top/Bottom``,
+/// gradient helpers) come from Iteration N — they replace the U Cluj gold
+/// with the early-2000s sports-broadcast cobalt blue and expose the
+/// gradient surfaces the glossy widgets consume.
 class AppColorTokens {
   const AppColorTokens({
+    // ── Surfaces (flat aliases for legacy call sites) ────────────────────
     required this.surface,
     required this.surfaceLow,
     required this.surfaceHigh,
+    // ── Iteration N gradient endpoints ───────────────────────────────────
+    required this.surfaceBaseTop,
+    required this.surfaceBaseBottom,
+    required this.surfaceElevatedTop,
+    required this.surfaceElevatedBottom,
+    // ── Primary / on-primary (legacy "accent" aliases follow) ─────────────
+    required this.primary,
+    required this.primaryDeep,
+    required this.primaryGloss,
+    required this.onPrimary,
+    // ── Legacy gold-era aliases ──────────────────────────────────────────
     required this.accent,
     required this.accentStrong,
     required this.onAccent,
     required this.accentBlue,
+    // ── Chrome + glow (Iteration N glossy primitives) ────────────────────
+    required this.chrome,
+    required this.chromeDeep,
+    required this.glow,
+    // ── Text ─────────────────────────────────────────────────────────────
     required this.textPrimary,
     required this.textSecondary,
     required this.textMuted,
     required this.divider,
+    // ── Status ───────────────────────────────────────────────────────────
     required this.negative,
     required this.negativeSubtle,
     required this.positive,
     required this.positiveSubtle,
+    // ── Iteration H legacy ───────────────────────────────────────────────
     required this.cardGlow,
+    required this.brightness,
   });
 
   final Color surface;
   final Color surfaceLow;
   final Color surfaceHigh;
+
+  final Color surfaceBaseTop;
+  final Color surfaceBaseBottom;
+  final Color surfaceElevatedTop;
+  final Color surfaceElevatedBottom;
+
+  final Color primary;
+  final Color primaryDeep;
+  final Color primaryGloss;
+  final Color onPrimary;
+
   final Color accent;
   final Color accentStrong;
   final Color onAccent;
   final Color accentBlue;
+
+  final Color chrome;
+  final Color chromeDeep;
+  final Color glow;
+
   final Color textPrimary;
-  /// Between primary and muted — card titles, secondary headings
   final Color textSecondary;
   final Color textMuted;
   final Color divider;
+
   final Color negative;
-  /// Subtle negative tint — error backgrounds, danger zones
   final Color negativeSubtle;
   final Color positive;
-  /// Subtle positive tint — success backgrounds
   final Color positiveSubtle;
-  /// Gold-tinted ambient shadow for elevated cards
+
   final Color cardGlow;
+  final Brightness brightness;
 
-  // ── Dark palette (U Cluj — deep charcoal + gold) ──────────────────────────
-  static const AppColorTokens dark = AppColorTokens(
-    surface:      Color(0xFF0D0D0D), // near-black — true base
-    surfaceLow:   Color(0xFF111111), // subtle recess (inputs, pressed states)
-    surfaceHigh:  Color(0xFF1C1C1E), // cards — 12 steps above surface, visible depth
-    accent:       Color(0xFFF5C518), // U Cluj gold — reserved for primary actions
-    accentStrong: Color(0xFFD4A800), // pressed / active gold
-    onAccent:     Color(0xFF0D0D0D),
-    accentBlue:   Color(0xFF1A56DB), // brightened blue — legible on dark
-    textPrimary:    Color(0xFFF2F2F2), // off-white — softer than pure white, less eye strain
-    textSecondary:  Color(0xFFCCCCCC), // card titles, sub-headings
-    textMuted:      Color(0xFFAAAAAA), // lifted from #9A → #AA for better contrast
-    divider:        Color(0x1FFFFFFF), // 12% white — visible but not harsh
-    negative:       Color(0xFFFF453A), // iOS-style red — warmer, less neon
-    negativeSubtle: Color(0x1AFF453A), // 10% red tint for backgrounds
-    positive:       Color(0xFF4ADE80), // slightly warmer green — harmonises with gold
-    positiveSubtle: Color(0x1A4ADE80), // 10% green tint for backgrounds
-    cardGlow:       Color(0x0CF5C518), // gold ambient glow — subtle elevation cue
-  );
+  bool get isDark => brightness == Brightness.dark;
 
-  // ── Light palette (clean white + U Cluj gold) ─────────────────────────────
+  // ── Iteration N gradient helpers ─────────────────────────────────────────
+  LinearGradient get surfaceBaseGradient => LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [surfaceBaseTop, surfaceBaseBottom],
+      );
+
+  LinearGradient get surfaceElevatedGradient => LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [surfaceElevatedTop, surfaceElevatedBottom],
+      );
+
+  LinearGradient primaryGlossGradient([double sheen = 1.0]) => LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        stops: const [0.0, 0.5, 1.0],
+        colors: [
+          Color.alphaBlend(
+              primaryGloss.withValues(alpha: 0.7 * sheen), primary),
+          primary,
+          primaryDeep,
+        ],
+      );
+
+  // ── Light palette (Iteration N — cobalt blue + chrome + pale-blue base) ─
   static const AppColorTokens light = AppColorTokens(
-    surface:        Color(0xFFF5F5F5),
-    surfaceLow:     Color(0xFFEDEDED),
-    surfaceHigh:    Color(0xFFFFFFFF),
-    accent:         Color(0xFFD4A800), // darker gold — legible on white
-    accentStrong:   Color(0xFFB08900),
-    onAccent:       Color(0xFFFFFFFF),
-    accentBlue:     Color(0xFF1A56DB),
-    textPrimary:    Color(0xFF111111),
-    textSecondary:  Color(0xFF444444),
-    textMuted:      Color(0xFF777777),
-    divider:        Color(0x1A000000), // 10% black
-    negative:       Color(0xFFDC2626),
-    negativeSubtle: Color(0x1ADC2626),
-    positive:       Color(0xFF16A34A),
-    positiveSubtle: Color(0x1A16A34A),
-    cardGlow:       Color(0x08D4A800),
+    surface:              Color(0xFFEBF3FF),
+    surfaceLow:           Color(0xFFF4F8FE),
+    surfaceHigh:          Color(0xFFE6EFFB),
+    surfaceBaseTop:       Color(0xFFEBF3FF),
+    surfaceBaseBottom:    Color(0xFFC7DDF5),
+    surfaceElevatedTop:   Color(0xFFFFFFFF),
+    surfaceElevatedBottom:Color(0xFFDCE8F8),
+    primary:              Color(0xFF0047AB),
+    primaryDeep:          Color(0xFF003D99),
+    primaryGloss:         Color(0x66FFFFFF),
+    onPrimary:            Color(0xFFFFFFFF),
+    accent:               Color(0xFF0047AB),
+    accentStrong:         Color(0xFF003D99),
+    onAccent:             Color(0xFFFFFFFF),
+    accentBlue:           Color(0xFF0047AB),
+    chrome:               Color(0xFFC0CCDA),
+    chromeDeep:           Color(0xFF8A98A8),
+    glow:                 Color(0xFF42A5F5),
+    textPrimary:          Color(0xFF0A1929),
+    textSecondary:        Color(0xFF1F3147),
+    textMuted:            Color(0xFF5A6B7C),
+    divider:              Color(0x22000000),
+    negative:             Color(0xFFC62828),
+    negativeSubtle:       Color(0x1AC62828),
+    positive:             Color(0xFF2E7D32),
+    positiveSubtle:       Color(0x1A2E7D32),
+    cardGlow:             Color(0x080047AB),
+    brightness:           Brightness.light,
   );
+
+  // ── Dark palette (Iteration N — deep navy + brighter cobalt) ────────────
+  static const AppColorTokens dark = AppColorTokens(
+    surface:              Color(0xFF0A1929),
+    surfaceLow:           Color(0xFF0F1B2D),
+    surfaceHigh:          Color(0xFF1A2942),
+    surfaceBaseTop:       Color(0xFF0A1929),
+    surfaceBaseBottom:    Color(0xFF050D17),
+    surfaceElevatedTop:   Color(0xFF1A2942),
+    surfaceElevatedBottom:Color(0xFF0F1A2D),
+    primary:              Color(0xFF1E88E5),
+    primaryDeep:          Color(0xFF0D47A1),
+    primaryGloss:         Color(0x55FFFFFF),
+    onPrimary:            Color(0xFFFFFFFF),
+    accent:               Color(0xFF1E88E5),
+    accentStrong:         Color(0xFF0D47A1),
+    onAccent:             Color(0xFFFFFFFF),
+    accentBlue:           Color(0xFF1E88E5),
+    chrome:               Color(0xFF5B6A7F),
+    chromeDeep:           Color(0xFF2C3645),
+    glow:                 Color(0xFF64B5F6),
+    textPrimary:          Color(0xFFF2F6FB),
+    textSecondary:        Color(0xFFB8C5D6),
+    textMuted:            Color(0xFF9FB0C0),
+    divider:              Color(0x33FFFFFF),
+    negative:             Color(0xFFFF5252),
+    negativeSubtle:       Color(0x1AFF5252),
+    positive:             Color(0xFF4ADE80),
+    positiveSubtle:       Color(0x1A4ADE80),
+    cardGlow:             Color(0x141E88E5),
+    brightness:           Brightness.dark,
+  );
+
+  static AppColorTokens fromBrightness(Brightness b) =>
+      b == Brightness.dark ? dark : light;
 }
 
-// ── InheritedWidget ───────────────────────────────────────────────────────────
+// ── InheritedWidget (preserved from umbraro for back-compat) ────────────────
 
 class _AppColorsScope extends InheritedWidget {
   const _AppColorsScope({required this.colors, required super.child});
@@ -94,7 +192,6 @@ class _AppColorsScope extends InheritedWidget {
   bool updateShouldNotify(_AppColorsScope old) => colors != old.colors;
 }
 
-/// Place above [MaterialApp] (or any subtree) to provide theme-aware colors.
 class AppColorsScope extends StatelessWidget {
   const AppColorsScope({
     super.key,
@@ -114,11 +211,14 @@ class AppColorsScope extends StatelessWidget {
   }
 }
 
-// ── BuildContext extension ────────────────────────────────────────────────────
-
 extension AppColorsX on BuildContext {
-  /// Returns the active [AppColorTokens] for the current theme.
-  AppColorTokens get colors =>
-      dependOnInheritedWidgetOfExactType<_AppColorsScope>()?.colors ??
-      AppColorTokens.dark;
+  /// Returns the active palette: prefers an enclosing ``AppColorsScope`` and
+  /// falls back to ``Theme.of(context).brightness`` so widgets work even if
+  /// the scope isn't present (e.g. inside isolated tests).
+  AppColorTokens get colors {
+    final scoped =
+        dependOnInheritedWidgetOfExactType<_AppColorsScope>()?.colors;
+    if (scoped != null) return scoped;
+    return AppColorTokens.fromBrightness(Theme.of(this).brightness);
+  }
 }

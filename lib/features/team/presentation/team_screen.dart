@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/primitives/app_card.dart';
-import '../../../core/theme/color_tokens.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
@@ -21,6 +21,7 @@ class TeamScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return AppScaffold(
       currentTab: AppTab.dashboard,
       onTabSelected: onTabSelected,
@@ -67,7 +68,7 @@ class TeamScreen extends StatelessWidget {
           ),
           const SizedBox(height: SpacingTokens.md),
           Container(
-            color: ColorTokens.surfaceLow,
+            color: c.surfaceLow,
             width: double.infinity,
             padding: const EdgeInsets.all(SpacingTokens.md),
             child: Column(
@@ -75,8 +76,8 @@ class TeamScreen extends StatelessWidget {
               children: [
                 Text('RECENT FORM', style: TypographyTokens.sectionLabel),
                 const SizedBox(height: SpacingTokens.sm),
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     _FormBox('W'),
                     SizedBox(width: SpacingTokens.xs),
                     _FormBox('W'),
@@ -96,7 +97,7 @@ class TeamScreen extends StatelessWidget {
           ),
           const SizedBox(height: SpacingTokens.md),
           Container(
-            color: ColorTokens.accent,
+            color: c.accent,
             padding: const EdgeInsets.all(SpacingTokens.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,14 +105,13 @@ class TeamScreen extends StatelessWidget {
                 Text(
                   'TACTICAL ALERT: MATCH PLAN DEVIATION',
                   style: TypographyTokens.sectionLabel.copyWith(
-                    color: ColorTokens.onAccent,
+                    color: c.onAccent,
                   ),
                 ),
                 const SizedBox(height: SpacingTokens.sm),
                 Text(
                   'Midfield defensive transition lags 1.4s behind opposition average.',
-                  style: TypographyTokens.body
-                      .copyWith(color: ColorTokens.onAccent),
+                  style: TypographyTokens.body.copyWith(color: c.onAccent),
                 ),
                 const SizedBox(height: SpacingTokens.sm),
                 GestureDetector(
@@ -125,7 +125,7 @@ class TeamScreen extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    color: ColorTokens.surface,
+                    color: c.surface,
                     padding: const EdgeInsets.symmetric(
                       horizontal: SpacingTokens.md,
                       vertical: SpacingTokens.sm,
@@ -133,7 +133,7 @@ class TeamScreen extends StatelessWidget {
                     child: Text(
                       'OPEN MATCH PLAN',
                       style: TypographyTokens.sectionLabel.copyWith(
-                        color: ColorTokens.accent,
+                        color: c.accent,
                       ),
                     ),
                   ),
@@ -153,7 +153,7 @@ class TeamScreen extends StatelessWidget {
               );
             },
             child: Container(
-              color: ColorTokens.surface,
+              color: c.surface,
               width: double.infinity,
               padding: const EdgeInsets.symmetric(
                 horizontal: SpacingTokens.md,
@@ -162,7 +162,7 @@ class TeamScreen extends StatelessWidget {
               child: Text(
                 'AI STARTING XI GENERATOR',
                 style: TypographyTokens.sectionLabel.copyWith(
-                  color: ColorTokens.accent,
+                  color: c.accent,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -180,15 +180,16 @@ class _FormBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Container(
       width: 28,
       height: 24,
-      color: label == 'L' ? ColorTokens.negative : ColorTokens.accent,
+      color: label == 'L' ? c.negative : c.accent,
       alignment: Alignment.center,
       child: Text(
         label,
         style: TypographyTokens.sectionLabel.copyWith(
-          color: label == 'L' ? ColorTokens.surface : ColorTokens.surface,
+          color: c.surface,
           letterSpacing: 0.6,
         ),
       ),

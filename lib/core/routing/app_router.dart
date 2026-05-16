@@ -5,12 +5,14 @@ import '../../features/chat/presentation/chat_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/standings/presentation/standings_screen.dart';
+import '../theme/theme_mode_notifier.dart';
 import '../widgets/app_bottom_nav.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({required this.authState, super.key});
+  const AppShell({required this.authState, required this.themeMode, super.key});
 
   final AuthState authState;
+  final ThemeModeNotifier themeMode;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -27,7 +29,10 @@ class _AppShellState extends State<AppShell> {
   void _openProfile() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => ProfileScreen(authState: widget.authState),
+        builder: (_) => ProfileScreen(
+          authState: widget.authState,
+          themeMode: widget.themeMode,
+        ),
       ),
     );
   }

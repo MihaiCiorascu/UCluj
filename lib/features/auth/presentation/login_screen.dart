@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/l10n/strings.dart';
+import '../../../core/branding/branding_config.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
@@ -46,8 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final c = context.colors;
     return Scaffold(
-      backgroundColor: c.surface,
-      body: SafeArea(
+      body: Container(
+        decoration: BoxDecoration(gradient: c.surfaceBaseGradient),
+        child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.xxl),
@@ -60,77 +61,60 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: 96,
-                          width: 96,
+                          height: 140,
+                          width: 140,
                           child: Image.asset(
-                            'assets/teams/universitatea_cluj.png',
+                            BrandingConfig.logoFull,
                             fit: BoxFit.contain,
                           ),
                         ),
                         const SizedBox(height: SpacingTokens.sm),
                         Text(
-                          'U CLUJ',
+                          BrandingConfig.appName.toUpperCase(),
                           style: TypographyTokens.headline.copyWith(
-                            color: c.accent,
+                            color: c.primary,
                             letterSpacing: 4,
                             fontSize: 28,
-                          ),
-                        ),
-                        const SizedBox(height: SpacingTokens.xxs),
-                        Text(
-                          'TACTICAL INTELLIGENCE',
-                          style: TypographyTokens.sectionLabel.copyWith(
-                            color: c.textMuted,
-                            letterSpacing: 3,
-                            fontSize: 9,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(height: SpacingTokens.sm),
+                  Text(
+                    'TACTICAL INTELLIGENCE PLATFORM',
+                    textAlign: TextAlign.center,
+                    style: TypographyTokens.sectionLabel,
+                  ),
                   const SizedBox(height: 48),
-                  Text(L10n.t('login.tagline'),
-                      textAlign: TextAlign.center,
-                      style: TypographyTokens.sectionLabel
-                          .copyWith(color: c.textMuted)),
-                  const SizedBox(height: 40),
-                  Text(L10n.t('login.title'),
-                      style: TypographyTokens.sectionLabel
-                          .copyWith(color: c.textSecondary)),
+                  Text('SIGN IN', style: TypographyTokens.sectionLabel),
                   const SizedBox(height: SpacingTokens.md),
-                  _buildField(context, _emailCtrl, L10n.t('login.email'), false),
+                  _buildField(context, _emailCtrl, 'EMAIL', false),
                   const SizedBox(height: SpacingTokens.md),
-                  _buildField(context, _passCtrl, L10n.t('login.password'), true),
+                  _buildField(context, _passCtrl, 'PASSWORD', true),
                   const SizedBox(height: SpacingTokens.xl),
-
-                  // Error banner
                   if (widget.authState.error != null) ...[
                     Container(
                       padding: const EdgeInsets.all(SpacingTokens.sm),
-                      decoration: BoxDecoration(
-                        color: c.negativeSubtle,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: c.negative.withValues(alpha: 0.3)),
-                      ),
+                      color: c.negative.withValues(alpha: 0.15),
                       child: Text(
                         widget.authState.error!,
-                        style: TypographyTokens.body
-                            .copyWith(color: c.negative, fontSize: 13),
+                        style: TypographyTokens.body.copyWith(
+                          color: c.negative,
+                          fontSize: 13,
+                        ),
                       ),
                     ),
                     const SizedBox(height: SpacingTokens.md),
                   ],
-
-                  // Submit button
                   SizedBox(
                     height: 48,
                     child: TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: c.accent,
                         foregroundColor: c.onAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                        shape: const RoundedRectangleBorder(),
                       ),
                       onPressed: _submitting ? null : _submit,
                       child: _submitting
@@ -143,27 +127,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           : Text(
-                              L10n.t('login.submit'),
-                              style: TypographyTokens.buttonLabel
+                              'LOGIN',
+                              style: TypographyTokens.sectionLabel
                                   .copyWith(color: c.onAccent),
                             ),
                     ),
                   ),
                   const SizedBox(height: SpacingTokens.lg),
-
-                  // Register link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '${L10n.t('login.noAccount')} ',
-                        style: TypographyTokens.sectionLabel
-                            .copyWith(color: c.textMuted),
+                        'NO ACCOUNT? ',
+                        style: TypographyTokens.sectionLabel,
                       ),
                       GestureDetector(
                         onTap: widget.onRegisterTap,
                         child: Text(
-                          L10n.t('login.register'),
+                          'REGISTER',
                           style: TypographyTokens.sectionLabel.copyWith(
                             color: c.accent,
                           ),
@@ -175,6 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
+        ),
         ),
       ),
     );
@@ -190,13 +172,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: TypographyTokens.sectionLabel.copyWith(color: c.textSecondary)),
+        Text(label, style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.xs),
         TextField(
           controller: controller,
           obscureText: obscure,
-          style: TypographyTokens.body.copyWith(color: c.textPrimary),
+          style: TypographyTokens.body,
           cursorColor: c.accent,
           decoration: InputDecoration(
             filled: true,
@@ -206,16 +187,16 @@ class _LoginScreenState extends State<LoginScreen> {
               vertical: SpacingTokens.sm,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.zero,
               borderSide: BorderSide(color: c.divider),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.zero,
               borderSide: BorderSide(color: c.divider),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4),
-              borderSide: BorderSide(color: c.accent, width: 1.5),
+              borderRadius: BorderRadius.zero,
+              borderSide: BorderSide(color: c.accent),
             ),
           ),
         ),

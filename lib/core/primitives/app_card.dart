@@ -1,54 +1,51 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/glossy_widgets.dart';
 import '../theme/spacing_tokens.dart';
 
+/// Iteration N — ``AppCard`` is the project-wide stat / info container.
+/// It now renders as a ``GlossyCard`` (gradient surface, chrome border,
+/// soft drop-shadow). The public API (`child`, `padding`, optional
+/// `backgroundColor`) is preserved so the eleven screens consuming it
+/// pick up the new aesthetic without per-call-site edits.
+///
+/// If a caller passes ``backgroundColor`` explicitly, we honour it as a
+/// flat solid (used in rare cases where the glossy gradient looks wrong,
+/// e.g. inside a chart legend); otherwise we render the glossy panel.
 class AppCard extends StatelessWidget {
   const AppCard({
     required this.child,
     super.key,
     this.padding = const EdgeInsets.all(SpacingTokens.lg),
     this.backgroundColor,
-    this.borderRadius = 6.0,
-    this.showGlow = true,
+    this.radius = 10,
   });
 
   final Widget child;
   final EdgeInsetsGeometry padding;
-
-  /// If null, defaults to [AppColorTokens.surfaceHigh] of the current theme.
   final Color? backgroundColor;
-
-  /// Corner radius. Defaults to 6 — matches the design system card radius.
-  final double borderRadius;
-
-  /// Whether to apply the gold ambient glow shadow. Defaults to true.
-  final bool showGlow;
+  final double radius;
 
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
-    final bg = backgroundColor ?? c.surfaceHigh;
-
-    return Container(
-      width: double.infinity,
+    if (backgroundColor != null) {
+      final c = context.colors;
+      return Container(
+        width: double.infinity,
+        padding: padding,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(radius),
+          border: Border.all(color: c.chrome, width: 0.6),
+        ),
+        child: child,
+      );
+    }
+    return GlossyCard(
       padding: padding,
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(color: c.divider),
-        boxShadow: showGlow
-            ? [
-                BoxShadow(
-                  color: c.cardGlow,
-                  blurRadius: 16,
-                  spreadRadius: 0,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
-      ),
-      child: child,
+      radius: radius,
+      child: SizedBox(width: double.infinity, child: child),
     );
   }
 }

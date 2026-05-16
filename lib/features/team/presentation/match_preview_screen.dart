@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/color_tokens.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../data/models/match_preview.dart';
@@ -67,11 +67,12 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Scaffold(
-      backgroundColor: ColorTokens.surface,
+      backgroundColor: c.surface,
       appBar: AppBar(
-        backgroundColor: ColorTokens.surface,
-        foregroundColor: ColorTokens.textPrimary,
+        backgroundColor: c.surface,
+        foregroundColor: c.textPrimary,
         elevation: 0,
         title: Text(
           '${widget.myTeam.toUpperCase()} VS ${widget.opponentName.toUpperCase()}',
@@ -83,11 +84,10 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _formation,
-                dropdownColor: ColorTokens.surfaceLow,
+                dropdownColor: c.surfaceLow,
                 style: TypographyTokens.body
-                    .copyWith(color: ColorTokens.textPrimary),
-                icon: const Icon(Icons.arrow_drop_down,
-                    color: ColorTokens.accent),
+                    .copyWith(color: c.textPrimary),
+                icon: Icon(Icons.arrow_drop_down, color: c.accent),
                 onChanged: (v) {
                   if (v != null && v != _formation) {
                     setState(() => _formation = v);
@@ -103,15 +103,15 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
         ],
       ),
       body: _loading
-          ? const Center(
-              child: CircularProgressIndicator(color: ColorTokens.accent))
+          ? Center(child: CircularProgressIndicator(color: c.accent))
           : _error != null
-              ? _buildError()
-              : _buildBody(),
+              ? _buildError(context)
+              : _buildBody(context),
     );
   }
 
-  Widget _buildError() {
+  Widget _buildError(BuildContext context) {
+    final c = context.colors;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(SpacingTokens.xl),
@@ -120,18 +120,18 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
           children: [
             Text('Failed to load preview',
                 style: TypographyTokens.headline
-                    .copyWith(color: ColorTokens.negative)),
+                    .copyWith(color: c.negative)),
             const SizedBox(height: SpacingTokens.sm),
             Text(_error!,
                 style: TypographyTokens.body
-                    .copyWith(color: ColorTokens.textMuted),
+                    .copyWith(color: c.textMuted),
                 textAlign: TextAlign.center),
             const SizedBox(height: SpacingTokens.lg),
             TextButton(
               onPressed: _load,
               child: Text('RETRY',
                   style: TypographyTokens.sectionLabel
-                      .copyWith(color: ColorTokens.accent)),
+                      .copyWith(color: c.accent)),
             ),
           ],
         ),
@@ -139,35 +139,36 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context) {
     final p = _preview!;
     return ListView(
       padding: const EdgeInsets.all(SpacingTokens.md),
       children: [
-        _buildStatsRow(p),
+        _buildStatsRow(context, p),
         const SizedBox(height: SpacingTokens.xl),
-        _buildOpponentStatsRow(p),
+        _buildOpponentStatsRow(context, p),
         const SizedBox(height: SpacingTokens.xl),
         if (p.headToHead.total > 0) ...[
-          _buildH2H(p.headToHead),
+          _buildH2H(context, p.headToHead),
           const SizedBox(height: SpacingTokens.xl),
         ],
-        _buildXI(p),
+        _buildXI(context, p),
         const SizedBox(height: SpacingTokens.xl),
-        _buildBench(p.bench),
+        _buildBench(context, p.bench),
         const SizedBox(height: SpacingTokens.xl),
       ],
     );
   }
 
-  Widget _buildStatsRow(MatchPreviewResponse p) {
+  Widget _buildStatsRow(BuildContext context, MatchPreviewResponse p) {
+    final c = context.colors;
     final s = p.teamStats;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('SQUAD ANALYTICS', style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.sm),
-        const Divider(color: ColorTokens.divider, height: 1),
+        Divider(color: c.divider, height: 1),
         const SizedBox(height: SpacingTokens.md),
         Row(
           children: [
@@ -212,14 +213,15 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
     );
   }
 
-  Widget _buildOpponentStatsRow(MatchPreviewResponse p) {
+  Widget _buildOpponentStatsRow(BuildContext context, MatchPreviewResponse p) {
+    final c = context.colors;
     final s = p.opponentStats;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('${p.opponentName.toUpperCase()} RECENT FORM', style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.sm),
-        const Divider(color: ColorTokens.divider, height: 1),
+        Divider(color: c.divider, height: 1),
         const SizedBox(height: SpacingTokens.md),
         Row(
           children: [
@@ -264,14 +266,15 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
     );
   }
 
-  Widget _buildH2H(H2HStats h) {
+  Widget _buildH2H(BuildContext context, H2HStats h) {
+    final c = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('HEAD TO HEAD (LAST ${h.total})',
             style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.sm),
-        const Divider(color: ColorTokens.divider, height: 1),
+        Divider(color: c.divider, height: 1),
         const SizedBox(height: SpacingTokens.md),
         Row(
           children: [
@@ -288,7 +291,8 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
     );
   }
 
-  Widget _buildXI(MatchPreviewResponse p) {
+  Widget _buildXI(BuildContext context, MatchPreviewResponse p) {
+    final c = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -296,31 +300,32 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('STARTING XI', style: TypographyTokens.sectionLabel
-                .copyWith(color: ColorTokens.accent)),
+                .copyWith(color: c.accent)),
             Text(p.formation,
                 style: TypographyTokens.sectionLabel),
           ],
         ),
         const SizedBox(height: SpacingTokens.sm),
-        const Divider(color: ColorTokens.divider, height: 1),
+        Divider(color: c.divider, height: 1),
         const SizedBox(height: SpacingTokens.sm),
         for (final group in ['GK', 'DEF', 'MID', 'FWD']) ...[
-          ..._playersForGroup(p.startingXi, group).map(_buildPlayerRow),
+          ..._playersForGroup(p.startingXi, group).map((pl) => _buildPlayerRow(context, pl)),
         ],
       ],
     );
   }
 
-  Widget _buildBench(List<MatchPreviewPlayer> bench) {
+  Widget _buildBench(BuildContext context, List<MatchPreviewPlayer> bench) {
+    final c = context.colors;
     if (bench.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('BENCH', style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.sm),
-        const Divider(color: ColorTokens.divider, height: 1),
+        Divider(color: c.divider, height: 1),
         const SizedBox(height: SpacingTokens.sm),
-        ...bench.map(_buildPlayerRow),
+        ...bench.map((pl) => _buildPlayerRow(context, pl)),
       ],
     );
   }
@@ -330,10 +335,11 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
     return players.where((p) => p.roleGroup == group).toList();
   }
 
-  Widget _buildPlayerRow(MatchPreviewPlayer p) {
+  Widget _buildPlayerRow(BuildContext context, MatchPreviewPlayer p) {
+    final c = context.colors;
     return Container(
       margin: const EdgeInsets.only(bottom: 2),
-      color: ColorTokens.surfaceLow,
+      color: c.surfaceLow,
       padding: const EdgeInsets.symmetric(
           horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
       child: Row(
@@ -343,7 +349,7 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
             child: Text(
               p.roleGroup,
               style: TypographyTokens.body.copyWith(
-                  color: ColorTokens.textMuted, fontSize: 11),
+                  color: c.textMuted, fontSize: 11),
             ),
           ),
           Expanded(
@@ -355,7 +361,7 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
                         .copyWith(fontWeight: FontWeight.w700)),
                 Text(p.role,
                     style: TypographyTokens.body
-                        .copyWith(color: ColorTokens.textMuted, fontSize: 11)),
+                        .copyWith(color: c.textMuted, fontSize: 11)),
               ],
             ),
           ),
@@ -365,12 +371,12 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
               Text(
                 p.predictedScore.toStringAsFixed(2),
                 style: TypographyTokens.headline
-                    .copyWith(color: ColorTokens.accent, fontSize: 14),
+                    .copyWith(color: c.accent, fontSize: 14),
               ),
               Text(
                 '${p.keyStatLabel} ${p.keyStatValue.toStringAsFixed(2)}',
                 style: TypographyTokens.body
-                    .copyWith(color: ColorTokens.textMuted, fontSize: 10),
+                    .copyWith(color: c.textMuted, fontSize: 10),
               ),
             ],
           ),
@@ -387,9 +393,10 @@ class _StatCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Expanded(
       child: Container(
-        color: ColorTokens.surfaceLow,
+        color: c.surfaceLow,
         margin: const EdgeInsets.only(right: 2),
         padding: const EdgeInsets.symmetric(
             vertical: SpacingTokens.sm, horizontal: SpacingTokens.xs),
@@ -400,7 +407,7 @@ class _StatCell extends StatelessWidget {
             const SizedBox(height: 2),
             Text(label,
                 style: TypographyTokens.body
-                    .copyWith(color: ColorTokens.textMuted, fontSize: 9),
+                    .copyWith(color: c.textMuted, fontSize: 9),
                 textAlign: TextAlign.center),
           ],
         ),
@@ -418,22 +425,23 @@ class _NameStatCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Container(
-      color: ColorTokens.surfaceLow,
+      color: c.surfaceLow,
       padding: const EdgeInsets.all(SpacingTokens.sm),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
               style: TypographyTokens.body
-                  .copyWith(color: ColorTokens.textMuted, fontSize: 10)),
+                  .copyWith(color: c.textMuted, fontSize: 10)),
           const SizedBox(height: 2),
           Text(name,
               style: TypographyTokens.body
                   .copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
           Text(value,
               style: TypographyTokens.body
-                  .copyWith(color: ColorTokens.accent, fontSize: 11)),
+                  .copyWith(color: c.accent, fontSize: 11)),
         ],
       ),
     );

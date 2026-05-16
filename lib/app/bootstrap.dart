@@ -7,6 +7,7 @@ import 'package:umbraro/core/services/api_client.dart';
 import 'package:umbraro/core/services/auth_service.dart';
 import 'package:umbraro/core/state/auth_state.dart';
 import 'package:umbraro/core/storage/token_store.dart';
+import 'package:umbraro/core/theme/theme_mode_notifier.dart';
 import 'package:umbraro/data/auth/auth_session_repository.dart';
 
 import 'app.dart';
@@ -34,5 +35,8 @@ Future<void> bootstrap() async {
     auth: auth,
     session: session,
   );
-  runApp(UmbraRoApp(authState: authState));
+  // Iteration N — load the persisted light/dark preference before
+  // mounting the app so the first frame paints with the right palette.
+  final themeMode = await ThemeModeNotifier.load();
+  runApp(UmbraRoApp(authState: authState, themeMode: themeMode));
 }

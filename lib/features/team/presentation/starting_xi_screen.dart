@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/primitives/app_button.dart';
-import '../../../core/theme/color_tokens.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_scaffold.dart';
@@ -110,6 +110,7 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return AppScaffold(
       currentTab: AppTab.dashboard,
       onTabSelected: widget.onTabSelected,
@@ -118,49 +119,49 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
         children: [
           Text('TACTICAL BLUEPRINT',
               style: TypographyTokens.sectionLabel
-                  .copyWith(color: ColorTokens.accent)),
+                  .copyWith(color: c.accent)),
           const SizedBox(height: SpacingTokens.xs),
           Text('STARTING XI',
               style: TypographyTokens.displayHero.copyWith(fontSize: 48)),
           const SizedBox(height: SpacingTokens.xl),
-          
-          // Form
-          _buildDropdowns(),
+
+          _buildDropdowns(context),
           const SizedBox(height: SpacingTokens.md),
-          
+
           AppButton.primary(
             label: _isLoading ? 'GENERATING...' : 'GENERATE XI',
             onPressed: _isLoading ? null : () => _generateXi(),
           ),
-          
+
           if (_errorMessage != null) ...[
             const SizedBox(height: SpacingTokens.md),
-            Text('Error: $_errorMessage', style: TypographyTokens.body.copyWith(color: ColorTokens.negative)),
+            Text('Error: $_errorMessage', style: TypographyTokens.body.copyWith(color: c.negative)),
           ],
 
           const SizedBox(height: SpacingTokens.xl),
-          
-          if (_prediction != null && !_isLoading) _buildResults(),
+
+          if (_prediction != null && !_isLoading) _buildResults(context),
         ],
       ),
     );
   }
 
-  Widget _buildDropdowns() {
+  Widget _buildDropdowns(BuildContext context) {
+    final c = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('FORMATION', style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.xs),
         Container(
-          color: ColorTokens.surface,
+          color: c.surface,
           padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               isExpanded: true,
-              dropdownColor: ColorTokens.surface,
+              dropdownColor: c.surface,
               value: _selectedFormation,
-              style: TypographyTokens.body.copyWith(color: ColorTokens.textPrimary),
+              style: TypographyTokens.body.copyWith(color: c.textPrimary),
               onChanged: (v) {
                 if (v != null) setState(() => _selectedFormation = v);
               },
@@ -175,34 +176,33 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
         Text('OPPONENT', style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.xs),
         if (_isLoadingOpponents)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: SpacingTokens.sm),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
             child: SizedBox(
               width: 20,
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                color: ColorTokens.accent,
+                color: c.accent,
               ),
             ),
           )
         else if (_opponentsError != null)
           Text(
             _opponentsError!,
-            style: TypographyTokens.body.copyWith(color: ColorTokens.negative),
+            style: TypographyTokens.body.copyWith(color: c.negative),
           )
         else
           Container(
-            color: ColorTokens.surface,
+            color: c.surface,
             padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<int>(
                 isExpanded: true,
-                dropdownColor: ColorTokens.surface,
+                dropdownColor: c.surface,
                 menuMaxHeight: 240,
                 value: _selectedOpponentId,
-                style: TypographyTokens.body
-                    .copyWith(color: ColorTokens.textPrimary),
+                style: TypographyTokens.body.copyWith(color: c.textPrimary),
                 onChanged: (v) {
                   if (v != null) setState(() => _selectedOpponentId = v);
                 },
@@ -221,46 +221,47 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
     );
   }
 
-  Widget _buildResults() {
+  Widget _buildResults(BuildContext context) {
+    final c = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('SELECTED XI', style: TypographyTokens.sectionLabel.copyWith(color: ColorTokens.accent)),
+        Text('SELECTED XI', style: TypographyTokens.sectionLabel.copyWith(color: c.accent)),
         const SizedBox(height: SpacingTokens.sm),
-        _buildPlayerList(_prediction!.startingXI),
-        
+        _buildPlayerList(context, _prediction!.startingXI),
+
         const SizedBox(height: SpacingTokens.xl),
         Text('BENCH', style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.sm),
-        _buildPlayerList(_prediction!.bench),
+        _buildPlayerList(context, _prediction!.bench),
         const SizedBox(height: SpacingTokens.xl),
       ],
     );
   }
 
-  Widget _buildPlayerList(List<XiPlayer> players) {
+  Widget _buildPlayerList(BuildContext context, List<XiPlayer> players) {
+    final c = context.colors;
     if (players.isEmpty) return Text('No players available.', style: TypographyTokens.body);
-    
-    // Group by roleGroup (GK, DEF, MID, FWD)
+
     final order = ['GK', 'DEF', 'MID', 'FWD'];
-    List<Widget> sections = [];
-    
+    final List<Widget> sections = [];
+
     for (var group in order) {
       final groupPlayers = players.where((p) => p.roleGroup == group).toList();
       if (groupPlayers.isEmpty) continue;
-      
+
       sections.add(
         Padding(
           padding: const EdgeInsets.only(top: SpacingTokens.md, bottom: SpacingTokens.xs),
           child: Text(group, style: TypographyTokens.sectionLabel),
-        )
+        ),
       );
-      
+
       for (var p in groupPlayers) {
         sections.add(
           Container(
             margin: const EdgeInsets.only(bottom: 2),
-            color: ColorTokens.surfaceLow,
+            color: c.surfaceLow,
             padding: const EdgeInsets.all(SpacingTokens.sm),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,24 +271,24 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(p.shortName, style: TypographyTokens.headline.copyWith(fontSize: 16)),
-                      Text(p.role, style: TypographyTokens.body.copyWith(color: ColorTokens.textMuted, fontSize: 12)),
+                      Text(p.role, style: TypographyTokens.body.copyWith(color: c.textMuted, fontSize: 12)),
                     ],
                   ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(p.predictedScore.toStringAsFixed(2), style: TypographyTokens.headline.copyWith(color: ColorTokens.accent, fontSize: 16)),
-                    Text('SCORE', style: TypographyTokens.body.copyWith(color: ColorTokens.textMuted, fontSize: 10)),
+                    Text(p.predictedScore.toStringAsFixed(2), style: TypographyTokens.headline.copyWith(color: c.accent, fontSize: 16)),
+                    Text('SCORE', style: TypographyTokens.body.copyWith(color: c.textMuted, fontSize: 10)),
                   ],
                 ),
               ],
             ),
-          )
+          ),
         );
       }
     }
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: sections,

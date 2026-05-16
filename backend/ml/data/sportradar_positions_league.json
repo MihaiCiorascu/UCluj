@@ -1,0 +1,6038 @@
+{
+  "status": "ok",
+  "n_teams": 16,
+  "teams": {
+    "sr:competitor:7734": {
+      "team_short": "U Cluj",
+      "team_name_sr": "FC Universitatea Cluj",
+      "sr_id": "sr:competitor:7734",
+      "entries": [
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:301512",
+          "name": "Artean, Andrei",
+          "position": "midfielder",
+          "jersey_number": 18,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:3086710",
+          "name": "Ayomide, Raji",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Nigeria"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:236844",
+          "name": "Bic, Ovidiu",
+          "position": "midfielder",
+          "jersey_number": 94,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:284355",
+          "name": "Capradossi, Elio",
+          "position": "defender",
+          "jersey_number": 23,
+          "nationality": "Uganda"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2639451",
+          "name": "Chintes, Alin Marian",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:44435",
+          "name": "Chipciu, Alexandru",
+          "position": "forward",
+          "jersey_number": 27,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2645713",
+          "name": "Chirila, Iustin",
+          "position": "goalkeeper",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:1865742",
+          "name": "Cisse, Jonathan",
+          "position": "defender",
+          "jersey_number": 26,
+          "nationality": "Cote d ivoire"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:1560588",
+          "name": "Codrea, Dorin",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2981681",
+          "name": "Cosa, Tudor",
+          "position": "goalkeeper",
+          "jersey_number": 99,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2249161",
+          "name": "Coubis, Andrei",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:578526",
+          "name": "Cristea, Iulian Lucian",
+          "position": "defender",
+          "jersey_number": 6,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:944414",
+          "name": "Drammeh, Mouhamadou",
+          "position": "midfielder",
+          "jersey_number": 7,
+          "nationality": "France"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2446655",
+          "name": "El Sawy, Omar",
+          "position": "midfielder",
+          "jersey_number": 88,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:926778",
+          "name": "Fabry, Andrej",
+          "position": "midfielder",
+          "jersey_number": 13,
+          "nationality": "Slovakia"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:285953",
+          "name": "Gertmonas, Edvinas",
+          "position": "goalkeeper",
+          "jersey_number": 30,
+          "nationality": "Lithuania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2645359",
+          "name": "Gheorghita, Andrei",
+          "position": "midfielder",
+          "jersey_number": 77,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2633637",
+          "name": "Horn, Tobias",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Germany"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2357685",
+          "name": "Kis, Patrik",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2779009",
+          "name": "Lefter, Ștefan",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:1022329",
+          "name": "Lukic, Jovo",
+          "position": "forward",
+          "jersey_number": 17,
+          "nationality": "Bosnia & herzegovina"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2120884",
+          "name": "Macalou, Issouf",
+          "position": "forward",
+          "jersey_number": 19,
+          "nationality": "Cote d ivoire"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2121882",
+          "name": "Mendy, Oucasse",
+          "position": "forward",
+          "jersey_number": 29,
+          "nationality": "France"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:245249",
+          "name": "Mikanovic, Dino",
+          "position": "defender",
+          "jersey_number": 24,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2357653",
+          "name": "Moldovan, Denis",
+          "position": "goalkeeper",
+          "jersey_number": 12,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2100930",
+          "name": "Moraru, Matei",
+          "position": "midfielder",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:559470",
+          "name": "Murgia, Alessandro",
+          "position": "midfielder",
+          "jersey_number": 11,
+          "nationality": "Italy"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:93842",
+          "name": "Nistor, Dan Nicolae",
+          "position": "midfielder",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2938763",
+          "name": "Opris, Stefan",
+          "position": "midfielder",
+          "jersey_number": 66,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:3066213",
+          "name": "Orban, Alex",
+          "position": "forward",
+          "jersey_number": 80,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:3161124",
+          "name": "Pall, Lukas",
+          "position": "forward",
+          "jersey_number": 96,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:1297462",
+          "name": "Postolachi, Virgiliu",
+          "position": "forward",
+          "jersey_number": 93,
+          "nationality": "Moldova, republic of"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2925039",
+          "name": "Quadri Olakunle, Taiwo",
+          "position": "forward",
+          "jersey_number": 22,
+          "nationality": "Nigeria"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2357667",
+          "name": "Scocilca, Rares",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:867634",
+          "name": "Silva, Miguel",
+          "position": "defender",
+          "jersey_number": 28,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:1008455",
+          "name": "Simion, Gabriel",
+          "position": "defender",
+          "jersey_number": 98,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:1240964",
+          "name": "Stanojev, Jug",
+          "position": "forward",
+          "jersey_number": 33,
+          "nationality": "Serbia"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2639453",
+          "name": "Techeres, Ionel  Alin",
+          "position": "defender",
+          "jersey_number": 41,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:110210",
+          "name": "Tosca, Alin",
+          "position": "defender",
+          "jersey_number": 14,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:2162060",
+          "name": "Trica-Balaci, Atanas Ioan",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Cluj",
+          "team_sr_id": "sr:competitor:7734",
+          "id": "sr:player:1407133",
+          "name": "Van der Werff, Jasper",
+          "position": "defender",
+          "jersey_number": 16,
+          "nationality": "Switzerland"
+        }
+      ]
+    },
+    "sr:competitor:5287": {
+      "team_short": "CFR Cluj",
+      "team_name_sr": "FC CFR 1907 Cluj",
+      "sr_id": "sr:competitor:5287",
+      "entries": [
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1435339",
+          "name": "Abeid, Aly",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Mauritania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:887864",
+          "name": "Aliev Aliyevich, Alibek",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Sweden"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2232146",
+          "name": "Avram, Costel",
+          "position": "defender",
+          "jersey_number": 78,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2870455",
+          "name": "Biliboc, Lorenzo",
+          "position": "forward",
+          "jersey_number": 49,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2200630",
+          "name": "Bolgado, Leo",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:163733",
+          "name": "Braun, Christopher",
+          "position": "defender",
+          "jersey_number": 47,
+          "nationality": "Germany"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:78908",
+          "name": "Camora, Mario",
+          "position": "defender",
+          "jersey_number": 45,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2601733",
+          "name": "Cimpoesu, Alberto",
+          "position": "goalkeeper",
+          "jersey_number": 85,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2782061",
+          "name": "Ciupei, Paul",
+          "position": "midfielder",
+          "jersey_number": 87,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1600936",
+          "name": "Cordea, Andrei",
+          "position": "midfielder",
+          "jersey_number": 24,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:3143180",
+          "name": "Crisan, Denis Andrei",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:36883",
+          "name": "Deac, Ciprian",
+          "position": "midfielder",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:108740",
+          "name": "Djokovic, Damjan",
+          "position": "midfielder",
+          "jersey_number": 88,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1064666",
+          "name": "Dumbravanu, Daniel",
+          "position": "defender",
+          "jersey_number": 44,
+          "nationality": "Moldova, republic of"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:3017676",
+          "name": "Ferenti, Alin",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1865454",
+          "name": "Fica, Alin Razvan",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2389369",
+          "name": "Gal, Rares",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2940615",
+          "name": "Gligor, Zvan",
+          "position": "midfielder",
+          "jersey_number": 26,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1553763",
+          "name": "Huja, Marian",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1972795",
+          "name": "Ilie, Matei Cristian",
+          "position": "defender",
+          "jersey_number": 27,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1661923",
+          "name": "Kamara, Mohammed",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "Liberia"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1507497",
+          "name": "Keita, Tidiane",
+          "position": "midfielder",
+          "jersey_number": 23,
+          "nationality": "France"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:915730",
+          "name": "Korenica, Meriton",
+          "position": "midfielder",
+          "jersey_number": 17,
+          "nationality": "Kosovo"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2358317",
+          "name": "Kun, Viktor",
+          "position": "midfielder",
+          "jersey_number": 86,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2358311",
+          "name": "Leata, George",
+          "position": "midfielder",
+          "jersey_number": 92,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1522217",
+          "name": "Masic, Ilija",
+          "position": "midfielder",
+          "jersey_number": 4,
+          "nationality": "Bosnia & herzegovina"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2538003",
+          "name": "Mensah, Emmanuel",
+          "position": "forward",
+          "jersey_number": 30,
+          "nationality": "Ghana"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2209968",
+          "name": "Moura Peloggia, Mateus Cesare",
+          "position": "",
+          "jersey_number": null,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:883094",
+          "name": "Muhar, Karlo",
+          "position": "midfielder",
+          "jersey_number": 73,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:190309",
+          "name": "Paun, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1642330",
+          "name": "Perianu, Ovidiu",
+          "position": "midfielder",
+          "jersey_number": 16,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1613214",
+          "name": "Popa, Mihai",
+          "position": "goalkeeper",
+          "jersey_number": 71,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2785203",
+          "name": "Racasan, Mihai Florin",
+          "position": "goalkeeper",
+          "jersey_number": 83,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2782063",
+          "name": "Radu, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 84,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:1857100",
+          "name": "Rocha, Simao",
+          "position": "defender",
+          "jersey_number": 13,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:3177736",
+          "name": "Rus, Jayden",
+          "position": "midfielder",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2123642",
+          "name": "Rusu, Denis",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2823441",
+          "name": "Samake, Moussa",
+          "position": "forward",
+          "jersey_number": 29,
+          "nationality": "Mali"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:3034336",
+          "name": "Senciuc, Stefan Eduard",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2188498",
+          "name": "Sfait, Andres",
+          "position": "midfielder",
+          "jersey_number": 77,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:837439",
+          "name": "Sinyan, Sheriff",
+          "position": "defender",
+          "jersey_number": 6,
+          "nationality": "Gambia"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:3017674",
+          "name": "Soptirean, Dominik",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:3177738",
+          "name": "Sula, Nicolae",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Moldova, republic of"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:300430",
+          "name": "Valceanu, Octavian",
+          "position": "goalkeeper",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:232162",
+          "name": "Zahovic, Luka",
+          "position": "forward",
+          "jersey_number": 90,
+          "nationality": "Slovenia"
+        },
+        {
+          "team_short": "CFR Cluj",
+          "team_sr_id": "sr:competitor:5287",
+          "id": "sr:player:2707762",
+          "name": "Zejnullahu, Rion",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Kosovo"
+        }
+      ]
+    },
+    "sr:competitor:3301": {
+      "team_short": "FCSB",
+      "team_name_sr": "Fotbal Club FCSB",
+      "sr_id": "sr:competitor:3301",
+      "entries": [
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2084449",
+          "name": "Alhassan, Baba",
+          "position": "midfielder",
+          "jersey_number": 42,
+          "nationality": "Uganda"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:994299",
+          "name": "Arad, Ofri",
+          "position": "defender",
+          "jersey_number": 15,
+          "nationality": "Israel"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:1864682",
+          "name": "Birligea, Daniel",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2639175",
+          "name": "Cercel, Ionut",
+          "position": "defender",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:69295",
+          "name": "Chiriches, Vlad",
+          "position": "defender",
+          "jersey_number": 21,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:151076",
+          "name": "Cisotti, Juri",
+          "position": "forward",
+          "jersey_number": 31,
+          "nationality": "Italy"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:44478",
+          "name": "Cretu, Valentin",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2939005",
+          "name": "Dancus, Andrei",
+          "position": "defender",
+          "jersey_number": 6,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:3139490",
+          "name": "Dancus, Zima",
+          "position": "",
+          "jersey_number": 99,
+          "nationality": ""
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:1420695",
+          "name": "Dawa Tchakonte, Joyskim",
+          "position": "defender",
+          "jersey_number": 5,
+          "nationality": "Cameroon"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:1359044",
+          "name": "Duarte, Andre",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:94815",
+          "name": "Graovac, Daniel",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Bosnia & herzegovina"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:1657827",
+          "name": "Joao, Paulo",
+          "position": "midfielder",
+          "jersey_number": 18,
+          "nationality": "Cape verde"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:856952",
+          "name": "Kiki, David",
+          "position": "defender",
+          "jersey_number": 12,
+          "nationality": "Benin"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2100370",
+          "name": "Lixandru, Mihai",
+          "position": "midfielder",
+          "jersey_number": 16,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:1321020",
+          "name": "Miculescu, David",
+          "position": "forward",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:1323154",
+          "name": "Ngezana, Siyabonga",
+          "position": "defender",
+          "jersey_number": 30,
+          "nationality": "South africa"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:893750",
+          "name": "Olaru, Darius",
+          "position": "midfielder",
+          "jersey_number": 27,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2803745",
+          "name": "Padurariu, Ricardo",
+          "position": "defender",
+          "jersey_number": 24,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:1987879",
+          "name": "Pantea, Grigoras",
+          "position": "defender",
+          "jersey_number": 28,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2765371",
+          "name": "Popa, David",
+          "position": "forward",
+          "jersey_number": 98,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2995371",
+          "name": "Popa, Matei",
+          "position": "goalkeeper",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:813348",
+          "name": "Popescu, Mihai",
+          "position": "defender",
+          "jersey_number": 17,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2072511",
+          "name": "Popescu, Octavian",
+          "position": "forward",
+          "jersey_number": 37,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:117128",
+          "name": "Radunovic, Risto",
+          "position": "defender",
+          "jersey_number": 33,
+          "nationality": "Montenegro"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2483739",
+          "name": "Stoian, Alexandru",
+          "position": "forward",
+          "jersey_number": 90,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:537032",
+          "name": "Tanase, Florin",
+          "position": "forward",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:1372522",
+          "name": "Tarnovanu, Stefan",
+          "position": "goalkeeper",
+          "jersey_number": 32,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:801158",
+          "name": "Thiam, Mamadou",
+          "position": "forward",
+          "jersey_number": 93,
+          "nationality": "Senegal"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2527831",
+          "name": "Toma, Mihai",
+          "position": "midfielder",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:2047245",
+          "name": "Udrea, Mihai",
+          "position": "goalkeeper",
+          "jersey_number": 34,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FCSB",
+          "team_sr_id": "sr:competitor:3301",
+          "id": "sr:player:135602",
+          "name": "Zima, Lukas",
+          "position": "goalkeeper",
+          "jersey_number": 38,
+          "nationality": "Czech republic"
+        }
+      ]
+    },
+    "sr:competitor:3292": {
+      "team_short": "Dinamo Bucureşti",
+      "team_name_sr": "FC Dinamo Bucuresti 1948",
+      "sr_id": "sr:competitor:3292",
+      "entries": [
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2093896",
+          "name": "Amzar, Costin ionut",
+          "position": "defender",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:552866",
+          "name": "Armstrong, Danny",
+          "position": "midfielder",
+          "jersey_number": 77,
+          "nationality": "Scotland"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:3017680",
+          "name": "Barbulescu, Luca",
+          "position": "forward",
+          "jersey_number": 48,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2131566",
+          "name": "Bordusanu, Antonio Alexandru",
+          "position": "midfielder",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2582273",
+          "name": "Caragea, Adrian Iulian",
+          "position": "forward",
+          "jersey_number": 24,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:1096544",
+          "name": "Cirjan, Catalin",
+          "position": "midfielder",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2933577",
+          "name": "Cristea, Antonio",
+          "position": "midfielder",
+          "jersey_number": 32,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:3044049",
+          "name": "Din Licaciu, Mario",
+          "position": "goalkeeper",
+          "jersey_number": 28,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2186300",
+          "name": "Dumitrache, Valentin",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2691004",
+          "name": "Dutu, Matteo",
+          "position": "defender",
+          "jersey_number": 30,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:362758",
+          "name": "Epassy, Devis",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Cameroon"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2734006",
+          "name": "Gageatu, Yanis Ilie",
+          "position": "goalkeeper",
+          "jersey_number": 39,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:218298",
+          "name": "Gnahore, Eddy",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "France"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2956299",
+          "name": "Hussaini, Sanusi",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Nigeria"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:139223",
+          "name": "Ikoko, Jordan",
+          "position": "defender",
+          "jersey_number": 32,
+          "nationality": "Congo democratic republic"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2933049",
+          "name": "Ilincas, Eduard Cristian",
+          "position": "midfielder",
+          "jersey_number": 34,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2229714",
+          "name": "Ionescu, Cristian",
+          "position": "forward",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2828513",
+          "name": "Ionica, Andrei",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:1694269",
+          "name": "Karamoko, Mamoudou",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "France"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:1047975",
+          "name": "Kennedy Boateng",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Togo"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:3017682",
+          "name": "Kyrychenko, Vadym",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Ukraine"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2391345",
+          "name": "Licsandru, Cristian",
+          "position": "midfielder",
+          "jersey_number": 6,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:1383013",
+          "name": "Marginean, Andrei",
+          "position": "midfielder",
+          "jersey_number": 90,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2395769",
+          "name": "Mazilu, Adrian",
+          "position": "forward",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:1096538",
+          "name": "Mihai, Cristian Petrisor",
+          "position": "midfielder",
+          "jersey_number": 21,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:78201",
+          "name": "Milanov, Georgi",
+          "position": "midfielder",
+          "jersey_number": 17,
+          "nationality": "Bulgaria"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:150953",
+          "name": "Morar, Vlad",
+          "position": "forward",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2136792",
+          "name": "Musi, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 7,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:3165224",
+          "name": "N'Giuwu, Matteo",
+          "position": "midfielder",
+          "jersey_number": 88,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:1128451",
+          "name": "Oprut, Raul",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2702800",
+          "name": "Pascalau, Razvan",
+          "position": "defender",
+          "jersey_number": 5,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:990223",
+          "name": "Pop, Alexandru Mihai Constantin",
+          "position": "forward",
+          "jersey_number": 99,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:190319",
+          "name": "Puscas, George",
+          "position": "forward",
+          "jersey_number": 47,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2395735",
+          "name": "Rosca, Alexandru",
+          "position": "goalkeeper",
+          "jersey_number": 73,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2663153",
+          "name": "Sandu, Codrut",
+          "position": "goalkeeper",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2764351",
+          "name": "Serafim",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:1437866",
+          "name": "Sivis, Maxime",
+          "position": "defender",
+          "jersey_number": 27,
+          "nationality": "France"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2665735",
+          "name": "Soare",
+          "position": "midfielder",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:1554815",
+          "name": "Soro, Alberto",
+          "position": "midfielder",
+          "jersey_number": 29,
+          "nationality": "Spain"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2805899",
+          "name": "Stoinov, Nikita",
+          "position": "defender",
+          "jersey_number": 15,
+          "nationality": "Israel"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:3021768",
+          "name": "Tabuncic, Alexandru-Simion",
+          "position": "defender",
+          "jersey_number": 13,
+          "nationality": "Moldova, republic of"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:3008419",
+          "name": "Tarba, Ianis",
+          "position": "midfielder",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:1613230",
+          "name": "Ticu, Valentin Constantin",
+          "position": "defender",
+          "jersey_number": 55,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:3058433",
+          "name": "Toader, Mihnea",
+          "position": "defender",
+          "jersey_number": 26,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:3017678",
+          "name": "Udosen, Godwin",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Nigeria"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:3086556",
+          "name": "Ungureanu, Costin",
+          "position": "goalkeeper",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Dinamo Bucureşti",
+          "team_sr_id": "sr:competitor:3292",
+          "id": "sr:player:2786029",
+          "name": "Ștefan, Mihnea",
+          "position": "midfielder",
+          "jersey_number": 26,
+          "nationality": "Romania"
+        }
+      ]
+    },
+    "sr:competitor:3302": {
+      "team_short": "Rapid Bucureşti",
+      "team_name_sr": "Rapid Bucuresti 1923",
+      "sr_id": "sr:competitor:3302",
+      "entries": [
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:946158",
+          "name": "Aioani, Mihai",
+          "position": "goalkeeper",
+          "jersey_number": 16,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2996141",
+          "name": "Banu, Sebastian",
+          "position": "midfielder",
+          "jersey_number": 52,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1573052",
+          "name": "Baroan, Antoine",
+          "position": "forward",
+          "jersey_number": 90,
+          "nationality": "France"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2299923",
+          "name": "Borza, Sebastian Andrei",
+          "position": "defender",
+          "jersey_number": 24,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2803743",
+          "name": "Briciu, Adrain",
+          "position": "goalkeeper",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1380869",
+          "name": "Burmaz, Borisav",
+          "position": "forward",
+          "jersey_number": 11,
+          "nationality": "Serbia"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:851774",
+          "name": "Christensen, Tobias",
+          "position": "midfielder",
+          "jersey_number": 17,
+          "nationality": "Norway"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:977985",
+          "name": "Ciobotariu, Denis",
+          "position": "defender",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:3193178",
+          "name": "Costache, -",
+          "position": "defender",
+          "jersey_number": 32,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:820402",
+          "name": "Dobre, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2835117",
+          "name": "Gheorghe, Gabriel",
+          "position": "midfielder",
+          "jersey_number": 98,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1642320",
+          "name": "Grameni, Constantin",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:3193176",
+          "name": "Grosu, Mihai",
+          "position": "midfielder",
+          "jersey_number": 26,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2680241",
+          "name": "Hazrollaj, Drilon",
+          "position": "forward",
+          "jersey_number": 27,
+          "nationality": "Kosovo"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:237406",
+          "name": "Hromada, Jakub",
+          "position": "midfielder",
+          "jersey_number": 14,
+          "nationality": "Slovakia"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:109065",
+          "name": "Iliev, Dejan",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "North macedonia"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1986865",
+          "name": "Jambor, Timotej",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Slovakia"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1864048",
+          "name": "Keita, Kader",
+          "position": "midfielder",
+          "jersey_number": 18,
+          "nationality": "Cote d ivoire"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:360902",
+          "name": "Koljic, Elvir",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "Bosnia & herzegovina"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1340618",
+          "name": "Kramer, Lars",
+          "position": "defender",
+          "jersey_number": 6,
+          "nationality": "Netherlands"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:361150",
+          "name": "Manea, Cristian",
+          "position": "defender",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:937786",
+          "name": "Mendes, Diogo",
+          "position": "midfielder",
+          "jersey_number": 66,
+          "nationality": "Cape verde"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:967409",
+          "name": "Morutan, Olimpiu",
+          "position": "midfielder",
+          "jersey_number": 80,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1262364",
+          "name": "Onea, Razvan Philippe",
+          "position": "defender",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1560506",
+          "name": "Paraschiv, Daniel",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1055153",
+          "name": "Pascanu, Alexandru",
+          "position": "defender",
+          "jersey_number": 5,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1535405",
+          "name": "Petrila, Claudiu",
+          "position": "midfielder",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:3193180",
+          "name": "Pirvu, -",
+          "position": "midfielder",
+          "jersey_number": 25,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2996133",
+          "name": "Popa, Patrick",
+          "position": "defender",
+          "jersey_number": 53,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2101626",
+          "name": "Salceanu, Robert",
+          "position": "defender",
+          "jersey_number": 21,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:137773",
+          "name": "Siegrist, Benjamin",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Switzerland"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:3187014",
+          "name": "Simonia, Alex",
+          "position": "forward",
+          "jersey_number": 70,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2761661",
+          "name": "Stan, Alexandru",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:69308",
+          "name": "Stan, Alexandru Constantin",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2996137",
+          "name": "Sucu, Andrei",
+          "position": "midfielder",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2284573",
+          "name": "Talisson",
+          "position": "forward",
+          "jersey_number": 33,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:3190846",
+          "name": "Todoran, David",
+          "position": "defender",
+          "jersey_number": 50,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:3187012",
+          "name": "Todoran, Dorian",
+          "position": "defender",
+          "jersey_number": 50,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:2395541",
+          "name": "Ungureanu, George Bogdan",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Rapid Bucureşti",
+          "team_sr_id": "sr:competitor:3302",
+          "id": "sr:player:1652085",
+          "name": "Vulturar, Catalin Alin",
+          "position": "midfielder",
+          "jersey_number": 15,
+          "nationality": "Romania"
+        }
+      ]
+    },
+    "sr:competitor:24798": {
+      "team_short": "Botoşani",
+      "team_name_sr": "FC Botosani",
+      "sr_id": "sr:competitor:24798",
+      "entries": [
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2252183",
+          "name": "Adams, Alfie",
+          "position": "defender",
+          "jersey_number": 12,
+          "nationality": "Nigeria"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:212832",
+          "name": "Anestis, Ioannis",
+          "position": "goalkeeper",
+          "jersey_number": 99,
+          "nationality": "Greece"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1951676",
+          "name": "Bodisteanu, Stefan",
+          "position": "forward",
+          "jersey_number": 10,
+          "nationality": "Moldova, republic of"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:82889",
+          "name": "Bordeianu, Mihai",
+          "position": "midfielder",
+          "jersey_number": 37,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2576857",
+          "name": "Bota, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2775305",
+          "name": "Brasoveanu, Alberto Emanuel",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1832792",
+          "name": "Cimpanu, George",
+          "position": "midfielder",
+          "jersey_number": 77,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2826913",
+          "name": "Ciobanu, Alin",
+          "position": "goalkeeper",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2559107",
+          "name": "Ciurel, David",
+          "position": "midfielder",
+          "jersey_number": 75,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2646155",
+          "name": "Cret, Razvan Bogdan",
+          "position": "defender",
+          "jersey_number": 5,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2291795",
+          "name": "David, Gabriel",
+          "position": "midfielder",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1057661",
+          "name": "De Vega, Lucas",
+          "position": "midfielder",
+          "jersey_number": 21,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:957880",
+          "name": "Diaw, Elhadji Pape",
+          "position": "defender",
+          "jersey_number": 23,
+          "nationality": "Senegal"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1096230",
+          "name": "Dumiter, Ioan Andrei",
+          "position": "forward",
+          "jersey_number": 41,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2788267",
+          "name": "Dumitru, Andrei",
+          "position": "midfielder",
+          "jersey_number": 22,
+          "nationality": "Canada"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2639473",
+          "name": "Dumitru, Antonio Mihai",
+          "position": "forward",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1360916",
+          "name": "Ferreira, Aldair Caputo",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Angola"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2710554",
+          "name": "Gligor, George Andrei",
+          "position": "midfielder",
+          "jersey_number": 70,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2613593",
+          "name": "Ilas, Narcis",
+          "position": "defender",
+          "jersey_number": 73,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:231894",
+          "name": "Junior, Francisco",
+          "position": "midfielder",
+          "jersey_number": 22,
+          "nationality": "Guinea-bissau"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:774199",
+          "name": "Kovtalyuk, Mykola",
+          "position": "forward",
+          "jersey_number": 25,
+          "nationality": "Ukraine"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:933558",
+          "name": "Kukic, Luka",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2564847",
+          "name": "Lopez, Enzo",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Argentina"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:917822",
+          "name": "Mailat, Sebastian",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:557342",
+          "name": "Miron, George Andrei",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2327549",
+          "name": "Mitrov, Zoran",
+          "position": "forward",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1380635",
+          "name": "Munoz Fernandez, Miguel",
+          "position": "defender",
+          "jersey_number": 18,
+          "nationality": "Spain"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1987887",
+          "name": "Nechita, Sebastian Vasile",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2823435",
+          "name": "Niculescu, Gabriel",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:191174",
+          "name": "Ongenda, Hervin",
+          "position": "forward",
+          "jersey_number": 26,
+          "nationality": "Congo democratic republic"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1863350",
+          "name": "Panoiu, Stefan Calin",
+          "position": "midfielder",
+          "jersey_number": 17,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:286645",
+          "name": "Papa, Enriko",
+          "position": "midfielder",
+          "jersey_number": 67,
+          "nationality": "Albania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2969758",
+          "name": "Pascalau, Darius Andrei",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1982765",
+          "name": "Pavlovic, Michael",
+          "position": "midfielder",
+          "jersey_number": 3,
+          "nationality": "Slovenia"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2527829",
+          "name": "Petrisor, Iulian Costin",
+          "position": "midfielder",
+          "jersey_number": 80,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1749789",
+          "name": "Petro, Charles",
+          "position": "defender",
+          "jersey_number": 28,
+          "nationality": "Malawi"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2969756",
+          "name": "Popa, Luca Mario",
+          "position": "defender",
+          "jersey_number": 16,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2762415",
+          "name": "Rautu, Adrian",
+          "position": "forward",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:973949",
+          "name": "Sadiku, Rijad",
+          "position": "defender",
+          "jersey_number": 44,
+          "nationality": "Bosnia & herzegovina"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2966567",
+          "name": "Sorodoc, George",
+          "position": "midfielder",
+          "jersey_number": 27,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2826025",
+          "name": "Stefan, Denis",
+          "position": "forward",
+          "jersey_number": 15,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:1952168",
+          "name": "Suta, Riad",
+          "position": "defender",
+          "jersey_number": 6,
+          "nationality": "Bosnia & herzegovina"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:100797",
+          "name": "Tiganasu, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Botoşani",
+          "team_sr_id": "sr:competitor:24798",
+          "id": "sr:player:2391109",
+          "name": "Tomache, Serban",
+          "position": "goalkeeper",
+          "jersey_number": 94,
+          "nationality": "Romania"
+        }
+      ]
+    },
+    "sr:competitor:3291": {
+      "team_short": "Oţelul Galaţi",
+      "team_name_sr": "ASC Otelul Galati",
+      "sr_id": "sr:competitor:3291",
+      "entries": [
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:3167948",
+          "name": "Aftene, Dragos",
+          "position": "midfielder",
+          "jersey_number": 5,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:1418163",
+          "name": "Andrezinho",
+          "position": "midfielder",
+          "jersey_number": 7,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:21564",
+          "name": "Bicfalvi, Eric",
+          "position": "forward",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:1857132",
+          "name": "Bonilla, Julian",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Colombia"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:2639393",
+          "name": "Bordun, Denis",
+          "position": "forward",
+          "jersey_number": 24,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:756338",
+          "name": "Ciobanu, Andrei",
+          "position": "forward",
+          "jersey_number": 17,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:2337345",
+          "name": "Cristian Chira, Mihai Octavian",
+          "position": "midfielder",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:1028207",
+          "name": "Debeljuh, Gabriel",
+          "position": "forward",
+          "jersey_number": 96,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:756328",
+          "name": "Dur Bozoanca, Cosmin",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:1242060",
+          "name": "Fernandes, Patrick",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Cape verde"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:3021024",
+          "name": "Frunza, Matei",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:1138125",
+          "name": "Holz, Conrado Buchanelli",
+          "position": "defender",
+          "jersey_number": 97,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:805252",
+          "name": "Iacob, Paul",
+          "position": "midfielder",
+          "jersey_number": 6,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:1672025",
+          "name": "Kazu",
+          "position": "defender",
+          "jersey_number": 88,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:1852670",
+          "name": "Lopes, Manuel",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:2416827",
+          "name": "Luan Campos",
+          "position": "forward",
+          "jersey_number": 99,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:2213940",
+          "name": "Neicu, Dan Emilian",
+          "position": "defender",
+          "jersey_number": 16,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:3021174",
+          "name": "Neicu, Dan-Cristian",
+          "position": "forward",
+          "jersey_number": 15,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:584434",
+          "name": "Nuno, Pedro",
+          "position": "midfielder",
+          "jersey_number": 27,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:2639403",
+          "name": "Paharnicu, Darius",
+          "position": "goalkeeper",
+          "jersey_number": 12,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:605972",
+          "name": "Paz, Bruno",
+          "position": "midfielder",
+          "jersey_number": 80,
+          "nationality": "Angola"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:96322",
+          "name": "Popescu, Iustin",
+          "position": "goalkeeper",
+          "jersey_number": 32,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:2990235",
+          "name": "Postelnicu, Radu",
+          "position": "midfielder",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:2639389",
+          "name": "Rus, Andrei",
+          "position": "defender",
+          "jersey_number": 14,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:2800783",
+          "name": "Sandu, Daniel",
+          "position": "forward",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:936372",
+          "name": "Santos Lameira, Joao Pedro",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:2639405",
+          "name": "Ursu, Gabriel",
+          "position": "goalkeeper",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:173559",
+          "name": "Zhelev, Milen",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Bulgaria"
+        },
+        {
+          "team_short": "Oţelul Galaţi",
+          "team_sr_id": "sr:competitor:3291",
+          "id": "sr:player:127758",
+          "name": "Zivulic, Diego",
+          "position": "midfielder",
+          "jersey_number": 31,
+          "nationality": "Croatia"
+        }
+      ]
+    },
+    "sr:competitor:342922": {
+      "team_short": "Hermannstadt",
+      "team_name_sr": "AFC Hermannstadt",
+      "sr_id": "sr:competitor:342922",
+      "entries": [
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2334375",
+          "name": "Afalna, Christ",
+          "position": "midfielder",
+          "jersey_number": 15,
+          "nationality": "Cameroon"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:1383003",
+          "name": "Albu, Dragos",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:3034334",
+          "name": "Ankrah, Obed",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Ghana"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2781257",
+          "name": "Baba, Emanuel",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Ghana"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:279607",
+          "name": "Balaure, Silviu",
+          "position": "midfielder",
+          "jersey_number": 96,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2866571",
+          "name": "Barstan, Ioan",
+          "position": "forward",
+          "jersey_number": 27,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:3174158",
+          "name": "Bejan, David",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2143894",
+          "name": "Branco Batista, Diogo Jose",
+          "position": "midfielder",
+          "jersey_number": 21,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:70723",
+          "name": "Bus, Sergiu Florin",
+          "position": "forward",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2645707",
+          "name": "Calugar, Razvan",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:756356",
+          "name": "Capusa, Tiberiu",
+          "position": "defender",
+          "jersey_number": 66,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:115585",
+          "name": "Chitu, Aurelian Ionut",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:252473",
+          "name": "Chorbadzhiyski, Bozhidar",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Bulgaria"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2482423",
+          "name": "Ciubotaru, Kevin",
+          "position": "defender",
+          "jersey_number": 98,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:562036",
+          "name": "Florescu, Eduard",
+          "position": "midfielder",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2263817",
+          "name": "Gindila, Ianis Alessio",
+          "position": "midfielder",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:1319788",
+          "name": "Gjorgjievski, Marko",
+          "position": "forward",
+          "jersey_number": 19,
+          "nationality": "North macedonia"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2116812",
+          "name": "Issah, Seydou Saeed",
+          "position": "defender",
+          "jersey_number": 16,
+          "nationality": "Ghana"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:984763",
+          "name": "Jair",
+          "position": "midfielder",
+          "jersey_number": 7,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:186735",
+          "name": "Karo, Andreas",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Cyprus"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2417165",
+          "name": "Kujabi, Kalifa",
+          "position": "midfielder",
+          "jersey_number": 6,
+          "nationality": "Gambia"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:131433",
+          "name": "Lazar, David",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2665727",
+          "name": "Luca",
+          "position": "forward",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2327557",
+          "name": "Mihart, Ianis",
+          "position": "forward",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:317571",
+          "name": "Mutiu, Vlad",
+          "position": "goalkeeper",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:973435",
+          "name": "Negut, Cristian Daniel",
+          "position": "forward",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:1089720",
+          "name": "Politic, Dennis",
+          "position": "midfielder",
+          "jersey_number": 17,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:605590",
+          "name": "Pop, Ionut Alin",
+          "position": "goalkeeper",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:3139010",
+          "name": "Ritivoi, Sebastian",
+          "position": "forward",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:1012593",
+          "name": "Simba, Moonga",
+          "position": "midfielder",
+          "jersey_number": 70,
+          "nationality": "Sweden"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:2587467",
+          "name": "Stancu, Luca",
+          "position": "defender",
+          "jersey_number": 77,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:302988",
+          "name": "Stoica, Ionut",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Hermannstadt",
+          "team_sr_id": "sr:competitor:342922",
+          "id": "sr:player:1633710",
+          "name": "Zargary, Aviel Yosef",
+          "position": "midfielder",
+          "jersey_number": 36,
+          "nationality": "Israel"
+        }
+      ]
+    },
+    "sr:competitor:25856": {
+      "team_short": "Petrolul Ploieşti",
+      "team_name_sr": "FC Petrolul Ploiesti",
+      "sr_id": "sr:competitor:25856",
+      "entries": [
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:189193",
+          "name": "Aimbetov, Abat",
+          "position": "forward",
+          "jersey_number": 17,
+          "nationality": "Kazakhstan"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:329469",
+          "name": "Baiano, Fabricio",
+          "position": "midfielder",
+          "jersey_number": 27,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2615761",
+          "name": "Balasa",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2203214",
+          "name": "Balbarau, Raul",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2262951",
+          "name": "Baldres Hermann, Rafael",
+          "position": "forward",
+          "jersey_number": 28,
+          "nationality": "Spain"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2835913",
+          "name": "Berbeaca, Eduard",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:252531",
+          "name": "Boateng, Nana",
+          "position": "midfielder",
+          "jersey_number": 77,
+          "nationality": "Ghana"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2100880",
+          "name": "Botogan, Alin",
+          "position": "midfielder",
+          "jersey_number": 36,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1856474",
+          "name": "Bucur, Raul Gabriel",
+          "position": "forward",
+          "jersey_number": 99,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1940096",
+          "name": "Chica-Rosa, Adi",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2764957",
+          "name": "David, Paraschiv",
+          "position": "midfielder",
+          "jersey_number": 21,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1047621",
+          "name": "Diogo Rodrigues",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2411857",
+          "name": "Dongmo, Danel Jordan",
+          "position": "midfielder",
+          "jersey_number": 5,
+          "nationality": "Cameroon"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1731811",
+          "name": "Doukansy, Brahima",
+          "position": "midfielder",
+          "jersey_number": 15,
+          "nationality": "France"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:803462",
+          "name": "Doumtsios, Konstantinos",
+          "position": "forward",
+          "jersey_number": 19,
+          "nationality": "Greece"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:3125044",
+          "name": "Dudu, -",
+          "position": "defender",
+          "jersey_number": 23,
+          "nationality": ""
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:934758",
+          "name": "Dulca, Marco",
+          "position": "midfielder",
+          "jersey_number": 88,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2755043",
+          "name": "Dumitrache, Augustin",
+          "position": "midfielder",
+          "jersey_number": 97,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1383001",
+          "name": "Dumitrescu, Andres",
+          "position": "defender",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:357416",
+          "name": "Dumitriu, Lucian Mihai",
+          "position": "defender",
+          "jersey_number": 44,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1012103",
+          "name": "Gheorghe, Valentin",
+          "position": "midfielder",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:69213",
+          "name": "Grozav, Gheorghe",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2589003",
+          "name": "Guiu, Sebastian",
+          "position": "forward",
+          "jersey_number": 25,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:113743",
+          "name": "Hanca, Sergiu",
+          "position": "midfielder",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1988123",
+          "name": "Ignat, Cristian",
+          "position": "defender",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2391339",
+          "name": "Ilie, David",
+          "position": "forward",
+          "jersey_number": 17,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2391337",
+          "name": "Jercalau, Andrei Cristian",
+          "position": "goalkeeper",
+          "jersey_number": 35,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1061770",
+          "name": "Jyry, Tommi",
+          "position": "midfielder",
+          "jersey_number": 6,
+          "nationality": "Finland"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:134646",
+          "name": "Krell, Stefan",
+          "position": "goalkeeper",
+          "jersey_number": 41,
+          "nationality": "Austria"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:939258",
+          "name": "Ludewig, Kilian",
+          "position": "defender",
+          "jersey_number": 29,
+          "nationality": "Germany"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:3028898",
+          "name": "Manolache, Rares",
+          "position": "forward",
+          "jersey_number": 40,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2600443",
+          "name": "Marian, Bogdan",
+          "position": "defender",
+          "jersey_number": 64,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:44443",
+          "name": "Mateiu, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:369976",
+          "name": "Onguene, Jerome",
+          "position": "defender",
+          "jersey_number": 25,
+          "nationality": "Cameroon"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:69336",
+          "name": "Papp, Paul",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2343317",
+          "name": "Pop, Rares",
+          "position": "midfielder",
+          "jersey_number": 55,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:190427",
+          "name": "Prce, Franjo",
+          "position": "defender",
+          "jersey_number": 71,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1652079",
+          "name": "Radu, Denis Razvan",
+          "position": "defender",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:3153378",
+          "name": "Radulescu, Stefan",
+          "position": "goalkeeper",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:770243",
+          "name": "Ricardinho",
+          "position": "defender",
+          "jersey_number": 24,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1243914",
+          "name": "Roche, Yohan",
+          "position": "defender",
+          "jersey_number": 69,
+          "nationality": "Benin"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2160164",
+          "name": "Soares, Guilherme",
+          "position": "defender",
+          "jersey_number": 42,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2784501",
+          "name": "Stancovici, Victor",
+          "position": "midfielder",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2784525",
+          "name": "Stancovici, Vlad",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:1543301",
+          "name": "Stanica, Alexandru Iulian",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2391321",
+          "name": "Tolea, Ioan",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Petrolul Ploieşti",
+          "team_sr_id": "sr:competitor:25856",
+          "id": "sr:player:2562925",
+          "name": "Tudor, Alesio Robert",
+          "position": "midfielder",
+          "jersey_number": 55,
+          "nationality": "Romania"
+        }
+      ]
+    },
+    "sr:competitor:221210": {
+      "team_short": "UTA Arad",
+      "team_name_sr": "FC Uta Arad",
+      "sr_id": "sr:competitor:221210",
+      "entries": [
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:1103969",
+          "name": "Abdallah, Hakim",
+          "position": "midfielder",
+          "jersey_number": 11,
+          "nationality": "Madagascar"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:135146",
+          "name": "Alin, Roman",
+          "position": "forward",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:361654",
+          "name": "Alomerovic, Sabahudin",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "North macedonia"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2651999",
+          "name": "Anisorac, Ionut",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:98566",
+          "name": "Benga, Alexandru Constantin",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2336497",
+          "name": "Blaga, Cristian",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:3017688",
+          "name": "Bokse, Alex",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2800609",
+          "name": "Campan, Lucas",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2639457",
+          "name": "Ciubăncan, David Bogdan",
+          "position": "forward",
+          "jersey_number": 98,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:893390",
+          "name": "Coman, Marius Catalin",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2863375",
+          "name": "Covaci, David",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2892457",
+          "name": "Dragos, Adrian Cristian",
+          "position": "forward",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:1247368",
+          "name": "Gojkovic, Luka",
+          "position": "midfielder",
+          "jersey_number": 18,
+          "nationality": "Serbia"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2028219",
+          "name": "Gorcea, Andrei Cristian",
+          "position": "goalkeeper",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:1628672",
+          "name": "Hrezdac, Denis Lucian",
+          "position": "midfielder",
+          "jersey_number": 97,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2800573",
+          "name": "Iacob, Flavius",
+          "position": "defender",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2557265",
+          "name": "Jelacic, Nikola",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Bosnia & herzegovina"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:3017684",
+          "name": "Joldea, Razvan",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2411865",
+          "name": "Mihai, Luca",
+          "position": "midfielder",
+          "jersey_number": 17,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:1075376",
+          "name": "Mino, Sota",
+          "position": "midfielder",
+          "jersey_number": 5,
+          "nationality": "Japan"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2776835",
+          "name": "Ndon, Ime",
+          "position": "forward",
+          "jersey_number": 15,
+          "nationality": "Nigeria"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:1730533",
+          "name": "Odada, Richard",
+          "position": "midfielder",
+          "jersey_number": 16,
+          "nationality": "Kenya"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2936567",
+          "name": "Olar, Alexandru Hodosan",
+          "position": "defender",
+          "jersey_number": 24,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:1009199",
+          "name": "Padula, Andrea",
+          "position": "defender",
+          "jersey_number": 72,
+          "nationality": "Italy"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:359476",
+          "name": "Popescu, Ovidiu Marian",
+          "position": "midfielder",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:112300",
+          "name": "Pospelov, Dmytro",
+          "position": "defender",
+          "jersey_number": 60,
+          "nationality": "Ukraine"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:1763213",
+          "name": "Poulolo, Florent",
+          "position": "defender",
+          "jersey_number": 6,
+          "nationality": "Martinique"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2649015",
+          "name": "Ristin, Razvan",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2941027",
+          "name": "Rosu, Lucas",
+          "position": "goalkeeper",
+          "jersey_number": 12,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2008501",
+          "name": "Sejdiu, Patriot",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Kosovo"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:283837",
+          "name": "Stolnik, Marko",
+          "position": "defender",
+          "jersey_number": 28,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2902621",
+          "name": "Taroi, Denis",
+          "position": "midfielder",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2990683",
+          "name": "Tolcea, Andrei",
+          "position": "midfielder",
+          "jersey_number": 7,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:361140",
+          "name": "Tordai, Arpad",
+          "position": "goalkeeper",
+          "jersey_number": 96,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2985817",
+          "name": "Tutu, Mark",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:1281198",
+          "name": "Tzionis, Marinos",
+          "position": "forward",
+          "jersey_number": 10,
+          "nationality": "Cyprus"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:838193",
+          "name": "Van Durmen, Benjamin",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Belgium"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:2328387",
+          "name": "Vlasceanu, Laurentiu",
+          "position": "defender",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "UTA Arad",
+          "team_sr_id": "sr:competitor:221210",
+          "id": "sr:player:3192450",
+          "name": "lle, Denis",
+          "position": "midfielder",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        }
+      ]
+    },
+    "sr:competitor:391688": {
+      "team_short": "Csikszereda",
+      "team_name_sr": "AFK Csikszereda Miercurea Ciuc",
+      "sr_id": "sr:competitor:391688",
+      "entries": [
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2779517",
+          "name": "Bakos, Ervin",
+          "position": "midfielder",
+          "jersey_number": 15,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2446683",
+          "name": "Balogh, Szilard",
+          "position": "midfielder",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:3021770",
+          "name": "Bencze, Lorand",
+          "position": "defender",
+          "jersey_number": 25,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2156028",
+          "name": "Betini, Mariano",
+          "position": "defender",
+          "jersey_number": 5,
+          "nationality": "Argentina"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:1096206",
+          "name": "Bloj, Erwin Szilard",
+          "position": "midfielder",
+          "jersey_number": 17,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2841417",
+          "name": "Bodo, Zoltan Efraim",
+          "position": "forward",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:3138990",
+          "name": "Bota, Darius",
+          "position": "midfielder",
+          "jersey_number": 55,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:3118300",
+          "name": "Brugger, D",
+          "position": "midfielder",
+          "jersey_number": 54,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:1645448",
+          "name": "Ceara, Anderson",
+          "position": "midfielder",
+          "jersey_number": 11,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:784053",
+          "name": "Celic, Maks Juraj",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:1869980",
+          "name": "Csuros, Attila",
+          "position": "midfielder",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:3017652",
+          "name": "Deaky, Zsombor",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:116314",
+          "name": "Dolny, Jozef",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Slovakia"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2548533",
+          "name": "Dusinszki, Szabolcs",
+          "position": "midfielder",
+          "jersey_number": 18,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:149688",
+          "name": "Eperjesi, Gabor",
+          "position": "defender",
+          "jersey_number": 9,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:117066",
+          "name": "Eppel, Marton",
+          "position": "forward",
+          "jersey_number": 27,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:3017654",
+          "name": "Erdei, Ramon",
+          "position": "midfielder",
+          "jersey_number": 96,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:3017814",
+          "name": "Gergely, Alpar",
+          "position": "forward",
+          "jersey_number": 99,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:1987895",
+          "name": "Gergely, Botond",
+          "position": "defender",
+          "jersey_number": 57,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:286677",
+          "name": "Hegedus, Janos",
+          "position": "defender",
+          "jersey_number": 24,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:1044283",
+          "name": "Jebari, Soufiane Jebari",
+          "position": "midfielder",
+          "jersey_number": 10,
+          "nationality": "Morocco"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:899776",
+          "name": "Kabashi, Arian",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Kosovo"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2592669",
+          "name": "Kajan, Norbert",
+          "position": "defender",
+          "jersey_number": 55,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:134877",
+          "name": "Kleinheisler, Laszlo",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2446681",
+          "name": "Mathe, Matyas Becze",
+          "position": "goalkeeper",
+          "jersey_number": 97,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:154225",
+          "name": "Nagy, Janos",
+          "position": "defender",
+          "jersey_number": 99,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:1658111",
+          "name": "Nagy, Zoard",
+          "position": "forward",
+          "jersey_number": 99,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:3017656",
+          "name": "Novelli, Luca",
+          "position": "forward",
+          "jersey_number": 14,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:969119",
+          "name": "Palmes, Raul",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:283213",
+          "name": "Pap, Eduard Adrian",
+          "position": "goalkeeper",
+          "jersey_number": 94,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:380560",
+          "name": "Paszka, Lorand",
+          "position": "defender",
+          "jersey_number": 6,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2779521",
+          "name": "Ronai, Robert",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2446667",
+          "name": "Simon, Mate",
+          "position": "goalkeeper",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:1641876",
+          "name": "Szalay, Szabolcs",
+          "position": "forward",
+          "jersey_number": 79,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:1642328",
+          "name": "Szondi, Botond",
+          "position": "midfielder",
+          "jersey_number": 53,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2097044",
+          "name": "Tajti, Balazs",
+          "position": "defender",
+          "jersey_number": 19,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:758860",
+          "name": "Tajti, Matyas",
+          "position": "midfielder",
+          "jersey_number": 19,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:3079236",
+          "name": "Toth-Pal, Elod",
+          "position": "forward",
+          "jersey_number": 16,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:893752",
+          "name": "Trif, Razvan Alin",
+          "position": "midfielder",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:996993",
+          "name": "Ulfsson Loeper, Wilhelm Axel",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "Sweden"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:1074432",
+          "name": "Vegh, Bence",
+          "position": "midfielder",
+          "jersey_number": 97,
+          "nationality": "Hungary"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:385988",
+          "name": "Veres, Szilard",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Csikszereda",
+          "team_sr_id": "sr:competitor:391688",
+          "id": "sr:player:2771105",
+          "name": "dos Santos Cabral, Gustavo",
+          "position": "midfielder",
+          "jersey_number": 22,
+          "nationality": "Brazil"
+        }
+      ]
+    },
+    "sr:competitor:116221": {
+      "team_short": "FC Argeş",
+      "team_name_sr": "ACS Champions FC Arges",
+      "sr_id": "sr:competitor:116221",
+      "entries": [
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2913423",
+          "name": "Ailenei, Raul",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:1827356",
+          "name": "Bettaieb, Adel",
+          "position": "forward",
+          "jersey_number": 21,
+          "nationality": "France"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:1317290",
+          "name": "Blagaic, Jakov",
+          "position": "forward",
+          "jersey_number": 24,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:1543415",
+          "name": "Borta, Florin",
+          "position": "midfielder",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:131451",
+          "name": "Briceag, Marius",
+          "position": "defender",
+          "jersey_number": 5,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:3138996",
+          "name": "Buse, Bogdan Ioan",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:279583",
+          "name": "Cabuz, Catalin",
+          "position": "goalkeeper",
+          "jersey_number": 34,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2620191",
+          "name": "Ciuciuolete, Radu",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:3020282",
+          "name": "Craciun, Luca Marian",
+          "position": "goalkeeper",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2359243",
+          "name": "Dinoci, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:3030172",
+          "name": "Dinu, Andrei Bogdan",
+          "position": "defender",
+          "jersey_number": 14,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2665713",
+          "name": "Dulcea, Patrick",
+          "position": "midfielder",
+          "jersey_number": 7,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:945898",
+          "name": "Emmers, Xian",
+          "position": "midfielder",
+          "jersey_number": 80,
+          "nationality": "Belgium"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2579053",
+          "name": "Frumuzache, Vlad",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2100766",
+          "name": "Garutti, Guilherme",
+          "position": "defender",
+          "jersey_number": 15,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:1383341",
+          "name": "Heras, Nacho",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "Spain"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:3153362",
+          "name": "Idowu, Michael",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "Nigeria"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:3020284",
+          "name": "Ionut, Rafael Petriu",
+          "position": "forward",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:181495",
+          "name": "Luckassen, Kevin",
+          "position": "forward",
+          "jersey_number": 42,
+          "nationality": "Netherlands"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2620189",
+          "name": "Manole",
+          "position": "midfielder",
+          "jersey_number": 98,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:3105846",
+          "name": "Marin, M",
+          "position": "defender",
+          "jersey_number": 82,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:1297698",
+          "name": "Matos, Ricardo",
+          "position": "forward",
+          "jersey_number": 17,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:934768",
+          "name": "Micovschi, Claudiu",
+          "position": "forward",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:3118872",
+          "name": "Moldovan, Iulian",
+          "position": "forward",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:854064",
+          "name": "Moldoveanu, Robert",
+          "position": "forward",
+          "jersey_number": 99,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:1096718",
+          "name": "Oancea, Dorinel",
+          "position": "defender",
+          "jersey_number": 26,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:305092",
+          "name": "Petrescu, Ionut Petrisor",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2490953",
+          "name": "Pirvu, Yanis",
+          "position": "forward",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2465927",
+          "name": "Popescu, Robert",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:878608",
+          "name": "Radescu, Ionut",
+          "position": "midfielder",
+          "jersey_number": 16,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:98082",
+          "name": "Rata, Vadim",
+          "position": "midfielder",
+          "jersey_number": 22,
+          "nationality": "Moldova, republic of"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:71393",
+          "name": "Roman, Mihai Alexandru",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:1382125",
+          "name": "Sadriu, Leard",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Kosovo"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:3139898",
+          "name": "Serban, Matteo Ionut",
+          "position": "goalkeeper",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:69296",
+          "name": "Seto, Takayuki",
+          "position": "midfielder",
+          "jersey_number": 25,
+          "nationality": "Japan"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:1383037",
+          "name": "Sierra, Rober",
+          "position": "midfielder",
+          "jersey_number": 27,
+          "nationality": "Spain"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2094118",
+          "name": "Silveanu, Alexandru Ionut",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:3024654",
+          "name": "Stancu, Claudiu",
+          "position": "defender",
+          "jersey_number": 28,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2514133",
+          "name": "Stoica, Andrei Floricel",
+          "position": "midfielder",
+          "jersey_number": 21,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:69155",
+          "name": "Straton, Catalin",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2569065",
+          "name": "Tchassem, Franck",
+          "position": "forward",
+          "jersey_number": 14,
+          "nationality": "Cameroon"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:892970",
+          "name": "Tofan, Costinel Andrei",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "FC Argeş",
+          "team_sr_id": "sr:competitor:116221",
+          "id": "sr:player:2121650",
+          "name": "Tudose, Mario",
+          "position": "defender",
+          "jersey_number": 6,
+          "nationality": "Romania"
+        }
+      ]
+    },
+    "sr:competitor:116223": {
+      "team_short": "U Craiova",
+      "team_name_sr": "CS Universitatea Craiova",
+      "sr_id": "sr:competitor:116223",
+      "entries": [
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:1989227",
+          "name": "Al Hamlawi, Assad Al Islam",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Palestinian territory, occupied"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2566817",
+          "name": "Badelj, Juraj",
+          "position": "defender",
+          "jersey_number": 15,
+          "nationality": "Croatia"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:1721980",
+          "name": "Baiaram, Stefan",
+          "position": "forward",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:857148",
+          "name": "Baluta, Tudor",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2675255",
+          "name": "Bana, Stefan Daniel",
+          "position": "forward",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:199092",
+          "name": "Bancu, Nicusor",
+          "position": "defender",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2608255",
+          "name": "Barbu, David",
+          "position": "forward",
+          "jersey_number": 27,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2639173",
+          "name": "Basceanu, Luca",
+          "position": "midfielder",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:1412423",
+          "name": "Bassey Etim, Monday",
+          "position": "forward",
+          "jersey_number": 12,
+          "nationality": "Niger"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2276195",
+          "name": "Benga, Denis Mirel",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:361160",
+          "name": "Cicaldau, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:229678",
+          "name": "Cretu, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 4,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2062213",
+          "name": "Danciu, Marian",
+          "position": "forward",
+          "jersey_number": 37,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2536755",
+          "name": "Falcusan, Darius Gabriel",
+          "position": "defender",
+          "jersey_number": 25,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2675243",
+          "name": "Gaina, Dragos",
+          "position": "forward",
+          "jersey_number": 30,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2645965",
+          "name": "Gaspar, Florin",
+          "position": "defender",
+          "jersey_number": 36,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2714316",
+          "name": "Glodean, Alexandru",
+          "position": "goalkeeper",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2661725",
+          "name": "Goga, Matei",
+          "position": "goalkeeper",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:1839802",
+          "name": "Goncalves, Joao",
+          "position": "goalkeeper",
+          "jersey_number": 32,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:1725282",
+          "name": "Iamandache",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:1747813",
+          "name": "Isenko, Pavlo",
+          "position": "goalkeeper",
+          "jersey_number": 77,
+          "nationality": "Ukraine"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:44556",
+          "name": "Lung, Silviu",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2981249",
+          "name": "Luta, Teodor Gabriel",
+          "position": "forward",
+          "jersey_number": 37,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2731728",
+          "name": "Martinovic, Lazar",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Montenegro"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2781169",
+          "name": "Matei, David",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:1061005",
+          "name": "Mekvabishvili, Anzor",
+          "position": "midfielder",
+          "jersey_number": 5,
+          "nationality": "Georgia"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:369056",
+          "name": "Mogos, Vasile",
+          "position": "defender",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2324373",
+          "name": "Mora, Carlos",
+          "position": "midfielder",
+          "jersey_number": 17,
+          "nationality": "Costa rica"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:3105852",
+          "name": "Muntean, Denys",
+          "position": "midfielder",
+          "jersey_number": 38,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2403049",
+          "name": "Nsimba, Steven",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "France"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:1080430",
+          "name": "Pereira Nunes Silva, Samuel Teles",
+          "position": "midfielder",
+          "jersey_number": 23,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:898478",
+          "name": "Popescu, Laurentiu",
+          "position": "goalkeeper",
+          "jersey_number": 21,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:3066905",
+          "name": "Preda, Sorin",
+          "position": "goalkeeper",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:2559429",
+          "name": "Radulescu, Mihnea",
+          "position": "forward",
+          "jersey_number": 18,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:1496333",
+          "name": "Romanchuk, Oleksandr",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Ukraine"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:997191",
+          "name": "Rus, Adrian",
+          "position": "defender",
+          "jersey_number": 28,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:993051",
+          "name": "Screciu, Vladimir",
+          "position": "midfielder",
+          "jersey_number": 6,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:560398",
+          "name": "Stefan, Florin",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "U Craiova",
+          "team_sr_id": "sr:competitor:116223",
+          "id": "sr:player:969477",
+          "name": "Stevanovic, Nikola",
+          "position": "defender",
+          "jersey_number": 24,
+          "nationality": "Serbia"
+        }
+      ]
+    },
+    "sr:competitor:3294": {
+      "team_short": "Farul Constanţa",
+      "team_name_sr": "FC Farul Constanta",
+      "sr_id": "sr:competitor:3294",
+      "entries": [
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:44417",
+          "name": "Alibec, Denis",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2183002",
+          "name": "Banu, Luca",
+          "position": "forward",
+          "jersey_number": 18,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2883641",
+          "name": "Barbu, David Cristian",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2823395",
+          "name": "Borba Ferreira, Isaque Vitor Kaminski",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2945517",
+          "name": "Budescu, Patrick",
+          "position": "midfielder",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:185267",
+          "name": "Buzbuchi, Alexandru",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:3155674",
+          "name": "Caldararu, Ricardo",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2831859",
+          "name": "Cocos, Alin Ionut",
+          "position": "forward",
+          "jersey_number": 97,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2229724",
+          "name": "Cojocaru, Ionut",
+          "position": "forward",
+          "jersey_number": 27,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:3017690",
+          "name": "Constantinescu, Nicolas",
+          "position": "forward",
+          "jersey_number": 16,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1987881",
+          "name": "Danuleasa, Gabriel",
+          "position": "defender",
+          "jersey_number": 15,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1839040",
+          "name": "Dican, Victor",
+          "position": "defender",
+          "jersey_number": 6,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2872371",
+          "name": "Dinca, David",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2639177",
+          "name": "Doicaru, Iustin",
+          "position": "forward",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2883645",
+          "name": "Dumitra, David John",
+          "position": "defender",
+          "jersey_number": 95,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2639181",
+          "name": "Dutu, Stefan",
+          "position": "defender",
+          "jersey_number": 5,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:3138112",
+          "name": "Fotin, Rares",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1243030",
+          "name": "Furtado, Steve",
+          "position": "defender",
+          "jersey_number": 93,
+          "nationality": "Cape verde"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:316433",
+          "name": "Ganea, Cristian",
+          "position": "defender",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2883669",
+          "name": "Gheorghe, Costyn",
+          "position": "defender",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:3120966",
+          "name": "Goncear, Alexandru",
+          "position": "",
+          "jersey_number": 29,
+          "nationality": ""
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1336360",
+          "name": "Grigoryan, Narek",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Armenia"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1641920",
+          "name": "Grosu, Darius",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:149648",
+          "name": "Iancu, Gabriel",
+          "position": "forward",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1719868",
+          "name": "Isfan, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 31,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2771103",
+          "name": "Kaminski Borba Ferreira, Joao Vitor",
+          "position": "defender",
+          "jersey_number": 45,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:48051",
+          "name": "Larie, Ionut",
+          "position": "defender",
+          "jersey_number": 17,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2779831",
+          "name": "Maftei, David",
+          "position": "defender",
+          "jersey_number": 98,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2601689",
+          "name": "Marin, Horia",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2990239",
+          "name": "Marincean, Razvan",
+          "position": "midfielder",
+          "jersey_number": 99,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2575243",
+          "name": "Marins, Gustavo",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1093970",
+          "name": "Markovic, Jovan",
+          "position": "forward",
+          "jersey_number": 25,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2932667",
+          "name": "Munteanu, Rafael",
+          "position": "goalkeeper",
+          "jersey_number": 12,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2883655",
+          "name": "Munteanu, Rares Gabriel",
+          "position": "defender",
+          "jersey_number": 26,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1613850",
+          "name": "Musat, Stefan",
+          "position": "goalkeeper",
+          "jersey_number": 34,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2883673",
+          "name": "Nechifor, Dan Ovidiu",
+          "position": "midfielder",
+          "jersey_number": 14,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:3155678",
+          "name": "Oancea, Andrei David",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2938361",
+          "name": "Pacuraru, David",
+          "position": "forward",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2883675",
+          "name": "Patru, David",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1548523",
+          "name": "Pellegrini, Lucas",
+          "position": "midfielder",
+          "jersey_number": 21,
+          "nationality": "France"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1948482",
+          "name": "Pereira Baptista, Fabio",
+          "position": "defender",
+          "jersey_number": 2,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2060019",
+          "name": "Popescu, Nicolas",
+          "position": "midfielder",
+          "jersey_number": 80,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2229726",
+          "name": "Radaslavescu, Eduard",
+          "position": "midfielder",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2395767",
+          "name": "Rafaila, Vlad",
+          "position": "goalkeeper",
+          "jersey_number": 12,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1086718",
+          "name": "Ramalho, Diogo",
+          "position": "midfielder",
+          "jersey_number": 77,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:3155662",
+          "name": "Rapeanu, Dragos Alexandru",
+          "position": "defender",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2201194",
+          "name": "Seruca, Andre",
+          "position": "defender",
+          "jersey_number": 50,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2883671",
+          "name": "Sima, Cristian",
+          "position": "forward",
+          "jersey_number": 97,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:1987883",
+          "name": "Sirbu, Dan",
+          "position": "midfielder",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:3155676",
+          "name": "Somandru, Eric",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2142524",
+          "name": "Tanasa, Razvan Andrei",
+          "position": "midfielder",
+          "jersey_number": 71,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:2990237",
+          "name": "Telehoi, Alexandru",
+          "position": "defender",
+          "jersey_number": 66,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:135151",
+          "name": "Tiru, Bogdan",
+          "position": "defender",
+          "jersey_number": 15,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:190323",
+          "name": "Vina, Ionut",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Farul Constanţa",
+          "team_sr_id": "sr:competitor:3294",
+          "id": "sr:player:98291",
+          "name": "Vojtus, Jakub",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Slovakia"
+        }
+      ]
+    },
+    "sr:competitor:44259": {
+      "team_short": "Unirea Slobozia",
+      "team_name_sr": "FC Unirea 2004 Slobozia",
+      "sr_id": "sr:competitor:44259",
+      "entries": [
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:834619",
+          "name": "Albu, Alexandru",
+          "position": "defender",
+          "jersey_number": 25,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:233758",
+          "name": "Antoche, Marius",
+          "position": "midfielder",
+          "jersey_number": 6,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:316441",
+          "name": "Barbut, Cristi Marian",
+          "position": "midfielder",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:756360",
+          "name": "Carnat, Nicolae",
+          "position": "forward",
+          "jersey_number": 14,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:2334377",
+          "name": "Ciuperca, Stefan",
+          "position": "goalkeeper",
+          "jersey_number": 27,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1252862",
+          "name": "Coada, Ionut",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:936688",
+          "name": "Dahan, Guy",
+          "position": "forward",
+          "jersey_number": 19,
+          "nationality": "Israel"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1417769",
+          "name": "Dinu, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 4,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:2334379",
+          "name": "Dorobantu, Andrei",
+          "position": "midfielder",
+          "jersey_number": 2,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1320970",
+          "name": "Dragu, Andrei",
+          "position": "midfielder",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1419147",
+          "name": "Espinoza, Renato",
+          "position": "forward",
+          "jersey_number": 26,
+          "nationality": "Peru"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1501701",
+          "name": "Garutti, Rafael Gomes",
+          "position": "defender",
+          "jersey_number": 17,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:2334371",
+          "name": "Girbacea, Viorel",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:2786059",
+          "name": "Iancu, Raul",
+          "position": "defender",
+          "jersey_number": 5,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:300624",
+          "name": "Ibrian, Florinel",
+          "position": "defender",
+          "jersey_number": 21,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1343094",
+          "name": "Lemnaru, Mihaita",
+          "position": "midfielder",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1587524",
+          "name": "Lopez Varela, Ariel Ignacio",
+          "position": "defender",
+          "jersey_number": 5,
+          "nationality": "Uruguay"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:573496",
+          "name": "Lungu, Teodor",
+          "position": "midfielder",
+          "jersey_number": 30,
+          "nationality": "Moldova, republic of"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:2289485",
+          "name": "Melniciuc, Alexandru",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:2112432",
+          "name": "Orozco Fernandez, Esteban",
+          "position": "defender",
+          "jersey_number": 98,
+          "nationality": "Equatorial guinea"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1770236",
+          "name": "Papeau, Jayson",
+          "position": "midfielder",
+          "jersey_number": 77,
+          "nationality": "France"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:190169",
+          "name": "Ponde, Cristian",
+          "position": "forward",
+          "jersey_number": 20,
+          "nationality": "Portugal"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:2101578",
+          "name": "Pop, Vlad",
+          "position": "midfielder",
+          "jersey_number": 24,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1987877",
+          "name": "Popa, Robert",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:2639443",
+          "name": "Rotund, Raul",
+          "position": "midfielder",
+          "jersey_number": 19,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:66034",
+          "name": "Rusu, Denis",
+          "position": "goalkeeper",
+          "jersey_number": 12,
+          "nationality": "Moldova, republic of"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:992343",
+          "name": "Safronov, Oleksandr",
+          "position": "defender",
+          "jersey_number": 3,
+          "nationality": "Ukraine"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:287023",
+          "name": "Said, Ahmed",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Italy"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:1096682",
+          "name": "Serbanica, Daniel Marius",
+          "position": "defender",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:300554",
+          "name": "Toma, Constantin",
+          "position": "defender",
+          "jersey_number": 10,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:2055763",
+          "name": "Tsoungui, Marc",
+          "position": "defender",
+          "jersey_number": 15,
+          "nationality": "Switzerland"
+        },
+        {
+          "team_short": "Unirea Slobozia",
+          "team_sr_id": "sr:competitor:44259",
+          "id": "sr:player:935154",
+          "name": "Yanakov, Denys",
+          "position": "forward",
+          "jersey_number": 77,
+          "nationality": "Ukraine"
+        }
+      ]
+    },
+    "sr:competitor:79081": {
+      "team_short": "Metaloglobus",
+      "team_name_sr": "Metaloglobus Bucureşti",
+      "sr_id": "sr:competitor:79081",
+      "entries": [
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2639439",
+          "name": "Abbey, Moses",
+          "position": "midfielder",
+          "jersey_number": 17,
+          "nationality": "Ghana"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2514089",
+          "name": "Badescu, Robert ,",
+          "position": "defender",
+          "jersey_number": 99,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:3044829",
+          "name": "Banu, Raoul",
+          "position": "forward",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2639789",
+          "name": "Camara, Aboubacar",
+          "position": "defender",
+          "jersey_number": 30,
+          "nationality": "France"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:908096",
+          "name": "Caramalau, George",
+          "position": "defender",
+          "jersey_number": 4,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2427695",
+          "name": "Celaj, Endri",
+          "position": "forward",
+          "jersey_number": 77,
+          "nationality": "Albania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:104579",
+          "name": "Cestor, Mike",
+          "position": "defender",
+          "jersey_number": 75,
+          "nationality": "Republic congo"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:101897",
+          "name": "Dragos Huiban",
+          "position": "forward",
+          "jersey_number": 11,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2996735",
+          "name": "Dumitru, Gabriel",
+          "position": "defender",
+          "jersey_number": 23,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:343671",
+          "name": "Fernandes, Ely",
+          "position": "forward",
+          "jersey_number": 10,
+          "nationality": "Cape verde"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2784543",
+          "name": "Florică, Ștefan",
+          "position": "goalkeeper",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:153663",
+          "name": "Gavrilas, George",
+          "position": "goalkeeper",
+          "jersey_number": 1,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2592213",
+          "name": "Gheorghe, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 14,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2357661",
+          "name": "Ghimfus, Giovani",
+          "position": "midfielder",
+          "jersey_number": 20,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:973943",
+          "name": "Hadzic, Benjamin",
+          "position": "forward",
+          "jersey_number": 99,
+          "nationality": "Bosnia & herzegovina"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2615333",
+          "name": "Irimia, Alexandru",
+          "position": "midfielder",
+          "jersey_number": 15,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2615329",
+          "name": "Irimia, David",
+          "position": "defender",
+          "jersey_number": 21,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2289491",
+          "name": "Lis, Laurentiu marian",
+          "position": "forward",
+          "jersey_number": 7,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:79056",
+          "name": "Morais, Junior",
+          "position": "defender",
+          "jersey_number": 12,
+          "nationality": "Brazil"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:1658081",
+          "name": "Moreira Barreto Carvalho, Bruno Jose",
+          "position": "midfielder",
+          "jersey_number": 6,
+          "nationality": "Cape verde"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:1136961",
+          "name": "Neacsu, Robert",
+          "position": "midfielder",
+          "jersey_number": 22,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:1098614",
+          "name": "Nedelcovici, Cristian Nicolae",
+          "position": "goalkeeper",
+          "jersey_number": 34,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2784541",
+          "name": "Pancișin, Liviu",
+          "position": "midfielder",
+          "jersey_number": null,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:941306",
+          "name": "Pasagic, Omar",
+          "position": "defender",
+          "jersey_number": 19,
+          "nationality": "Bosnia & herzegovina"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:756614",
+          "name": "Popa, Daniel",
+          "position": "forward",
+          "jersey_number": 29,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:87940",
+          "name": "Purece, Florin",
+          "position": "midfielder",
+          "jersey_number": 8,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:847306",
+          "name": "Sabater, Damia",
+          "position": "midfielder",
+          "jersey_number": 5,
+          "nationality": "Spain"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:90923",
+          "name": "Sava, Andrei",
+          "position": "midfielder",
+          "jersey_number": 13,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2779029",
+          "name": "Soare, Alexandru",
+          "position": "goalkeeper",
+          "jersey_number": 33,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:1643628",
+          "name": "Tirlea, Alexandru",
+          "position": "defender",
+          "jersey_number": 18,
+          "nationality": "Romania"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:1705441",
+          "name": "Toutou Mpondo, Martins Daniel",
+          "position": "forward",
+          "jersey_number": 16,
+          "nationality": "France"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:1035165",
+          "name": "Visic, Stefan",
+          "position": "forward",
+          "jersey_number": 9,
+          "nationality": "Serbia"
+        },
+        {
+          "team_short": "Metaloglobus",
+          "team_sr_id": "sr:competitor:79081",
+          "id": "sr:player:2199982",
+          "name": "Zakir, Yassine",
+          "position": "defender",
+          "jersey_number": 24,
+          "nationality": "Netherlands"
+        }
+      ]
+    }
+  },
+  "per_team_stats": [
+    {
+      "team": "U Cluj",
+      "wy_squad_size": 27,
+      "sr_squad_size": 41,
+      "matched": 26,
+      "pos_match": 20,
+      "match_rate": 0.7692307692307693
+    },
+    {
+      "team": "CFR Cluj",
+      "wy_squad_size": 30,
+      "sr_squad_size": 46,
+      "matched": 19,
+      "pos_match": 15,
+      "match_rate": 0.7894736842105263
+    },
+    {
+      "team": "FCSB",
+      "wy_squad_size": 28,
+      "sr_squad_size": 32,
+      "matched": 22,
+      "pos_match": 16,
+      "match_rate": 0.7272727272727273
+    },
+    {
+      "team": "Dinamo Bucureşti",
+      "wy_squad_size": 21,
+      "sr_squad_size": 47,
+      "matched": 17,
+      "pos_match": 13,
+      "match_rate": 0.7647058823529411
+    },
+    {
+      "team": "Rapid Bucureşti",
+      "wy_squad_size": 29,
+      "sr_squad_size": 40,
+      "matched": 22,
+      "pos_match": 20,
+      "match_rate": 0.9090909090909091
+    },
+    {
+      "team": "Botoşani",
+      "wy_squad_size": 25,
+      "sr_squad_size": 44,
+      "matched": 23,
+      "pos_match": 16,
+      "match_rate": 0.6956521739130435
+    },
+    {
+      "team": "Oţelul Galaţi",
+      "wy_squad_size": 27,
+      "sr_squad_size": 29,
+      "matched": 16,
+      "pos_match": 9,
+      "match_rate": 0.5625
+    },
+    {
+      "team": "Hermannstadt",
+      "wy_squad_size": 30,
+      "sr_squad_size": 33,
+      "matched": 21,
+      "pos_match": 15,
+      "match_rate": 0.7142857142857143
+    },
+    {
+      "team": "Petrolul Ploieşti",
+      "wy_squad_size": 31,
+      "sr_squad_size": 47,
+      "matched": 26,
+      "pos_match": 23,
+      "match_rate": 0.8846153846153846
+    },
+    {
+      "team": "UTA Arad",
+      "wy_squad_size": 25,
+      "sr_squad_size": 39,
+      "matched": 20,
+      "pos_match": 17,
+      "match_rate": 0.85
+    },
+    {
+      "team": "Csikszereda",
+      "wy_squad_size": 29,
+      "sr_squad_size": 43,
+      "matched": 22,
+      "pos_match": 14,
+      "match_rate": 0.6363636363636364
+    },
+    {
+      "team": "FC Argeş",
+      "wy_squad_size": 24,
+      "sr_squad_size": 43,
+      "matched": 21,
+      "pos_match": 18,
+      "match_rate": 0.8571428571428571
+    },
+    {
+      "team": "U Craiova",
+      "wy_squad_size": 26,
+      "sr_squad_size": 39,
+      "matched": 23,
+      "pos_match": 18,
+      "match_rate": 0.782608695652174
+    },
+    {
+      "team": "Farul Constanţa",
+      "wy_squad_size": 27,
+      "sr_squad_size": 55,
+      "matched": 26,
+      "pos_match": 17,
+      "match_rate": 0.6538461538461539
+    },
+    {
+      "team": "Unirea Slobozia",
+      "wy_squad_size": 33,
+      "sr_squad_size": 32,
+      "matched": 21,
+      "pos_match": 14,
+      "match_rate": 0.6666666666666666
+    },
+    {
+      "team": "Metaloglobus",
+      "wy_squad_size": 31,
+      "sr_squad_size": 33,
+      "matched": 25,
+      "pos_match": 18,
+      "match_rate": 0.72
+    }
+  ],
+  "league_match_rate": 0.7514285714285714,
+  "league_matched_players": 350,
+  "league_position_matches": 263
+}

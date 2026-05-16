@@ -1,0 +1,444 @@
+team,wyId,wyscout_name,wyscout_fine,wyscout_coarse,sportradar_id,sportradar_name,sportradar_position,sportradar_coarse,match
+U Cluj,1047336,A. Chintes,FB,DEF,sr:player:2639451,"Chintes, Alin Marian",defender,DEF,True
+U Cluj,779379,Ş. Lefter,GK,GK,sr:player:2779009,"Lefter, Ștefan",goalkeeper,GK,True
+U Cluj,778883,A. Gheorghiță,AM,MID,sr:player:2645359,"Gheorghita, Andrei",midfielder,MID,True
+U Cluj,759616,O. El Sawy,AM,MID,sr:player:2446655,"El Sawy, Omar",midfielder,MID,True
+U Cluj,630268,A. Coubis,CB,DEF,sr:player:2249161,"Coubis, Andrei",defender,DEF,True
+U Cluj,619309,O. Mendy,AM,MID,sr:player:2121882,"Mendy, Oucasse",forward,FWD,False
+U Cluj,577452,D. Codrea,DM,MID,sr:player:1560588,"Codrea, Dorin",midfielder,MID,True
+U Cluj,560364,J. Lukić,ST,FWD,sr:player:1022329,"Lukic, Jovo",forward,FWD,True
+U Cluj,83590,A. Chipciu,FB,DEF,sr:player:44435,"Chipciu, Alexandru",forward,FWD,False
+U Cluj,83838,D. Nistor,AM,MID,sr:player:93842,"Nistor, Dan Nicolae",midfielder,MID,True
+U Cluj,169037,O. Bic,DM,MID,sr:player:236844,"Bic, Ovidiu",midfielder,MID,True
+U Cluj,220694,D. Mikanović,FB,DEF,sr:player:245249,"Mikanovic, Dino",defender,DEF,True
+U Cluj,239290,E. Capradossi,CB,DEF,sr:player:284355,"Capradossi, Elio",defender,DEF,True
+U Cluj,240507,E. Gertmonas,GK,GK,sr:player:285953,"Gertmonas, Edvinas",goalkeeper,GK,True
+U Cluj,270356,I. Cristea,CB,DEF,sr:player:578526,"Cristea, Iulian Lucian",defender,DEF,True
+U Cluj,338220,Miguel Silva,FB,DEF,sr:player:867634,"Silva, Miguel",defender,DEF,True
+U Cluj,346908,A. Murgia,DM,MID,sr:player:559470,"Murgia, Alessandro",midfielder,MID,True
+U Cluj,445824,A. Fábry,AM,MID,sr:player:926778,"Fabry, Andrej",midfielder,MID,True
+U Cluj,462140,J. Cissé,CB,DEF,sr:player:1865742,"Cisse, Jonathan",defender,DEF,True
+U Cluj,506853,M. Drammeh,DM,MID,sr:player:944414,"Drammeh, Mouhamadou",midfielder,MID,True
+U Cluj,526387,I. Macalou,AM,MID,sr:player:2120884,"Macalou, Issouf",forward,FWD,False
+U Cluj,532568,V. Postolachi,AM,MID,sr:player:1297462,"Postolachi, Virgiliu",forward,FWD,False
+U Cluj,541971,J. Stanojev,AM,MID,sr:player:1240964,"Stanojev, Jug",forward,FWD,False
+U Cluj,748513,A. Trică,ST,FWD,sr:player:2162060,"Trica-Balaci, Atanas Ioan",forward,FWD,True
+U Cluj,227952,A. Artean,DM,MID,sr:player:301512,"Artean, Andrei",midfielder,MID,True
+U Cluj,441683,G. Simion,DM,MID,sr:player:1008455,"Simion, Gabriel",defender,DEF,False
+U Cluj,278515,M. Thiam,ST,FWD,,,,,False
+CFR Cluj,830137,V. Kun,FB,DEF,sr:player:2358317,"Kun, Viktor",midfielder,MID,False
+CFR Cluj,635248,L. Biliboc,AM,MID,sr:player:2870455,"Biliboc, Lorenzo",forward,FWD,False
+CFR Cluj,624454,A. Fică,AM,MID,sr:player:1865454,"Fica, Alin Razvan",midfielder,MID,True
+CFR Cluj,574712,Marian Huja,CB,DEF,sr:player:1553763,"Huja, Marian",defender,DEF,True
+CFR Cluj,530655,A. Cordea,AM,MID,sr:player:1600936,"Cordea, Andrei",midfielder,MID,True
+CFR Cluj,83617,C. Deac,W,FWD,sr:player:36883,"Deac, Ciprian",midfielder,MID,False
+CFR Cluj,83892,Mario Camora,FB,DEF,sr:player:78908,"Camora, Mario",defender,DEF,True
+CFR Cluj,21354,D. Djoković,DM,MID,sr:player:108740,"Djokovic, Damjan",midfielder,MID,True
+CFR Cluj,19445,C. Braun,FB,DEF,sr:player:163733,"Braun, Christopher",defender,DEF,True
+CFR Cluj,137155,A. Păun,AM,MID,sr:player:190309,"Paun, Alexandru",midfielder,MID,True
+CFR Cluj,173293,L. Zahovič,ST,FWD,sr:player:232162,"Zahovic, Luka",forward,FWD,True
+CFR Cluj,295757,T. Keita,DM,MID,sr:player:1507497,"Keita, Tidiane",midfielder,MID,True
+CFR Cluj,331420,M. Popa,GK,GK,sr:player:1613214,"Popa, Mihai",goalkeeper,GK,True
+CFR Cluj,361179,A. Aliev,ST,FWD,,,,,False
+CFR Cluj,376565,A. Abeid,FB,DEF,sr:player:1435339,"Abeid, Aly",defender,DEF,True
+CFR Cluj,412678,M. Korenica,AM,MID,sr:player:915730,"Korenica, Meriton",midfielder,MID,True
+CFR Cluj,431961,S. Sinyan,CB,DEF,sr:player:837439,"Sinyan, Sheriff",defender,DEF,True
+CFR Cluj,794309,A. Sfait,WF,FWD,sr:player:2188498,"Sfait, Andres",midfielder,MID,False
+CFR Cluj,725275,L. Emërllahu,CM,MID,,,,,False
+CFR Cluj,654448,O. Hindrich,GK,GK,,,,,False
+CFR Cluj,552657,M. Badamosi,ST,FWD,,,,,False
+CFR Cluj,528296,M. Ilie,CB,DEF,sr:player:1972795,"Ilie, Matei Cristian",defender,DEF,True
+CFR Cluj,330387,M. Coco,FB,DEF,,,,,False
+CFR Cluj,387061,K. Muhar,DM,MID,sr:player:883094,"Muhar, Karlo",midfielder,MID,True
+CFR Cluj,545276,L. Munteanu,ST,FWD,,,,,False
+CFR Cluj,517742,M. Gjorgjievski,ST,FWD,,,,,False
+CFR Cluj,343732,B. N'Kololo,AM,MID,,,,,False
+CFR Cluj,532568,V. Postolachi,ST,FWD,,,,,False
+CFR Cluj,280007,I. Cernigoi,ST,FWD,,,,,False
+CFR Cluj,119630,I. Slimani,ST,FWD,,,,,False
+FCSB,885074,M. Toma,AM,MID,sr:player:2527831,"Toma, Mihai",midfielder,MID,True
+FCSB,825398,A. Stoian,ST,FWD,sr:player:2483739,"Stoian, Alexandru",forward,FWD,True
+FCSB,753764,M. Lixandru,DM,MID,sr:player:2100370,"Lixandru, Mihai",midfielder,MID,True
+FCSB,682829,O. Popescu,AM,MID,sr:player:813348,"Popescu, Mihai",defender,DEF,False
+FCSB,681583,A. Pantea,FB,DEF,sr:player:1987879,"Pantea, Grigoras",defender,DEF,True
+FCSB,642344,Baba Alhassan,DM,MID,sr:player:2084449,"Alhassan, Baba",midfielder,MID,True
+FCSB,551713,S. Târnovanu,GK,GK,sr:player:1372522,"Tarnovanu, Stefan",goalkeeper,GK,True
+FCSB,511261,D. Bîrligea,ST,FWD,sr:player:1864682,"Birligea, Daniel",forward,FWD,True
+FCSB,509301,J. Dawa,CB,DEF,,,,,False
+FCSB,38598,D. Alibec,ST,FWD,,,,,False
+FCSB,83616,V. Crețu,FB,DEF,sr:player:44478,"Cretu, Valentin",defender,DEF,True
+FCSB,83575,V. Chiricheș,DM,MID,sr:player:69295,"Chiriches, Vlad",defender,DEF,False
+FCSB,128732,R. Radunović,FB,DEF,sr:player:117128,"Radunovic, Risto",defender,DEF,True
+FCSB,20650,J. Cisotti,AM,MID,sr:player:151076,"Cisotti, Juri",forward,FWD,False
+FCSB,262984,F. Tănase,AM,MID,sr:player:537032,"Tanase, Florin",forward,FWD,False
+FCSB,278515,M. Thiam,ST,FWD,sr:player:801158,"Thiam, Mamadou",forward,FWD,True
+FCSB,402409,D. Olaru,AM,MID,sr:player:893750,"Olaru, Darius",midfielder,MID,True
+FCSB,481134,D. Politic,AM,MID,,,,,False
+FCSB,537093,D. Miculescu,AM,MID,sr:player:1321020,"Miculescu, David",forward,FWD,False
+FCSB,136045,D. Graovac,CB,DEF,sr:player:94815,"Graovac, Daniel",defender,DEF,True
+FCSB,277597,M. Edjouma,DM,MID,,,,,False
+FCSB,363609,M. Popescu,CB,DEF,sr:player:813348,"Popescu, Mihai",defender,DEF,True
+FCSB,444594,S. Ngezana,CB,DEF,sr:player:1323154,"Ngezana, Siyabonga",defender,DEF,True
+FCSB,1047195,M. Popa,GK,GK,sr:player:2765371,"Popa, David",forward,FWD,False
+FCSB,583627,João Paulo,FB,DEF,,,,,False
+FCSB,500774,André Duarte,CB,DEF,sr:player:1359044,"Duarte, Andre",defender,DEF,True
+FCSB,433693,A. Şut,DM,MID,,,,,False
+FCSB,875076,I. Cercel,FB,DEF,sr:player:2639175,"Cercel, Ionut",defender,DEF,True
+Dinamo Bucureşti,866488,Alexandru Rosca,GK,GK,sr:player:2395735,"Rosca, Alexandru",goalkeeper,GK,True
+Dinamo Bucureşti,807849,N. Stoioanov,CB,DEF,,,,,False
+Dinamo Bucureşti,747286,C. Mihai,DM,MID,sr:player:1096538,"Mihai, Cristian Petrisor",midfielder,MID,True
+Dinamo Bucureşti,735669,A. Musi,WF,FWD,sr:player:2136792,"Musi, Alexandru",midfielder,MID,False
+Dinamo Bucureşti,696185,A. Caragea,WF,FWD,sr:player:2582273,"Caragea, Adrian Iulian",forward,FWD,True
+Dinamo Bucureşti,619740,C. Cîrjan,AM,MID,sr:player:1096544,"Cirjan, Catalin",midfielder,MID,True
+Dinamo Bucureşti,551419,Alberto Soro,WF,FWD,sr:player:1554815,"Soro, Alberto",midfielder,MID,False
+Dinamo Bucureşti,68126,G. Milanov,WF,FWD,sr:player:78201,"Milanov, Georgi",midfielder,MID,False
+Dinamo Bucureşti,28293,D. Epassy,GK,GK,sr:player:362758,"Epassy, Devis",goalkeeper,GK,True
+Dinamo Bucureşti,136564,C. Kyriakou,DM,MID,,,,,False
+Dinamo Bucureşti,8109,E. Gnahoré,DM,MID,sr:player:218298,"Gnahore, Eddy",midfielder,MID,True
+Dinamo Bucureşti,234533,S. Perica,ST,FWD,,,,,False
+Dinamo Bucureşti,302088,D. Armstrong,WF,FWD,sr:player:552866,"Armstrong, Danny",midfielder,MID,False
+Dinamo Bucureşti,426771,M. Sivis,FB,DEF,sr:player:1437866,"Sivis, Maxime",defender,DEF,True
+Dinamo Bucureşti,421354,K. Boateng,CB,DEF,sr:player:1047975,Kennedy Boateng,defender,DEF,True
+Dinamo Bucureşti,433613,A. Constantin Pop,ST,FWD,,,,,False
+Dinamo Bucureşti,503199,R. Opruț,FB,DEF,sr:player:1128451,"Oprut, Raul",defender,DEF,True
+Dinamo Bucureşti,545792,A. Marginean,DM,MID,sr:player:1383013,"Marginean, Andrei",midfielder,MID,True
+Dinamo Bucureşti,696194,A. Mazilu,WF,FWD,sr:player:2395769,"Mazilu, Adrian",forward,FWD,True
+Dinamo Bucureşti,563154,M. Karamoko,ST,FWD,sr:player:1694269,"Karamoko, Mamoudou",forward,FWD,True
+Dinamo Bucureşti,28528,J. Ikoko,FB,DEF,sr:player:139223,"Ikoko, Jordan",defender,DEF,True
+Rapid Bucureşti,847059,D. Hazrollaj,AM,MID,sr:player:2680241,"Hazrollaj, Drilon",forward,FWD,False
+Rapid Bucureşti,826080,R. Pop,AM,MID,,,,,False
+Rapid Bucureşti,762964,R. Bădescu,FB,DEF,,,,,False
+Rapid Bucureşti,696173,A. Borza,FB,DEF,sr:player:2299923,"Borza, Sebastian Andrei",defender,DEF,True
+Rapid Bucureşti,633039,T. Jambor,ST,FWD,sr:player:1986865,"Jambor, Timotej",forward,FWD,True
+Rapid Bucureşti,618151,K. Keita,DM,MID,sr:player:1864048,"Keita, Kader",midfielder,MID,True
+Rapid Bucureşti,591005,C. Petrila,AM,MID,sr:player:1535405,"Petrila, Claudiu",midfielder,MID,True
+Rapid Bucureşti,573194,F. Stolz,GK,GK,,,,,False
+Rapid Bucureşti,528176,C. Grameni,DM,MID,sr:player:1642320,"Grameni, Constantin",midfielder,MID,True
+Rapid Bucureşti,19445,C. Braun,FB,DEF,,,,,False
+Rapid Bucureşti,283833,J. Hromada,DM,MID,sr:player:237406,"Hromada, Jakub",midfielder,MID,True
+Rapid Bucureşti,286009,C. Manea,FB,DEF,sr:player:361150,"Manea, Cristian",defender,DEF,True
+Rapid Bucureşti,293344,E. Koljič,ST,FWD,sr:player:360902,"Koljic, Elvir",forward,FWD,True
+Rapid Bucureşti,368012,A. Dobre,AM,MID,sr:player:820402,"Dobre, Alexandru",midfielder,MID,True
+Rapid Bucureşti,399270,C. Micovschi,AM,MID,,,,,False
+Rapid Bucureşti,404829,M. Aioani,GK,GK,sr:player:946158,"Aioani, Mihai",goalkeeper,GK,True
+Rapid Bucureşti,424244,D. Ciobotariu,CB,DEF,sr:player:977985,"Ciobotariu, Denis",defender,DEF,True
+Rapid Bucureşti,447420,A. Pașcanu,CB,DEF,sr:player:1055153,"Pascanu, Alexandru",defender,DEF,True
+Rapid Bucureşti,495815,L. Gojković,AM,MID,,,,,False
+Rapid Bucureşti,499832,T. Christensen,AM,MID,sr:player:851774,"Christensen, Tobias",midfielder,MID,True
+Rapid Bucureşti,522105,R. Onea,FB,DEF,sr:player:1262364,"Onea, Razvan Philippe",defender,DEF,True
+Rapid Bucureşti,545144,L. Kramer,CB,DEF,sr:player:1340618,"Kramer, Lars",defender,DEF,True
+Rapid Bucureşti,827001,G. Gheorghe,CM,MID,sr:player:2835117,"Gheorghe, Gabriel",midfielder,MID,True
+Rapid Bucureşti,595649,C. Vulturar,DM,MID,sr:player:1652085,"Vulturar, Catalin Alin",midfielder,MID,True
+Rapid Bucureşti,649828,Talisson,ST,FWD,sr:player:2284573,Talisson,forward,FWD,True
+Rapid Bucureşti,577446,D. Paraschiv,ST,FWD,sr:player:1560506,"Paraschiv, Daniel",midfielder,MID,False
+Rapid Bucureşti,409007,O. Moruţan,AM,MID,sr:player:967409,"Morutan, Olimpiu",midfielder,MID,True
+Rapid Bucureşti,497525,A. Baroan,ST,FWD,sr:player:1573052,"Baroan, Antoine",forward,FWD,True
+Rapid Bucureşti,436604,Léo Bolgado,CB,DEF,,,,,False
+Botoşani,943700,R. Creţ,FB,DEF,sr:player:2646155,"Cret, Razvan Bogdan",defender,DEF,True
+Botoşani,842097,A. Friday,FB,DEF,,,,,False
+Botoşani,809979,G. David,DM,MID,sr:player:2291795,"David, Gabriel",midfielder,MID,True
+Botoşani,657843,Z. Mitrov,AM,MID,sr:player:2327549,"Mitrov, Zoran",forward,FWD,False
+Botoşani,634633,R. Šuta,CB,DEF,sr:player:1952168,"Suta, Riad",defender,DEF,True
+Botoşani,614148,G. Cîmpanu,AM,MID,sr:player:1832792,"Cimpanu, George",midfielder,MID,True
+Botoşani,612385,C. Petro,DM,MID,sr:player:1749789,"Petro, Charles",defender,DEF,False
+Botoşani,558098,E. López,ST,FWD,sr:player:2564847,"Lopez, Enzo",forward,FWD,True
+Botoşani,528185,Ş. Bodişteanu,AM,MID,sr:player:1951676,"Bodisteanu, Stefan",forward,FWD,False
+Botoşani,83986,A. Țigănașu,FB,DEF,sr:player:100797,"Tiganasu, Alexandru",midfielder,MID,False
+Botoşani,85307,M. Bordeianu,DM,MID,sr:player:82889,"Bordeianu, Mihai",midfielder,MID,True
+Botoşani,134514,H. Ongenda,AM,MID,sr:player:191174,"Ongenda, Hervin",forward,FWD,False
+Botoşani,92988,G. Anestis,GK,GK,sr:player:212832,"Anestis, Ioannis",goalkeeper,GK,True
+Botoşani,227873,E. Papa,DM,MID,sr:player:286645,"Papa, Enriko",midfielder,MID,True
+Botoşani,240057,L. Kukić,GK,GK,sr:player:933558,"Kukic, Luka",goalkeeper,GK,True
+Botoşani,301999,A. Miron,CB,DEF,sr:player:557342,"Miron, George Andrei",defender,DEF,True
+Botoşani,404846,S. Mailat,AM,MID,sr:player:917822,"Mailat, Sebastian",forward,FWD,False
+Botoşani,479610,A. Dumiter,ST,FWD,sr:player:1096230,"Dumiter, Ioan Andrei",forward,FWD,True
+Botoşani,518465,Aldaír,DM,MID,,,,,False
+Botoşani,825406,N. Ilaș,FB,DEF,sr:player:2613593,"Ilas, Narcis",defender,DEF,True
+Botoşani,622286,Ș. Pănoiu,AM,MID,sr:player:1863350,"Panoiu, Stefan Calin",midfielder,MID,True
+Botoşani,621237,M. Pavlović,FB,DEF,sr:player:1982765,"Pavlovic, Michael",midfielder,MID,False
+Botoşani,355910,M. Kovtalyuk,ST,FWD,sr:player:774199,"Kovtalyuk, Mykola",forward,FWD,True
+Botoşani,845197,A. Dumitru,AM,MID,sr:player:2788267,"Dumitru, Andrei",midfielder,MID,True
+Botoşani,411139,E. Diaw,CB,DEF,sr:player:957880,"Diaw, Elhadji Pape",defender,DEF,True
+Oţelul Galaţi,1208673,D. Neicu,AM,MID,sr:player:2213940,"Neicu, Dan Emilian",defender,DEF,False
+Oţelul Galaţi,1049294,D. Sandu,AM,MID,sr:player:2800783,"Sandu, Daniel",forward,FWD,False
+Oţelul Galaţi,1047237,M. Frunza,WF,FWD,sr:player:3021024,"Frunza, Matei",midfielder,MID,False
+Oţelul Galaţi,884773,D. Bordun,AM,MID,sr:player:2639393,"Bordun, Denis",forward,FWD,False
+Oţelul Galaţi,837919,A. Rus,FB,DEF,sr:player:2639389,"Rus, Andrei",defender,DEF,True
+Oţelul Galaţi,798255,Ș. Bană,AM,MID,,,,,False
+Oţelul Galaţi,756156,C. Chira,DM,MID,,,,,False
+Oţelul Galaţi,704331,Paulinho,ST,FWD,,,,,False
+Oţelul Galaţi,595340,Né Lopes,CB,DEF,sr:player:1852670,"Lopes, Manuel",defender,DEF,True
+Oţelul Galaţi,583627,João Paulo,DM,MID,,,,,False
+Oţelul Galaţi,135847,D. Živulić,CB,DEF,sr:player:127758,"Zivulic, Diego",midfielder,MID,False
+Oţelul Galaţi,68734,M. Zhelev,FB,DEF,sr:player:173559,"Zhelev, Milen",defender,DEF,True
+Oţelul Galaţi,283961,I. Popescu,GK,GK,sr:player:96322,"Popescu, Iustin",goalkeeper,GK,True
+Oţelul Galaţi,346541,C. Dur-Bozoancă,GK,GK,,,,,False
+Oţelul Galaţi,346549,Andrei Ciobanu,DM,MID,sr:player:756338,"Ciobanu, Andrei",forward,FWD,False
+Oţelul Galaţi,399649,João Lameira,DM,MID,,,,,False
+Oţelul Galaţi,493487,Kazu,FB,DEF,sr:player:1672025,Kazu,defender,DEF,True
+Oţelul Galaţi,509226,Andrezinho,AM,MID,sr:player:1418163,Andrezinho,midfielder,MID,True
+Oţelul Galaţi,510846,Patrick,ST,FWD,,,,,False
+Oţelul Galaţi,292613,P. Iacob,CB,DEF,sr:player:805252,"Iacob, Paul",midfielder,MID,False
+Oţelul Galaţi,333626,Pedro Nuno,AM,MID,sr:player:584434,"Nuno, Pedro",midfielder,MID,True
+Oţelul Galaţi,345748,Bruno Paz,DM,MID,sr:player:605972,"Paz, Bruno",midfielder,MID,True
+Oţelul Galaţi,444454,G. Debeljuh,ST,FWD,sr:player:1028207,"Debeljuh, Gabriel",forward,FWD,True
+Oţelul Galaţi,507596,Conrado,FB,DEF,,,,,False
+Oţelul Galaţi,648838,V. Murria,CB,DEF,,,,,False
+Oţelul Galaţi,650096,Luan,AM,MID,,,,,False
+Oţelul Galaţi,363588,R. Trif,FB,DEF,,,,,False
+Hermannstadt,1085571,L. Stancu,FB,DEF,sr:player:2587467,"Stancu, Luca",defender,DEF,True
+Hermannstadt,875968,K. Ciubotaru,FB,DEF,sr:player:2482423,"Ciubotaru, Kevin",defender,DEF,True
+Hermannstadt,731172,C. Afalna,ST,FWD,sr:player:2334375,"Afalna, Christ",midfielder,MID,False
+Hermannstadt,607434,A. Oroian,WF,FWD,,,,,False
+Hermannstadt,590121,A. Zargari,DM,MID,,,,,False
+Hermannstadt,580951,N. Antwi,FB,DEF,,,,,False
+Hermannstadt,568864,M. Simba,WF,FWD,sr:player:1012593,"Simba, Moonga",midfielder,MID,False
+Hermannstadt,517742,M. Gjorgjievski,ST,FWD,sr:player:1319788,"Gjorgjievski, Marko",forward,FWD,True
+Hermannstadt,84343,A. Chițu,ST,FWD,sr:player:115585,"Chitu, Aurelian Ionut",forward,FWD,True
+Hermannstadt,83820,D. Lazar,GK,GK,sr:player:131433,"Lazar, David",goalkeeper,GK,True
+Hermannstadt,84047,S. Buș,ST,FWD,sr:player:70723,"Bus, Sergiu Florin",forward,FWD,True
+Hermannstadt,136551,A. Karo,CB,DEF,sr:player:186735,"Karo, Andreas",defender,DEF,True
+Hermannstadt,224047,B. Chorbadzhiyski,CB,DEF,sr:player:252473,"Chorbadzhiyski, Bozhidar",defender,DEF,True
+Hermannstadt,227957,I. Stoica,CB,DEF,sr:player:302988,"Stoica, Ionut",defender,DEF,True
+Hermannstadt,270318,A. Ivanov,DM,MID,,,,,False
+Hermannstadt,331434,E. Florescu,AM,MID,sr:player:562036,"Florescu, Eduard",midfielder,MID,True
+Hermannstadt,346542,T. Căpușă,CB,DEF,sr:player:756356,"Capusa, Tiberiu",defender,DEF,True
+Hermannstadt,376363,Jair,WF,FWD,sr:player:984763,Jair,midfielder,MID,False
+Hermannstadt,380865,C. Neguţ,WF,FWD,sr:player:973435,"Negut, Cristian Daniel",forward,FWD,True
+Hermannstadt,481134,D. Politic,WF,FWD,sr:player:1089720,"Politic, Dennis",midfielder,MID,False
+Hermannstadt,545275,D. Albu,CM,MID,sr:player:1383003,"Albu, Dragos",midfielder,MID,True
+Hermannstadt,849722,P. Patrick Vuc,ST,FWD,,,,,False
+Hermannstadt,644450,K. Kujabi,DM,MID,sr:player:2417165,"Kujabi, Kalifa",midfielder,MID,True
+Hermannstadt,593080,Diogo Batista,CM,MID,,,,,False
+Hermannstadt,581187,S. Issah,CB,DEF,sr:player:2116812,"Issah, Seydou Saeed",defender,DEF,True
+Hermannstadt,84321,F. Bejan,CB,DEF,sr:player:3174158,"Bejan, David",midfielder,MID,False
+Hermannstadt,236740,C. Biceanu,CM,MID,,,,,False
+Hermannstadt,236811,C. Căbuz,GK,GK,,,,,False
+Hermannstadt,366563,V. Selimović,CB,DEF,,,,,False
+Hermannstadt,236823,S. Balaure,WF,FWD,sr:player:279607,"Balaure, Silviu",midfielder,MID,False
+Petrolul Ploieşti,1046094,D. Paraschiv,CM,MID,,,,,False
+Petrolul Ploieşti,846397,D. Dongmo,DM,MID,sr:player:2411857,"Dongmo, Danel Jordan",midfielder,MID,True
+Petrolul Ploieşti,821944,I. Tolea,AM,MID,sr:player:2391321,"Tolea, Ioan",midfielder,MID,True
+Petrolul Ploieşti,784809,B. Marian,WB,DEF,sr:player:2600443,"Marian, Bogdan",defender,DEF,True
+Petrolul Ploieşti,756116,R. Balbarau,GK,GK,sr:player:2203214,"Balbarau, Raul",goalkeeper,GK,True
+Petrolul Ploieşti,684806,A. Chica-Rosa,ST,FWD,sr:player:1940096,"Chica-Rosa, Adi",forward,FWD,True
+Petrolul Ploieşti,684792,R. Sălceanu,FB,DEF,,,,,False
+Petrolul Ploieşti,682774,A. Boțogan,CM,MID,sr:player:2100880,"Botogan, Alin",midfielder,MID,True
+Petrolul Ploieşti,488953,Guilherme Soares,CB,DEF,sr:player:2160164,"Soares, Guilherme",defender,DEF,True
+Petrolul Ploieşti,83699,A. Mateiu,DM,MID,sr:player:44443,"Mateiu, Alexandru",midfielder,MID,True
+Petrolul Ploieşti,83959,G. Grozav,AM,MID,sr:player:69213,"Grozav, Gheorghe",forward,FWD,False
+Petrolul Ploieşti,83744,P. Papp,CB,DEF,sr:player:69336,"Papp, Paul",defender,DEF,True
+Petrolul Ploieşti,84880,S. Hanca,AM,MID,sr:player:113743,"Hanca, Sergiu",midfielder,MID,True
+Petrolul Ploieşti,64958,S. Krell,GK,GK,sr:player:134646,"Krell, Stefan",goalkeeper,GK,True
+Petrolul Ploieşti,238584,F. Prce,CB,DEF,sr:player:190427,"Prce, Franjo",defender,DEF,True
+Petrolul Ploieşti,279058,Ricardinho,FB,DEF,sr:player:770243,Ricardinho,defender,DEF,True
+Petrolul Ploieşti,347151,Y. Roche,CB,DEF,sr:player:1243914,"Roche, Yohan",defender,DEF,True
+Petrolul Ploieşti,412695,V. Gheorghe,W,FWD,sr:player:1012103,"Gheorghe, Valentin",midfielder,MID,False
+Petrolul Ploieşti,475980,T. Jyry,CM,MID,sr:player:1061770,"Jyry, Tommi",midfielder,MID,True
+Petrolul Ploieşti,487125,K. Doumtsios,ST,FWD,sr:player:803462,"Doumtsios, Konstantinos",forward,FWD,True
+Petrolul Ploieşti,491990,B. Doukansy,DM,MID,sr:player:1731811,"Doukansy, Brahima",midfielder,MID,True
+Petrolul Ploieşti,826080,R. Pop,AM,MID,sr:player:2343317,"Pop, Rares",midfielder,MID,True
+Petrolul Ploieşti,694082,Rafinha,WF,FWD,,,,,False
+Petrolul Ploieşti,632600,C. Ignat,CB,DEF,sr:player:1988123,"Ignat, Cristian",defender,DEF,True
+Petrolul Ploieşti,136788,A. Aymbetov,ST,FWD,,,,,False
+Petrolul Ploieşti,404908,M. Dulca,DM,MID,sr:player:934758,"Dulca, Marco",midfielder,MID,True
+Petrolul Ploieşti,545262,A. Dumitrescu,FB,DEF,sr:player:1383001,"Dumitrescu, Andres",defender,DEF,True
+Petrolul Ploieşti,222582,N. Boateng,AM,MID,sr:player:252531,"Boateng, Nana",midfielder,MID,True
+Petrolul Ploieşti,295757,T. Keita,DM,MID,,,,,False
+Petrolul Ploieşti,595660,D. Radu,FB,DEF,sr:player:1652079,"Radu, Denis Razvan",defender,DEF,True
+Petrolul Ploieşti,408933,K. Ludewig,W,FWD,sr:player:939258,"Ludewig, Kilian",defender,DEF,False
+UTA Arad,1086818,M. Țuțu,FB,DEF,sr:player:2985817,"Tutu, Mark",defender,DEF,True
+UTA Arad,1046794,D. Taroi,AM,MID,sr:player:2902621,"Taroi, Denis",midfielder,MID,True
+UTA Arad,1018334,D. Barbu,ST,FWD,,,,,False
+UTA Arad,779381,F. Iacob,FB,DEF,sr:player:2800573,"Iacob, Flavius",defender,DEF,True
+UTA Arad,673678,R. Odada,DM,MID,sr:player:1730533,"Odada, Richard",midfielder,MID,True
+UTA Arad,636258,A. Gorcea,GK,GK,sr:player:2028219,"Gorcea, Andrei Cristian",goalkeeper,GK,True
+UTA Arad,625962,L. Mihai,DM,MID,sr:player:2411865,"Mihai, Luca",midfielder,MID,True
+UTA Arad,590216,D. Hrezdac,DM,MID,sr:player:1628672,"Hrezdac, Denis Lucian",midfielder,MID,True
+UTA Arad,587667,S. Mino,DM,MID,sr:player:1075376,"Mino, Sota",midfielder,MID,True
+UTA Arad,83665,A. Benga,CB,DEF,sr:player:98566,"Benga, Alexandru Constantin",defender,DEF,True
+UTA Arad,84373,A. Roman,AM,MID,,,,,False
+UTA Arad,285677,D. Alomerović,FB,DEF,sr:player:361654,"Alomerovic, Sabahudin",defender,DEF,True
+UTA Arad,346550,V. Costache,AM,MID,,,,,False
+UTA Arad,366784,H. Abdallah,ST,FWD,sr:player:1103969,"Abdallah, Hakim",midfielder,MID,False
+UTA Arad,372880,B. Van Durmen,DM,MID,sr:player:838193,"Van Durmen, Benjamin",midfielder,MID,True
+UTA Arad,393264,F. Poulolo,CB,DEF,sr:player:1763213,"Poulolo, Florent",defender,DEF,True
+UTA Arad,402476,M. Coman,ST,FWD,sr:player:893390,"Coman, Marius Catalin",forward,FWD,True
+UTA Arad,495815,L. Gojković,AM,MID,sr:player:1247368,"Gojkovic, Luka",midfielder,MID,True
+UTA Arad,762967,L. Vlasceanu,AM,MID,sr:player:2328387,"Vlasceanu, Laurentiu",defender,DEF,False
+UTA Arad,106397,D. Pospelov,CB,DEF,sr:player:112300,"Pospelov, Dmytro",defender,DEF,True
+UTA Arad,136092,D. Iliev,GK,GK,,,,,False
+UTA Arad,283965,O. Popescu,DM,MID,sr:player:359476,"Popescu, Ovidiu Marian",midfielder,MID,True
+UTA Arad,443858,A. Padula,FB,DEF,sr:player:1009199,"Padula, Andrea",defender,DEF,True
+UTA Arad,544331,M. Tzionis,AM,MID,sr:player:1281198,"Tzionis, Marinos",forward,FWD,False
+UTA Arad,601785,D. Zsóri,AM,MID,,,,,False
+Csikszereda,1047125,Z. Bödő,CM,MID,sr:player:2841417,"Bodo, Zoltan Efraim",forward,FWD,False
+Csikszereda,844699,B. Végh,DM,MID,sr:player:1074432,"Vegh, Bence",midfielder,MID,True
+Csikszereda,798561,E. Bakoș,AM,MID,sr:player:2779517,"Bakos, Ervin",midfielder,MID,True
+Csikszereda,754380,S. Szilágyi,DM,MID,,,,,False
+Csikszereda,602966,A. Csuros,CB,DEF,sr:player:1869980,"Csuros, Attila",midfielder,MID,False
+Csikszereda,586805,S. Szalay,W,FWD,sr:player:1641876,"Szalay, Szabolcs",forward,FWD,True
+Csikszereda,487329,Anderson Ceará,W,FWD,sr:player:1645448,"Ceara, Anderson",midfielder,MID,False
+Csikszereda,104898,P. Gál-Andrezly,FB,DEF,,,,,False
+Csikszereda,104842,J. Dolný,ST,FWD,sr:player:116314,"Dolny, Jozef",forward,FWD,True
+Csikszereda,75148,M. Eppel,ST,FWD,sr:player:117066,"Eppel, Marton",forward,FWD,True
+Csikszereda,74982,J. Ferenczi,FB,DEF,,,,,False
+Csikszereda,226046,B. Babati,FB,DEF,,,,,False
+Csikszereda,236828,E. Pap,GK,GK,sr:player:283213,"Pap, Eduard Adrian",goalkeeper,GK,True
+Csikszereda,239276,J. Hegedűs,CB,DEF,sr:player:286677,"Hegedus, Janos",defender,DEF,True
+Csikszereda,263038,S. Veres,CM,MID,sr:player:385988,"Veres, Szilard",midfielder,MID,True
+Csikszereda,352143,B. Szabó,AM,MID,,,,,False
+Csikszereda,287504,L. Pászka,FB,DEF,sr:player:380560,"Paszka, Lorand",defender,DEF,True
+Csikszereda,426372,R. Palmes,CB,DEF,sr:player:969119,"Palmes, Raul",defender,DEF,True
+Csikszereda,479620,E. Bloj,FB,DEF,sr:player:1096206,"Bloj, Erwin Szilard",midfielder,MID,False
+Csikszereda,759643,S. Dusinszki,AM,MID,sr:player:2548533,"Dusinszki, Szabolcs",midfielder,MID,True
+Csikszereda,470748,S. Jebari,W,FWD,sr:player:1044283,"Jebari, Soufiane Jebari",midfielder,MID,False
+Csikszereda,474747,M. Čelić,CB,DEF,sr:player:784053,"Celic, Maks Juraj",defender,DEF,True
+Csikszereda,1223013,D. Bota,W,FWD,sr:player:3138990,"Bota, Darius",midfielder,MID,False
+Csikszereda,649323,Gustavo Cabral,W,FWD,,,,,False
+Csikszereda,363588,R. Trif,FB,DEF,sr:player:893752,"Trif, Razvan Alin",midfielder,MID,False
+Csikszereda,396846,A. Kabashi,CB,DEF,sr:player:899776,"Kabashi, Arian",defender,DEF,True
+Csikszereda,602116,Z. Nagy,ST,FWD,sr:player:154225,"Nagy, Janos",defender,DEF,False
+Csikszereda,453653,W. Loeper,W,FWD,,,,,False
+Csikszereda,74943,L. Kleinheisler,DM,MID,sr:player:134877,"Kleinheisler, Laszlo",midfielder,MID,True
+FC Argeş,1082698,F. Tchassem,ST,FWD,sr:player:2569065,"Tchassem, Franck",forward,FWD,True
+FC Argeş,825394,C. Pirvu,W,FWD,sr:player:2490953,"Pirvu, Yanis",forward,FWD,True
+FC Argeş,696195,M. Tudose,CB,DEF,sr:player:2121650,"Tudose, Mario",defender,DEF,True
+FC Argeş,83983,T. Seto,DM,MID,sr:player:69296,"Seto, Takayuki",midfielder,MID,True
+FC Argeş,83736,C. Straton,GK,GK,sr:player:69155,"Straton, Catalin",goalkeeper,GK,True
+FC Argeş,80986,V. Raţă,CM,MID,sr:player:98082,"Rata, Vadim",midfielder,MID,True
+FC Argeş,83820,D. Lazar,GK,GK,,,,,False
+FC Argeş,84477,M. Briceag,FB,DEF,sr:player:131451,"Briceag, Marius",defender,DEF,True
+FC Argeş,47583,Guilherme Garutti,CB,DEF,sr:player:2100766,"Garutti, Guilherme",defender,DEF,True
+FC Argeş,347148,A. Bettaieb,ST,FWD,sr:player:1827356,"Bettaieb, Adel",forward,FWD,True
+FC Argeş,380863,R. Moldoveanu,ST,FWD,sr:player:854064,"Moldoveanu, Robert",forward,FWD,True
+FC Argeş,395131,R. Sierra,DM,MID,sr:player:1383037,"Sierra, Rober",midfielder,MID,True
+FC Argeş,402458,A. Tofan,FB,DEF,sr:player:892970,"Tofan, Costinel Andrei",defender,DEF,True
+FC Argeş,425861,I. Rădescu,CM,MID,sr:player:878608,"Radescu, Ionut",midfielder,MID,True
+FC Argeş,519484,Esteban Orozco,CB,DEF,,,,,False
+FC Argeş,532611,Ricardo Matos,ST,FWD,sr:player:1297698,"Matos, Ricardo",forward,FWD,True
+FC Argeş,539343,J. Blagaić,AM,MID,sr:player:1317290,"Blagaic, Jakov",forward,FWD,False
+FC Argeş,542894,L. Sadriu,CB,DEF,sr:player:1382125,"Sadriu, Leard",defender,DEF,True
+FC Argeş,576188,F. Borța,FB,DEF,sr:player:1543415,"Borta, Florin",midfielder,MID,False
+FC Argeş,95,K. Luckassen,ST,FWD,sr:player:181495,"Luckassen, Kevin",forward,FWD,True
+FC Argeş,236811,C. Căbuz,GK,GK,sr:player:279583,"Cabuz, Catalin",goalkeeper,GK,True
+FC Argeş,514662,D. Oancea,FB,DEF,sr:player:1096718,"Oancea, Dorinel",defender,DEF,True
+FC Argeş,900843,Caio Ferreira,WF,FWD,,,,,False
+FC Argeş,399270,C. Micovschi,WB,DEF,sr:player:934768,"Micovschi, Claudiu",forward,FWD,False
+U Craiova,905052,D. Matei,WF,FWD,sr:player:2781169,"Matei, David",midfielder,MID,False
+U Craiova,892106,L. Băsceanu,W,FWD,sr:player:2639173,"Basceanu, Luca",midfielder,MID,False
+U Craiova,745987,J. Badelj,CB,DEF,sr:player:2566817,"Badelj, Juraj",defender,DEF,True
+U Craiova,603977,P. Isenko,GK,GK,sr:player:1747813,"Isenko, Pavlo",goalkeeper,GK,True
+U Craiova,528190,Ş. Baiaram,ST,FWD,sr:player:1721980,"Baiaram, Stefan",forward,FWD,True
+U Craiova,83966,S. Lung,GK,GK,sr:player:44556,"Lung, Silviu",goalkeeper,GK,True
+U Craiova,84397,A. Crețu,CM,MID,sr:player:229678,"Cretu, Alexandru",midfielder,MID,True
+U Craiova,85276,N. Bancu,WB,DEF,sr:player:199092,"Bancu, Nicusor",defender,DEF,True
+U Craiova,235454,L. Houri,WF,FWD,,,,,False
+U Craiova,273125,V. Mogoș,CB,DEF,sr:player:369056,"Mogos, Vasile",defender,DEF,True
+U Craiova,327219,F. Ștefan,WB,DEF,sr:player:560398,"Stefan, Florin",defender,DEF,True
+U Craiova,358660,Samuel Teles,WB,DEF,,,,,False
+U Craiova,380866,T. Băluţă,DM,MID,sr:player:857148,"Baluta, Tudor",midfielder,MID,True
+U Craiova,397975,L. Popescu,GK,GK,sr:player:898478,"Popescu, Laurentiu",goalkeeper,GK,True
+U Craiova,420975,N. Stevanović,CB,DEF,sr:player:969477,"Stevanovic, Nikola",defender,DEF,True
+U Craiova,437020,A. Rus,CB,DEF,sr:player:997191,"Rus, Adrian",defender,DEF,True
+U Craiova,475721,A. Mekvabishvili,CM,MID,sr:player:1061005,"Mekvabishvili, Anzor",midfielder,MID,True
+U Craiova,504570,M. Etim,ST,FWD,,,,,False
+U Craiova,512664,O. Romanchuk,CB,DEF,sr:player:1496333,"Romanchuk, Oleksandr",defender,DEF,True
+U Craiova,547271,A. Al Hamlawi,ST,FWD,sr:player:1989227,"Al Hamlawi, Assad Al Islam",forward,FWD,True
+U Craiova,1018334,D. Barbu,WF,FWD,sr:player:2608255,"Barbu, David",forward,FWD,True
+U Craiova,828623,M. Rădulescu,WB,DEF,sr:player:2559429,"Radulescu, Mihnea",forward,FWD,False
+U Craiova,286015,A. Cicâldău,CM,MID,sr:player:361160,"Cicaldau, Alexandru",midfielder,MID,True
+U Craiova,435748,V. Screciu,CB,DEF,sr:player:993051,"Screciu, Vladimir",midfielder,MID,False
+U Craiova,525537,S. Nsimba,ST,FWD,sr:player:2403049,"Nsimba, Steven",forward,FWD,True
+U Craiova,655465,C. Mora,WB,DEF,sr:player:2324373,"Mora, Carlos",midfielder,MID,False
+Farul Constanţa,1024583,A. Goncear,ST,FWD,sr:player:3120966,"Goncear, Alexandru",,?,False
+Farul Constanţa,866833,R. Munteanu,GK,GK,sr:player:2932667,"Munteanu, Rafael",goalkeeper,GK,True
+Farul Constanţa,860666,I. Doicaru,WF,FWD,sr:player:2639177,"Doicaru, Iustin",forward,FWD,True
+Farul Constanţa,739220,R. Tănasă,WF,FWD,sr:player:2142524,"Tanasa, Razvan Andrei",midfielder,MID,False
+Farul Constanţa,690392,Gustavo Marins,CB,DEF,sr:player:2575243,"Marins, Gustavo",defender,DEF,True
+Farul Constanţa,645620,E. Rădăslăvescu,CM,MID,sr:player:2229726,"Radaslavescu, Eduard",midfielder,MID,True
+Farul Constanţa,618306,V. Dican,DM,MID,sr:player:1839040,"Dican, Victor",defender,DEF,False
+Farul Constanţa,603499,A. Ișfan,ST,FWD,sr:player:1719868,"Isfan, Alexandru",midfielder,MID,False
+Farul Constanţa,565494,D. Sîrbu,FB,DEF,sr:player:1987883,"Sirbu, Dan",midfielder,MID,False
+Farul Constanţa,38598,D. Alibec,ST,FWD,sr:player:44417,"Alibec, Denis",forward,FWD,True
+Farul Constanţa,22389,J. Vojtuš,ST,FWD,sr:player:98291,"Vojtus, Jakub",forward,FWD,True
+Farul Constanţa,84318,A. Buzbuchi,GK,GK,sr:player:185267,"Buzbuchi, Alexandru",goalkeeper,GK,True
+Farul Constanţa,84353,I. Vînă,CM,MID,sr:player:190323,"Vina, Ionut",midfielder,MID,True
+Farul Constanţa,84342,B. Țîru,CB,DEF,sr:player:135151,"Tiru, Bogdan",defender,DEF,True
+Farul Constanţa,252564,C. Ganea,FB,DEF,sr:player:316433,"Ganea, Cristian",defender,DEF,True
+Farul Constanţa,486209,J. Marković,ST,FWD,sr:player:1093970,"Markovic, Jovan",forward,FWD,True
+Farul Constanţa,486564,Diogo Ramalho,DM,MID,sr:player:1086718,"Ramalho, Diogo",midfielder,MID,True
+Farul Constanţa,535038,L. Pellegrini,FB,DEF,sr:player:1548523,"Pellegrini, Lucas",midfielder,MID,False
+Farul Constanţa,543832,N. Grigoryan,WF,FWD,sr:player:1336360,"Grigoryan, Narek",midfielder,MID,False
+Farul Constanţa,747238,I. Cojocaru,ST,FWD,sr:player:2229724,"Cojocaru, Ionut",forward,FWD,True
+Farul Constanţa,645614,D. Maftei,FB,DEF,sr:player:2779831,"Maftei, David",defender,DEF,True
+Farul Constanţa,84325,I. Larie,CB,DEF,sr:player:48051,"Larie, Ionut",defender,DEF,True
+Farul Constanţa,84336,G. Iancu,AM,MID,sr:player:149648,"Iancu, Gabriel",forward,FWD,False
+Farul Constanţa,136151,B. Nikolov,DM,MID,,,,,False
+Farul Constanţa,229125,Steeve Furtado,FB,DEF,sr:player:1243030,"Furtado, Steve",defender,DEF,True
+Farul Constanţa,1047256,C. Sima,WF,FWD,sr:player:2883671,"Sima, Cristian",forward,FWD,True
+Farul Constanţa,754904,André Seruca,DM,MID,sr:player:2201194,"Seruca, Andre",defender,DEF,False
+Unirea Slobozia,845124,A. Dorobanțu,FB,DEF,sr:player:2334379,"Dorobantu, Andrei",midfielder,MID,False
+Unirea Slobozia,618368,R. Popa,GK,GK,sr:player:1987877,"Popa, Robert",goalkeeper,GK,True
+Unirea Slobozia,564613,T. Lungu,DM,MID,sr:player:573496,"Lungu, Teodor",midfielder,MID,True
+Unirea Slobozia,561907,A. Dinu,CB,DEF,sr:player:1417769,"Dinu, Alexandru",midfielder,MID,False
+Unirea Slobozia,81100,D. Rusu,GK,GK,sr:player:66034,"Rusu, Denis",goalkeeper,GK,True
+Unirea Slobozia,84779,M. Antoche,CB,DEF,sr:player:233758,"Antoche, Marius",midfielder,MID,False
+Unirea Slobozia,135924,Cristian Ponde,W,FWD,sr:player:190169,"Ponde, Cristian",forward,FWD,True
+Unirea Slobozia,236768,F. Ibrian,FB,DEF,sr:player:300624,"Ibrian, Florinel",defender,DEF,True
+Unirea Slobozia,240953,A. Said,ST,FWD,sr:player:287023,"Said, Ahmed",forward,FWD,True
+Unirea Slobozia,263024,C. Bărbuţ,AM,MID,sr:player:316441,"Barbut, Cristi Marian",midfielder,MID,True
+Unirea Slobozia,302018,A. Albu,CM,MID,sr:player:834619,"Albu, Alexandru",defender,DEF,False
+Unirea Slobozia,346531,V. Pop,DM,MID,sr:player:2101578,"Pop, Vlad",midfielder,MID,True
+Unirea Slobozia,346555,N. Carnat,AM,MID,sr:player:756360,"Carnat, Nicolae",forward,FWD,False
+Unirea Slobozia,404648,G. Dahan,ST,FWD,sr:player:936688,"Dahan, Guy",forward,FWD,True
+Unirea Slobozia,406084,D. Yanakov,W,FWD,sr:player:935154,"Yanakov, Denys",forward,FWD,True
+Unirea Slobozia,499666,O. Safronov,CB,DEF,sr:player:992343,"Safronov, Oleksandr",defender,DEF,True
+Unirea Slobozia,514663,D. Şerbănică,FB,DEF,sr:player:1096682,"Serbanica, Daniel Marius",defender,DEF,True
+Unirea Slobozia,518067,I. Coadă,DM,MID,sr:player:1252862,"Coada, Ionut",midfielder,MID,True
+Unirea Slobozia,530165,A. Dragu,FB,DEF,sr:player:1320970,"Dragu, Andrei",midfielder,MID,False
+Unirea Slobozia,892108,P. Dulcea,AM,MID,,,,,False
+Unirea Slobozia,489204,R. Espinosa,ST,FWD,,,,,False
+Unirea Slobozia,519484,Esteban Orozco,CB,DEF,,,,,False
+Unirea Slobozia,880237,R. Rotund,WF,FWD,sr:player:2639443,"Rotund, Raul",midfielder,MID,False
+Unirea Slobozia,731172,C. Afalna,ST,FWD,,,,,False
+Unirea Slobozia,682684,R. Negru,FB,DEF,,,,,False
+Unirea Slobozia,85338,A. Aganović,AM,MID,,,,,False
+Unirea Slobozia,84220,F. Purece,AM,MID,,,,,False
+Unirea Slobozia,286014,R. Deaconu,AM,MID,,,,,False
+Unirea Slobozia,331434,E. Florescu,AM,MID,,,,,False
+Unirea Slobozia,476917,I. Gurău,GK,GK,,,,,False
+Unirea Slobozia,512592,V. Hamdiu,DM,MID,,,,,False
+Unirea Slobozia,583396,J. Papeau,AM,MID,sr:player:1770236,"Papeau, Jayson",midfielder,MID,True
+Unirea Slobozia,492280,J. Jeno,AM,MID,,,,,False
+Metaloglobus,882555,A. Irimia,W,FWD,sr:player:2615333,"Irimia, Alexandru",midfielder,MID,False
+Metaloglobus,882554,D. Irimia,FB,DEF,sr:player:2615333,"Irimia, Alexandru",midfielder,MID,False
+Metaloglobus,858732,A. Gheorghe,DM,MID,sr:player:2592213,"Gheorghe, Alexandru",midfielder,MID,True
+Metaloglobus,826254,A. Sîrbu,ST,FWD,,,,,False
+Metaloglobus,805767,M. Lis,FB,DEF,sr:player:2289491,"Lis, Laurentiu marian",forward,FWD,False
+Metaloglobus,733083,M. Abbey,W,FWD,sr:player:2639439,"Abbey, Moses",midfielder,MID,False
+Metaloglobus,707184,R. Milea,CM,MID,,,,,False
+Metaloglobus,683516,A. Camara,CB,DEF,sr:player:2639789,"Camara, Aboubacar",defender,DEF,True
+Metaloglobus,488648,C. Kouadio,FB,DEF,,,,,False
+Metaloglobus,84514,D. Huiban,ST,FWD,sr:player:101897,Dragos Huiban,forward,FWD,True
+Metaloglobus,83964,G. Gavrilaş,GK,GK,sr:player:153663,"Gavrilas, George",goalkeeper,GK,True
+Metaloglobus,169081,A. Sava,FB,DEF,sr:player:90923,"Sava, Andrei",midfielder,MID,False
+Metaloglobus,223105,D. Ubbink,ST,FWD,,,,,False
+Metaloglobus,232421,Ely Fernandes,ST,FWD,sr:player:343671,"Fernandes, Ely",forward,FWD,True
+Metaloglobus,357952,D. Sabater,DM,MID,sr:player:847306,"Sabater, Damia",midfielder,MID,True
+Metaloglobus,407352,O. Pašagić,CB,DEF,sr:player:941306,"Pasagic, Omar",defender,DEF,True
+Metaloglobus,507174,R. Neacşu,FB,DEF,sr:player:1136961,"Neacsu, Robert",midfielder,MID,False
+Metaloglobus,514666,G. Caramalău,CB,DEF,sr:player:908096,"Caramalau, George",defender,DEF,True
+Metaloglobus,1105408,G. Dumitru,CB,DEF,sr:player:2996735,"Dumitru, Gabriel",defender,DEF,True
+Metaloglobus,830037,G. Ghimfus,AM,MID,sr:player:2357661,"Ghimfus, Giovani",midfielder,MID,True
+Metaloglobus,762964,R. Bădescu,CB,DEF,sr:player:2514089,"Badescu, Robert ,",defender,DEF,True
+Metaloglobus,422702,Y. Zakir,W,FWD,sr:player:2199982,"Zakir, Yassine",defender,DEF,False
+Metaloglobus,11588,M. Cestor,CB,DEF,sr:player:104579,"Cestor, Mike",defender,DEF,True
+Metaloglobus,511014,Bruno Carvalho,DM,MID,,,,,False
+Metaloglobus,530669,S. Visic,ST,FWD,sr:player:1035165,"Visic, Stefan",forward,FWD,True
+Metaloglobus,541707,M. Toutou Mpondo,ST,FWD,sr:player:1705441,"Toutou Mpondo, Martins Daniel",forward,FWD,True
+Metaloglobus,84220,F. Purece,AM,MID,sr:player:87940,"Purece, Florin",midfielder,MID,True
+Metaloglobus,734173,T. Aggoun,CB,DEF,,,,,False
+Metaloglobus,422535,B. Hadžić,ST,FWD,sr:player:973943,"Hadzic, Benjamin",forward,FWD,True
+Metaloglobus,489688,A. Tirlea,FB,DEF,sr:player:1643628,"Tirlea, Alexandru",defender,DEF,True
+Metaloglobus,346448,D. Popa,ST,FWD,sr:player:756614,"Popa, Daniel",forward,FWD,True

@@ -1,0 +1,3566 @@
+{
+  "team": "Universitatea Cluj",
+  "n_fixtures": 35,
+  "n_squad_players": 27,
+  "squad_ids": [
+    83590,
+    83838,
+    169037,
+    220694,
+    227952,
+    239290,
+    240507,
+    270356,
+    278515,
+    338220,
+    346908,
+    441683,
+    445824,
+    462140,
+    506853,
+    526387,
+    532568,
+    541971,
+    560364,
+    577452,
+    619309,
+    630268,
+    748513,
+    759616,
+    778883,
+    779379,
+    1047336
+  ],
+  "fixtures": [
+    {
+      "match_id": 5715680,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Metaloglobus - Universitatea Cluj, 1-4_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 46.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 79.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 278515,
+          "shortName": "M. Thiam",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 66.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 46.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 94.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 1.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 48.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 15.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 28.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 48.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715690,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - UTA Arad, 1-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 85.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 47.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 47.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 85.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 278515,
+          "shortName": "M. Thiam",
+          "role_group": "FWD",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 47.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 98.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 13.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 13.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 51.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 51.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 51.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715703,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Craiova - Universitatea Cluj, 2-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 67.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 67.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 49.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 67.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 91.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 11.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 35.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 53.0
+        },
+        {
+          "playerId": 278515,
+          "shortName": "M. Thiam",
+          "role_group": "FWD",
+          "minutes": 35.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 35.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715708,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Hermannstadt - Universitatea Cluj, 2-2_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 73.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 278515,
+          "shortName": "M. Thiam",
+          "role_group": "FWD",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 77.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 73.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 73.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 25.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 25.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 25.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 21.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715717,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Petrolul 52, 1-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 71.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 71.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 84.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 71.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 278515,
+          "shortName": "M. Thiam",
+          "role_group": "FWD",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 80.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 99.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 15.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 19.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 29.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 29.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 29.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715723,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Farul Constanţa - Universitatea Cluj, 0-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 64.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 64.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 102.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 15.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 102.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 8.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 38.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 38.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715733,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Dinamo Bucureşti, 0-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 47.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 47.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 47.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 51.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 51.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 51.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715743,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Unirea Slobozia - Universitatea Cluj, 0-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 61.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 83.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 78.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 78.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 96.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 18.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 13.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 18.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715749,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Rapid Bucureşti, 0-0_players_stats.json",
+      "starters": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 65.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 65.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 65.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 46.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 80.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 95.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 16.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 49.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 30.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 30.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715755,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Argeș - Universitatea Cluj, 1-0_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 85.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 85.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 105.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 105.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 64.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 105.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 75.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 105.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 75.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 105.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 75.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 30.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 30.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 20.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 30.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715765,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - CFR Cluj, 2-2_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 67.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 79.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 79.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 67.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 72.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 30.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 18.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 18.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 25.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715769,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Csikszereda Miercurea Ciuc - Universitatea Cluj, 2-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 47.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 56.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 47.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 97.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 50.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 41.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 50.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715781,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Botoşani, 0-2_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 60.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 60.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 60.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 74.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 96.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 22.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 36.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 36.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 36.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 36.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715791,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Oţelul - Universitatea Cluj, 1-2_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 117.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 117.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 117.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 117.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 75.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 117.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 68.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 117.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 80.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 117.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 117.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 38.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 49.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 42.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715796,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - FCS Bucureşti, 0-2_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 87.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 227952,
+          "shortName": "A. Artean",
+          "role_group": "MID",
+          "minutes": 80.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 40.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 66.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 66.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 32.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 11.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 32.0
+        },
+        {
+          "playerId": 278515,
+          "shortName": "M. Thiam",
+          "role_group": "FWD",
+          "minutes": 16.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 18.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715800,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Metaloglobus, 3-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 72.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 39.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 28.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 72.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 67.0
+        },
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 23.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 23.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 57.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715810,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "UTA Arad - Universitatea Cluj, 0-2_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 65.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 85.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 93.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 93.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 93.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 93.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 93.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 93.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 93.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 73.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 93.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 19.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 7.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715823,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Universitatea Craiova, 0-0_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 68.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 92.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 68.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 68.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 86.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 26.0
+        },
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 9.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 2.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 26.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 26.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715828,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Hermannstadt, 3-0_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 60.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 60.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 74.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 77.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 60.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 34.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 34.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 34.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 20.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 17.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715837,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Petrolul 52 - Universitatea Cluj, 0-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 88.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 47.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 70.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 91.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 88.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 8.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 49.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 26.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 5.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 8.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715843,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Farul Constanţa, 1-0_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 92.0
+        },
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 68.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 87.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 92.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 92.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 92.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 92.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 92.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 68.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 92.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 80.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 24.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 5.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 12.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 24.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715853,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Dinamo Bucureşti - Universitatea Cluj, 1-0_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 47.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 65.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 65.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 74.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 65.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 31.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 49.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 31.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 31.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715863,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Unirea Slobozia, 1-0_players_stats.json",
+      "starters": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 62.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 62.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 73.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 45.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 62.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 94.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 32.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 49.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 32.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 21.0
+        },
+        {
+          "playerId": 532568,
+          "shortName": "V. Postolachi",
+          "role_group": "FWD",
+          "minutes": 32.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715869,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Rapid Bucureşti - Universitatea Cluj, 0-2_players_stats.json",
+      "starters": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 59.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 69.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 97.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 39.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 28.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715875,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Argeș, 3-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 59.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 76.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 59.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 76.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 59.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 94.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 18.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 35.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 35.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 18.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 35.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715885,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "CFR Cluj - Universitatea Cluj, 3-2_players_stats.json",
+      "starters": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 49.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 49.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 49.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 100.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 67.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 86.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 100.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 100.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 100.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 100.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 100.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 51.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 51.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 51.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 14.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 33.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715889,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Csikszereda Miercurea Ciuc, 4-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 73.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 59.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 59.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 73.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 56.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 36.0
+        },
+        {
+          "playerId": 239290,
+          "shortName": "E. Capradossi",
+          "role_group": "DEF",
+          "minutes": 36.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 21.0
+        },
+        {
+          "playerId": 441683,
+          "shortName": "G. Simion",
+          "role_group": "MID",
+          "minutes": 21.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 38.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715901,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Botoşani - Universitatea Cluj, 1-3_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 82.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 69.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 82.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 48.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 99.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 87.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 17.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 17.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 50.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 29.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 11.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715911,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "Universitatea Cluj - Oţelul, 4-0_players_stats.json",
+      "starters": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 69.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 79.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 79.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 94.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 79.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 79.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 15.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 15.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 15.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 15.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 25.0
+        }
+      ]
+    },
+    {
+      "match_id": 5715916,
+      "season_id": 191642,
+      "round_id": 4435361,
+      "filename": "FCS Bucureşti - Universitatea Cluj, 1-3_players_stats.json",
+      "starters": [
+        {
+          "playerId": 779379,
+          "shortName": "Ş. Lefter",
+          "role_group": "GK",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 69.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 54.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 278515,
+          "shortName": "M. Thiam",
+          "role_group": "FWD",
+          "minutes": 46.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 59.0
+        },
+        {
+          "playerId": 462140,
+          "shortName": "J. Cissé",
+          "role_group": "DEF",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 69.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 95.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 26.0
+        },
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 41.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 36.0
+        },
+        {
+          "playerId": 346908,
+          "shortName": "A. Murgia",
+          "role_group": "MID",
+          "minutes": 26.0
+        }
+      ]
+    },
+    {
+      "match_id": 5823152,
+      "season_id": 191642,
+      "round_id": 4437530,
+      "filename": "Universitatea Cluj - CFR Cluj, 2-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 83.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 74.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 98.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 98.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 1.0
+        },
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 15.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 23.0
+        }
+      ]
+    },
+    {
+      "match_id": 5823760,
+      "season_id": 191642,
+      "round_id": 4437530,
+      "filename": "Argeș - Universitatea Cluj, 0-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 38.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 38.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 75.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 90.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 90.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 58.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 6.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 58.0
+        },
+        {
+          "playerId": 445824,
+          "shortName": "A. Fábry",
+          "role_group": "MID",
+          "minutes": 22.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 6.0
+        }
+      ]
+    },
+    {
+      "match_id": 5828023,
+      "season_id": 191642,
+      "round_id": 4437530,
+      "filename": "Rapid Bucureşti - Universitatea Cluj, 1-2_players_stats.json",
+      "starters": [
+        {
+          "playerId": 1047336,
+          "shortName": "A. Chintes",
+          "role_group": "DEF",
+          "minutes": 45.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 82.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 82.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 45.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 97.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 91.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 97.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 15.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 52.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 6.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 52.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 15.0
+        }
+      ]
+    },
+    {
+      "match_id": 5829259,
+      "season_id": 191642,
+      "round_id": 4437530,
+      "filename": "Universitatea Cluj - Universitatea Craiova, 4-0_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 75.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 84.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 75.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 95.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 84.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 67.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 20.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 11.0
+        },
+        {
+          "playerId": 83838,
+          "shortName": "D. Nistor",
+          "role_group": "MID",
+          "minutes": 11.0
+        },
+        {
+          "playerId": 338220,
+          "shortName": "Miguel Silva",
+          "role_group": "DEF",
+          "minutes": 20.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 28.0
+        }
+      ]
+    },
+    {
+      "match_id": 5831728,
+      "season_id": 191642,
+      "round_id": 4437530,
+      "filename": "Dinamo Bucureşti - Universitatea Cluj, 2-1_players_stats.json",
+      "starters": [
+        {
+          "playerId": 759616,
+          "shortName": "O. El Sawy",
+          "role_group": "FWD",
+          "minutes": 75.0
+        },
+        {
+          "playerId": 630268,
+          "shortName": "A. Coubis",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 619309,
+          "shortName": "O. Mendy",
+          "role_group": "FWD",
+          "minutes": 82.0
+        },
+        {
+          "playerId": 560364,
+          "shortName": "J. Lukić",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 83590,
+          "shortName": "A. Chipciu",
+          "role_group": "FWD",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 169037,
+          "shortName": "O. Bic",
+          "role_group": "MID",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 220694,
+          "shortName": "D. Mikanović",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 240507,
+          "shortName": "E. Gertmonas",
+          "role_group": "GK",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 270356,
+          "shortName": "I. Cristea",
+          "role_group": "DEF",
+          "minutes": 96.0
+        },
+        {
+          "playerId": 506853,
+          "shortName": "M. Drammeh",
+          "role_group": "MID",
+          "minutes": 62.0
+        },
+        {
+          "playerId": 541971,
+          "shortName": "J. Stanojev",
+          "role_group": "MID",
+          "minutes": 62.0
+        }
+      ],
+      "subs": [
+        {
+          "playerId": 778883,
+          "shortName": "A. Gheorghiță",
+          "role_group": "MID",
+          "minutes": 14.0
+        },
+        {
+          "playerId": 748513,
+          "shortName": "A. Trică",
+          "role_group": "FWD",
+          "minutes": 22.0
+        },
+        {
+          "playerId": 577452,
+          "shortName": "D. Codrea",
+          "role_group": "MID",
+          "minutes": 34.0
+        },
+        {
+          "playerId": 526387,
+          "shortName": "I. Macalou",
+          "role_group": "FWD",
+          "minutes": 34.0
+        }
+      ]
+    }
+  ]
+}

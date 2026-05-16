@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../branding/branding_config.dart';
 import '../theme/app_colors.dart';
-import '../theme/theme_notifier.dart';
+import '../theme/glossy_widgets.dart';
 import '../theme/spacing_tokens.dart';
 import 'app_bottom_nav.dart';
+import 'team_accent_scope.dart';
+import 'user_badge.dart';
 
+/// Iteration N — application chrome rebuilt around UmbraRo branding +
+/// the glossy app bar. The header now carries the UmbraRo logo, the
+/// "UMBRARO / TACTICAL INTELLIGENCE" wordmark, and (when a team is in
+/// scope) a thin per-team accent strip beneath the gloss bar.
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
     required this.currentTab,
@@ -24,142 +31,85 @@ class AppScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final isDark = ThemeNotifier.instance.isDark;
-
+    final accentColors = TeamAccentScope.colorsOf(context);
     return Scaffold(
-      backgroundColor: c.surface,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // ── Header ──────────────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                SpacingTokens.md,
-                SpacingTokens.sm,
-                SpacingTokens.md,
-                SpacingTokens.xs,
-              ),
-              child: Row(
-                children: [
-                  // Club crest
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: const BoxDecoration(shape: BoxShape.circle),
-                    child: Image.asset(
-                      'assets/teams/universitatea_cluj.png',
-                      fit: BoxFit.contain,
+      backgroundColor: c.surfaceBaseTop,
+      body: Container(
+        decoration: BoxDecoration(gradient: c.surfaceBaseGradient),
+        child: SafeArea(
+          child: Column(
+            children: [
+              GlossyAppBar(
+                accentColors: accentColors.isEmpty ? null : accentColors,
+                leading: Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.10),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.25),
+                          width: 0.8,
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(4),
+                      child: Image.asset(
+                        BrandingConfig.logoIcon,
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: SpacingTokens.xs),
-                  // Brand wordmark
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'U CLUJ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18,
-                          height: 1.0,
-                          letterSpacing: 2.0,
-                          color: c.accent,
+                    const SizedBox(width: SpacingTokens.sm),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          BrandingConfig.appName.toUpperCase(),
+                          style: TextStyle(
+                            color: c.onPrimary,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 18,
+                            height: 1.0,
+                            letterSpacing: 2.0,
+                          ),
                         ),
-                      ),
-                      Text(
-                        'TACTICAL INTELLIGENCE',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 7,
-                          height: 1.2,
-                          letterSpacing: 2.5,
-                          color: c.textMuted,
+                        Text(
+                          BrandingConfig.tagline.toUpperCase(),
+                          style: TextStyle(
+                            color: c.onPrimary.withValues(alpha: 0.75),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 8,
+                            height: 1.2,
+                            letterSpacing: 2.4,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  // Theme toggle
-                  _HeaderIconButton(
-                    onTap: ThemeNotifier.instance.toggle,
-                    icon: isDark
-                        ? Icons.light_mode_outlined
-                        : Icons.dark_mode_outlined,
-                    iconColor: c.accent,
-                    c: c,
-                  ),
-                  const SizedBox(width: SpacingTokens.xs),
-                  // Profile
-                  trailing ??
-                      _HeaderIconButton(
-                        onTap: onProfileTap,
-                        icon: Icons.person_outline,
-                        iconColor: c.textPrimary,
-                        c: c,
-                      ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
+                trailing: trailing ??
+                    UserBadge(onTap: onProfileTap),
               ),
-            ),
-            // Gold accent rule
-            Container(
-              height: 2,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [c.accent, c.accentStrong, const Color(0x00000000)],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    SpacingTokens.xl,
+                    SpacingTokens.xl,
+                    SpacingTokens.xl,
+                    SpacingTokens.md,
+                  ),
+                  child: body,
                 ),
               ),
-            ),
-            // ── Body ────────────────────────────────────────────────────────
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  SpacingTokens.md,
-                  SpacingTokens.md,
-                  SpacingTokens.md,
-                  SpacingTokens.xs,
-                ),
-                child: body,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: AppBottomNav(
         current: currentTab,
         onSelected: onTabSelected,
-      ),
-    );
-  }
-}
-
-/// Compact 32×32 icon button for the scaffold header.
-class _HeaderIconButton extends StatelessWidget {
-  const _HeaderIconButton({
-    required this.icon,
-    required this.iconColor,
-    required this.c,
-    this.onTap,
-  });
-
-  final IconData icon;
-  final Color iconColor;
-  final AppColorTokens c;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          color: c.surfaceHigh,
-          border: Border.all(color: c.divider),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Icon(icon, size: 15, color: iconColor),
       ),
     );
   }

@@ -1,0 +1,295 @@
+{
+  "status": "ok",
+  "team_id": "sr:competitor:7734",
+  "team_name": "FC Universitatea Cluj",
+  "fetched_at": "2026-05-15T16:27:32Z",
+  "entries": [
+    {
+      "id": "sr:player:301512",
+      "name": "Artean, Andrei",
+      "position": "midfielder",
+      "jersey_number": 18,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:3086710",
+      "name": "Ayomide, Raji",
+      "position": "midfielder",
+      "jersey_number": null,
+      "nationality": "Nigeria"
+    },
+    {
+      "id": "sr:player:236844",
+      "name": "Bic, Ovidiu",
+      "position": "midfielder",
+      "jersey_number": 94,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:284355",
+      "name": "Capradossi, Elio",
+      "position": "defender",
+      "jersey_number": 23,
+      "nationality": "Uganda"
+    },
+    {
+      "id": "sr:player:2639451",
+      "name": "Chintes, Alin Marian",
+      "position": "defender",
+      "jersey_number": 2,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:44435",
+      "name": "Chipciu, Alexandru",
+      "position": "forward",
+      "jersey_number": 27,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:2645713",
+      "name": "Chirila, Iustin",
+      "position": "goalkeeper",
+      "jersey_number": 33,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:1865742",
+      "name": "Cisse, Jonathan",
+      "position": "defender",
+      "jersey_number": 26,
+      "nationality": "Cote d ivoire"
+    },
+    {
+      "id": "sr:player:1560588",
+      "name": "Codrea, Dorin",
+      "position": "midfielder",
+      "jersey_number": 8,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:2981681",
+      "name": "Cosa, Tudor",
+      "position": "goalkeeper",
+      "jersey_number": 99,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:2249161",
+      "name": "Coubis, Andrei",
+      "position": "defender",
+      "jersey_number": 4,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:578526",
+      "name": "Cristea, Iulian Lucian",
+      "position": "defender",
+      "jersey_number": 6,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:944414",
+      "name": "Drammeh, Mouhamadou",
+      "position": "midfielder",
+      "jersey_number": 7,
+      "nationality": "France"
+    },
+    {
+      "id": "sr:player:2446655",
+      "name": "El Sawy, Omar",
+      "position": "midfielder",
+      "jersey_number": 88,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:926778",
+      "name": "Fabry, Andrej",
+      "position": "midfielder",
+      "jersey_number": 13,
+      "nationality": "Slovakia"
+    },
+    {
+      "id": "sr:player:285953",
+      "name": "Gertmonas, Edvinas",
+      "position": "goalkeeper",
+      "jersey_number": 30,
+      "nationality": "Lithuania"
+    },
+    {
+      "id": "sr:player:2645359",
+      "name": "Gheorghita, Andrei",
+      "position": "midfielder",
+      "jersey_number": 77,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:2633637",
+      "name": "Horn, Tobias",
+      "position": "defender",
+      "jersey_number": null,
+      "nationality": "Germany"
+    },
+    {
+      "id": "sr:player:2357685",
+      "name": "Kis, Patrik",
+      "position": "goalkeeper",
+      "jersey_number": null,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:2779009",
+      "name": "Lefter, Ștefan",
+      "position": "goalkeeper",
+      "jersey_number": 1,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:1022329",
+      "name": "Lukic, Jovo",
+      "position": "forward",
+      "jersey_number": 17,
+      "nationality": "Bosnia & herzegovina"
+    },
+    {
+      "id": "sr:player:2120884",
+      "name": "Macalou, Issouf",
+      "position": "forward",
+      "jersey_number": 19,
+      "nationality": "Cote d ivoire"
+    },
+    {
+      "id": "sr:player:2121882",
+      "name": "Mendy, Oucasse",
+      "position": "forward",
+      "jersey_number": 29,
+      "nationality": "France"
+    },
+    {
+      "id": "sr:player:245249",
+      "name": "Mikanovic, Dino",
+      "position": "defender",
+      "jersey_number": 24,
+      "nationality": "Croatia"
+    },
+    {
+      "id": "sr:player:2357653",
+      "name": "Moldovan, Denis",
+      "position": "goalkeeper",
+      "jersey_number": 12,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:2100930",
+      "name": "Moraru, Matei",
+      "position": "midfielder",
+      "jersey_number": 31,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:559470",
+      "name": "Murgia, Alessandro",
+      "position": "midfielder",
+      "jersey_number": 11,
+      "nationality": "Italy"
+    },
+    {
+      "id": "sr:player:93842",
+      "name": "Nistor, Dan Nicolae",
+      "position": "midfielder",
+      "jersey_number": 10,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:2938763",
+      "name": "Opris, Stefan",
+      "position": "midfielder",
+      "jersey_number": 66,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:3066213",
+      "name": "Orban, Alex",
+      "position": "forward",
+      "jersey_number": 80,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:3161124",
+      "name": "Pall, Lukas",
+      "position": "forward",
+      "jersey_number": 96,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:1297462",
+      "name": "Postolachi, Virgiliu",
+      "position": "forward",
+      "jersey_number": 93,
+      "nationality": "Moldova, republic of"
+    },
+    {
+      "id": "sr:player:2925039",
+      "name": "Quadri Olakunle, Taiwo",
+      "position": "forward",
+      "jersey_number": 22,
+      "nationality": "Nigeria"
+    },
+    {
+      "id": "sr:player:2357667",
+      "name": "Scocilca, Rares",
+      "position": "midfielder",
+      "jersey_number": null,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:867634",
+      "name": "Silva, Miguel",
+      "position": "defender",
+      "jersey_number": 28,
+      "nationality": "Portugal"
+    },
+    {
+      "id": "sr:player:1008455",
+      "name": "Simion, Gabriel",
+      "position": "defender",
+      "jersey_number": 98,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:1240964",
+      "name": "Stanojev, Jug",
+      "position": "forward",
+      "jersey_number": 33,
+      "nationality": "Serbia"
+    },
+    {
+      "id": "sr:player:2639453",
+      "name": "Techeres, Ionel  Alin",
+      "position": "defender",
+      "jersey_number": 41,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:110210",
+      "name": "Tosca, Alin",
+      "position": "defender",
+      "jersey_number": 14,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:2162060",
+      "name": "Trica-Balaci, Atanas Ioan",
+      "position": "forward",
+      "jersey_number": 9,
+      "nationality": "Romania"
+    },
+    {
+      "id": "sr:player:1407133",
+      "name": "Van der Werff, Jasper",
+      "position": "defender",
+      "jersey_number": 16,
+      "nationality": "Switzerland"
+    }
+  ]
+}

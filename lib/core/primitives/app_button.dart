@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
-import '../theme/spacing_tokens.dart';
-import '../theme/typography_tokens.dart';
+import '../theme/glossy_widgets.dart';
 
+/// Iteration N — ``AppButton`` is the project-wide CTA. Both ``primary``
+/// and ``secondary`` variants now render with the glossy gradient surface
+/// from ``GlossyButton``. The public API (named constructors, ``label``,
+/// ``onPressed``) is preserved so consumers are not touched.
 class AppButton extends StatelessWidget {
   const AppButton.primary({
     required this.label,
     this.onPressed,
+    this.accentBias,
     super.key,
   }) : isPrimary = true;
 
   const AppButton.secondary({
     required this.label,
     this.onPressed,
+    this.accentBias,
     super.key,
   }) : isPrimary = false;
 
@@ -21,39 +25,17 @@ class AppButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isPrimary;
 
+  /// Optional per-team accent — biases the top sheen of primary buttons
+  /// toward the user's club colour. Iteration N.8.
+  final Color? accentBias;
+
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
-    final fg = isPrimary ? c.onAccent : c.accent;
-    final bg = isPrimary ? c.accent : Colors.transparent;
-    final isDisabled = onPressed == null;
-
-    return SizedBox(
-      height: 44,
-      child: TextButton(
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.lg),
-          backgroundColor: isDisabled
-              ? (isPrimary ? c.accent.withValues(alpha: 0.4) : Colors.transparent)
-              : bg,
-          foregroundColor: isDisabled ? fg.withValues(alpha: 0.4) : fg,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          side: isPrimary
-              ? BorderSide.none
-              : BorderSide(
-                  color: isDisabled
-                      ? c.divider.withValues(alpha: 0.4)
-                      : c.divider,
-                ),
-        ),
-        onPressed: onPressed,
-        child: Text(
-          label.toUpperCase(),
-          style: TypographyTokens.buttonLabel.copyWith(color: isDisabled ? fg.withValues(alpha: 0.4) : fg),
-        ),
-      ),
+    return GlossyButton(
+      label: label,
+      onPressed: onPressed,
+      isPrimary: isPrimary,
+      accentBias: accentBias,
     );
   }
 }

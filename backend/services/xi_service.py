@@ -1,19 +1,45 @@
+"""
+Starting-XI service for UmbraRo.
+
+Iteration L generalisation: ``XiService`` now accepts a per-request
+``home_team_substring`` (or a team short label or Sportradar ID) and
+returns the predicted XI for that team. The previous U Cluj-only path
+is preserved as the default — every method falls back to U Cluj when
+the caller does not specify a team. The Flutter app keeps working
+unchanged, but any of the sixteen Romanian Superliga teams can now be
+queried.
+
+Per-team feature DataFrames are cached on the service instance so that
+repeat calls for the same team stay fast (the cold path costs roughly
+five seconds while the league dataset is materialised and the per-team
+availability features are computed).
+"""
+
 from __future__ import annotations
 
+import glob
 import os
 import pickle
-import glob
 from typing import Dict, List, Optional
+
 import pandas as pd
 
-from ml.pipeline import load_player_profiles, build_dataset_from_files, _format_output
+from ml.feature_engineering import get_team_squad_from_matches
+from ml.pipeline import _format_output, build_dataset_from_files, load_player_profiles
 from ml.xi_predictor import StartingXIPredictor
+from sportradar.team_registry import (
+    SUPERLIGA_TEAMS,
+    TeamRef,
+    team_by_alias,
+    team_by_short,
+    team_by_sr_id,
+)
 
-# Maps fixture CSV team names → WyScout team IDs used in player profiles
-# NOTE: U Cluj's WyScout ID in the player profiles is 60374 (not 11571 which was the
-# old/stale ID associated with players who have since transferred to Otelul Galati).
+# Wyscout team IDs (used historically by the front-end for team selection).
+# Retained for backwards compatibility — new code should prefer
+# :data:`sportradar.team_registry.SUPERLIGA_TEAMS`.
 FIXTURE_NAME_TO_ID: dict[str, int] = {
-    "U Cluj": 60374,
+    "U Cluj": 11571,
     "CFR Cluj": 11611,
     "FCSB": 8164,
     "Rapid Bucuresti": 11566,
@@ -33,190 +59,206 @@ FIXTURE_NAME_TO_ID: dict[str, int] = {
     "Sepsi Sf. Gheorghe": None,
 }
 
+
 class XiService:
+    """Starting-XI predictor service that supports any Romanian Superliga team.
+
+    The default home team remains FC Universitatea Cluj for backwards
+    compatibility, but the public methods now accept a
+    ``home_team_substring`` (or any team-registry alias) so that callers
+    can request another club's predicted XI without touching service
+    internals.
+    """
+
+    DEFAULT_HOME_TEAM_SUBSTRING = "Universitatea Cluj"
+
     def __init__(self, model_path: str, data_dir: str):
         self.model_path = model_path
         self.data_dir = data_dir
         self.predictor: Optional[StartingXIPredictor] = None
-        self._df: Optional[pd.DataFrame] = None
+        self._df_by_team: Dict[str, pd.DataFrame] = {}
+        self._squad_by_team: Dict[str, set] = {}
         self._profiles: Dict = {}
-        
-        # Pre-load model
+
+        # Pre-load the heuristic-predictor pickle.
         if os.path.exists(model_path):
             with open(model_path, "rb") as f:
                 self.predictor = pickle.load(f)
-                
-    def _get_feature_df(self) -> pd.DataFrame:
-        if self._df is not None:
-            return self._df
-            
+
+        # Iteration J.4: Auto-load the supervised lineup-classifier bundle
+        # alongside the heuristic predictor. Iteration L will replace this
+        # path with the league-wide bundle (``xi_lineup_model_league.joblib``)
+        # once the pooled supervised model is retrained.
+        league_bundle = os.path.join(
+            os.path.dirname(model_path), "xi_lineup_model_league.joblib"
+        )
+        ucluj_bundle = os.path.join(
+            os.path.dirname(model_path), "xi_lineup_model.joblib"
+        )
+        bundle_path = league_bundle if os.path.exists(league_bundle) else ucluj_bundle
+        if self.predictor is not None and os.path.exists(bundle_path):
+            try:
+                import joblib
+                self.predictor.supervised_bundle = joblib.load(bundle_path)
+            except Exception:
+                pass
+
+    # ── Team-registry helpers ────────────────────────────────────────────────
+
+    def _resolve_home_team(
+        self,
+        home_team_substring: Optional[str] = None,
+        home_team_sr_id: Optional[str] = None,
+        home_team_short: Optional[str] = None,
+    ) -> TeamRef:
+        """Resolve a TeamRef from any of the supported caller inputs."""
+        if home_team_sr_id:
+            t = team_by_sr_id(home_team_sr_id)
+            if t is not None:
+                return t
+        if home_team_short:
+            t = team_by_short(home_team_short)
+            if t is not None:
+                return t
+        if home_team_substring:
+            t = team_by_alias(home_team_substring)
+            if t is not None:
+                return t
+            # Fall back to a free-form substring (handy for older callers).
+            return TeamRef(
+                short=home_team_substring,
+                wy_substr=home_team_substring,
+                sr_id="",
+            )
+        return team_by_alias(self.DEFAULT_HOME_TEAM_SUBSTRING) or SUPERLIGA_TEAMS[0]
+
+    # ── Feature-DataFrame builder (cached per home team) ─────────────────────
+
+    def _get_feature_df(self, home_team: TeamRef) -> pd.DataFrame:
+        cache_key = home_team.wy_substr
+        if cache_key in self._df_by_team:
+            return self._df_by_team[cache_key]
+
         match_files = sorted(glob.glob(os.path.join(self.data_dir, "*.json")))
         profile_path = os.path.join(self.data_dir, "players (1).json")
-        if os.path.exists(profile_path):
+        if not self._profiles and os.path.exists(profile_path):
             self._profiles = load_player_profiles(profile_path)
-            
-        self._df = build_dataset_from_files(match_files, self._profiles)
-        
-        def resolve_team(pid):
+
+        # Availability features are computed against *this* home team's
+        # chronological fixture list. A player who does not belong to
+        # the home team's empirical squad receives neutral availability
+        # zeros — the same convention as the per-U Cluj implementation
+        # used in Iterations J and K.
+        df = build_dataset_from_files(
+            match_files,
+            self._profiles,
+            availability_team_substring=home_team.wy_substr,
+        )
+
+        squad_ids = get_team_squad_from_matches(match_files, home_team.wy_substr)
+
+        def _resolve_team(pid):
             profile = self._profiles.get(pid, {})
             return profile.get("currentTeamId", None)
-            
-        self._df["teamId"] = self._df["playerId"].apply(resolve_team)
-        return self._df
 
-    def predict_xi(self, formation: str, opponent_team_id: Optional[int]) -> Dict:
+        df["teamId"] = df["playerId"].apply(_resolve_team)
+        df["is_home_squad"] = df["playerId"].isin(squad_ids)
+
+        self._df_by_team[cache_key] = df
+        self._squad_by_team[cache_key] = squad_ids
+        return df
+
+    # ── Public API ───────────────────────────────────────────────────────────
+
+    def predict_xi(
+        self,
+        formation: str,
+        opponent_team_id: Optional[int],
+        home_team_substring: Optional[str] = None,
+        home_team_sr_id: Optional[str] = None,
+        home_team_short: Optional[str] = None,
+    ) -> Dict:
         if not self.predictor:
             raise RuntimeError("XI Model not loaded")
-            
-        df = self._get_feature_df()
-        my_team_id = 60374  # FC Universitatea Cluj WyScout team ID
-        
-        my_team_df = df[df["teamId"] == my_team_id].copy()
+
+        home = self._resolve_home_team(
+            home_team_substring=home_team_substring,
+            home_team_sr_id=home_team_sr_id,
+            home_team_short=home_team_short,
+        )
+        df = self._get_feature_df(home)
+
+        my_team_df = df[df["is_home_squad"]].copy()
         if my_team_df.empty:
-            raise RuntimeError(f"No players found for base team {my_team_id}")
-            
-        opp_team_df = df[df["teamId"] == opponent_team_id].copy() if opponent_team_id else None
-        
+            raise RuntimeError(
+                f"No players found for home team '{home.short}' "
+                f"(empirical squad set is empty for wy_substr={home.wy_substr!r})."
+            )
+
+        opp_team_df = (
+            df[df["teamId"] == opponent_team_id].copy() if opponent_team_id else None
+        )
+
         result = self.predictor.predict_xi(
             df=my_team_df,
             formation=formation,
-            your_team_id=my_team_id,
-            opponent_df=opp_team_df
+            your_team_id=opponent_team_id,
+            opponent_df=opp_team_df,
         )
-        
-        return _format_output(result, my_team_id, opponent_team_id)
+
+        # Surface the resolved home team in the response payload so the
+        # Flutter app can confirm which team it received.
+        out = _format_output(result, FIXTURE_NAME_TO_ID.get(home.short), opponent_team_id)
+        out["home_team_short"] = home.short
+        out["home_team_sr_id"] = home.sr_id
+        return out
 
     def match_preview(
         self,
         opponent_name: str,
         formation: str,
         main_df: Optional[pd.DataFrame] = None,
+        home_team_substring: Optional[str] = None,
+        home_team_sr_id: Optional[str] = None,
+        home_team_short: Optional[str] = None,
     ) -> Dict:
         """Return starting XI + team stats + H2H record for an upcoming match."""
         if not self.predictor:
             raise RuntimeError("XI model not loaded")
 
+        home = self._resolve_home_team(
+            home_team_substring=home_team_substring,
+            home_team_sr_id=home_team_sr_id,
+            home_team_short=home_team_short,
+        )
         opp_id = FIXTURE_NAME_TO_ID.get(opponent_name)
 
-        df = self._get_feature_df()
-        my_team_id = 60374
+        df = self._get_feature_df(home)
 
-        my_team_df = df[df["teamId"] == my_team_id].copy()
+        my_team_df = df[df["is_home_squad"]].copy()
         if my_team_df.empty:
-            raise RuntimeError(f"No players found for base team {my_team_id}")
+            raise RuntimeError(
+                f"No players found for home team '{home.short}' "
+                f"(empirical squad set is empty for wy_substr={home.wy_substr!r})."
+            )
 
         opp_team_df = df[df["teamId"] == opp_id].copy() if opp_id else None
 
         result = self.predictor.predict_xi(
             df=my_team_df,
             formation=formation,
-            your_team_id=my_team_id,
+            your_team_id=FIXTURE_NAME_TO_ID.get(home.short),
             opponent_df=opp_team_df,
         )
 
         _PLAYER_COLS = [
             "playerId", "shortName", "role", "role_group",
-            "predicted_score", "composite_score",
-            "performance_score", "recent_form_score",
+            "predicted_score", "performance_score", "recent_form_score",
             "total_minutes", "matches_played",
             "pass_accuracy", "duel_win_rate",
             "per90_goals", "per90_assists", "per90_shots",
             "per90_keyPasses", "per90_interceptions", "per90_gkSaves",
-            "per90_gkCleanSheets",
         ]
-
-        # Normalize raw scores to 0-100 using league-wide position-group percentiles.
-        # Using all players in the dataset (all teams) as the reference population,
-        # split by role_group, with 5th/95th percentile bounds to avoid outlier skew.
-        _RAW_COLS = [
-            "performance_score", "recent_form_score",
-            "per90_goals", "per90_assists", "per90_keyPasses",
-            "per90_interceptions", "per90_gkSaves", "per90_gkCleanSheets", "per90_shots",
-            "pass_accuracy", "duel_win_rate",
-        ]
-
-        df_all = self._get_feature_df()
-
-        def _league_normalize(target: pd.DataFrame) -> pd.DataFrame:
-            target = target.copy()
-            for col in _RAW_COLS:
-                if col not in df_all.columns or col not in target.columns:
-                    continue
-                for grp in ["GK", "DEF", "MID", "FWD"]:
-                    mask_all = df_all["role_group"] == grp
-                    mask_tgt = target["role_group"] == grp
-                    if not mask_tgt.any():
-                        continue
-                    group_vals = df_all.loc[mask_all, col].dropna()
-                    if len(group_vals) < 3:
-                        continue
-                    p5  = float(group_vals.quantile(0.05))
-                    p95 = float(group_vals.quantile(0.95))
-                    rng = p95 - p5
-                    if rng == 0:
-                        target.loc[mask_tgt, col] = 50.0
-                    else:
-                        target.loc[mask_tgt, col] = (
-                            (target.loc[mask_tgt, col] - p5) / rng * 100
-                        ).clip(0, 100).round(1)
-            return target
-
-        def _recompute_composite(frame: pd.DataFrame) -> pd.DataFrame:
-            """Recompute composite/predicted score from the already-normalized (0-100)
-            stat values so the card score is consistent with the attribute bars."""
-            if frame.empty:
-                return frame
-            frame = frame.copy()
-
-            def _score(row: pd.Series) -> float:
-                matches = int(row.get("matches_played", 0) or 0)
-                base = 0.35 if matches >= 3 else 0.0
-                perf = (row.get("performance_score", 0) or 0) / 100
-                form = (row.get("recent_form_score", 0) or 0) / 100
-                base_vars = (
-                    0.22 * perf
-                    + 0.15 * form
-                    + 0.03 * min(matches / 20.0, 1.0)
-                )
-                role = str(row.get("role_group", "")).upper()
-                if role == "GK":
-                    bonus = (
-                        0.07 * min((row.get("per90_gkSaves", 0) or 0) / 100, 1.0)
-                        + 0.05 * min((row.get("per90_gkCleanSheets", 0) or 0) / 100, 1.0)
-                        + 0.03 * (row.get("pass_accuracy", 0) or 0) / 100
-                    )
-                elif role == "DEF":
-                    bonus = (
-                        0.07 * (row.get("def_action_success", 0) or 0) / 100
-                        + 0.05 * (row.get("duel_win_rate", 0) or 0) / 100
-                        + 0.03 * (row.get("pass_accuracy", 0) or 0) / 100
-                    )
-                elif role == "MID":
-                    bonus = (
-                        0.07 * (row.get("pass_accuracy", 0) or 0) / 100
-                        + 0.05 * (row.get("duel_win_rate", 0) or 0) / 100
-                        + 0.03 * min((row.get("per90_keyPasses", 0) or 0) / 100, 1.0)
-                    )
-                elif role == "FWD":
-                    bonus = (
-                        0.07 * min((row.get("per90_goals", 0) or 0) / 100, 1.0)
-                        + 0.05 * (row.get("shot_accuracy", 0) or 0) / 100
-                        + 0.03 * (row.get("dribble_success", 0) or 0) / 100
-                    )
-                else:
-                    bonus = (
-                        0.05 * (row.get("pass_accuracy", 0) or 0) / 100
-                        + 0.05 * (row.get("duel_win_rate", 0) or 0) / 100
-                        + 0.05 * (row.get("def_action_success", 0) or 0) / 100
-                    )
-                return round(base + base_vars + bonus, 4)
-
-            frame["composite_score"] = frame.apply(_score, axis=1)
-            frame["predicted_score"] = frame["composite_score"]
-            return frame
-
-        xi_norm    = _recompute_composite(_league_normalize(result["xi"]))
-        bench_norm = _recompute_composite(_league_normalize(result["bench"]))
 
         def _fmt(frame: pd.DataFrame) -> List[Dict]:
             if frame is None or frame.empty:
@@ -248,7 +290,7 @@ class XiService:
         if opp_team_df is not None and not opp_team_df.empty:
             def _opp_mean(col: str) -> float:
                 return round(float(opp_team_df[col].mean()), 2) if col in opp_team_df.columns else 0.0
-            
+
             opponent_stats = {
                 "avg_performance_score": _opp_mean("performance_score"),
                 "avg_recent_form": _opp_mean("recent_form_score"),
@@ -272,12 +314,12 @@ class XiService:
                 "top_creator_stat": 0.0,
             }
 
-        # Head-to-head from main fixtures CSV
+        # Head-to-head from main fixtures CSV (uses the resolved home short label)
         h2h: Dict = {"total": 0, "our_wins": 0, "draws": 0, "their_wins": 0,
                      "our_avg_goals": 0.0, "their_avg_goals": 0.0}
         if main_df is not None and not main_df.empty:
             try:
-                our = "U Cluj"
+                our = home.short
                 mask = (
                     ((main_df["home_team"] == our) & (main_df["away_team"] == opponent_name))
                     | ((main_df["home_team"] == opponent_name) & (main_df["away_team"] == our))
@@ -311,68 +353,44 @@ class XiService:
 
         return {
             "formation": formation,
+            "home_team_short": home.short,
+            "home_team_sr_id": home.sr_id,
             "opponent_name": opponent_name,
             "opponent_team_id": opp_id,
-            "starting_xi": _fmt(xi_norm),
-            "bench": _fmt(bench_norm),
+            "starting_xi": _fmt(result["xi"]),
+            "bench": _fmt(result["bench"]),
             "team_stats": team_stats,
             "opponent_stats": opponent_stats,
             "head_to_head": h2h,
         }
 
-    def list_opponents(self, min_players: int = 20) -> list[dict]:
-        """Return opponent options inferred from loaded XI feature data."""
-        known_names = {
-            8164: "FCSB",
-            11564: "Dinamo Bucuresti",
-            11565: "FCS Bucuresti",
-            11566: "Rapid Bucuresti",
-            11611: "CFR Cluj",
-            11634: "FC Botosani",
-            11663: "Unirea Slobozia",
-            11943: "Metaloglobus",
-            22731: "Csikszereda Miercurea Ciuc",
-            23334: "FC Arges",
-            26233: "Universitatea Craiova",
-            30817: "UTA Arad",
-            55427: "FC Hermannstadt",
-            60390: "Petrolul 52",
-            61242: "Farul Constanta",
-        }
+    def list_opponents(self, min_players: int = 20,
+                       home_team_substring: Optional[str] = None) -> list[dict]:
+        """Return opponent options. Iteration L: prefer the team registry
+        over the legacy ``currentTeamId`` count."""
+        home = self._resolve_home_team(home_team_substring=home_team_substring)
 
-        try:
-            df = self._get_feature_df()
-        except Exception:
-            df = None
-
-        if df is None or df.empty or "teamId" not in df.columns:
-            return sorted(
-                [{"id": tid, "name": name} for tid, name in known_names.items()],
-                key=lambda item: item["name"],
-            )
-
-        my_team_id = 60374
-        team_counts = (
-            df["teamId"]
-            .dropna()
-            .astype(int)
-            .value_counts()
-        )
-
-        candidate_ids = [
-            int(team_id)
-            for team_id, count in team_counts.items()
-            if int(team_id) != my_team_id and int(count) >= min_players
-        ]
-
-        if not candidate_ids:
-            candidate_ids = list(known_names.keys())
-
+        # Primary path: team registry (returns all sixteen Superliga clubs
+        # minus the home team).
         opponents = [
             {
-                "id": team_id,
-                "name": known_names.get(team_id, f"Team {team_id}"),
+                "id": FIXTURE_NAME_TO_ID.get(t.short),
+                "name": t.short,
+                "sr_id": t.sr_id,
             }
-            for team_id in candidate_ids
+            for t in SUPERLIGA_TEAMS
+            if t.short != home.short
         ]
         return sorted(opponents, key=lambda item: item["name"])
+
+    # ── New Iteration L public method: list all Superliga teams ─────────────
+    def list_home_teams(self) -> list[dict]:
+        """Return every Romanian Superliga team eligible as the home team."""
+        return [
+            {
+                "short": t.short,
+                "wy_substr": t.wy_substr,
+                "sr_id": t.sr_id,
+            }
+            for t in SUPERLIGA_TEAMS
+        ]

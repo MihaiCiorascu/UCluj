@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 
-import '../core/l10n/strings.dart';
+import '../core/branding/branding_config.dart';
+import '../core/data/superliga_teams.dart';
+import '../core/routing/app_router.dart';
 import '../core/state/auth_state.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_theme.dart';
-import '../core/theme/theme_notifier.dart';
+import '../core/theme/theme_mode_notifier.dart';
+import '../core/widgets/team_accent_scope.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
-import '../core/routing/app_router.dart';
 
 class UmbraRoApp extends StatefulWidget {
-  const UmbraRoApp({super.key, required this.authState});
+  const UmbraRoApp({
+    super.key,
+    required this.authState,
+    required this.themeMode,
+  });
 
   final AuthState authState;
+  final ThemeModeNotifier themeMode;
 
   @override
   State<UmbraRoApp> createState() => _UmbraRoAppState();
@@ -20,77 +27,105 @@ class UmbraRoApp extends StatefulWidget {
 
 class _UmbraRoAppState extends State<UmbraRoApp> {
   late final AuthState _authState;
+  late final ThemeModeNotifier _themeMode;
 
   @override
   void initState() {
     super.initState();
     _authState = widget.authState;
-    _authState.addListener(_onAuthChanged);
+    _themeMode = widget.themeMode;
+    _authState.addListener(_onChanged);
+    _themeMode.addListener(_onChanged);
   }
 
-  void _onAuthChanged() {
+  void _onChanged() {
     if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
-    _authState.removeListener(_onAuthChanged);
+    _authState.removeListener(_onChanged);
+    _themeMode.removeListener(_onChanged);
     _authState.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: Listenable.merge([L10n.instance, ThemeNotifier.instance]),
-      builder: (context, _) {
-        final isDark = ThemeNotifier.instance.isDark;
-        return AppColorsScope(
-          isDark: isDark,
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'U Cluj — Tactical Intelligence',
-            theme: AppTheme.lightThemeData,
-            darkTheme: AppTheme.darkThemeData,
-            themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-            builder: (context, child) {
-              return ColoredBox(
-                color: context.colors.surface,
-                child: child ?? const SizedBox.shrink(),
-              );
-            },
-            home: _buildRoot(isDark),
-          ),
-        );
-      },
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: BrandingConfig.title,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: _themeMode.mode,
+      home: AppColorsScope(
+        isDark: _themeMode.mode == ThemeMode.dark
+            || (_themeMode.mode == ThemeMode.system
+                && MediaQuery.platformBrightnessOf(context) == Brightness.dark),
+        child: TeamAccentScope(
+          team: teamByShort(_authState.user?.teamName),
+          child: _buildRoot(),
+        ),
+      ),
     );
   }
 
-  Widget _buildRoot(bool isDark) {
+  Widget _buildRoot() {
     if (_authState.loading) {
-      return Scaffold(
-        backgroundColor: isDark
-            ? AppColorTokens.dark.surface
-            : AppColorTokens.light.surface,
-        body: Center(
-          child: CircularProgressIndicator(
-            color: AppColorTokens.dark.accent,
-          ),
-        ),
-      );
+      return _SplashScreen(themeMode: _themeMode);
     }
 
     if (!_authState.isLoggedIn) {
-      return _AuthGate(authState: _authState);
+      return _AuthGate(authState: _authState, themeMode: _themeMode);
     }
 
-    return AppShell(authState: _authState);
+    return AppShell(authState: _authState, themeMode: _themeMode);
+  }
+}
+
+/// Splash shown while the auth-restore is still pending. UmbraRo logo +
+/// gradient base + a thin progress indicator at the bottom.
+class _SplashScreen extends StatelessWidget {
+  const _SplashScreen({required this.themeMode});
+  final ThemeModeNotifier themeMode;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 140,
+              height: 140,
+              child: Image.asset(
+                BrandingConfig.logoFull,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: 28,
+              height: 28,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
 class _AuthGate extends StatefulWidget {
-  const _AuthGate({required this.authState});
+  const _AuthGate({required this.authState, required this.themeMode});
   final AuthState authState;
+  final ThemeModeNotifier themeMode;
 
   @override
   State<_AuthGate> createState() => _AuthGateState();
