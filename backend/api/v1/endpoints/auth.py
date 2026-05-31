@@ -12,7 +12,7 @@ from core.models import (
     RefreshRequest,
     TokenResponse,
     UserResponse,
-    FirebaseRegisterRequest,
+    CognitoRegisterRequest,
 )
 from core.security import get_current_user
 from db.engine import async_session as session_factory
@@ -80,7 +80,7 @@ async def auth_cognito(request: Request, db: AsyncSession = Depends(_get_db)):
 @router.post("/register_with_cognito", response_model=TokenResponse)
 async def register_with_cognito(
     request: Request,
-    body: FirebaseRegisterRequest,
+    body: CognitoRegisterRequest,
     db: AsyncSession = Depends(_get_db),
 ):
     id_token = _bearer_id_token(request)

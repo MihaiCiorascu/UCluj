@@ -1,5 +1,6 @@
 # deploy.ps1 - Ruleaza din folderul ucluj-hackathon
-# Porneste backend, tunel cloudflare si face deploy pe Firebase
+# Porneste backend, tunel cloudflare si face deploy pe AWS Amplify Hosting
+# Requires: amplify init + amplify add hosting (one-time setup)
 
 $ErrorActionPreference = "Stop"
 $rootDir = $PSScriptRoot
@@ -65,7 +66,6 @@ if (Test-Path $configPath) {
 Write-Host "=== BUILD FLUTTER WEB ===" -ForegroundColor Cyan
 Set-Location $rootDir
 flutter build web `
-    --dart-define=USE_FIREBASE_AUTH=false `
     --dart-define=APP_ENV=development `
     "--dart-define=API_BASE_URL=$apiUrl" `
     --base-href=/
@@ -77,19 +77,18 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host ""
-Write-Host "=== DEPLOY PE FIREBASE HOSTING ===" -ForegroundColor Cyan
-npx firebase-tools deploy --only hosting --project hackatonu
+Write-Host "=== DEPLOY PE AWS AMPLIFY HOSTING ===" -ForegroundColor Cyan
+amplify publish --yes
 
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "EROARE la deploy Firebase!" -ForegroundColor Red
+    Write-Host "EROARE la deploy Amplify!" -ForegroundColor Red
     Stop-Job $job
     exit 1
 }
 
 Write-Host ""
 Write-Host "================================================" -ForegroundColor Green
-Write-Host "SUCCES! App disponibil la:" -ForegroundColor Green
-Write-Host "  https://hackatonu.web.app" -ForegroundColor White
+Write-Host "SUCCES! App deployed via Amplify." -ForegroundColor Green
 Write-Host "  Backend API: $apiUrl" -ForegroundColor White
 Write-Host "================================================" -ForegroundColor Green
 Write-Host ""

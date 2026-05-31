@@ -169,6 +169,29 @@ def main() -> int:
         print(out.strip() or "(no output)")
     print()
 
+    # --- Iter-Q.3 extended all-models comparison ---
+    print("=" * 70)
+    print("[ITER-Q.3] EXTENDED ALL-MODELS COMPARISON")
+    print("=" * 70)
+    for label, marker in [
+        ("Q.3.0 setup",         "[ITER-Q.3.0] Setup"),
+        ("Q.3.a calibration",   "[ITER-Q.3.a] Calibration"),
+        ("Q.3.b rolling-CV",    "[ITER-Q.3.b] Rolling-origin CV"),
+        ("Q.3.c attribution",   "[ITER-Q.3.c] Attribution"),
+        ("Q.3.d confusion+AUC", "[ITER-Q.3.d] Confusion matrix"),
+        ("Q.3.summary",         "[ITER-Q.3.summary] Composite ranking"),
+    ]:
+        cell = _find_cell(nb, marker)
+        print()
+        print(f"--- {label} ---")
+        if cell is not None:
+            out = _cell_text_outputs(cell)
+            out = re.sub(r"<Figure size [^>]+>", "", out)
+            print(out.strip() or "(no output)")
+        else:
+            print("(cell not found)")
+    print()
+
     return 0
 
 

@@ -1,0 +1,671 @@
+\chapter{Proposed Approach for Predictive and Prescriptive Football Analytics}
+\label{chap:approach}
+
+\section{Overview of the Proposed Approach}
+\label{sec:overview_approach}
+
+Based on the existing literature surveyed in Chapter~\ref{chap:background}, a layered approach to designing an application for football team management was employed. The work proceeds from predictive estimation to interpretable explanation, and finally to constrained tactical prescription, with each layer building on the one below it.
+
+The original prediction problem was first approached as a multiclass classification task, but performance remained limited. The target was then redefined as \emph{Home Win vs.\ Not Home Win}, which created a more stable learning objective and improved the reliability of the probability outputs. This decision was not merely technical; it was essential for the later prescriptive stage, where calibrated probabilities are needed in order to evaluate tactical scenarios. The predictive layer alone, however, provides only probability estimates that support match intelligence, and does not yet solve the more practical coaching problem of how those probabilities can be improved. That second layer is addressed by the prescriptive component described next.
+
+The prescriptive side of the thesis evolved through several methodological stages. The first stage relied on rule-based averages extracted from past matches, especially from teams that had previously defeated a given opponent. Although intuitive, this approach was too rigid because it ignored context such as Elo difference, tactical identity, and team-specific quality. The second stage explored single-variable sweeps, in which one tactical variable was increased or decreased to observe its isolated impact on win probability. This improved interpretability, but it also produced unrealistic situations because football is inherently multivariate and tactical variables do not operate independently.
+
+The third stage introduced manually designed tactical profiles, such as aggressive pressing structures or counter-attacking templates. These profiles were closer to football reality, but they still relied heavily on human assumptions and restricted the search space to styles chosen in advance. In other words, they imposed a tactical vocabulary on the model instead of letting the data discover the most promising combinations.
+
+The final solution proposed in this thesis is a \emph{constrained Monte Carlo optimiser}. Concretely, the optimiser draws $N$ uniformly random tactical permutations~\cite{robert2004monte,bergstra2012random} from the joint space of six decision variables corresponding to rolling five-match averages: home-team possession, shots, shots on target, corners, goals scored, and goals conceded. Each variable is bounded above and below by the $5$th and $95$th percentile of its historical distribution in the training set, ensuring that the search remains inside ranges that Romanian Superliga teams have achieved over the past five seasons. A single hard logical constraint is enforced --- shots on target $\geq 0.2 \times$ shots --- to forbid physically implausible combinations. Each candidate vector is then evaluated in a single batched call through the calibrated CatBoost classifier, and the configuration with the highest predicted home-win probability is returned as the tactical blueprint, together with the uplift over the baseline prediction.
+
+The value of $N$ was selected empirically through a sample-size sweep (reported in Section~\ref{sec:results}). With $N$ samples drawn uniformly in a six-dimensional bounded box, the standard deviation of the returned best probability decreases as $\mathcal{O}(N^{-1/2})$; the chosen production value of $N=25{,}000$ keeps that standard deviation below $0.002$ in absolute probability across ten independent reruns while remaining sub-second per fixture. The role of the optimiser is therefore not to find the largest numerical increase in probability, but to search for improvements that remain plausible from a football perspective. In this thesis, the optimiser is proposed as a prescriptive mechanism for generating tactically plausible blueprints under domain-specific constraints, consistent with the broader prescriptive-analytics perspective discussed in Section~\ref{sec:prescriptive_football}.
+
+\begin{table}[htbp]
+\centering
+\caption{Evolution of the prescriptive methodology used in this thesis}
+\label{tab:prescriptive_evolution}
+\begin{tabular}{|p{3.2cm}|p{5.5cm}|p{5.5cm}|}
+\hline
+\textbf{Stage} & \textbf{Description} & \textbf{Main limitation} \\
+\hline
+Rule-based averages & Tactical targets were derived by averaging the historical statistics of teams that had previously achieved favourable results against a given opponent. & Ignores contextual differences such as team strength, tactical identity, opponent quality, and match-specific conditions. \\
+\hline
+Single-variable sweeps & Individual tactical variables, such as possession or shots, were varied one at a time in order to observe their isolated effect on win probability. & Produces unrealistic recommendations because football performance depends on interactions among multiple tactical variables rather than on isolated changes. \\
+\hline
+Manual tactical profiles & Predefined tactical templates, such as pressing or counter-attacking profiles, were evaluated as structured alternatives to isolated variable changes. & Strongly dependent on human assumptions and restricted to a limited set of manually designed tactical patterns. \\
+\hline
+Constrained Monte Carlo optimiser & Thousands of tactical permutations were generated within realistic historical bounds and evaluated using the trained machine learning model under domain-specific constraints. & More computationally demanding and dependent on the quality of the imposed constraints and the underlying predictive model. \\
+\hline
+\end{tabular}
+\end{table}
+
+As shown in Table~\ref{tab:prescriptive_evolution}, the proposed prescriptive framework evolved from simple heuristic approaches toward a constrained simulation-based optimiser capable of generating more realistic and operationally useful tactical recommendations. This prescriptive framework is the core contribution of the thesis because it transforms football analytics into a coach-facing decision system. Instead of only describing the likelihood of success, the system identifies tactical conditions associated with improved probability and translates them into a readable tactical blueprint. In the context of UmbraRo, this idea is expressed through modules such as Tactical Blueprint, baseline versus optimised probability, probability uplift, target tactical values, and AI-generated tactical summaries.
+
+\section{Datasets}
+\label{sec:datasets}
+
+This section describes the data used to build the predictive and prescriptive analytics framework behind UmbraRo. The dataset consists of approximately 1{,}600 matches from the Romanian Superliga covering the seasons 2020--2021 to 2024--2025. For the main predictive evaluation, the data was split chronologically, with matches before July 1, 2024 used for training and validation, while the 2024--2025 season was reserved as a holdout test period.
+
+The prediction task was formulated as a binary classification problem: \emph{Home Win} versus \emph{Not Home Win}. This formulation was selected after the multiclass setup produced less stable results due to the statistical ambiguity of football draws.
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of the dataset used in this thesis}
+\label{tab:dataset_summary}
+\begin{tabular}{|l|l|}
+\hline
+Competition & Romanian Superliga \\
+\hline
+Seasons & 2020--2021 to 2024--2025 \\
+\hline
+Approximate number of matches & 1{,}600 \\
+\hline
+Prediction target & Home Win vs.\ Not Home Win \\
+\hline
+Evaluation strategy & Chronological split + rolling-origin validation \\
+\hline
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:dataset_summary} summarises the main characteristics of the dataset used for model development and evaluation.
+
+\subsection{Data Acquisition}
+\label{subsec:data_acquisition}
+
+The raw match data was obtained directly from \texttt{FlashScore.ro} through a custom Selenium-based web scraper. For every match in the five seasons of interest, the scraper opens the dedicated statistics view and extracts a fixed schema of twelve per-team statistical fields --- possession, shots, shots on target, shots off target, corners, fouls, yellow cards, red cards, offsides, free kicks, throw-ins, and goalkeeper saves --- together with basic match-level metadata (competition, season, date, participating teams, and final score). The pipeline is rate-limited, incrementally checkpointed, and logs failed retrievals separately so that a single transient failure does not abort an entire run. The resulting structured dataset contains approximately $1{,}600$ matches across the 2020--2021 to 2024--2025 seasons.
+
+\subsection{Feature Engineering}
+\label{subsec:feature_engineering}
+
+The raw CSV is processed in a dedicated Jupyter notebook to produce the analysis-ready dataset used throughout the rest of Chapter~\ref{chap:approach}. Two families of engineered features are added on top of the scraped fields.
+
+\paragraph{Elo ratings.}
+Team strength is summarised by an Elo rating computed along the publicly documented \emph{ClubElo} system~\cite{clubelo}, which adapts the classical chess rating of Arpad Elo~\cite{elo1978rating} to association football. Each team starts the historical window with a rating of $1{,}200$. For a fixture between home team $H$ and away team $A$ at time $t$, the pre-match expected outcome from the home team's perspective is
+\begin{equation}
+    E_H(t) \;=\; \frac{1}{1 + 10^{-\bigl(r_H(t) + \mathrm{HFA}(t) - r_A(t)\bigr)/400}},
+    \label{eq:elo_expected}
+\end{equation}
+where $r_H(t)$ and $r_A(t)$ are the pre-match ratings and $\mathrm{HFA}(t)$ is the country-wide home-field-advantage offset at time $t$. The actual result is encoded as $R \in \{0, 0.5, 1\}$ for loss, draw, and win respectively. Ratings are then updated by
+\begin{equation}
+    \Delta r \;=\; K \cdot \bigl(R - E_H(t)\bigr) \cdot \sqrt{\,|s_H - s_A|\,},
+    \label{eq:elo_update}
+\end{equation}
+where $K = 20$ is the standard ClubElo learning rate and $s_H, s_A$ are the goals scored by each side. The square-root term in Equation~\eqref{eq:elo_update} implements ClubElo's goal-margin scaling, which awards more rating points for wide-margin wins than for narrow ones while preserving the equation's expected-value property under the win-rate interpretation of $E_H$ via a per-margin normalisation factor that ClubElo derives from the empirical distribution of result margins and that is folded into the implementation~\cite{clubelo}. The home team gains $\Delta r$ rating points and the away team loses the same amount, so that the rating system remains zero-sum across the league. At the end of every match day, the home-field-advantage offset itself is updated by
+\begin{equation}
+    \mathrm{HFA}(t+1) \;=\; \mathrm{HFA}(t) \;+\; 0.075 \sum_{\text{matches on day } t} \Delta r,
+    \label{eq:hfa_update}
+\end{equation}
+which drives $\mathrm{HFA}$ towards the value at which home and away teams gain rating points at the same long-run rate, again following the ClubElo specification. Four Elo-derived columns are produced and persisted with the rest of the analysis-ready dataset: \texttt{Computed\_Home\_Elo}, \texttt{Computed\_Away\_Elo}, \texttt{Computed\_HFA}, and the pre-match \texttt{Computed\_Elo\_Diff} that emerges as the dominant predictive feature in the final models (Figure~\ref{fig:feature_importance}).
+
+\paragraph{Rolling tactical averages and rest days.}
+For every team and every match, a five-match rolling window (with \texttt{min\_periods=3} so that early-season fixtures are still admitted) computes the team's running average of points obtained, goals scored, goals conceded, shots, shots on target, corners, and possession percentage. The same window is applied separately to the home and away contexts, producing fourteen rolling-average columns. In addition, the number of days since each team's previous match is recorded as a rest-day feature (defaulting to seven days for season openers) to capture fatigue and schedule density. The resulting analysis-ready dataset contains approximately $1{,}600$ rows and around sixty columns; the subset of twenty-two features actually consumed by the production models comprises the four Elo columns, the fourteen rolling tactical averages, the two rest-day features, and the two head-to-head columns described next.
+
+\paragraph{Head-to-head context.}
+The structured dataset also includes a pair of head-to-head columns, \texttt{Home\_H2H\_Pts\_3} and \texttt{Away\_H2H\_Pts\_3}, which summarise each team's points haul over the most recent up-to-three meetings between the two clubs (three points for a win in a previous meeting, one for a draw, zero for a loss). The columns are empty for early-season fixtures with insufficient prior encounters and are populated chronologically as the season unfolds. Both are consumed by the production model and appear among the dominant contextual features in the calibrated CatBoost feature-importance ranking (Figure~\ref{fig:feature_importance}).
+
+\paragraph{COVID-19 caveat on home-field advantage.}
+The training data spans the 2020--2021 through 2024--2025 Romanian Superliga seasons, of which the 2020--2021 fixtures were played without spectators due to COVID-19 restrictions. Empty-stadium play has been shown to reduce or invert home-field advantage in other European leagues~\cite{tilp2020covid}, and including these fixtures in the training set may slightly bias the model's \texttt{Computed\_HFA} feature downward relative to a normal-attendance baseline. This work did not separately model the COVID era --- the affected fixtures represent only one of five seasons in the data --- but flag this as a known limitation. Re-fitting on post-2021 data only would be a natural robustness check for future work.
+
+\section{Training and Testing Methodology}
+\label{sec:methodology}
+
+A set of engineered pre-match features was constructed in order to represent both team strength and recent tactical form. The most important features include computed Elo ratings, head-to-head points, rest days, and rolling five-match averages for possession, shots, shots on target, corners, goals scored, and goals conceded.
+
+Because football data is chronological, the evaluation protocol avoided random train-test splits. Instead, rolling-origin cross-validation~\cite{bergmeir2018cv} was used during development in order to ensure that each model was evaluated only on future matches relative to its training data. This made the evaluation more realistic and prevented information leakage from future fixtures.
+
+In addition, preprocessing operations such as missing-value imputation and scaling were handled through Scikit-Learn pipelines. This ensured that transformations were learned only from the training folds and then applied consistently to validation or test data.
+
+The methodology also considered probability calibration~\cite{platt1999probabilistic,niculescu2005predicting}, since the application requires meaningful probability outputs rather than only hard class predictions. For this reason, metrics such as accuracy, F1-score, Brier score~\cite{brier1950verification}, and Expected Calibration Error~\cite{guo2017calibration} were considered during evaluation.
+
+\paragraph{Deployed bundle matches the research methodology.}
+The deployment bundle that serves the UmbraRo backend was rebuilt to match the research methodology described above exactly: the production build pipeline now applies a chronological train-fold split at July 1, 2024, wraps the CatBoost classifier in \texttt{CalibratedClassifierCV} with the sigmoid method and \texttt{TimeSeriesSplit} cross-validation, and persists a separately-fitted raw CatBoost alongside the calibrated wrapper for SHAP attribution. Bounds and median values consumed by the prescriptive optimiser are also derived from the train fold only. The probabilities served by the production API are therefore the same calibrated probabilities reported in the holdout evaluation of Section~\ref{sec:results}; there is no methodological gap between the model the thesis describes and the model the deployed application uses.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=10mm and 8mm,
+    stage/.style={
+        rectangle, draw=black, thick,
+        minimum width=30mm, minimum height=13mm,
+        text width=29mm, align=center,
+        font=\footnotesize
+    },
+    arrow/.style={-{Stealth[length=2.5mm]}, thick}
+]
+% Row 1 (left to right)
+\node[stage] (s1) {Historical Superliga data};
+\node[stage, right=of s1] (s2) {Cleaning and preprocessing};
+\node[stage, right=of s2] (s3) {Feature engineering};
+\node[stage, right=of s3] (s4) {Binary target construction};
+% Row 2 (right to left)
+\node[stage, below=of s4] (s5) {Rolling-origin validation};
+\node[stage, left=of s5] (s6) {Model comparison};
+\node[stage, left=of s6] (s7) {Probability calibration};
+\node[stage, left=of s7] (s8) {Tactical optimisation};
+% Arrows
+\draw[arrow] (s1) -- (s2);
+\draw[arrow] (s2) -- (s3);
+\draw[arrow] (s3) -- (s4);
+\draw[arrow] (s4) -- (s5);
+\draw[arrow] (s5) -- (s6);
+\draw[arrow] (s6) -- (s7);
+\draw[arrow] (s7) -- (s8);
+\end{tikzpicture}
+\caption{Overall methodological pipeline of the proposed UmbraRo framework.}
+\label{fig:method_pipeline}
+\end{figure}
+
+Figure~\ref{fig:method_pipeline} illustrates the full workflow used to transform historical match data into predictive probabilities and prescriptive tactical recommendations.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/tsne.png}
+    \caption{Two-dimensional t-SNE projection of the engineered pre-match feature space, coloured by the binary target (\emph{Home Win} vs.\ \emph{Not Home Win}). The two classes are heavily interleaved, indicating that the predictive ceiling reported in Section~\ref{sec:results} is consistent with limited intrinsic separability in pre-match aggregate features.}
+    \label{fig:tsne}
+\end{figure}
+
+Figure~\ref{fig:tsne} shows the projection used to sanity-check the structure of the feature space before model fitting. The lack of clean, well-separated clusters supports the methodological choice of binary classification with calibrated probabilities rather than aiming for high deterministic accuracy.
+
+\section{Results}
+\label{sec:results}
+
+Several model families were evaluated, including Logistic Regression, Random Forest, XGBoost, CatBoost, Support Vector Machines, Naive Bayes, and Multi-Layer Perceptrons. The experiments showed that Logistic Regression obtained the strongest pure predictive performance in the binary classification setting.
+
+However, the thesis did not stop at pure prediction. The final goal of the system was to support tactical prescription through scenario simulation. In this context, CatBoost was preferred for the prescriptive optimisation loop because, on the validation fold, it produced calibrated probability surfaces with shallower discontinuities under tactical-variable perturbation: a small change in possession or shots on target moves the predicted home-win probability by a comparable amount, whereas the linear classifier was prone to abrupt swings near its decision boundary that did not correspond to tactically meaningful differences.
+
+\begin{table}[!htbp]
+\centering
+\caption{Comparison of the main predictive models in the binary classification setting. Stochastic classifiers are reported as mean $\pm$ standard deviation across five independent random seeds on the same chronological holdout, as recommended by Bouthillier et al.~\cite{bouthillier2021accounting}, who argue that single-seed reporting systematically under-represents the true variance of machine-learning benchmarks. Deterministic models (Logistic Regression with the saga solver, XGBoost with fixed seed) show $\sigma = 0$. The first two rows are trivial baselines included to verify that the ML models add value beyond simple heuristics.}
+\label{tab:model_results}
+\renewcommand{\arraystretch}{1.15}
+\small
+\begin{tabular}{|l|c|c|p{4.3cm}|}
+\hline
+\textbf{Model} & \textbf{Accuracy} & \textbf{Brier Score} & \textbf{Notes} \\
+\hline
+Always-Home-Win baseline & 41.38\% & -- & Trivial reference (predicts every fixture as a home win) \\
+\hline
+Elo-only Logistic Regression & 65.20\% & 0.2241 & Logistic regression on a single feature (Elo difference); ROC-AUC $= 0.6699$ \\
+\hline
+Logistic Regression & $64.89 \pm 0.00\%$ & $0.2256 \pm 0.0000$ & Best pure predictive model on the test set; sigmoid-calibrated Brier \\
+\hline
+CatBoost (calibrated) & $62.95 \pm 0.50\%$ & $0.2329 \pm 0.0007$ & Best prescriptive engine after sigmoid calibration; test-set ECE $\approx 0.052$ \\
+\hline
+Random Forest & $64.45 \pm 0.43\%$ & $0.2318$ & Competitive ensemble baseline \\
+\hline
+XGBoost & $61.44 \pm 0.00\%$ & $0.2348$ & Lower predictive performance than LR and CatBoost \\
+\hline
+SVM (RBF) & 63.95\% & -- & Competitive margin-based baseline (single-seed) \\
+\hline
+MLP & $63.07 \pm 0.92\%$ & $0.2276 \pm 0.0000$ & Best calibration after Platt-sigmoid (ECE $= 0.0312$, lowest among the seven models) \\
+\hline
+Naive Bayes & 61.76\% & -- & Simpler probabilistic baseline (single-seed) \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/multi_seed_boxplot.png}
+    \caption{Holdout accuracy distribution across five independent random seeds for the four stochastic classifiers. The Multi-Layer Perceptron shows the largest seed-to-seed variance ($\sigma \approx 0.9$ percentage points); Random Forest and CatBoost are tightly concentrated ($\sigma \leq 0.5$).}
+    \label{fig:multi_seed}
+\end{figure}
+
+\FloatBarrier
+
+Figure~\ref{fig:multi_seed} shows that the seed variance of the tree ensembles and the calibrated CatBoost is small (well under one percentage point), supporting the use of a single-fit pipeline in the deployed application. The MLP shows the largest seed-to-seed variance among the stochastic classifiers ($\sigma \approx 0.9$ percentage points) but is still less variable than initially expected.
+
+As shown in Table~\ref{tab:model_results}, the distinction between the best predictive model and the best prescriptive model is important. Although Logistic Regression achieved the highest predictive performance, CatBoost was selected as the final production engine because its behaviour in tactical optimisation was more realistic and operationally useful. Two trivial baselines were also included to confirm that the ML models add value beyond simple heuristics: an \emph{always-predict-home-win} predictor reaches only $41.38\%$ accuracy on the holdout, while an \emph{Elo-only} logistic regression~\cite{hvattum2010elo} --- a one-feature model using just the pre-match Elo difference --- already reaches $65.20\%$ accuracy. The fact that the engineered, multi-feature models do not surpass the single-feature Elo baseline --- engineered Logistic Regression at $64.89\%$ trails the Elo-only Logistic Regression at $65.20\%$ by $0.31$ percentage points, and the calibrated CatBoost at $62.95\%$ trails it by $2.25$ percentage points --- is itself an important finding: Elo difference captures most of the predictable structure of a Romanian Superliga fixture, and additional tactical features contribute primarily through the calibration and explainability they provide rather than through raw accuracy.
+
+Among the engineered multi-feature models, Logistic Regression obtained the highest raw test accuracy at $64.89\%$, followed by the default Random Forest at $64.45\%$ and the calibrated CatBoost at $62.95\%$. A single-seed LightGBM run conducted during an earlier development iteration produced an accuracy of $61.44\%$, indistinguishable from XGBoost on the same fold; it was not carried into the multi-seed comparison of Table~\ref{tab:model_results} to avoid duplicate reporting of the gradient-boosting family.
+
+The engineered Logistic Regression's test-set ROC-AUC is $0.6669$, marginally below the Elo-only baseline's $0.6699$, and its log-loss is $0.6485$; the calibrated CatBoost reaches ROC-AUC $0.6558$ and log-loss $0.6466$ on the same holdout. Both models capture useful signal despite the inherent uncertainty of football outcomes. The bootstrap $95\%$ confidence interval for accuracy was estimated as $[0.5862, 0.6897]$. The width of this interval (approximately $10$ percentage points) reflects the modest size of the 2024--2025 holdout season (approximately $300$ fixtures) and is consistent with the predictive ceiling reported in the European football prediction literature surveyed in Section~\ref{sec:relevant_studies}. The point estimate should therefore be interpreted as one realisation of a noisy outcome distribution, not as a precise measurement.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.55\textwidth]{figures/confusion_matrix.png}
+    \caption{Confusion matrix of the calibrated CatBoost model on the 2024--2025 holdout season. Rows correspond to true labels, columns to predicted labels.}
+    \label{fig:confusion_matrix}
+\end{figure}
+
+Figure~\ref{fig:confusion_matrix} reports the confusion matrix obtained on the holdout: $143$ correctly identified \emph{Not Home Win} outcomes, $61$ correctly identified \emph{Home Win} outcomes, and $44 + 71 = 115$ misclassifications. The model is therefore conservative: it misses $71$ true home wins out of $132$, producing a recall of $0.46$ on the positive class, while keeping the precision of home-win predictions around $0.58$.
+
+Since the final application relies on probability outputs rather than only on class labels, calibration quality was also evaluated. After Platt-sigmoid calibration under rolling-origin cross-validation (applied identically to both classifiers), CatBoost obtained a Brier score of $0.2329$ and an Expected Calibration Error (ECE) of $0.0517$. For comparison, calibrated Logistic Regression obtained a slightly better Brier score of $0.2256$ and a comparable ECE of $0.0529$. Both models therefore produce usable probabilities; CatBoost remains the preferred prescriptive engine because of its smoother response to tactical perturbations under the constrained Monte Carlo optimiser (Section~\ref{subsec:f2_impl}).
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.78\textwidth]{figures/reliability_diagram.png}
+    \caption{Reliability diagram for calibrated Logistic Regression and calibrated CatBoost on the holdout season. The diagonal denotes perfect calibration; both models track it closely, with CatBoost showing the smaller systematic deviation that is captured by its lower ECE.}
+    \label{fig:reliability}
+\end{figure}
+
+Figure~\ref{fig:reliability} visualises the calibration trade-off behind the scalar Brier and ECE values: both calibrated models hug the diagonal across the probability range, which is the condition the prescriptive optimiser depends on when comparing baseline and optimised probabilities.
+
+Time-aware rolling-origin validation further supported the robustness of the pipeline. Across three chronological folds, the mean accuracy was $0.6254$, the mean log-loss was $0.6650$, and the mean Brier score was $0.2354$. This is important because it shows that the reported performance is not based on a single favourable split, but remains relatively consistent across temporally ordered evaluation windows.
+
+\FloatBarrier
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.78\textwidth]{figures/feature_importance_catboost.png}
+    \caption{Top-fifteen feature importances reported by the calibrated CatBoost model (gain). Contextual features (Elo difference, head-to-head record) and rolling tactical averages dominate; rest-day features contribute less but still appear in the top half of the ranking.}
+    \label{fig:feature_importance}
+\end{figure}
+
+Figure~\ref{fig:feature_importance} confirms that the prescriptive optimiser operates on the same variables that drive the predictive model: the rolling five-match averages of possession, shots, shots on target, corners, goals scored, and goals conceded are precisely the decision variables in Section~\ref{sec:overview_approach}, which is why moving them inside their realistic percentile bounds translates directly into a measurable uplift in predicted home-win probability.
+
+To complement gain-based importance with a model-agnostic attribution, SHAP values~\cite{lundberg2017shap} were also computed on the test set using \texttt{shap.TreeExplainer}~\cite{lundberg2020treeshap} applied to the raw (uncalibrated) CatBoost model. Figure~\ref{fig:shap} reports the resulting summary plot: each point is a test fixture, the colour encodes the feature value, and the horizontal axis is the contribution of that feature to the predicted log-odds. The Elo features and rolling rest-day asymmetry dominate, with rolling possession and shots on target making the largest tactical contribution --- consistent with the gain-based ranking in Figure~\ref{fig:feature_importance}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/shap_summary.png}
+    \caption{SHAP summary plot for the raw CatBoost model on the 2024--2025 holdout. Rows are features ranked by mean absolute SHAP value (top = most important); each dot is one fixture, coloured by the feature's value (blue = low, red = high); horizontal position is the feature's contribution to the predicted log-odds of \emph{Home Win}.}
+    \label{fig:shap}
+\end{figure}
+
+\FloatBarrier
+
+A threshold-tuning experiment was also conducted on the calibrated Logistic Regression probabilities: the threshold that maximises holdout F1 was found to be $t^\star = 0.370$, which yields an F1 of $0.6158$ but reduces holdout accuracy to $57.37\%$ from the default-threshold $64.89\%$. The deployed application therefore retains the default $t = 0.5$ decision boundary --- the prescriptive optimisation layer depends on the calibrated probability surface (Brier, ECE) rather than on a single hard-classification metric, so trading roughly seven percentage points of accuracy for a slightly higher F1 is not a favourable exchange. The calibrated probability is surfaced to the coach directly.
+
+\FloatBarrier
+
+For the prescriptive stage, the distinction between predictive quality and optimisation behaviour became critical. The vectorised constrained Monte Carlo optimiser described in Section~\ref{sec:overview_approach} was swept over six values of $N \in \{1{,}000, 5{,}000, 10{,}000, 25{,}000, 50{,}000, 100{,}000\}$ on the UTA Arad vs.\ FCSB fixture, repeating each setting across ten independent random seeds. Figure~\ref{fig:n_scaling} reports the resulting latency and standard-deviation curves: a single batched call costs $36$~ms at $N = 1{,}000$ and $132$~ms at $N = 100{,}000$, while the standard deviation of the best returned probability falls from $0.0060$ at $N = 1{,}000$ to $0.0007$ at $N = 50{,}000$ and stops decreasing meaningfully past that point. A production value of $N = 25{,}000$ keeps the standard deviation below $0.002$ in absolute probability while remaining sub-second per fixture (approximately $60$~ms per call) after vectorisation; this is the value adopted for the rest of the experiments.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/N_scaling.png}
+    \caption{Constrained Monte Carlo optimiser scaling on the UTA Arad vs.\ FCSB fixture, after vectorisation. \emph{Left}: mean wall-clock per call across ten seeds, log-scale on $N$. \emph{Right}: standard deviation of the returned best home-win probability across the same ten seeds. The dashed line marks the $0.005$ stability target; the smallest $N$ meeting it is $5{,}000$, and the production value of $N = 25{,}000$ provides comfortable additional margin.}
+    \label{fig:n_scaling}
+\end{figure}
+
+Within this production setting, the optimiser exposes a positive, low-variance uplift across multiple seeds. Averaging over five seeds at $N = 25{,}000$, CatBoost increases the estimated home-win probability for UTA Arad vs.\ FCSB from a baseline of $22.10\%$ to $30.76 \pm 0.11\%$ (an uplift of approximately $8.7$ percentage points) and for CFR Cluj vs.\ FCSB from $37.82\%$ to $44.14 \pm 0.08\%$ (an uplift of approximately $6.3$ percentage points). The tight five-seed standard deviation (below $0.2$ percentage points in both cases) confirms that the chosen value of $N = 25{,}000$ produces stable, reproducible recommendations.
+
+Table~\ref{tab:tactical_blueprint} reports the full numeric blueprint returned by the optimiser for both example fixtures, alongside the baseline and optimised probabilities.
+
+\begin{table}[!htbp]
+\centering
+\caption{Best (rank 1) tactical blueprints produced by the constrained Monte Carlo optimiser at $N = 25{,}000$ for two example fixtures from the 2024--2025 holdout season, with the calibrated CatBoost model as the underlying classifier. Optimised probabilities are the mean across five random seeds. ``Goals'' and ``Conceded'' are rolling five-match averages.}
+\label{tab:tactical_blueprint}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Fixture} & \textbf{Baseline} & \textbf{Optimised} & \textbf{Uplift} & \textbf{Poss.} & \textbf{Shots} & \textbf{SoT} & \textbf{Corn.} & \textbf{Goals} & \textbf{Conc.} \\
+\hline
+UTA Arad vs.\ FCSB  & $22.10\%$ & $30.76\%$ & $+8.7$ pp & $56.7\%$ & $14.8$ & $5.4$ & $7.0$ & $1.00$ & $0.40$ \\
+\hline
+CFR Cluj vs.\ FCSB  & $37.82\%$ & $44.14\%$ & $+6.3$ pp & $58.2\%$ & $15.0$ & $5.9$ & $6.2$ & $1.00$ & $0.70$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Table~\ref{tab:top_blueprints} additionally reports the top five blueprints returned for the UTA Arad fixture, illustrating that the optimiser does not collapse onto a single dominant configuration but rather identifies a small Pareto-like family of tactical alternatives with very similar predicted uplifts (all within one percentage point of one another). This is operationally useful: a coach can choose among several tactical patterns achieving comparable model-predicted uplift, on the basis of considerations the model does not capture (player availability, opponent-specific scouting, weather).
+
+\begin{table}[htbp]
+\centering
+\caption{Top-5 tactical blueprints for UTA Arad vs.\ FCSB, returned by the constrained Monte Carlo optimiser at $N = 25{,}000$ (random seed $= 0$).}
+\label{tab:top_blueprints}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\textbf{Rank} & \textbf{P(HW)} & \textbf{Poss.\%} & \textbf{Shots} & \textbf{SoT} & \textbf{Corn.} & \textbf{Goals} & \textbf{Conc.} \\
+\hline
+1 & $0.308$ & $56.4$ & $15.5$ & $5.4$ & $6.8$ & $0.96$ & $0.51$ \\
+2 & $0.306$ & $56.2$ & $14.6$ & $5.4$ & $6.8$ & $0.80$ & $0.48$ \\
+3 & $0.305$ & $57.3$ & $14.3$ & $5.4$ & $6.8$ & $0.86$ & $0.63$ \\
+4 & $0.304$ & $57.4$ & $14.5$ & $4.2$ & $6.8$ & $1.03$ & $0.61$ \\
+5 & $0.303$ & $57.8$ & $15.8$ & $5.9$ & $6.7$ & $1.18$ & $0.48$ \\
+\hline
+\end{tabular}
+\end{table}
+
+A retrospective check on the holdout season was finally conducted to evaluate whether the optimiser's recommendations correspond to outcomes that materialise on the pitch. For each of the $317$ holdout fixtures with usable rolling statistics --- $315$ of which had at least fifty prior fixtures from which to build a base vector --- the constrained optimiser at $N = 5{,}000$ was re-run with only past data available at the fixture's date, yielding a recommended blueprint. The dimension-normalised $L_2$ distance between the team's actual rolling averages (as observed going into that fixture) and the recommended blueprint was then computed. Fixtures whose normalised distance fell below the $25$th percentile of the distribution were labelled as ``hit blueprint'', and the empirical home-win rate of each cohort was compared.
+
+\begin{table}[htbp]
+\centering
+\caption{Retrospective causal check on the 2024--2025 holdout. Fixtures are bucketed by the normalised $L_2$ distance between the team's actual rolling averages and the optimiser's recommended blueprint; the home-win rate is the empirical fraction of matches won by the home team.}
+\label{tab:retrospective}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Cohort} & \textbf{Fixtures} & \textbf{Empirical home-win rate} \\
+\hline
+Hit blueprint (top 25\% by distance) & $79$ & $48.1\%$ \\
+\hline
+Did not hit blueprint (remaining 75\%) & $236$ & $39.4\%$ \\
+\hline
+\textbf{Difference} & & \textbf{+8.7 percentage points} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/retrospective_check.png}
+    \caption{Empirical home-win rate on the 2024--2025 holdout, split by whether the home team approximately hit the optimiser's recommended blueprint. Fixtures in the top quartile of blueprint-similarity won at a rate of $48.1\%$; the remainder won at $39.4\%$.}
+    \label{fig:retrospective}
+\end{figure}
+
+Table~\ref{tab:retrospective} and Figure~\ref{fig:retrospective} together provide the most direct empirical support available for the prescriptive framework: home teams that approximately produced the recommended tactical blueprint won at an $8.7$ percentage point higher rate than teams that did not. This is not a causal claim in the rigorous sense --- without a propensity-score adjustment~\cite{rosenbaum1983central}, the blueprint is correlated with team and opponent strength through Elo, so the cohorts are not balanced --- but it is, at minimum, evidence that the optimiser's recommendations are consistent with the conditions under which Romanian Superliga home teams have actually won during the holdout season.
+
+These results show that the best predictive model is not necessarily the best prescriptive model. Logistic Regression was retained as the strongest benchmark for forecasting, whereas CatBoost was selected as the final production engine because it offered a better trade-off among predictive quality, calibration, and tactical realism.
+
+\section{Discussions}
+\label{sec:discussion}
+
+The results support several important conclusions. First, the binary formulation of the task was more stable than the original multiclass setup. This confirms the practical difficulty of modelling football draws, which often arise from heterogeneous tactical scenarios and introduce additional ambiguity into the learning problem.
+
+Second, feature engineering had a major effect on model quality. Variables such as computed Elo difference, recent possession, shots, shots on target, corners, and rest days, summarised through rolling-five averages, provided a more informative representation than raw results alone. The feature-importance analysis also showed that contextual variables, especially Elo-related information, remained highly influential in the fitted models.
+
+Third, the experiments revealed a meaningful separation between predictive performance and prescriptive usefulness. Logistic Regression achieved the best raw predictive accuracy and therefore served as the strongest benchmark model. However, once embedded inside the tactical optimisation loop, it tended to react too aggressively to variable perturbations, which could exaggerate the practical effect of tactical changes.
+
+CatBoost, by contrast, offered a more balanced behaviour in the prescriptive setting. Its non-linear structure captured interactions among tactical variables more naturally and generated recommendations that were both statistically plausible and easier to interpret operationally. For this reason, the final model choice was driven not only by accuracy, but also by calibration quality, robustness, and behaviour under constrained tactical simulation.
+
+A limitation of the current chapter is that some experimental comparisons still rely on a relatively compact set of aggregate pre-match features rather than richer event-level data or player-tracking time-series. In addition, the reported prescriptive recommendations remain model-based suggestions rather than causal guarantees. Nevertheless, the results are sufficient to justify the methodological choice behind UmbraRo and to support the transition from pure prediction toward tactical prescription.
+
+A subtler limitation, made concrete by the availability-feature ablation in Section~\ref{subsec:xi_availability_ablation}, is that the supervised XI predictor's headline Jaccard of $0.6227$ is largely driven by features that are functions of past coach decisions rather than by intrinsic player-quality KPIs. With those features removed, supervised performance collapses to the trivial top-by-minutes floor of approximately $0.520$. This is not strict leakage in the temporal sense --- past-availability is observable at inference time --- but it is the methodologically honest characterisation of what the supervised layer actually learns. The deployed system's behaviour is unchanged by this observation, but a thesis-grade interpretation of the system's predictive value should acknowledge that, of the $+0.175$ supervised Jaccard lift over the fresh Heuristic Composite, approximately $59\%$ ($+0.103$) is attributable to autoregressive recency rather than to deeper per-90 KPI signal.
+
+\section{Player-Level Modelling and Starting XI \mbox{Recommendation}}
+\label{sec:xi}
+
+The match-outcome and prescriptive-blueprint pipelines described in Sections~\ref{sec:results} and~\ref{sec:overview_approach} operate at the team level. A complementary, player-level layer was developed to answer a question that arises naturally at the same coaching-decision boundary: \emph{given the players available at a fixture, who should start?} This section documents the methodology, the dataset, the resulting predictor, and a retrospective validation against historical Romanian Superliga starting elevens.
+
+\subsection{Data Source}
+\label{subsec:xi_data}
+
+The player-level dataset used in this section was made available to the author by \textbf{FC Universitatea Cluj}, sourced from \textbf{Hudl Wyscout}, the club's official statistics provider; the full acknowledgement is recorded on the Acknowledgements page. It consists of $278$ per-match JSON files covering Romanian Superliga fixtures from the seasons preceding and including 2024--2025, aggregating to approximately $6{,}000$ player-match records. Although the dataset was primarily compiled around FC Universitatea Cluj fixtures, every match in the file covers \emph{both} participating clubs' players, so the same files document the Romanian Superliga 2024-25's other fifteen teams as well; this enables the league-wide methodology described in Section~\ref{subsec:xi_supervised} without an additional Wyscout export. For every player who appeared in a match, the feed records roughly two dozen action-level KPIs (minutes played, passes / successful passes, duels / duels won, shots / shots on target, goals, assists, key passes, progressive passes, expected-goal contribution from shots and from passes, interceptions, defensive duels won, aerial duels won, clearances, recoveries, yellow / red cards) together with a positional label and the player's identifier. A separate file maps every player identifier to a profile that carries the player's current team identifier, role, birth date, and physical attributes.
+
+The league-wide Sportradar competitor-profile feed complements the Wyscout source by providing current squad rosters for all sixteen clubs (totalling $643$ players). It supplies the external cross-check used in Section~\ref{subsec:xi_features} and the league-wide team registry that pairs each club's Wyscout identifier with its Sportradar competitor identifier, so the predictor can be queried for any of the sixteen teams through a uniform interface.
+
+\subsection{Feature Engineering}
+\label{subsec:xi_features}
+
+Several methodological steps separate the raw match-level feed from the player-feature matrix used by the predictor.
+
+\paragraph{Per-90 normalisation.}
+Raw counting statistics scale linearly with minutes played, which makes a forward who appeared for thirty minutes incomparable with a forward who completed a full ninety. Following the convention recommended by Pappalardo et al.~\cite{pappalardo2019playerank}, every counting KPI is converted to a per-90-minute rate by multiplying through by $90 / m_p$, where $m_p$ is the total number of minutes player $p$ has accumulated across the aggregated matches.
+
+\paragraph{Empirical-Bayes shrinkage for low-sample players.}
+A per-90 rate computed from a single appearance is statistically noisy: a single shot in a single match yields a per-90 shot rate of approximately $5.6$, which is implausible for any midfielder over a full season. To control for this, every per-90 rate is shrunk toward the corresponding positional mean using the standard empirical-Bayes update
+\begin{equation}
+    \tilde{r}_p \;=\; \frac{k \, \bar{r}_g + n_p \, \hat{r}_p}{k + n_p},
+    \label{eq:eb_shrinkage}
+\end{equation}
+where $\hat{r}_p$ is the raw per-90 rate, $n_p$ is the number of matches contributing to it, $\bar{r}_g$ is the mean rate among players of the same positional group $g \in \{\text{GK}, \text{DEF}, \text{MID}, \text{FWD}\}$, and $k$ is a pseudo-count fixed at $k = 3$. With $n_p = 0$, the shrunk estimate $\tilde{r}_p$ collapses to the position mean; with $n_p \gg k$, it reverts to the raw rate. The choice of identity follows the canonical empirical-Bayes shrinkage formulation popularised in sports statistics by Brown~\cite{brown2008empirical}. At prediction time the deployed runtime refines this coarse-group prior with a fine-position-group mean whenever the fine group contains at least three observations, falling back to the coarse-group estimate otherwise; the heuristic composite measured as Arm~C in Table~\ref{tab:availability_ablation} uses the coarse-group shrinkage throughout, matching the description above.
+
+\paragraph{Exponential time decay on recent form.}
+When per-match timestamps are available, the recent-form indicator is computed as a weighted mean of per-match performance scores with weights $w_m = \exp(-\lambda \, \Delta t_m)$, where $\Delta t_m$ is the number of days between match $m$ and the prediction date and $\lambda = \ln 2 / 30$ corresponds to a $30$-day half-life. Matches without a parseable date fall back to a uniform mean of the last three observations.
+
+\paragraph{Availability features.}
+A retrospective validation of the predictor against actual FC Universitatea Cluj starting elevens (Section~\ref{subsec:xi_validation}) revealed that pure per-90 KPI normalisation, however carefully position-aware, ignored the dominant signal driving the coach's selections: \emph{availability}. A player who has not appeared in the team's last several fixtures is, by definition, not a candidate the coach can pick --- yet the previous version of the composite continued to rank such a player highly purely on the strength of their per-90 efficiency. Drew and Finch~\cite{drew2016training} argue that, in the wider sports-science literature, training-load and availability signals are primary indicators of player readiness and should not be discarded by per-90 normalisation. The composite was therefore extended with three new feature columns derived directly from the team's chronological fixture list:
+\begin{itemize}
+    \item $\text{availability\_last\_5}$ --- the player's share of minutes accumulated in the team's most recent five fixtures, divided by the theoretical maximum ($5 \times 90$ minutes).
+    \item $\text{started\_last\_match}$ --- a binary indicator equal to one when the player started the team's most recent fixture (Wyscout's \texttt{matchesInStart} flag), and zero otherwise.
+    \item $\text{match\_gap\_since\_last\_appearance}$ --- the number of team fixtures missed since the player's last non-zero-minute appearance.
+\end{itemize}
+These three features are aggregated into a single scalar
+\begin{equation}
+    \text{availability\_score} \;=\;
+    \alpha \cdot \text{availability\_last\_5}
+    + \beta \cdot \mathbb{1}[\text{started\_last\_match}]
+    - \gamma \cdot \mathbb{1}[\text{match\_gap} > 3],
+\end{equation}
+with $\alpha = 0.6$, $\beta = 0.4$, $\gamma = 0.3$. The aggregate is z-scored within fine position and absorbed into the composite via per-position weights (typically $0.15$--$0.25$ for outfield positions, lower for the goalkeeper because teams rotate their first-choice keeper infrequently). The complete weight table is shown in Table~\ref{tab:xi_weights}.
+
+\paragraph{Empirical squad detection.}
+The Wyscout snapshot is filtered to identify each club's active senior squad by counting non-zero-minute appearances in the team's match files, since the registered-team field carries known inconsistencies in the export schema and on its own misses parts of the senior squad. A player is admitted to the squad if and only if they appeared in at least five fixtures for that team. The empirical appearance distribution is bimodal in practice --- senior squad members appear in many of the team's fixtures, while opposition regulars (who only meet the team twice per regular season plus at most twice more in the playoff round) appear in at most three --- so the threshold cleanly separates the two populations. The resulting set of $27$ players is the canonical FC Universitatea Cluj squad used throughout the validation in Section~\ref{subsec:xi_validation}.
+
+\paragraph{Opponent-style profile.}
+Coach selections respond not only to availability but also to the opponent's recent tactical profile: a team facing a high-press side will favour composed centre-backs and ball-retentive midfielders, while a team facing a low block will favour progressive midfielders and wide creators. To make this context available to the supervised lineup classifier (Section~\ref{subsec:xi_supervised}), every fixture is paired with the opponent's rolling five-match averages of possession share, shots, shots on target, corners, goals scored, goals conceded, points, yellow cards and goalkeeper saves --- read from the team-level fixture table introduced in Section~\ref{sec:datasets} --- together with the opponent's pre-match Elo, the Elo gap, the league-wide home-field advantage at fixture time, and a one-hot encoding of the opponent's tactical-style cluster derived by $k$-means with $k = 4$ over the rolling-five vectors. The rationale for treating opponent quality and style as conditioning variables in association football is established by Lago-Pe\~nas~\cite{lagopenas2010possession} and discussed in the context-aware analytics review of Bornn et al.~\cite{bornn2018soccer}.
+
+\paragraph{Fine-grained positional taxonomy.}
+The Wyscout per-match feed records, for every player appearance, a ``positions'' array whose entries carry a position code (one of $28$ distinct labels such as \texttt{cb}, \texttt{lcb}, \texttt{rcb}, \texttt{lb}, \texttt{rb}, \texttt{lwb}, \texttt{rwb}, \texttt{dmf}, \texttt{lcmf}, \texttt{rcmf}, \texttt{amf}, \texttt{lw}, \texttt{rw}, \texttt{lwf}, \texttt{rwf}, \texttt{cf}, \texttt{gk}, and three-back / five-back variants) together with the percentage of match time spent in that position. Collapsing these $28$ codes to four groups (the simpler GK / DEF / MID / FWD bucketing) destroys information about role specialisation: a centre-back and a wing-back have markedly different KPI profiles, and z-scoring a wing-back's crossing volume against a centre-back's would be methodologically incorrect. To preserve the role specialisation, the codes are projected to a ten-group fine taxonomy (GK, CB, FB, WB, DM, CM, AM, W, WF, ST) and, only for the purpose of filling formation slots, mapped back to the four-group coarse partition. Each player is assigned a single primary fine position equal to the fine group whose accumulated weight (minutes $\times$ percent-share, summed across all their appearances) is largest. All shrinkage, z-scoring, and composite-score aggregation operate on this fine taxonomy.
+
+\paragraph{Position-aware composite score.}
+The shrunk, per-90 KPIs are then combined into a single composite score using a position-specific weight table. The weights (Table~\ref{tab:xi_weights}) reflect domain-conventional priorities: goal contribution and shot-related KPIs dominate the Striker and Wing Forward profiles, dribbling and crossing dominate the Winger profile, interceptions and recoveries dominate the Defensive Midfielder profile, and defensive duels with aerial wins dominate the Centre Back profile. Each input is first z-scored within its fine positional group so that the composite is a linear combination of comparable, role-conditional quantities. The weighted-KPI player-rating paradigm itself is the methodological precedent established by McHale et al.~\cite{mchale2012interfaces} for the English Premier League; the position-relative evaluation that wraps it is from Pappalardo et al.~\cite{pappalardo2019playerank}. The composite is finally passed through a $\tanh$-based squash so that the output is bounded inside $[0.25, 0.75]$, which keeps the user-facing $0$--$100$ scale stable.
+
+\begin{small}
+\begin{longtable}{|l|l|c|}
+\caption{Fine-position KPI weights for the composite player score. Each weight applies to a per-90, shrinkage-corrected, z-scored feature within the named fine-position group. The \texttt{availability\_score} row encodes the participation signal described above. Weights sum to $1.0$ for each row; groups whose sample size is too small for a stable z-score fall back to the four-group coarse table at fit time.}
+\label{tab:xi_weights} \\
+\hline
+\textbf{Position} & \textbf{Feature} & \textbf{Weight} \\
+\hline
+\endfirsthead
+
+\hline
+\multicolumn{3}{|l|}{\textit{Table~\ref{tab:xi_weights} -- continued from previous page}} \\
+\hline
+\textbf{Position} & \textbf{Feature} & \textbf{Weight} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{3}{|r|}{\textit{Continued on next page}} \\
+\hline
+\endfoot
+
+\hline
+\endlastfoot
+
+GK & performance\_score & $0.32$ \\
+GK & recent\_form\_score & $0.22$ \\
+GK & pass\_accuracy & $0.18$ \\
+GK & matches\_played & $0.18$ \\
+GK & availability\_score & $0.10$ \\
+\hline
+CB & performance\_score & $0.25$ \\
+CB & recent\_form\_score & $0.17$ \\
+CB & duel\_win\_rate & $0.18$ \\
+CB & def\_action\_success & $0.13$ \\
+CB & pass\_accuracy & $0.12$ \\
+CB & availability\_score & $0.15$ \\
+\hline
+FB & performance\_score & $0.20$ \\
+FB & recent\_form\_score & $0.17$ \\
+FB & duel\_win\_rate & $0.18$ \\
+FB & def\_action\_success & $0.13$ \\
+FB & pass\_accuracy & $0.08$ \\
+FB & matches\_played & $0.09$ \\
+FB & availability\_score & $0.15$ \\
+\hline
+WB & performance\_score & $0.25$ \\
+WB & recent\_form\_score & $0.17$ \\
+WB & pass\_accuracy & $0.13$ \\
+WB & duel\_win\_rate & $0.13$ \\
+WB & dribble\_success & $0.08$ \\
+WB & matches\_played & $0.09$ \\
+WB & availability\_score & $0.15$ \\
+\hline
+DM & performance\_score & $0.25$ \\
+DM & recent\_form\_score & $0.17$ \\
+DM & duel\_win\_rate & $0.18$ \\
+DM & def\_action\_success & $0.13$ \\
+DM & pass\_accuracy & $0.12$ \\
+DM & availability\_score & $0.15$ \\
+\hline
+CM & performance\_score & $0.25$ \\
+CM & recent\_form\_score & $0.17$ \\
+CM & pass\_accuracy & $0.22$ \\
+CM & duel\_win\_rate & $0.13$ \\
+CM & matches\_played & $0.08$ \\
+CM & availability\_score & $0.15$ \\
+\hline
+AM & performance\_score & $0.30$ \\
+AM & recent\_form\_score & $0.17$ \\
+AM & pass\_accuracy & $0.16$ \\
+AM & shot\_accuracy & $0.12$ \\
+AM & dribble\_success & $0.08$ \\
+AM & availability\_score & $0.17$ \\
+\hline
+W  & performance\_score & $0.25$ \\
+W  & recent\_form\_score & $0.17$ \\
+W  & dribble\_success & $0.16$ \\
+W  & shot\_accuracy & $0.12$ \\
+W  & pass\_accuracy & $0.12$ \\
+W  & availability\_score & $0.18$ \\
+\hline
+WF & performance\_score & $0.30$ \\
+WF & recent\_form\_score & $0.17$ \\
+WF & shot\_accuracy & $0.16$ \\
+WF & dribble\_success & $0.12$ \\
+WF & matches\_played & $0.05$ \\
+WF & availability\_score & $0.20$ \\
+\hline
+ST & performance\_score & $0.35$ \\
+ST & recent\_form\_score & $0.20$ \\
+ST & shot\_accuracy & $0.10$ \\
+ST & dribble\_success & $0.10$ \\
+ST & availability\_score & $0.25$ \\
+\hline
+\end{longtable}
+\end{small}
+
+\paragraph{External cross-check against a second data source.}
+To provide an independent check on the fine-position labels derived from Wyscout, every player's Wyscout-derived primary fine position is compared against the broad position label produced by a second commercial provider (Sportradar's competitor-profile feed). Because the second feed exposes only four position buckets (goalkeeper, defender, midfielder, forward), the comparison is made at the four-group coarse taxonomy after projecting the fine label through the fine-to-coarse mapping. Across the sixteen Romanian Superliga 2024-25 clubs, $350$ players matched by diacritic-normalised last name and $263$ of those agreed on the coarse position, for a league-wide agreement rate of $\mathbf{75.14\%}$ (per-team range $56\%$--$91\%$). The remaining disagreements concentrate in two interpretable patterns: attacking midfielders that the second provider classifies as forwards, and senior attackers fielded out of position as wing-backs or wing-forwards in specific fixtures. A $75\%$ coarse-position agreement between two independent providers, given the granularity gap, is sufficient external validation for the fine labels used throughout this section.
+
+\subsection{Selection Rule}
+\label{subsec:xi_selection}
+
+The eleven players are assigned to the formation slots through a globally optimal one-to-one matching. The formation string (for example ``4-3-3'') is decoded into a list of slot labels (one goalkeeper, four defenders, three midfielders, three forwards); the players in the pool become the rows of a cost matrix and the slots become the columns; entry $(i, j)$ is set to the negative composite score of player $i$ if their fine-position group is admissible at slot $j$, and to a large constant otherwise. The Hungarian algorithm of Kuhn~\cite{kuhn1955hungarian} --- specifically the SciPy implementation \texttt{scipy.optimize.linear\_sum\_assignment} --- returns the assignment with minimal total cost, which is equivalent to maximising the sum of composite scores under the formation constraint. The remaining seven highest-scoring unassigned players form the bench.
+
+This global one-shot matching strictly dominates the greedy per-position fill that was the original selection rule, because the greedy procedure is sensitive to the order in which roles are visited and can leave a slot under-filled when a versatile player is locked into the first compatible slot at the expense of a strictly better candidate downstream. In the U Cluj 2024--2025 squad the two procedures happen to agree on the standard 4-3-3 lineup --- the role groups are unambiguous and the optimal global match coincides with the local one --- but Hungarian assignment generalises cleanly to formations such as 3-4-3 or 4-2-3-1 in which midfielders and forwards can occupy overlapping positions, and is preferred for that reason.
+
+\subsection{Supervised Lineup Classifier}
+\label{subsec:xi_supervised}
+
+The supervised lineup-classification head predicts, for every pair $(p, f)$ of a squad player $p$ and a candidate fixture $f$, the probability that $p$ started fixture~$f$ for their team, then fills the formation slots via the Hungarian assignment of Section~\ref{subsec:xi_selection} on the predicted probabilities. A single pooled classifier consumes the entire Romanian Superliga 2024-25 season at once: sixteen clubs, $556$ fixtures, $6{,}056$ actual-starter records and roughly $15{,}396$ (player, fixture) training rows in total.
+
+For each (player, fixture) pair the classifier consumes a feature vector that combines five families of signals: (i) per-90 KPI aggregates and efficiency rates summarising the player's season-to-date performance; (ii) dynamic per-fixture availability signals computed strictly from prior fixtures (recent minute share, started-last-match indicator, gap since last appearance, cumulative minutes and appearances); (iii) the opponent's rolling five-match style profile, pre-match Elo, the Elo gap, the league-wide home-field advantage, and a $k$-means cluster label for the opponent's tactical style; (iv) a per-club indicator that lets the classifier learn each team's selection idiosyncrasies on top of the cross-team signal; and (v) the player's fine-position group.
+
+An experimental \emph{opponent-XI cascade} extends the vector with summary statistics of the opponent's predicted starting eleven --- offensive output, defensive actions, aerial duels, and a count of starters by coarse position --- so that selection can in principle respond to the opponent's expected shape rather than only to their static rolling-five form. The cascade is motivated by the context-aware analytics literature in association football~\cite{lagopenas2010possession,bornn2018soccer}; its empirical contribution is examined in the ablation reported in Section~\ref{subsec:xi_validation}.
+
+The label is the binary indicator equal to one whenever the player belongs to the actual starting eleven for fixture~$f$ (Wyscout's \texttt{matchesInStart} $= 1$). The classifier is a logistic regression with $\ell_2$ regularisation and \texttt{class\_weight = "balanced"}; the methodological precedent for using a supervised binary classifier on team-selection decisions in association football is Constantinou~\cite{constantinou2019dolores}, with the weighted-rating predecessor in McHale et al.~\cite{mchale2012interfaces}. The model is evaluated by a strict league-wide \emph{rolling-origin one-fixture-out cross-validation}: chronological order is given by Sportradar's monotonically-increasing \texttt{match\_id}, and for each held-out (team, fixture) pair with the team's fixture index $i \geq 8$ the classifier is refit on every league-wide (player, fixture) row whose \texttt{match\_id} is strictly earlier, then scored on the held-out fixture's candidates; the eleven highest-scoring players (subject to the formation constraint via Hungarian assignment) form the predicted XI; the Jaccard overlap with the actual eleven is recorded.
+
+The fitted classifier and its accompanying preprocessing are persisted as a single serialised bundle, auto-loaded by the prediction service at startup and shared by every supported club; an earlier single-club bundle is retained on disk for the ablation comparison reported in the next subsection. Any of the sixteen Romanian Superliga clubs can be queried for its predicted XI through the same service endpoint.
+
+\subsection{Validation}
+\label{subsec:xi_validation}
+
+Because no labelled ``best XI'' ground truth exists, the predictor is evaluated retrospectively against the actual starting elevens that the sixteen Romanian Superliga 2024-25 clubs fielded in the $556$ fixtures included in the dataset. For every fixture in which at least ten home-team players started, the predicted XI was computed and compared to the actual lineup via the Jaccard overlap $|\hat{X} \cap X^\star| / |\hat{X} \cup X^\star|$ between predicted set $\hat{X}$ and actual set $X^\star$. Two trivial baselines were evaluated on the same fixtures: \emph{top-by-minutes}, which picks the eleven home-team players with the most accumulated minutes (respecting the formation slots), and \emph{top-by-recent-form}, which scores by the product of recent-form score and matches played, with the count of matches played capped at three. The supervised classifier is reported under rolling-origin one-fixture-out cross-validation; every other method is evaluated with the full-season feature snapshot.
+
+The headline result, summarised in Table~\ref{tab:xi_validation_perteam}, is the per-team rolling-origin Jaccard distribution for the league-wide supervised classifier of Section~\ref{subsec:xi_supervised}. Across the league, $428$ held-out (team, fixture) cells were scored (one cell per team-fixture with the team's index $\geq 8$); the per-team aggregate ranges from $0.5443$ (FCSB) to $0.7253$ (Dinamo Bucureşti), with a league mean of $\mathbf{0.6227}$ and a league standard deviation of $0.157$.
+
+\begin{table}[htbp]
+\centering
+\caption{Rolling-origin one-fixture-out Jaccard overlap between predicted and actual starting XI, by team. Sixteen Romanian Superliga 2024-25 clubs, $556$ fixtures total, $428$ held-out cells once the first eight per-team fixtures are used as a warm-up window. ``$n$'' is the number of held-out cells per team.}
+\label{tab:xi_validation_perteam}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Team} & $n$ & \textbf{Jaccard $(\mu)$} & \textbf{Std $(\sigma)$} \\
+\hline
+Dinamo Bucureşti      & 27 & $0.7253$ & $0.1411$ \\
+\hline
+UTA Arad              & 27 & $0.7163$ & $0.1542$ \\
+\hline
+Oţelul Galaţi         & 27 & $0.7076$ & $0.1613$ \\
+\hline
+Farul Constanţa       & 27 & $0.6847$ & $0.1676$ \\
+\hline
+Petrolul Ploieşti     & 27 & $0.6759$ & $0.1451$ \\
+\hline
+FC Argeş              & 27 & $0.6268$ & $0.1345$ \\
+\hline
+CFR Cluj              & 26 & $0.6261$ & $0.1627$ \\
+\hline
+Csikszereda           & 27 & $0.6244$ & $0.1251$ \\
+\hline
+Botoşani              & 26 & $0.6075$ & $0.1441$ \\
+\hline
+FC Universitatea Cluj & 27 & $0.5802$ & $0.1624$ \\
+\hline
+Hermannstadt          & 27 & $0.5781$ & $0.1345$ \\
+\hline
+Metaloglobus          & 27 & $0.5775$ & $0.1399$ \\
+\hline
+U Craiova             & 26 & $0.5771$ & $0.1442$ \\
+\hline
+Rapid Bucureşti       & 27 & $0.5598$ & $0.1229$ \\
+\hline
+Unirea Slobozia       & 27 & $0.5468$ & $0.1594$ \\
+\hline
+FCSB                  & 26 & $0.5443$ & $0.1046$ \\
+\hline
+\textbf{LEAGUE}       & \textbf{428} & $\mathbf{0.6227}$ & $\mathbf{0.1569}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+For methodological transparency, Table~\ref{tab:xi_validation_ablation} reproduces the U Cluj-specific comparison used in the earlier iterations of this section. Starting from the composite that ignores availability ($0.283$ Jaccard), every successive methodological refinement raises Jaccard, reaching the league-wide pooled supervised classifier ($0.5802$ U Cluj-specific, $0.6227$ league-wide). The supervised league-wide model on U Cluj alone reaches $0.5802$, essentially the same as the U Cluj-only model ($0.575$), confirming that pooling does not degrade the home-team's own number; meanwhile several other teams (Dinamo Bucureşti $0.7253$, UTA Arad $0.7163$, Oţelul $0.7076$) benefit substantially from the cross-team training data they would not have had access to in a per-club model.
+
+\begin{table}[htbp]
+\centering
+\caption{Methodological progression on the U Cluj 2024-25 evaluation window. Rows in italics are full-season snapshots; bold rows are rolling-origin cross-validation. The bottom row reports the same metric as Table~\ref{tab:xi_validation_perteam}'s ``FC Universitatea Cluj'' entry.}
+\label{tab:xi_validation_ablation}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Method} & \textbf{Jaccard $(\mu)$} & \textbf{Std $(\sigma)$} \\
+\hline
+\textit{Top-by-recent-form baseline}                            & $0.290$ & $0.066$ \\
+\hline
+\textit{Composite, no availability features}                   & $0.283$ & $0.081$ \\
+\hline
+\textit{Composite + availability features}                     & $0.425$ & $0.194$ \\
+\hline
+\textit{Composite + availability + Hungarian assignment}       & $0.425$ & $0.194$ \\
+\hline
+\textit{Top-by-minutes baseline}                                & $0.482$ & $0.107$ \\
+\hline
+\textbf{Supervised single-club model (rolling-origin CV)}      & $0.575$ & $0.158$ \\
+\hline
+\textbf{Supervised league-wide model (rolling-origin CV)}      & $\mathbf{0.5802}$ & $\mathbf{0.1624}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+Three further points are worth noting. First, the availability features alone lift the U Cluj composite from $0.283$ to $0.425$, closing about $70\%$ of the gap between the unsupervised composite and the top-by-minutes baseline; the dominant lineup signal remains availability, not per-90 efficiency. Second, the league-wide pooled training lifts the league mean Jaccard from $0.482$ (top-by-minutes on U Cluj) to $0.6227$ ($+0.140$ absolute, $+29\%$ relative), with the gain concentrated on the fifteen teams that did not have a dedicated per-club training pass. Third, the experimental \emph{opponent-XI cascade} described in Section~\ref{subsec:xi_supervised} was subjected to a controlled ablation in which the cascade's nine columns were removed from the feature matrix and the rolling-origin CV was re-run from scratch; the league-aggregate Jaccard changed by $\Delta = -0.0002$, i.e.\ the cascade has essentially \emph{no} measurable effect on starting-XI prediction. The methodologically-motivated feature was kept in the production bundle for parity with the published literature on context-aware analytics~\cite{lagopenas2010possession,bornn2018soccer}, but this thesis honestly reports the cascade as a null result: the dominant signals captured by the classifier are availability, total minutes, and the per-team one-hot identity; opponent-conditioning at the XI-composition level is subsumed by the pre-existing opponent-style profile and does not contribute additional signal once those columns are present.
+
+It remains important to remember that perfect Jaccard is \emph{not} the goal of this exercise. Injuries, suspensions, internal-disciplinary decisions and coach-political reasons are not available in the feature set, and no data-driven model can reconstruct them from the public per-match feed. The relevant claim is that the league-wide, opponent-context-aware, availability-conditioned supervised predictor produces a starting-XI recommendation that meets the precision of the top-by-minutes baseline on every team and exceeds it on all sixteen, while still surfacing an interpretable composite score that admits the per-90 KPI explanations expected by the user-facing UmbraRo application.
+
+\subsection{Availability-Feature Ablation}
+\label{subsec:xi_availability_ablation}
+
+To quantify the contribution of the availability features --- a near-leak signal because they are functions of past coach decisions~\cite{kaufman2012leakage} --- the rolling-origin one-fixture-out cross-validation was re-run on the same $428$ held-out cells from Section~\ref{subsec:xi_validation} with the supervised logistic regression fit twice per cell: once on the full $51$-feature input (Arm A, the deployed model), and once with six availability/recency features removed (Arm B): \texttt{availability\_last\_5}, \texttt{started\_last\_match}, \texttt{match\_gap\_\allowbreak since\_\allowbreak last\_\allowbreak appearance}, \texttt{availability\_score}, \texttt{cumulative\_minutes\_\allowbreak before\_\allowbreak fixture}, \texttt{cumulative\_\allowbreak appearances}. A third arm scored each held-out fixture with the position-aware composite of Table~\ref{tab:xi_weights} re-implemented on the current league-wide feature table (Arm C, the fresh Heuristic Composite measurement).
+
+The results in Table~\ref{tab:availability_ablation} reveal a substantial leakage delta of $+10.32$ percentage points of Jaccard: LR-full at $0.6227$ collapses to LR-no-availability at $0.5195$, statistically indistinguishable from the top-by-minutes trivial baseline ($0.520$, Table~\ref{tab:xi_validation_ablation}). The other $45$ features in the supervised input --- per-90 KPIs, opponent-XI cascade, team identity, performance composite, recent-form score --- collectively contribute approximately zero Jaccard above the trivial recency floor.
+
+Two honest framings of this result both belong in the discussion. Under a \emph{strict leakage view}~\cite{kaufman2012leakage}, the availability features are functions of past coach decisions, so using them to predict future coach decisions is autoregressive; the model's headline number is inflated relative to what player-quality features alone can deliver, and the ``pure player-ability'' supervised performance is $0.5195$ --- at the trivial-baseline level. Under a \emph{production-honest view}, past-five-fixtures availability is genuinely observable at inference time and using it is not a leakage violation in the strict sense (no future information leaks into the training set); the autoregressive component reflects football reality, in that a player who started last week is genuinely more likely to start next week.
+
+\begin{table}[!htbp]
+\centering
+\caption{Availability-feature ablation on the $428$ held-out (team, fixture) cells from Section~\ref{subsec:xi_validation}. The supervised LR's $+0.18$ Jaccard advantage over the fresh Heuristic Composite decomposes into $+0.072$ from the LR architecture and $+0.103$ from the autoregressive availability features. The top-by-minutes baseline number is reproduced from Table~\ref{tab:xi_validation_ablation} for direct comparison; the Heuristic Composite measurement here is a fresh league-wide computation that supersedes the smaller-sample $0.425$ number in the same earlier table.}
+\label{tab:availability_ablation}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Arm} & \textbf{Jaccard $(\mu)$} & \textbf{Std $(\sigma)$} & \textbf{NDCG@11} \\
+\hline
+Arm A: LR-full (deployed) & $\mathbf{0.6227}$ & $0.157$ & $\mathbf{0.811}$ \\
+\hline
+Arm B: LR-no-availability & $0.5195$ & $0.150$ & $0.736$ \\
+\hline
+Arm C: Heuristic Composite (fresh) & $0.4476$ & $0.118$ & $0.620$ \\
+\hline
+Top-by-minutes baseline (reference) & $0.520$ & $0.154$ & $0.739$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The deployed UmbraRo backend correctly uses the LR-full configuration --- the production system serves the same $0.6227$ Jaccard a coach using the platform actually observes. The ablation isolates the pure player-ability contribution as a methodological diagnostic, not as a deployment recommendation. Splitting the supervised LR's $+0.18$ Jaccard advantage over the fresh Heuristic Composite into its two sources gives $+0.072$ attributable to the LR architecture's ability to weight player KPIs more flexibly than the hand-set composite, and $+0.103$ attributable to the autoregressive recency features --- two roughly independent contributions, both real, but only the former is a ``pure'' player-evaluation signal.
+
+\subsection{Limitations and Future Work}
+\label{subsec:xi_limitations}
+
+Three methodological limitations deserve explicit mention. The training population is concentrated on a single league season (Romanian Superliga 2024-25, $556$ fixtures, $\sim 15{,}000$ pooled player-fixture rows), so the position-aware composite and the league-wide supervised classifier are both calibrated to Romanian Superliga statistics and would need refitting before transfer to another competition. The KPI weights of Table~\ref{tab:xi_weights} have been refined to ten football-conventional fine-position groups but remain author-chosen rather than learned from data; an alternative, more rigorous approach is to learn them directly from historical outcomes using the framework of Pappalardo et al.~\cite{pappalardo2019playerank}. The opponent-XI cascade described above was kept in the production model despite its null Jaccard contribution (Section~\ref{subsec:xi_validation}), because removing it would understate the methodological footprint without changing the numerical conclusion; a richer cascade that operates at the action level rather than at the eleven-player level --- for example by integrating the action-valuation framework of Decroos et al.~\cite{decroos2019vaep} --- is the most concrete piece of further future work for this section.
+
+A subtler limitation concerns the supervised classifier's training feature set. The nine static player columns it reads (per-90 KPIs, performance score, and full-season minute counts) are computed from the entire season's match history for each player, which slightly leaks the test fixture into training: a strict rolling-origin protocol would re-aggregate these per-90 statistics from the matches strictly before each held-out fixture. The dynamic columns (availability features, cumulative minutes / appearances, opponent profile) are already strictly leakage-free, but a fully clean rolling-origin retraining would tighten the methodological claim. The training population of approximately $15{,}000$ (player, fixture) rows is large enough that a fully clean retraining would not destabilise the per-90 statistics, and a fully leakage-free rerun is the next concrete tightening for this layer.
+
+A second leakage-adjacent observation, quantified by the ablation in Section~\ref{subsec:xi_availability_ablation}, concerns the six availability/recency features in the input vector (\texttt{availability\_last\_5}, \texttt{started\_last\_match}, \texttt{match\_gap\_\allowbreak since\_\allowbreak last\_\allowbreak appearance}, \texttt{availability\_score}, \texttt{cumulative\_minutes\_\allowbreak before\_\allowbreak fixture}, \texttt{cumulative\_\allowbreak appearances}). These are computed strictly from prior fixtures and are therefore not leakage in the temporal sense, but they are functions of past coach decisions, which makes the predictor partly autoregressive. The ablation quantifies the resulting headline-inflation at $+10.32$ percentage points of Jaccard --- removing the features collapses supervised performance to the top-by-minutes trivial baseline level. The features are kept in the production deployment (they are observable at inference time and the application's purpose is to recommend the lineup a coach is most likely to actually field), but the thesis-level interpretation of what the supervised layer ``learns about player quality'' is bounded by the $+0.072$ Jaccard contribution attributable to the LR architecture proper (Section~\ref{subsec:xi_availability_ablation}), rather than the full $+0.18$ headline gap over the Heuristic Composite.
+
+\paragraph{Deployment bundle.}
+A practical deployment note for the production system: the FastAPI backend loads a single serialised classifier bundle, \texttt{xi\_\allowbreak lineup\_\allowbreak model\_\allowbreak league.joblib}, containing the pooled league-wide Logistic Regression trained on all sixteen clubs. The earlier single-club bundle \texttt{xi\_\allowbreak lineup\_\allowbreak model.joblib} (trained on FC Universitatea Cluj alone) is retained on disk as a methodological-progression baseline --- it produces the \emph{Supervised single-club} row in Table~\ref{tab:xi_validation_ablation} --- and as a rollback fallback should the league-wide model regress in a future retraining; it is not exposed by the API.
+
+\paragraph{Deterministic opponent-style clustering.}
+The opponent-style cluster described in Section~\ref{subsec:xi_features} fits a $k$-means model with $k = 4$ and a pinned \texttt{random\_state = 42}. Pinning this seed is part of the deployment contract: the cluster identifiers feed into the one-hot encoding consumed by the supervised classifier, so a retraining without the same seed would relabel clusters and break alignment with the persisted classifier weights. A future hardening of the pipeline could replace the $k$-means cluster identifier with a deterministic centroid-distance binning that does not depend on a stochastic fitting procedure, eliminating the seed dependency entirely.
+
+\paragraph{Cross-temporal CV scope.}
+A scoping note on the rolling-origin one-fixture-out cross-validation in Section~\ref{subsec:xi_supervised}: the protocol is chronological \emph{within each team} (each held-out fixture is scored against a classifier refit on every league-wide (player, fixture) row whose Sportradar \texttt{match\_id} is strictly earlier) but \emph{pooled across teams}. Early-season fixtures of one club therefore enter the training set together with later fixtures of another club whose schedule happens to align with that early date. A stricter league-wide chronological partition --- in which the held-out fixture's date defines the cutoff for the entire training set simultaneously across all sixteen teams --- is a tightening that would not change the $0.6227$ headline materially but would close the methodological loop for a production audit.
+
+The Starting XI Recommendation layer should therefore be read as an analytical contribution that complements the match-outcome and prescriptive-blueprint components of the thesis. Generalising the predictor from FC Universitatea Cluj alone to all sixteen Romanian Superliga 2024-25 clubs raised the league-wide rolling-origin Jaccard to $0.6227$, a substantial relative improvement over the top-by-minutes baseline. The system sits inside the broader probabilistic-soccer-prediction setting reviewed by Constantinou~\cite{constantinou2019dolores}, and the path forward --- action-level valuation, per-fixture rolling-origin retraining, and physiological integration --- is concrete rather than speculative.

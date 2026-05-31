@@ -42,3 +42,9 @@ _sr_standings_cache.json
 
 # Claude internal state
 .claude/
+
+# Local copyrighted-paper archive (kept out of the remote)
+citations/
+
+# Skills CLI lockfile (machine-local)
+skills-lock.json

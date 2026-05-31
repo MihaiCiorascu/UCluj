@@ -83,28 +83,6 @@ class AuthService {
     );
   }
 
-  /// Verifies [idToken] on the backend; returns FastAPI access/refresh tokens.
-  Future<void> exchangeWithFirebaseIdToken(String idToken) async {
-    final data = await _api.post(
-      '/auth/firebase',
-      firebaseIdToken: idToken,
-    );
-    _setTokensFromResponse(data);
-  }
-
-  /// Creates app user and returns JWT; requires a fresh Firebase [idToken].
-  Future<void> registerWithFirebaseIdToken({
-    required String idToken,
-    required String teamName,
-  }) async {
-    final data = await _api.post(
-      '/auth/register_with_firebase',
-      firebaseIdToken: idToken,
-      body: {'team_name': teamName},
-    );
-    _setTokensFromResponse(data);
-  }
-
   Future<void> refresh() async {
     final rt = _api.refreshToken;
     if (rt == null) throw ApiException(401, 'No refresh token');

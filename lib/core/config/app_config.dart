@@ -6,7 +6,6 @@ class AppConfig {
   AppConfig._();
 
   static const String appEnv = String.fromEnvironment('APP_ENV', defaultValue: 'development');
-  static const bool useFirebaseAuth = bool.fromEnvironment('USE_FIREBASE_AUTH', defaultValue: false);
 
   static const String _compiledApiUrl = String.fromEnvironment(
     'API_BASE_URL',
@@ -16,8 +15,8 @@ class AppConfig {
   static String _runtimeApiUrl = _compiledApiUrl;
   static String get apiBaseUrl => _runtimeApiUrl;
 
-  // On web, fetch /config.json from Firebase hosting so the API URL
-  // can be updated without a full Flutter rebuild.
+  // On web, fetch /config.json at runtime so the API URL can be updated
+  // without a full Flutter rebuild.
   static Future<void> load() async {
     if (!kIsWeb) return;
     try {

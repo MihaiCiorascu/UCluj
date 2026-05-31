@@ -127,5 +127,5 @@ class UserResponse(BaseModel):
     avatar_url: str | None = None
 
 
-class FirebaseRegisterRequest(BaseModel):
+class CognitoRegisterRequest(BaseModel):
     team_name: str | None = Field(None, description="Selected team (defaults to Universitatea Cluj)")
