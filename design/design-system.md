@@ -6,20 +6,21 @@ The Creative North Star for this system is **"The Stoic Analyst."** This is a hi
 To break away from "template" app design, this system rejects rounded corners and soft glows in favor of **Brutalist Precision**. We use intentional asymmetry and extreme typographic scale—placing massive, condensed data points against expansive negative space—to create an editorial feel that mimics high-end athletic journals. The interface should feel like a custom-machined tool: sharp, utilitarian, and expensive.
 
 ## 2. Colors & Surface Architecture
-The palette is rooted in the deep shadows of the stadium tunnel, punctuated by the "Trophy Gold" of championship legacy.
+The palette is rooted in the deep shadows of the stadium tunnel, punctuated by the cobalt blue of early-2000s sports broadcasting.
 
 ### Color Tokens
-*   **Surface (Background):** `#00132e` (Deep Midnight Blue)
-*   **Primary (Accent):** `#f2ca50` (Muted Gold)
-*   **On-Surface (Primary Text):** `#d6e3ff` (Soft Off-White)
-*   **Tertiary (Negative Data):** `#ffbfb2` (Flat Terracotta)
-*   **Success (Positive Data):** Subdued Green (Derived from `primary-fixed-dim` logic)
+*   **Surface (Background):** `#0A1929` (Deep Navy)
+*   **Primary (Accent):** `#1E88E5` (Cobalt Blue)
+*   **Primary Deep:** `#0D47A1` (Cobalt Deep)
+*   **On-Surface (Primary Text):** `#F2F6FB` (Off-White)
+*   **Tertiary (Negative Data):** `#FF5252` (Bright Red)
+*   **Success (Positive Data):** `#4ADE80` (Vibrant Green)
 
 ### The Layering Principle (Depth without Shadows)
 We prohibit the use of elevation shadows or glows. Depth is achieved strictly through **Tonal Layering**.
-*   **Base Layer:** `surface` (#00132e).
-*   **Secondary Sections:** Use `surface_container_low` (#001b3d) to define large content areas.
-*   **High-Priority Data Cards:** Use `surface_container_high` (#122a4c) to create a "lifted" effect through color contrast alone.
+*   **Base Layer:** `surface` (#0A1929).
+*   **Secondary Sections:** Use `surfaceLow` (#0F1B2D) to define large content areas.
+*   **High-Priority Data Cards:** Use `surfaceHigh` (#1A2942) to create a "lifted" effect through color contrast alone.
 *   **The "No-Line" Rule:** Do not use borders to define containers. A change in the surface token is the only permissible way to denote a new section.
 
 ## 3. Typography
@@ -33,27 +34,27 @@ The typographic system relies on the tension between the aggressive, condensed e
 In this system, "Elevation" is a misnomer. We utilize **Planar Precision**.
 
 *   **Sharp Edges Only:** Every component—from buttons to cards—must use a `0px` border radius. This communicates military-grade discipline.
-*   **The 1px Hairline:** While sectioning is done via color shifts, internal list items (e.g., a roster of 22 players) may use a `1px` hairline divider using the `outline_variant` (#4d4635) at 30% opacity. It should feel like a surgical incision, not a structural wall.
+*   **The 1px Hairline:** While sectioning is done via color shifts, internal list items (e.g., a roster of 22 players) may use a `1px` hairline divider using `chrome` (#5B6A7F) at 30% opacity. It should feel like a surgical incision, not a structural wall.
 *   **Negative Space as a Component:** Treat white space as a functional element. "Data Minimalism" requires that for every dense cluster of statistics, there is an equivalent "breathing zone" of pure `surface` color to prevent cognitive overload.
 
 ## 5. Components
 
 ### Buttons
-*   **Primary:** Solid `primary_container` (#d4af37) with `on_primary` text. No rounded corners. Text is All-Caps Inter Bold.
+*   **Primary:** Solid `primary` (#1E88E5) with `on_primary` text. No rounded corners. Text is All-Caps Inter Bold.
 *   **Secondary:** Ghost style. No background. `1px` border using `outline`.
-*   **Tertiary:** Text-only. Muted Gold, underlined with a 1px offset.
+*   **Tertiary:** Text-only. Cobalt Blue, underlined with a 1px offset.
 
 ### Data Chips (Pill-Shaped)
 The *only* exception to the sharp-edge rule. Tags for player positions (e.g., "CDM", "ST") or status must be fully pill-shaped. This provides a "tactical magnet" feel, as if these elements can be moved across a whiteboard. Use `surface_variant` with `on_surface_variant` text.
 
 ### Statistics & Performance Metrics
 *   **Growth (+):** Subdued Green text, no icons. Use `body-lg` for the value.
-*   **Decline (-):** `tertiary` (#ffbfb2). 
+*   **Decline (-):** `tertiary` (#FF5252). 
 *   **The Hero Metric:** Large-scale `display-lg` numbers. These should be the largest element on the screen, often pushed to the far left or right to create asymmetrical tension.
 
 ### Inputs & Forms
 *   **Fields:** Flat `surface_container_lowest`. No borders on three sides; only a bottom `1px` hairline in `outline_variant`.
-*   **Focus State:** The bottom hairline transitions to `primary` (Muted Gold).
+*   **Focus State:** The bottom hairline transitions to `primary` (Cobalt Blue).
 
 ## 6. Do’s and Don’ts
 

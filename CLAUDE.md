@@ -99,7 +99,7 @@ SPORTRADAR_API_KEY=<optional>
 ## Design Constraints
 
 **"Stoic Analyst" visual language (non-negotiable):**
-- Palette: `#00132e` (surface), `#f2ca50` (gold accent)
+- Palette: `#0A1929` (surface), `#1E88E5` (cobalt accent), `#F2F6FB` (primary text); pale-blue light theme available with `#EBF3FF` surface and `#0047AB` accent
 - Typography: Epilogue (headers), Inter (body)
 - Zero border radius, zero gradients, zero glows, zero shadows
 - Depth via tonal layering only
