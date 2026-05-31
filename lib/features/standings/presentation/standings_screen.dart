@@ -467,16 +467,13 @@ class _HeroClubCard extends StatelessWidget {
     final c = context.colors;
     return Container(
       decoration: BoxDecoration(
-        color: c.surfaceLow,
+        // Iteration N polish: replace the boxShadow with a tonal surfaceHigh
+        // overlay. The Stoic Analyst spec forbids drop shadows; depth here
+        // comes from the surfaceHigh vs surfaceBase gradient contrast plus
+        // the accent-tinted border.
+        color: c.surfaceHigh,
         borderRadius: BorderRadius.circular(6),
         border: Border.all(color: c.accent.withValues(alpha: 0.3)),
-        boxShadow: [
-          BoxShadow(
-            color: c.cardGlow,
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       padding: const EdgeInsets.fromLTRB(
         SpacingTokens.lg, SpacingTokens.xl,
@@ -516,13 +513,16 @@ class _HeroClubCard extends StatelessWidget {
           ]),
           const SizedBox(height: SpacingTokens.xl),
           Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            // Iteration N polish: ratio between rank (48 px) and the RANK
+            // label (12 px) is now ~4:1, closer to the Stoic Analyst spec's
+            // display-lg / label-sm contrast than the previous 7:1.
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('#${team.pos}', style: TypographyTokens.displayHero.copyWith(
-                  fontSize: 64, height: 0.85, color: c.accent)),
-              const SizedBox(height: 2),
+                  fontSize: 48, height: 0.85, color: c.accent)),
+              const SizedBox(height: SpacingTokens.xxs),
               Text('RANK',
                   style: TypographyTokens.sectionLabel
-                      .copyWith(fontSize: 9, letterSpacing: 2.0, color: c.textMuted)),
+                      .copyWith(fontSize: 12, letterSpacing: 2.4, color: c.textMuted)),
             ]),
             const SizedBox(width: 32),
             _metric('${team.points}', 'PTS', c),

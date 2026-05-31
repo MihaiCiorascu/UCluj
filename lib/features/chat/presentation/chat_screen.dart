@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/l10n/strings.dart';
 import '../../../core/state/auth_state.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
@@ -354,9 +355,10 @@ class _ChatScreenState extends State<ChatScreen> {
       context: context,
       builder: (ctx) {
         return StatefulBuilder(builder: (ctx, setDialogState) {
+          final c = context.colors;
           return AlertDialog(
-            backgroundColor: const Color(0xFF1E293B),
-            title: Text(L10n.t('chat.createGroup'), style: TypographyTokens.body.copyWith(color: Colors.white, fontSize: 18)),
+            backgroundColor: c.surfaceHigh,
+            title: Text(L10n.t('chat.createGroup'), style: TypographyTokens.body.copyWith(color: c.textPrimary, fontSize: 18)),
             content: SizedBox(
               width: double.maxFinite,
               child: Column(
@@ -591,6 +593,7 @@ class _Bubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Column(
       crossAxisAlignment:
           isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
@@ -602,8 +605,7 @@ class _Bubble extends StatelessWidget {
           ),
           child: Text(
             '${msg.sender}  ·  ${msg.time}',
-            style: TypographyTokens.sectionLabel
-                .copyWith(color: ColorTokens.textMuted),
+            style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted),
           ),
         ),
         const SizedBox(height: SpacingTokens.xxs),
@@ -619,7 +621,7 @@ class _Bubble extends StatelessWidget {
                 vertical: SpacingTokens.sm,
               ),
               decoration: BoxDecoration(
-                color: isMe ? const Color(0xFF0D2340) : const Color(0xFF1E293B),
+                color: isMe ? c.accentStrong : c.surfaceHigh,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(8),
                   topRight: const Radius.circular(8),
