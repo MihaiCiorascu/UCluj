@@ -6,6 +6,7 @@ import 'package:umbraro/core/observability/global_error_reporter.dart';
 import 'package:umbraro/core/services/api_client.dart';
 import 'package:umbraro/core/services/auth_service.dart';
 import 'package:umbraro/core/state/auth_state.dart';
+import 'package:umbraro/core/state/meta_state.dart';
 import 'package:umbraro/core/storage/token_store.dart';
 import 'package:umbraro/core/theme/theme_mode_notifier.dart';
 import 'package:umbraro/data/auth/auth_session_repository.dart';
@@ -35,6 +36,10 @@ Future<void> bootstrap() async {
     auth: auth,
     session: session,
   );
+  // Meta is no-auth and harmless; fire-and-forget so the ribbon can light up
+  // as soon as the response lands without blocking the splash screen.
+  // ignore: discarded_futures
+  MetaState.instance.init(api);
   // Iteration N — load the persisted light/dark preference before
   // mounting the app so the first frame paints with the right palette.
   final themeMode = await ThemeModeNotifier.load();

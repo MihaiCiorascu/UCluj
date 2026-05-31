@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../branding/branding_config.dart';
+import '../l10n/strings.dart';
+import '../state/meta_state.dart';
 import '../theme/app_colors.dart';
 import '../theme/glossy_widgets.dart';
 import '../theme/spacing_tokens.dart';
@@ -107,10 +109,85 @@ class AppScaffold extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: AppBottomNav(
-        current: currentTab,
-        onSelected: onTabSelected,
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const _DemoModeRibbon(),
+          AppBottomNav(
+            current: currentTab,
+            onSelected: onTabSelected,
+          ),
+        ],
       ),
     );
+  }
+}
+
+/// Thin single-line ribbon above the bottom nav that signals demo mode to the
+/// committee. Reads from the global MetaState singleton and rebuilds whenever
+/// the /meta fetch lands. Renders nothing when demo mode is off, so it has
+/// zero footprint in production.
+class _DemoModeRibbon extends StatelessWidget {
+  const _DemoModeRibbon();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return ListenableBuilder(
+      listenable: Listenable.merge([MetaState.instance, L10n.instance]),
+      builder: (context, _) {
+        if (!MetaState.instance.demoMode) {
+          return const SizedBox.shrink();
+        }
+        final formatted = _formatDemoDate(
+          MetaState.instance.demoToday,
+          L10n.instance.isRomanian,
+        );
+        return Container(
+          width: double.infinity,
+          color: c.chromeDeep,
+          padding: const EdgeInsets.symmetric(
+            horizontal: SpacingTokens.md,
+            vertical: SpacingTokens.xs,
+          ),
+          child: Text(
+            '${L10n.t('demoMode.label')}  ·  ${L10n.t('demoMode.fixturesFrom')} $formatted',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: c.onPrimary.withValues(alpha: 0.85),
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 1.4,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Format an ISO `YYYY-MM-DD` string as `15 April 2025` (English) or
+/// `15 aprilie 2025` (Romanian). Returns the input verbatim on parse failure
+/// so the ribbon still renders something rather than nothing.
+String _formatDemoDate(String iso, bool isRomanian) {
+  try {
+    final parts = iso.split('-');
+    if (parts.length != 3) return iso;
+    final year = int.parse(parts[0]);
+    final month = int.parse(parts[1]);
+    final day = int.parse(parts[2]);
+    const ro = [
+      '', 'ianuarie', 'februarie', 'martie', 'aprilie', 'mai', 'iunie',
+      'iulie', 'august', 'septembrie', 'octombrie', 'noiembrie', 'decembrie',
+    ];
+    const en = [
+      '', 'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December',
+    ];
+    final names = isRomanian ? ro : en;
+    if (month < 1 || month > 12) return iso;
+    return '$day ${names[month]} $year';
+  } catch (_) {
+    return iso;
   }
 }

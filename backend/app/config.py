@@ -1,3 +1,4 @@
+from datetime import date, datetime, time, timezone
 from pathlib import Path
 
 from pydantic_settings import BaseSettings
@@ -20,6 +21,16 @@ class Settings(BaseSettings):
     cognito_user_pool_id: str = ""
     cognito_app_client_id: str = ""
     cognito_region: str = "eu-central-1"
+
+    # Demo mode for the committee presentation.
+    # The Romanian Superliga 2024-2025 season is over and Sportradar trial
+    # returns no current fixtures, so the live dashboard would be empty. When
+    # demo_mode is on, the backend pretends "now" is demo_today (ISO date,
+    # interpreted at noon UTC) so the week-fixtures, standings, dashboard, and
+    # XI flows all light up against the CSV-backed 2024-2025 data. The live
+    # Sportradar fetch and its caches are bypassed in demo mode.
+    demo_mode: bool = False
+    demo_today: str = ""
 
     # Iter-Q.3 follow-up: optimizer configurability.
     # method: "mc" (production default, robust; always returns an in-distribution candidate)
@@ -51,3 +62,37 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+
+def _parse_demo_today(value: str) -> date:
+    """Parse the DEMO_TODAY env var into a date. Raises ValueError if invalid."""
+    try:
+        return date.fromisoformat(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            "DEMO_MODE is enabled but DEMO_TODAY is missing or not an ISO date "
+            f"(YYYY-MM-DD). Got: {value!r}"
+        ) from exc
+
+
+# Fail fast at import time if the demo-mode configuration is incoherent.
+if settings.demo_mode:
+    _parse_demo_today(settings.demo_today)
+
+
+def effective_now() -> datetime:
+    """Return the server's effective notion of "now".
+
+    Returns ``datetime.now(timezone.utc)`` normally. When ``DEMO_MODE`` is on,
+    returns ``demo_today`` at 12:00 UTC so all week-window and "upcoming" math
+    pivots around the committee-demo date instead of the wall clock. This is
+    a deliberate scope: cache TTLs, JWT expiry, and database timestamps still
+    use real time so the harness stays honest about its own state.
+    """
+    if settings.demo_mode:
+        return datetime.combine(
+            _parse_demo_today(settings.demo_today),
+            time(12, 0),
+            tzinfo=timezone.utc,
+        )
+    return datetime.now(timezone.utc)

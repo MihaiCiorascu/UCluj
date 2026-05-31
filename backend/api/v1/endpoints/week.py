@@ -8,7 +8,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, Query, Request
 
-from app.config import settings
+from app.config import effective_now, settings
 from clients.sportradar_client import SportradarClient
 from core.dependencies import get_feature_service
 from core.security import get_current_user
@@ -102,7 +102,7 @@ async def week_fixtures(
     home_win_probability in each response item is P(U Cluj Win), not P(Home Win).
     key_drivers and top_risks are from U Cluj's perspective regardless of home/away.
     """
-    now = datetime.now(timezone.utc)
+    now = effective_now()
     this_monday = (now - timedelta(days=now.weekday())).replace(
         hour=0, minute=0, second=0, microsecond=0
     )
@@ -110,10 +110,12 @@ async def week_fixtures(
     sunday = monday + timedelta(days=7)
 
     # ── 1. Check local Sportradar cache (instant if fresh) ──────────────────
-    sr_all: list[dict] | None = _load_cache()
+    # In demo mode we deliberately skip the cache and the live fetch so the
+    # CSV-backed historical week is the single source of truth.
+    sr_all: list[dict] | None = None if settings.demo_mode else _load_cache()
 
     # ── 2. If cache stale/missing, try Sportradar (cap at 20 s total) ──────
-    if sr_all is None and settings.sportradar_api_key:
+    if sr_all is None and settings.sportradar_api_key and not settings.demo_mode:
         try:
             fetched = await asyncio.wait_for(
                 _fetch_all_sr_fixtures(),

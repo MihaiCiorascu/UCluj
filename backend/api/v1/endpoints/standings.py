@@ -122,13 +122,14 @@ async def standings(
     _user=Depends(get_current_user),
     svc: FixtureService = Depends(_get_fixture_service),
 ):
-    # 1. Try fresh cache
-    cached = _load_cache()
-    if cached is not None:
-        return cached
+    # 1. Try fresh cache (skipped in demo mode so the warped date dominates)
+    if not settings.demo_mode:
+        cached = _load_cache()
+        if cached is not None:
+            return cached
 
-    # 2. Fetch from Sportradar (cap at 5 s)
-    if settings.sportradar_api_key:
+    # 2. Fetch from Sportradar (cap at 5 s; skipped in demo mode)
+    if settings.sportradar_api_key and not settings.demo_mode:
         try:
             sr_data = await asyncio.wait_for(_fetch_sr_standings(), timeout=5.0)
             if sr_data:
