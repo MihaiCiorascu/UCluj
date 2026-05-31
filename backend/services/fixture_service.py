@@ -3,7 +3,7 @@ from __future__ import annotations
 import pandas as pd
 import numpy as np
 
-from app.config import settings
+from app.config import effective_now, settings
 
 
 class FixtureService:
@@ -31,14 +31,30 @@ class FixtureService:
     def recent_fixtures(self, team: str, n: int = 5) -> list[dict]:
         df = self._df[(self._df["home_team"] == team) | (self._df["away_team"] == team)]
         completed = df.dropna(subset=["home_score", "away_score"])
+        # In demo mode, "recent" means completed fixtures up to the demo date.
+        if settings.demo_mode:
+            now_iso = effective_now().isoformat()
+            completed = completed[completed["match_date"].astype(str) <= now_iso]
+            completed = completed.sort_values("match_date", ascending=True)
         return [self._row_to_fixture(r) for _, r in completed.tail(n).iterrows()]
 
     def upcoming_fixtures(self, team: str, n: int = 3) -> list[dict]:
         df = self._df[(self._df["home_team"] == team) | (self._df["away_team"] == team)]
+
+        # In demo mode, "upcoming" means scheduled after the demo date,
+        # regardless of whether the result is in the dataset, because the
+        # 2024-2025 season is fully scored. The score field stays populated so
+        # downstream consumers that read it for a tactical retrospective still
+        # work; demo presentation simply treats them as forthcoming.
+        if settings.demo_mode:
+            now_iso = effective_now().isoformat()
+            future = df[df["match_date"].astype(str) > now_iso].sort_values("match_date", ascending=True)
+            return [self._row_to_fixture(r) for _, r in future.head(n).iterrows()]
+
         upcoming = df[df["home_score"].isna()]
-        
+
         fixtures = [self._row_to_fixture(r) for _, r in upcoming.head(n).iterrows()]
-        
+
         if not fixtures:
             # Mock upcoming match for presentation purposes
             fixtures.append({
@@ -51,7 +67,7 @@ class FixtureService:
                 "away_score": None,
                 "venue": self._stadium_map.get(team, "Cluj Arena"),
             })
-            
+
         return fixtures[:n]
 
     def standings(self, season: str | None = None) -> list[dict]:

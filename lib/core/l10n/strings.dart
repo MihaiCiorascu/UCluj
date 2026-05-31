@@ -93,6 +93,10 @@ class L10n extends ChangeNotifier {
     'dashboard.winChance': 'ȘANSĂ CÂȘTIG',
     'dashboard.analysis': 'ANALIZĂ',
 
+    // Demo-mode ribbon
+    'demoMode.label': 'MOD DEMO',
+    'demoMode.fixturesFrom': 'meciuri din',
+
     // Match stats sheet
     'sheet.win': 'VICTORIE',
     'sheet.loss': 'ÎNFRÂNGERE',
@@ -196,6 +200,10 @@ class L10n extends ChangeNotifier {
     'dashboard.empty': 'No matches this week.',
     'dashboard.winChance': 'WIN CHANCE',
     'dashboard.analysis': 'ANALYSIS',
+
+    // Demo-mode ribbon
+    'demoMode.label': 'DEMO MODE',
+    'demoMode.fixturesFrom': 'fixtures from',
 
     // Match stats sheet
     'sheet.win': 'WIN',
