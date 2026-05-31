@@ -1,6 +1,3 @@
-// User profile is persisted in the backend database.
-// No Firestore sync needed after Firebase migration.
-
 String teamIdFromName(String? teamName) {
   if (teamName == null || teamName.isEmpty) return 'unknown';
   return teamName

@@ -1,13 +1,14 @@
 # quick-restart.ps1
 # Restarts the Cloudflare tunnel + Python backend, updates config.json,
-# and deploys ONLY Firebase Hosting — no Flutter rebuild needed.
+# and deploys ONLY hosting via Amplify — no Flutter rebuild needed.
+# Requires: amplify init + amplify add hosting (one-time setup)
 #
 # Use this every time the tunnel dies (PC sleep, crash, etc.).
 # Takes ~25-35 s instead of the ~3 min full restart_and_deploy.ps1.
 #
 # Usage:
-#   .\quick-restart.ps1              # full run (tunnel + backend + Firebase deploy)
-#   .\quick-restart.ps1 -SkipDeploy # skip Firebase deploy (local testing only)
+#   .\quick-restart.ps1              # full run (tunnel + backend + Amplify deploy)
+#   .\quick-restart.ps1 -SkipDeploy # skip deploy (local testing only)
 
 param([switch]$SkipDeploy)
 
@@ -46,7 +47,7 @@ Write-Host "   Tunnel: $tunnelUrl"
 
 # ── 3. Update config.json in BOTH locations ──────────────────────────────────
 #   web/config.json       → used by future `flutter build web` runs
-#   build/web/config.json → used by the current Firebase Hosting deploy (no rebuild needed)
+#   build/web/config.json → used by the current Amplify deploy (no rebuild needed)
 Write-Host "[3/5] Updating config.json..."
 $configJson = "{`"apiBaseUrl`": `"$tunnelUrl/api/v1`"}"
 Set-Content -Path "$Root\web\config.json"       -Value $configJson -Encoding utf8
@@ -78,11 +79,11 @@ if ($uvLog -match "Application startup complete") {
 
 # ── 5. Deploy ONLY hosting (no Flutter rebuild) ──────────────────────────────
 if (-not $SkipDeploy) {
-    Write-Host "[5/5] Deploying config to Firebase Hosting — no Flutter rebuild..."
+    Write-Host "[5/5] Deploying config via Amplify — no Flutter rebuild..."
     Set-Location $Root
-    firebase deploy --only hosting --project uhack26-8050e
-    Write-Host "`n✓ Done! Open: https://uhack26-8050e.web.app"
+    amplify publish --yes
+    Write-Host "`n✓ Done! Amplify deploy complete."
 } else {
-    Write-Host "[5/5] Skipped Firebase deploy (-SkipDeploy flag set)"
+    Write-Host "[5/5] Skipped Amplify deploy (-SkipDeploy flag set)"
     Write-Host "   Tunnel is live at $tunnelUrl"
 }

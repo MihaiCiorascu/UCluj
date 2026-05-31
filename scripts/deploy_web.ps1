@@ -1,7 +1,8 @@
 ################################################################################
 #  deploy_web.ps1
-#  First run  : full Flutter build + Firebase deploy
+#  First run  : full Flutter build + Amplify deploy
 #  After that : only config.json is updated (3 seconds, no rebuild)
+#  Requires   : amplify init + amplify add hosting (one-time setup)
 #
 #  Usage:
 #    powershell -ExecutionPolicy Bypass -File scripts\deploy_web.ps1
@@ -75,8 +76,7 @@ $needsBuild = -not (Test-Path "build\web\main.dart.js")
 if ($needsBuild) {
     Write-Step "Building Flutter web (first time, ~40s)..."
     $buildOut = flutter build web `
-        "--dart-define=APP_ENV=production" `
-        "--dart-define=USE_FIREBASE_AUTH=false" 2>&1
+        "--dart-define=APP_ENV=production" 2>&1
     $buildOut | Where-Object { $_ -match "Built|error" } | ForEach-Object { Write-Host "  $_" }
     if ($LASTEXITCODE -ne 0) { Fail "Flutter build failed." }
 } else {
@@ -89,16 +89,16 @@ $config = @{ apiBaseUrl = $apiUrl } | ConvertTo-Json
 $config | Out-File -FilePath "build\web\config.json" -Encoding utf8
 Write-Host "  API URL: $apiUrl"
 
-# ── 7. Firebase deploy ───────────────────────────────────────────────────────
-Write-Step "Deploying to Firebase..."
-$depOut = firebase deploy --only hosting 2>&1
+# ── 7. Amplify deploy ────────────────────────────────────────────────────────
+Write-Step "Deploying via Amplify..."
+$depOut = amplify publish --yes 2>&1
 $depOut | Where-Object { $_ -match "complete|Error|Hosting URL|release" } | ForEach-Object { Write-Host "  $_" }
-if ($LASTEXITCODE -ne 0) { Fail "Firebase deploy failed." }
+if ($LASTEXITCODE -ne 0) { Fail "Amplify deploy failed." }
 
 # ── Done ─────────────────────────────────────────────────────────────────────
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Green
-Write-Host "  LIVE at  https://hackatonu.web.app" -ForegroundColor Green
+Write-Host "  Amplify deploy complete" -ForegroundColor Green
 Write-Host "  Backend: http://127.0.0.1:8000" -ForegroundColor Green
 Write-Host "  Tunnel:  $tunnelUrl" -ForegroundColor Green
 Write-Host "============================================================" -ForegroundColor Green

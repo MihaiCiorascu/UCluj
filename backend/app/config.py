@@ -21,6 +21,16 @@ class Settings(BaseSettings):
     cognito_app_client_id: str = ""
     cognito_region: str = "eu-central-1"
 
+    # Iter-Q.3 follow-up: optimizer configurability.
+    # method: "mc" (production default, robust; always returns an in-distribution candidate)
+    #         "trust_constr" (opt-in; scipy interior-point per Byrd, Hribar & Nocedal 1999;
+    #                         ~4x fewer CatBoost evaluations in the convergent case; falls
+    #                         back to MC on failure so the coach never sees an error)
+    # seed: reproducibility for the MC sampler (Pineau et al. 2021).
+    optimizer_method: str = "mc"
+    optimizer_seed: int = 42
+    optimizer_num_simulations: int = 1000
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]

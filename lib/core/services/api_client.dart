@@ -32,16 +32,6 @@ class ApiClient {
         if (_accessToken != null) 'Authorization': 'Bearer $_accessToken',
       };
 
-  Map<String, String> _headersFor({String? firebaseIdToken}) {
-    if (firebaseIdToken != null) {
-      return {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $firebaseIdToken',
-      };
-    }
-    return _headers;
-  }
-
   Future<Map<String, dynamic>> get(String path) async {
     try {
       final response = await http
@@ -62,13 +52,12 @@ class ApiClient {
   Future<Map<String, dynamic>> post(
     String path, {
     Map<String, dynamic>? body,
-    String? firebaseIdToken,
   }) async {
     try {
       final response = await http
           .post(
             Uri.parse('$_baseUrl$path'),
-            headers: _headersFor(firebaseIdToken: firebaseIdToken),
+            headers: _headers,
             body: body != null ? jsonEncode(body) : null,
           )
           .timeout(_requestTimeout);

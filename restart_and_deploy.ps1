@@ -1,6 +1,7 @@
 # restart_and_deploy.ps1
-# Full deploy: restarts tunnel + backend, rebuilds Flutter, deploys to Firebase.
+# Full deploy: restarts tunnel + backend, rebuilds Flutter, deploys via Amplify.
 # Use this when Flutter/Dart code has changed.
+# Requires: amplify init + amplify add hosting (one-time setup)
 #
 # For tunnel-only restarts (no code changes), use:
 #   .\quick-restart.ps1   (~30 s, no Flutter rebuild)
@@ -25,11 +26,11 @@ if (-not $SkipBuild) {
     flutter build web --release
     if ($LASTEXITCODE -ne 0) { Write-Host "Flutter build FAILED"; exit 1 }
 
-    Write-Host "      Deploying to Firebase..."
-    firebase deploy --only hosting --project uhack26-8050e
-    if ($LASTEXITCODE -ne 0) { Write-Host "Firebase deploy FAILED"; exit 1 }
+    Write-Host "      Deploying via Amplify..."
+    amplify publish --yes
+    if ($LASTEXITCODE -ne 0) { Write-Host "Amplify deploy FAILED"; exit 1 }
 
-    Write-Host "`n✓ Done! App live at https://uhack26-8050e.web.app"
+    Write-Host "`n✓ Done! Amplify deploy complete."
 } else {
     Write-Host "`n[5/5] Skipped Flutter build (-SkipBuild flag set)"
     Write-Host "      Run '.\restart_and_deploy.ps1' (without -SkipBuild) when ready to deploy."
