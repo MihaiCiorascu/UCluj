@@ -1,0 +1,88 @@
+# Repo-root .dockerignore for `docker build -f backend/Dockerfile .`
+# The Dockerfile only consumes backend/ and a couple of files under data/,
+# so this list excludes everything else from the build context to keep the
+# upload to the Docker daemon fast and the image lean.
+
+# Version control + worktree metadata
+.git
+.gitignore
+.gitattributes
+.claude
+.idea
+.vscode
+
+# Flutter / web build artefacts and source the backend image does not need
+build
+.dart_tool
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+android
+ios
+linux
+macos
+windows
+web
+lib
+assets
+test
+integration_test
+pubspec.yaml
+pubspec.lock
+analysis_options.yaml
+
+# Thesis + research artefacts the backend image does not need
+thesis
+figures
+design
+citations
+experiments
+notes
+research
+docs
+
+# Notebooks live under data/ but only the .csv files are copied; this
+# excludes the notebooks themselves so they do not balloon the context.
+data/*.ipynb
+data/.ipynb_checkpoints
+
+# Helper scripts that live at the repo root, none of which the backend needs
+scripts
+*.ps1
+*.sh
+
+# Stand-alone files that are not part of the backend image
+AGENTS.md
+CLAUDE.md
+HANDOFF.md
+START_HERE.md
+README.md
+LICENSE
+plan
+plans
+orient.ps1
+firebase.json
+.firebaserc
+amplify.yml
+
+# Python local artefacts (anywhere in the tree)
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.venv
+venv
+*.egg-info
+
+# Backend-specific items that should not ship to production
+backend/.env
+backend/*.db
+backend/uploads
+backend/catboost_info
+backend/_sr_fixtures_cache.json
+backend/_sr_standings_cache.json
+backend/secrets
+backend/.uvicorn.log
