@@ -42,17 +42,24 @@ class MatchIntelligenceScreen extends StatelessWidget {
               style: TypographyTokens.sectionLabel),
           const SizedBox(height: SpacingTokens.md),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
+              const Expanded(
                 child: _Box(label: 'BASELINE', value: '65%'),
               ),
-              const SizedBox(width: 1),
+              // Iteration N polish: 4 px gap between the two pods reads as a
+              // genuine separator rather than a hairline overlap.
+              const SizedBox(width: SpacingTokens.xxs),
               Expanded(
                 child: _Box(
                   label: 'AI-OPTIMIZED',
                   value: '74%',
                   valueColor: c.accent,
                   footer: '+9.0% UPLIFT',
+                  // Iteration N polish: visually anchor the AI pod with a
+                  // surfaceHigh background and a left-edge cobalt accent rule
+                  // so the baseline-vs-optimised contrast reads at a glance.
+                  highlighted: true,
                 ),
               ),
             ],
@@ -135,6 +142,7 @@ class _Box extends StatelessWidget {
     required this.value,
     this.valueColor,
     this.footer,
+    this.highlighted = false,
   });
 
   final String label;
@@ -142,12 +150,22 @@ class _Box extends StatelessWidget {
   final Color? valueColor;
   final String? footer;
 
+  /// When true the pod uses the tonally-elevated surfaceHigh background and
+  /// gets a left-edge cobalt accent rule. Used on the AI-OPTIMIZED pod so
+  /// the baseline-vs-optimised contrast reads at presentation distance.
+  final bool highlighted;
+
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
     final effectiveValueColor = valueColor ?? c.textPrimary;
     return Container(
-      color: c.surface,
+      decoration: BoxDecoration(
+        color: highlighted ? c.surfaceHigh : c.surface,
+        border: highlighted
+            ? Border(left: BorderSide(color: c.accent, width: 2))
+            : null,
+      ),
       padding: const EdgeInsets.all(SpacingTokens.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,10 +176,16 @@ class _Box extends StatelessWidget {
               style: TypographyTokens.displayHero
                   .copyWith(fontSize: 58, color: effectiveValueColor)),
           if (footer != null) ...[
-            const SizedBox(height: SpacingTokens.xs),
+            const SizedBox(height: SpacingTokens.sm),
+            // Iteration N polish: lift uplift footer to display-sm so it
+            // reads from across the room during the demo presentation.
             Text(footer!,
-                style: TypographyTokens.sectionLabel
-                    .copyWith(color: c.accent)),
+                style: TypographyTokens.sectionLabel.copyWith(
+                  color: c.accent,
+                  fontSize: 13,
+                  letterSpacing: 1.8,
+                  fontWeight: FontWeight.w900,
+                )),
           ],
         ],
       ),

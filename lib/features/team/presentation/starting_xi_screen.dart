@@ -4,6 +4,8 @@ import '../../../core/primitives/app_button.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
+import '../../../core/l10n/strings.dart';
+import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
 import '../../../data/models/xi_prediction.dart';
@@ -241,7 +243,13 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
 
   Widget _buildPlayerList(BuildContext context, List<XiPlayer> players) {
     final c = context.colors;
-    if (players.isEmpty) return Text('No players available.', style: TypographyTokens.body);
+    if (players.isEmpty) {
+      return AppEmptyState(
+        icon: Icons.person_outline,
+        headline: L10n.t('xi.noPlayers'),
+        body: L10n.t('xi.noPlayersBody'),
+      );
+    }
 
     final order = ['GK', 'DEF', 'MID', 'FWD'];
     final List<Widget> sections = [];

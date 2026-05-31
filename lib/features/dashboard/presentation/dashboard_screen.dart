@@ -7,6 +7,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
+import '../../../core/widgets/app_empty_state.dart';
+import '../../../core/widgets/app_loading_skeleton.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../data/models/week_fixture.dart';
 import '../../../data/repositories/match_details_repository.dart';
@@ -145,7 +147,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (details.primaryVelocity! > 200) _changeWeek(-1);
         },
         child: _loading
-            ? Center(child: CircularProgressIndicator(color: c.accent))
+            ? const Padding(
+                padding: EdgeInsets.symmetric(vertical: SpacingTokens.lg),
+                child: AppLoadingSkeleton(rows: 5, rowHeight: 72),
+              )
             : _error != null
                 ? _buildError(c)
                 : _buildContent(c),
@@ -213,13 +218,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
 
           if (weekFixtures.isEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(SpacingTokens.xxl),
-                child: Text(L10n.t('dashboard.empty'),
-                    style: TypographyTokens.body.copyWith(color: c.textMuted),
-                    textAlign: TextAlign.center),
-              ),
+            AppEmptyState(
+              icon: Icons.calendar_today_outlined,
+              headline: L10n.t('dashboard.empty'),
+              body: L10n.t('dashboard.emptyBody'),
             ),
 
           const SizedBox(height: SpacingTokens.xxl),
@@ -344,7 +346,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return GestureDetector(
       onTap: () => _openStats(f),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 3),
+        // Iteration N polish: lift the inter-card gap from 3 px to 12 px so
+        // the fixture list reads with editorial rhythm instead of compressed.
+        margin: const EdgeInsets.only(bottom: SpacingTokens.sm),
         decoration: BoxDecoration(
           color: c.surfaceLow,
           borderRadius: BorderRadius.circular(6),

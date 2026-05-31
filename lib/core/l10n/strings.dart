@@ -90,12 +90,17 @@ class L10n extends ChangeNotifier {
     'dashboard.uclujNextRound': 'U CLUJ — RUNDA VIITOARE',
     'dashboard.otherMatches': 'LIGA 1 — ALTE MECIURI',
     'dashboard.empty': 'Nu există meciuri această săptămână.',
+    'dashboard.emptyBody': 'Reveniți după runda următoare pentru meciurile actualizate.',
     'dashboard.winChance': 'ȘANSĂ CÂȘTIG',
     'dashboard.analysis': 'ANALIZĂ',
 
     // Demo-mode ribbon
     'demoMode.label': 'MOD DEMO',
     'demoMode.fixturesFrom': 'meciuri din',
+
+    // Starting XI empty state
+    'xi.noPlayers': 'Niciun jucător disponibil',
+    'xi.noPlayersBody': 'Alegeți un alt meci sau verificați conexiunea la sursa Wyscout.',
 
     // Match stats sheet
     'sheet.win': 'VICTORIE',
@@ -198,12 +203,17 @@ class L10n extends ChangeNotifier {
     'dashboard.uclujNextRound': 'U CLUJ — NEXT ROUND',
     'dashboard.otherMatches': 'LIGA 1 — OTHER MATCHES',
     'dashboard.empty': 'No matches this week.',
+    'dashboard.emptyBody': 'Check back after the next matchday for refreshed fixtures.',
     'dashboard.winChance': 'WIN CHANCE',
     'dashboard.analysis': 'ANALYSIS',
 
     // Demo-mode ribbon
     'demoMode.label': 'DEMO MODE',
     'demoMode.fixturesFrom': 'fixtures from',
+
+    // Starting XI empty state
+    'xi.noPlayers': 'No players available',
+    'xi.noPlayersBody': 'Pick another fixture or check the Wyscout feed connection.',
 
     // Match stats sheet
     'sheet.win': 'WIN',
