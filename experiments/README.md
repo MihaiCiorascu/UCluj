@@ -1,43 +1,30 @@
 # experiments/
 
-Preserved work that is not part of the active build but should not be lost.
+Holding area for theme-related work that is not part of the active build.
 
-## app_colors_cobalt.dart
+This folder previously contained `app_colors_cobalt.dart`, a copy of the
+"Iteration N glossy" cobalt blue palette. That file has been removed,
+because it was byte-identical to the live theme at
+`lib/core/theme/app_colors.dart` and therefore provided no additional
+information while creating a maintenance hazard: a future edit to the
+live palette would silently diverge from the duplicate.
 
-The "Iteration N glossy" cobalt-blue colour palette. It was the one unique
-valuable file that lived only in the `heuristic-diffie-741cd7` worktree
-(branch `deploy-main`) and not in this canonical worktree, so it was copied
-here so that `elated-swirles-549361` genuinely contains every valuable file.
+## Current state of the live theme
 
-### Provenance
+- Active palette: cobalt blue, defined in `lib/core/theme/app_colors.dart`,
+  introduced as the production theme in commit `a025264` (2026-05-16,
+  "feat: Iteration L + N -- Superliga-wide XI predictor + UmbraRo glossy
+  theme").
+- Canonical design spec: `design/design-system.md`. The Stoic Analyst
+  language (sharp edges, tonal depth, editorial typography, no shadows or
+  gradients) is preserved verbatim; only the colour tokens moved from the
+  earlier Trophy Gold to cobalt blue.
 
-- Source worktree: `heuristic-diffie-741cd7`
-- Source path: `lib/core/theme/app_colors.dart`
-- Theme direction: replaces the U Cluj gold accent with an early-2000s
-  sports-broadcast cobalt blue, plus glossy gradient surface fields.
+## Restoring the earlier "Trophy Gold" Stoic Analyst palette
 
-### Why it is not active
-
-The active theme in `lib/core/theme/app_colors.dart` keeps the gold
-"Stoic Analyst" palette (`#00132e` surface, `#f2ca50` gold accent), which is
-the non-negotiable design identity documented in `CLAUDE.md`. Activating the
-cobalt palette would contradict that spec, so this file is preserved as a
-reference rather than wired into the build. It also lives outside `lib/` on
-purpose: it declares the same `AppColorTokens` / `AppColorsScope` classes as
-the active theme, so keeping it inside `lib/` would cause a duplicate-class
-analysis error.
-
-### How to activate it (if desired)
-
-The cobalt and gold versions share an identical 31-field `AppColorTokens` API
-and the same `light` / `dark` static-const construction sites, and the glossy
-widget infrastructure (`lib/core/theme/glossy_widgets.dart`, `app_theme.dart`,
-`lib/core/widgets/app_scaffold.dart`) is already present and identical in this
-worktree. Activation is therefore a drop-in file swap:
-
-```
-copy experiments/app_colors_cobalt.dart -> lib/core/theme/app_colors.dart
-```
-
-Before doing so, update `CLAUDE.md` so the documented palette matches the code,
-otherwise the active theme and the design spec will disagree.
+The gold palette is no longer present anywhere in the active code. To
+bring it back, recover the pre-2026-05-31 revision of
+`design/design-system.md` via `git log --all -p -- design/design-system.md`,
+write a new `lib/core/theme/app_colors.dart` from those Color Tokens, and
+update `design/design-system.md` and `CLAUDE.md` to describe the gold
+palette once more.
