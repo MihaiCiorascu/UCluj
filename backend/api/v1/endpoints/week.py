@@ -3,8 +3,10 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import math
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Any
 
 from fastapi import APIRouter, Depends, Query, Request
 
@@ -203,7 +205,12 @@ async def week_fixtures(
         return result
 
     result = await asyncio.to_thread(_compute_predictions, fixtures)
-    return result
+    # The prescriptive optimiser and the explanation service can produce NaN
+    # or +/-Inf for edge-case feature vectors (e.g. a team with too few rolling
+    # samples in the demo horizon). Strict JSON has no representation for
+    # those, so Starlette's serialiser would 500 the whole response. Sanitise
+    # them to None so the rest of the payload still reaches the client.
+    return _sanitize_floats(result)
 
 
 # ---------------------------------------------------------------------------
@@ -285,6 +292,29 @@ def _slice_fixtures(all_fixtures: list[dict], monday: datetime, sunday: datetime
 # ---------------------------------------------------------------------------
 # CSV-based fixture source (instant fallback, no network)
 # ---------------------------------------------------------------------------
+
+def _sanitize_floats(value: Any) -> Any:
+    """Recursively replace NaN and +/-Inf floats with None.
+
+    Strict JSON (RFC 8259) does not allow non-finite floats, and Starlette's
+    response renderer trips on them with
+    ``ValueError: Out of range float values are not JSON compliant``. The
+    prescription pipeline can emit NaN when a feature vector lacks enough
+    rolling samples to compute an uplift; this helper keeps the rest of the
+    response intact instead of failing the whole request.
+    """
+    if isinstance(value, float):
+        if math.isnan(value) or math.isinf(value):
+            return None
+        return value
+    if isinstance(value, dict):
+        return {k: _sanitize_floats(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_sanitize_floats(v) for v in value]
+    if isinstance(value, tuple):
+        return tuple(_sanitize_floats(v) for v in value)
+    return value
+
 
 def _apply_demo_horizon(fixtures: list[dict], horizon: datetime) -> list[dict]:
     """Null out scores for fixtures dated strictly after ``horizon``.
