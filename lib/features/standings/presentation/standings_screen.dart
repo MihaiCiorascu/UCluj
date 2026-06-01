@@ -6,6 +6,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
+import '../../../core/widgets/app_empty_state.dart';
+import '../../../core/widgets/app_loading_skeleton.dart';
 import '../../../core/widgets/app_scaffold.dart';
 
 // =============================================================================
@@ -248,7 +250,15 @@ class _StandingsScreenState extends State<StandingsScreen>
       onTabSelected: widget.onTabSelected,
       onProfileTap: widget.onProfileTap,
       body: _loading
-          ? Center(child: CircularProgressIndicator(color: c.accent))
+          // PR 14 loading sweep: a table-shaped skeleton replaces the bare
+          // spinner so the standings open onto a layout that already matches
+          // the ledger about to land, rather than a centred dot on an empty
+          // surface (the cheapest-looking moment of any data screen).
+          ? const Padding(
+              padding: EdgeInsets.fromLTRB(
+                  SpacingTokens.md, SpacingTokens.lg, SpacingTokens.md, 0),
+              child: AppLoadingSkeleton(rows: 9, rowHeight: 44),
+            )
           : _error != null
               ? _buildError(c)
               : _buildContent(c),
@@ -405,22 +415,13 @@ class _StandingsTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
     if (rows.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(SpacingTokens.xxl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.table_chart_outlined, size: 32, color: c.textMuted),
-              const SizedBox(height: SpacingTokens.md),
-              Text(emptyLabel,
-                  style: TypographyTokens.body.copyWith(color: c.textMuted),
-                  textAlign: TextAlign.center),
-            ],
-          ),
-        ),
+      // PR 14 empty-state sweep: route the empty playoff-group tabs through
+      // the shared AppEmptyState so they read as a deliberate "not published
+      // yet" panel instead of a bare icon-over-text placeholder.
+      return AppEmptyState(
+        icon: Icons.table_chart_outlined,
+        headline: emptyLabel,
       );
     }
 
