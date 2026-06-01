@@ -7,16 +7,19 @@ import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../data/models/match_preview.dart';
 
+/// Map an XI role group to its colour. Reads from the role family in
+/// ``AppColorTokens`` so the Match Preview pitch and the Match Stats pitch
+/// agree, and so no role collides with the cobalt CTA accent.
 Color recommendedXiRoleColor(String g, AppColorTokens c) {
   switch (g) {
     case 'GK':
-      return c.accent;
+      return c.roleGoalkeeper;
     case 'DEF':
-      return c.accentBlue;
+      return c.roleDefender;
     case 'MID':
-      return c.positive;
+      return c.roleMidfielder;
     case 'FWD':
-      return c.negative;
+      return c.roleForward;
     default:
       return c.textMuted;
   }
@@ -626,6 +629,7 @@ class FifaRecommendedXiPitch extends StatelessWidget {
   Widget build(BuildContext context) {
     final placements = _placements();
     final maxLineCount = _maxLineCountFor(formation);
+    final tokens = context.colors;
 
     return LayoutBuilder(
       builder: (ctx, c) {
@@ -633,7 +637,15 @@ class FifaRecommendedXiPitch extends StatelessWidget {
         return Stack(
           fit: StackFit.expand,
           children: [
-            CustomPaint(painter: FifaPitchPainter()),
+            CustomPaint(
+              painter: FifaPitchPainter(
+                surface: tokens.pitchSurface,
+                line: tokens.pitchLine,
+                halo: tokens.pitchHalo,
+                accent: tokens.accent,
+                border: tokens.chromeDeep,
+              ),
+            ),
             for (final p in placements)
               Positioned(
                 left: p.offset.dx * c.maxWidth - chipSize / 2,
@@ -685,24 +697,60 @@ class _PitchPlacement {
 }
 
 class FifaPitchPainter extends CustomPainter {
+  const FifaPitchPainter({
+    required this.surface,
+    required this.line,
+    required this.halo,
+    required this.accent,
+    required this.border,
+  });
+
+  /// Pitch background. Comes from ``AppColorTokens.pitchSurface`` so the
+  /// pitch reads as a single product element across both themes.
+  final Color surface;
+
+  /// Pitch line colour (centre circle, halfway, penalty boxes, outer rect).
+  /// Comes from ``AppColorTokens.pitchLine``.
+  final Color line;
+
+  /// Subtle cobalt halo used inside the centre circle so the eye anchors
+  /// on the middle of the pitch. Comes from ``AppColorTokens.pitchHalo``.
+  final Color halo;
+
+  /// Cobalt accent rule along the top and bottom edge of the pitch, so
+  /// the pitch reads as part of the Stoic Analyst editorial layout. Comes
+  /// from ``AppColorTokens.accent``.
+  final Color accent;
+
+  /// 2 px sharp-cornered outer border, so the pitch sits inside the same
+  /// crisp boundary as sibling ``AppCard`` panels. Comes from
+  /// ``AppColorTokens.chromeDeep``.
+  final Color border;
+
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    final bg = Paint()..color = const Color(0xFF0D1A12);
-    canvas.drawRect(rect, bg);
 
-    final line = Paint()
-      ..color = Colors.white.withValues(alpha: 0.35)
+    final bgPaint = Paint()..color = surface;
+    canvas.drawRect(rect, bgPaint);
+
+    // Centre-circle halo first so the pitch lines overlay it.
+    final haloPaint = Paint()..color = halo;
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = math.min(size.width, size.height) * 0.12;
+    canvas.drawCircle(center, radius, haloPaint);
+
+    final linePaint = Paint()
+      ..color = line
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
 
-    canvas.drawRect(rect.deflate(8), line);
+    canvas.drawRect(rect.deflate(8), linePaint);
 
     final midY = size.height / 2;
-    canvas.drawLine(Offset(8, midY), Offset(size.width - 8, midY), line);
+    canvas.drawLine(Offset(8, midY), Offset(size.width - 8, midY), linePaint);
 
-    final center = Offset(size.width / 2, midY);
-    canvas.drawCircle(center, math.min(size.width, size.height) * 0.12, line);
+    canvas.drawCircle(center, radius, linePaint);
 
     final boxW = size.width * 0.36;
     final boxH = size.height * 0.18;
@@ -712,7 +760,7 @@ class FifaPitchPainter extends CustomPainter {
         width: boxW,
         height: boxH,
       ),
-      line,
+      linePaint,
     );
     canvas.drawRect(
       Rect.fromCenter(
@@ -720,12 +768,32 @@ class FifaPitchPainter extends CustomPainter {
         width: boxW,
         height: boxH,
       ),
-      line,
+      linePaint,
     );
+
+    // Cobalt accent rule along the top and bottom edges (thin, full-width).
+    final accentPaint = Paint()
+      ..color = accent
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas.drawLine(Offset.zero, Offset(size.width, 0), accentPaint);
+    canvas.drawLine(Offset(0, size.height), Offset(size.width, size.height), accentPaint);
+
+    // Sharp-cornered chrome border.
+    final borderPaint = Paint()
+      ..color = border
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas.drawRect(rect, borderPaint);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant FifaPitchPainter oldDelegate) =>
+      oldDelegate.surface != surface ||
+      oldDelegate.line != line ||
+      oldDelegate.halo != halo ||
+      oldDelegate.accent != accent ||
+      oldDelegate.border != border;
 }
 
 class FifaPitchPlayerChip extends StatelessWidget {

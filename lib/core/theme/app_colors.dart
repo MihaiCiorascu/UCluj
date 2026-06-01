@@ -46,6 +46,20 @@ class AppColorTokens {
     required this.negativeSubtle,
     required this.positive,
     required this.positiveSubtle,
+    // ── Player-role family (cobalt pitch redesign) ───────────────────────
+    // Four visually distinct tones for the GK / DEF / MID / FWD badges so
+    // the two pitch widgets (Match Preview + Match Stats) agree, and so
+    // no role collides with the cobalt CTA accent.
+    required this.roleGoalkeeper,
+    required this.roleDefender,
+    required this.roleMidfielder,
+    required this.roleForward,
+    // ── Pitch surface, lines, halo ───────────────────────────────────────
+    // Used by FifaPitchPainter. Replaces the hardcoded olive-green so the
+    // pitch sits inside the Stoic Analyst layout instead of next to it.
+    required this.pitchSurface,
+    required this.pitchLine,
+    required this.pitchHalo,
     // ── Iteration H legacy ───────────────────────────────────────────────
     required this.cardGlow,
     required this.brightness,
@@ -83,6 +97,15 @@ class AppColorTokens {
   final Color negativeSubtle;
   final Color positive;
   final Color positiveSubtle;
+
+  final Color roleGoalkeeper;
+  final Color roleDefender;
+  final Color roleMidfielder;
+  final Color roleForward;
+
+  final Color pitchSurface;
+  final Color pitchLine;
+  final Color pitchHalo;
 
   final Color cardGlow;
   final Brightness brightness;
@@ -130,7 +153,10 @@ class AppColorTokens {
     accent:               Color(0xFF0047AB),
     accentStrong:         Color(0xFF003D99),
     onAccent:             Color(0xFFFFFFFF),
-    accentBlue:           Color(0xFF0047AB),
+    // accentBlue is now a distinct steel-blue so the legacy aliases stop
+    // colliding with `accent`. Most call sites that wanted "the DEF role
+    // colour" should migrate to `roleDefender` (same value, clearer intent).
+    accentBlue:           Color(0xFF1A4F7A),
     chrome:               Color(0xFFC0CCDA),
     chromeDeep:           Color(0xFF8A98A8),
     glow:                 Color(0xFF42A5F5),
@@ -142,6 +168,18 @@ class AppColorTokens {
     negativeSubtle:       Color(0x1AC62828),
     positive:             Color(0xFF2E7D32),
     positiveSubtle:       Color(0x1A2E7D32),
+    // Player roles ── warm amber for GK, steel for DEF, green for MID, red
+    // for FWD. Each pair distinct in hue + lightness so the eye separates
+    // them at thumb distance.
+    roleGoalkeeper:       Color(0xFFB47B00),
+    roleDefender:         Color(0xFF1A4F7A),
+    roleMidfielder:       Color(0xFF2E7D32),
+    roleForward:          Color(0xFFC62828),
+    // Pitch surface stays deep navy across both themes so the pitch reads
+    // as a single product element regardless of the page palette.
+    pitchSurface:         Color(0xFF0A1929),
+    pitchLine:            Color(0xB3FFFFFF),
+    pitchHalo:            Color(0x141E88E5),
     cardGlow:             Color(0x080047AB),
     brightness:           Brightness.light,
   );
@@ -162,7 +200,8 @@ class AppColorTokens {
     accent:               Color(0xFF1E88E5),
     accentStrong:         Color(0xFF0D47A1),
     onAccent:             Color(0xFFFFFFFF),
-    accentBlue:           Color(0xFF1E88E5),
+    // Distinct steel-blue, see comment on the light palette.
+    accentBlue:           Color(0xFF5B8DBE),
     chrome:               Color(0xFF5B6A7F),
     chromeDeep:           Color(0xFF2C3645),
     glow:                 Color(0xFF64B5F6),
@@ -174,6 +213,16 @@ class AppColorTokens {
     negativeSubtle:       Color(0x1AFF5252),
     positive:             Color(0xFF4ADE80),
     positiveSubtle:       Color(0x1A4ADE80),
+    // Player roles ── warm amber for GK, steel for DEF, bright green for
+    // MID, bright red for FWD. Lifted vs the light theme so they read on
+    // the deep navy surface.
+    roleGoalkeeper:       Color(0xFFF2C94C),
+    roleDefender:         Color(0xFF5B8DBE),
+    roleMidfielder:       Color(0xFF4ADE80),
+    roleForward:          Color(0xFFFF5252),
+    pitchSurface:         Color(0xFF0A1929),
+    pitchLine:            Color(0x99FFFFFF),
+    pitchHalo:            Color(0x141E88E5),
     cardGlow:             Color(0x141E88E5),
     brightness:           Brightness.dark,
   );

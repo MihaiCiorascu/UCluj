@@ -78,7 +78,10 @@ class ColorTokens {
   static const Color accent = lightPrimary;
   static const Color accentStrong = lightPrimaryDeep;
   static const Color onAccent = lightOnPrimary;
-  static const Color accentBlue = lightPrimary;
+  // Distinct steel-blue. Was `lightPrimary`, which made the legacy
+  // `accentBlue` indistinguishable from `accent`. Same value as
+  // `AppColorTokens.light.roleDefender`.
+  static const Color accentBlue = Color(0xFF1A4F7A);
   static const Color textPrimary = lightTextPrimary;
   static const Color textMuted = lightTextMuted;
   static const Color divider = lightDivider;
