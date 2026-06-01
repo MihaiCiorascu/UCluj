@@ -39,7 +39,13 @@ class RecommendedXiFifaPanel extends StatefulWidget {
   final double Function(MatchPreviewPlayer p) ratingForDisplay;
 
   static double _defaultRatingForDisplay(MatchPreviewPlayer p) =>
-      (p.compositeScore * 100).clamp(0, 99).toDouble();
+      // The XI predictor backend emits the rolling-form composite under the
+      // key `predicted_score` (the in-code helper `_composite_score` writes
+      // to that column). The Dart model carries both `predictedScore` and
+      // `compositeScore`, but the JSON response only populates the former,
+      // so reading `compositeScore` always returned 0 and every chip showed
+      // a 0 rating. Pull from `predictedScore` instead.
+      (p.predictedScore * 100).clamp(0, 99).toDouble();
 
   @override
   State<RecommendedXiFifaPanel> createState() => _RecommendedXiFifaPanelState();
