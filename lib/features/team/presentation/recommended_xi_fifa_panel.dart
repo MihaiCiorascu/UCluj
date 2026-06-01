@@ -39,7 +39,13 @@ class RecommendedXiFifaPanel extends StatefulWidget {
   final double Function(MatchPreviewPlayer p) ratingForDisplay;
 
   static double _defaultRatingForDisplay(MatchPreviewPlayer p) =>
-      (p.compositeScore * 100).clamp(0, 99).toDouble();
+      // The XI predictor backend emits the rolling-form composite under the
+      // key `predicted_score` (the in-code helper `_composite_score` writes
+      // to that column). The Dart model carries both `predictedScore` and
+      // `compositeScore`, but the JSON response only populates the former,
+      // so reading `compositeScore` always returned 0 and every chip showed
+      // a 0 rating. Pull from `predictedScore` instead.
+      (p.predictedScore * 100).clamp(0, 99).toDouble();
 
   @override
   State<RecommendedXiFifaPanel> createState() => _RecommendedXiFifaPanelState();
@@ -195,54 +201,81 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         style: TypographyTokens.body.copyWith(color: c.textMuted),
       );
     }
-    return Wrap(
-      spacing: 6,
-      runSpacing: 6,
-      children: bench.map((pl) {
-        final sel = _selected?.playerId == pl.playerId;
-        return GestureDetector(
-          onTap: () => setState(() => _selected = pl),
-          child: Container(
-            width: 88,
-            padding: const EdgeInsets.all(SpacingTokens.xs),
-            decoration: BoxDecoration(
-              color: sel ? c.surfaceHigh : c.surfaceLow,
-              border: Border.all(
-                color: sel ? c.accent : c.divider,
+    // Horizontal scroll strip with the same chip shape as the pitch chip
+    // (left-edge role rule, dominant rating, demoted position). Replaces
+    // the previous 4-wide Wrap grid, which crammed every substitute into
+    // a single screen height even when there were 12+ benches to scroll.
+    return SizedBox(
+      height: 88,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: bench.length,
+        separatorBuilder: (_, __) => const SizedBox(width: SpacingTokens.xs),
+        itemBuilder: (context, i) {
+          final pl = bench[i];
+          final sel = _selected?.playerId == pl.playerId;
+          final roleColor = recommendedXiRoleColor(pl.roleGroup, c);
+          return GestureDetector(
+            onTap: () => setState(() => _selected = pl),
+            child: Container(
+              width: 84,
+              decoration: BoxDecoration(
+                color: sel ? c.surfaceHigh : c.surfaceLow,
+                border: Border(
+                  left: BorderSide(color: roleColor, width: 3),
+                  top: BorderSide(color: sel ? c.accent : c.divider, width: sel ? 2 : 1),
+                  right: BorderSide(color: sel ? c.accent : c.divider, width: sel ? 2 : 1),
+                  bottom: BorderSide(color: sel ? c.accent : c.divider, width: sel ? 2 : 1),
+                ),
+              ),
+              padding: const EdgeInsets.fromLTRB(
+                SpacingTokens.xs,
+                SpacingTokens.xs,
+                SpacingTokens.xxs,
+                SpacingTokens.xs,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    rf(pl).toStringAsFixed(0),
+                    style: TypographyTokens.headline.copyWith(
+                      color: c.textPrimary,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      height: 1.0,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    pl.shortName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TypographyTokens.body.copyWith(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 10,
+                      color: c.textPrimary,
+                      height: 1.0,
+                    ),
+                  ),
+                  const SizedBox(height: 1),
+                  Text(
+                    pl.roleGroup,
+                    style: TypographyTokens.sectionLabel.copyWith(
+                      fontSize: 8,
+                      color: c.textMuted,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  pl.roleGroup,
-                  style: TypographyTokens.body.copyWith(
-                    fontSize: 9,
-                    color: recommendedXiRoleColor(pl.roleGroup, c),
-                  ),
-                ),
-                Text(
-                  pl.shortName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TypographyTokens.body.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 10,
-                    color: c.textPrimary,
-                  ),
-                ),
-                Text(
-                  rf(pl).toStringAsFixed(0),
-                  style: TypographyTokens.headline.copyWith(
-                    color: c.accent,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
+          );
+        },
+      ),
     );
   }
 }
@@ -394,10 +427,14 @@ class _PlayerDetailColumn extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: SpacingTokens.sm),
-                // Right: radar
+                // Right: radar. Reduced height (130 vs 170) so the radar
+                // reads as a quick-glance shape signal and the attribute
+                // bars below carry the actual numeric detail. Keeping both
+                // means the radar gives instant "this is an attacker /
+                // defender" silhouette and the bars give the exact values.
                 Expanded(
                   child: SizedBox(
-                    height: 170,
+                    height: 130,
                     child: FifaPlayerRadar(
                       player: p,
                       accentColor: c.accent,
@@ -411,9 +448,13 @@ class _PlayerDetailColumn extends StatelessWidget {
 
           const SizedBox(height: SpacingTokens.lg),
 
-          // ── Attribute comparison bars (FIFA style) ─────────────────────
+          // ── Attribute bars ──────────────────────────────────────────────
+          // Section title in Romanian so it stops being the only English
+          // string on a screen that otherwise reads "FACTORI CHEIE AI",
+          // "RISCURI", "DIAGNOSTIC - PLAN TACTIC". Localisation through
+          // L10n.t is deferred to the cross-cutting polish PR.
           Text(
-            'PLAYER INFO COMPARISON',
+            'ATRIBUTE JUCATOR',
             style: TypographyTokens.sectionLabel.copyWith(
               fontSize: 9,
               color: c.accent,
@@ -815,42 +856,64 @@ class FifaPitchPlayerChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final roleColor = recommendedXiRoleColor(player.roleGroup, c);
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: c.surfaceHigh,
-          border: Border.all(
-            color: selected ? c.accent : c.divider,
-            width: selected ? 2 : 1,
+          border: Border(
+            // Thick left-edge rule in the role colour. Makes GK / DEF / MID
+            // / FWD identifiable from peripheral vision without reading the
+            // small position label.
+            left: BorderSide(color: roleColor, width: 3),
+            top: BorderSide(color: selected ? c.accent : c.divider, width: selected ? 2 : 1),
+            right: BorderSide(color: selected ? c.accent : c.divider, width: selected ? 2 : 1),
+            bottom: BorderSide(color: selected ? c.accent : c.divider, width: selected ? 2 : 1),
           ),
         ),
-        padding: EdgeInsets.all(chipSize * 0.08),
+        padding: EdgeInsets.fromLTRB(
+          chipSize * 0.10,
+          chipSize * 0.06,
+          chipSize * 0.06,
+          chipSize * 0.06,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Rating is the dominant element so the FIFA-style "85" reads
+            // first from across the screen.
             Text(
-              player.roleGroup,
-              style: TypographyTokens.body.copyWith(
-                fontSize: chipSize * 0.13,
-                color: recommendedXiRoleColor(player.roleGroup, c),
+              rating.toStringAsFixed(0),
+              style: TypographyTokens.headline.copyWith(
+                color: c.textPrimary,
+                fontSize: chipSize * 0.32,
+                fontWeight: FontWeight.w900,
+                height: 1.0,
+                letterSpacing: -1,
               ),
             ),
+            const SizedBox(height: 2),
             Text(
               player.shortName.split(' ').last,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TypographyTokens.body.copyWith(
-                fontSize: chipSize * 0.16,
+                fontSize: chipSize * 0.14,
                 fontWeight: FontWeight.w800,
                 color: c.textPrimary,
+                height: 1.0,
               ),
             ),
+            const SizedBox(height: 1),
+            // Position label demoted; the left-edge rule carries the role.
             Text(
-              rating.toStringAsFixed(0),
-              style: TypographyTokens.headline.copyWith(
-                color: c.accent,
-                fontSize: chipSize * 0.22,
+              player.roleGroup,
+              style: TypographyTokens.sectionLabel.copyWith(
+                fontSize: chipSize * 0.10,
+                color: c.textMuted,
+                letterSpacing: 1.2,
               ),
             ),
           ],
