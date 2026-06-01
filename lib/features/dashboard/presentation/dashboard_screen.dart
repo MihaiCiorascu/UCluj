@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/l10n/strings.dart';
 import '../../../core/state/auth_state.dart';
+import '../../../core/state/meta_state.dart';
 import '../../../core/services/api_client.dart' show ApiException;
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
@@ -47,9 +48,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // All fixtures returned by the backend for this offset
   List<WeekFixture> get _fixtures => _cache[_weekOffset] ?? [];
 
+  /// Server's effective notion of "now" mirrored on the client. When demo
+  /// mode is on (MetaState.demoMode), pivots the dashboard week math around
+  /// the demo date at noon UTC so the displayed Monday-Sunday window matches
+  /// what /api/v1/week-fixtures actually slices server-side. In production
+  /// this falls back to the real wall-clock time and behaves as before.
+  DateTime _effectiveNow() {
+    final meta = MetaState.instance;
+    if (meta.demoMode && meta.demoToday.isNotEmpty) {
+      final parts = meta.demoToday.split('-');
+      if (parts.length == 3) {
+        final y = int.tryParse(parts[0]);
+        final m = int.tryParse(parts[1]);
+        final d = int.tryParse(parts[2]);
+        if (y != null && m != null && d != null) {
+          return DateTime.utc(y, m, d, 12, 0);
+        }
+      }
+    }
+    return DateTime.now().toUtc();
+  }
+
   // The Monday (UTC midnight) of the currently displayed week
   DateTime _weekMonday() {
-    final now = DateTime.now().toUtc();
+    final now = _effectiveNow();
     final today = DateTime.utc(now.year, now.month, now.day);
     final thisMonday = today.subtract(Duration(days: today.weekday - 1));
     return thisMonday.add(Duration(days: _weekOffset * 7));

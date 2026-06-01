@@ -80,6 +80,23 @@ if settings.demo_mode:
     _parse_demo_today(settings.demo_today)
 
 
+def effective_season() -> str:
+    """Return the SuperLiga season label that contains ``effective_now()``.
+
+    The Romanian Superliga calendar runs July to May, so a fixture date in
+    months 7-12 belongs to the season labelled ``<year>`` and a date in
+    months 1-6 belongs to ``<year - 1>``. This convention matches the
+    ``season`` column in ``data/All_Data.csv`` where 2024-25 fixtures are
+    tagged ``"2024"``.
+
+    The Sportradar standings endpoint implicitly returns "current season"
+    relative to the wall clock; this helper gives every CSV-backed standings
+    or per-season query the same anchor when ``DEMO_MODE`` is on.
+    """
+    now = effective_now()
+    return str(now.year if now.month >= 7 else now.year - 1)
+
+
 def effective_now() -> datetime:
     """Return the server's effective notion of "now".
 
