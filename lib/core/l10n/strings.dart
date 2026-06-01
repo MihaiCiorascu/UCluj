@@ -122,7 +122,8 @@ class L10n extends ChangeNotifier {
     'sheet.optimalPlan': 'PLAN TACTIC OPTIM',
     'sheet.projectedProb': 'PROBABILITATE',
     'sheet.projected': 'PROIECTATĂ',
-    'sheet.modelFooter': 'CatBoost · 800 simulări · date Liga 1 2020–2025',
+    // Keep the simulation count in sync with settings.optimizer_num_simulations.
+    'sheet.modelFooter': 'CatBoost · 25.000 simulări · date Liga 1 2020-2025',
     'sheet.baselineLabel': 'BAZĂ',
     'sheet.optimisedLabel': 'OPTIMIZAT',
     'sheet.upliftLabel': 'CREȘTERE',
@@ -244,7 +245,8 @@ class L10n extends ChangeNotifier {
     'sheet.optimalPlan': 'OPTIMAL TACTICAL PLAN',
     'sheet.projectedProb': 'PROBABILITY',
     'sheet.projected': 'PROJECTED',
-    'sheet.modelFooter': 'CatBoost · 800 simulations · Liga 1 2020–2025 data',
+    // Keep the simulation count in sync with settings.optimizer_num_simulations.
+    'sheet.modelFooter': 'CatBoost · 25,000 simulations · Liga 1 2020-2025 data',
     'sheet.baselineLabel': 'BASELINE',
     'sheet.optimisedLabel': 'OPTIMISED',
     'sheet.upliftLabel': 'UPLIFT',

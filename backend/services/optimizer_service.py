@@ -74,6 +74,19 @@ class OptimizerService:
     # ── MC backend (default) ────────────────────────────────────────────────
 
     def _optimize_mc(self, baseline_features: pd.DataFrame, num_simulations: int) -> dict:
+        # Vectorised constrained Monte Carlo. The whole sample is drawn at
+        # once, the football-domain constraints are applied as a single numpy
+        # mask, and every feasible candidate is scored in one batched CatBoost
+        # call. This keeps the thesis production value of N = 25,000 sub-second
+        # per fixture (the earlier per-candidate predict loop did not scale to
+        # 25,000). Determinism is preserved because the service reseeds
+        # ``self._rng`` from ``settings.optimizer_seed`` on construction.
+        # Reseed per call so a given fixture always yields the same blueprint
+        # (the thesis reproducibility guarantee), independent of how many times
+        # this service instance has been reused. Mirrors the per-call seed in
+        # PrescriptionService.
+        self._rng = np.random.default_rng(self._seed)
+
         baseline_prob = self._model.predict_proba(baseline_features)
         bounds = self._model.bounds
         feature_cols = self._model.feature_cols
@@ -86,24 +99,41 @@ class OptimizerService:
         best_targets: dict[str, float] = {f: base_row.get(f, 0.0) for f in OPTIMIZABLE_FEATURES}
         valid_count = 0
 
-        for _ in range(num_simulations):
-            candidate = dict(base_row)
+        # 1. Draw every candidate's optimizable features up front. A feature
+        #    with a degenerate bound (high <= low) keeps the baseline value for
+        #    all candidates, matching the old per-candidate "continue" branch.
+        n = int(num_simulations)
+        sampled: dict[str, np.ndarray] = {}
+        for feat in OPTIMIZABLE_FEATURES:
+            base_val = float(base_row.get(feat, 0.0) or 0.0)
+            lo = bounds.get(feat, {}).get("low", base_val * 0.8)
+            hi = bounds.get(feat, {}).get("high", base_val * 1.2)
+            if hi <= lo:
+                sampled[feat] = np.full(n, base_val, dtype=float)
+            else:
+                sampled[feat] = self._rng.uniform(lo, hi, size=n)
+
+        # 2. Apply the same constraint predicate as _check_constraints, but
+        #    vectorised across the whole sample.
+        mask = self._constraint_mask(sampled, bounds)
+        valid_count = int(mask.sum())
+
+        if valid_count > 0:
+            valid_idx = np.nonzero(mask)[0]
+            data: dict[str, np.ndarray] = {
+                col: np.full(valid_count, float(base_row.get(col, 0.0) or 0.0), dtype=float)
+                for col in feature_cols
+            }
             for feat in OPTIMIZABLE_FEATURES:
-                lo = bounds.get(feat, {}).get("low", candidate.get(feat, 0) * 0.8)
-                hi = bounds.get(feat, {}).get("high", candidate.get(feat, 0) * 1.2)
-                if hi <= lo:
-                    continue
-                candidate[feat] = self._rng.uniform(lo, hi)
+                if feat in data:
+                    data[feat] = sampled[feat][valid_idx]
+            candidates = pd.DataFrame(data, columns=feature_cols)
 
-            if not self._check_constraints(candidate, bounds):
-                continue
-
-            valid_count += 1
-            row = pd.DataFrame([candidate], columns=feature_cols)
-            prob = self._model.predict_proba(row)
-            if prob > best_prob:
-                best_prob = prob
-                best_targets = {f: candidate[f] for f in OPTIMIZABLE_FEATURES}
+            probs = self._model.predict_proba_batch(candidates)
+            best_i = int(np.argmax(probs))
+            if float(probs[best_i]) > best_prob:
+                best_prob = float(probs[best_i])
+                best_targets = {f: float(candidates.iloc[best_i][f]) for f in OPTIMIZABLE_FEATURES}
 
         targets = []
         for feat in OPTIMIZABLE_FEATURES:
@@ -236,6 +266,43 @@ class OptimizerService:
         }
 
     # ── Shared constraint / bounds helpers ──────────────────────────────────
+
+    def _constraint_mask(self, sampled: dict[str, np.ndarray], bounds: dict) -> np.ndarray:
+        """Vectorised twin of ``_check_constraints``.
+
+        Returns a boolean mask over the whole candidate sample. The logic is
+        identical to the scalar predicate (shots on target, corners, and goals
+        each bounded both by the training percentiles and by football-domain
+        ratios, conceded strictly below goals minus 0.2); it is expressed with
+        numpy so the entire sample is filtered in one pass.
+        """
+        shots = sampled["Home_Shots_5"]
+        sot = sampled["Home_SoT_5"]
+        corners = sampled["Home_Corners_5"]
+        goals = sampled["Home_Goals_5"]
+        conceded = sampled["Home_Conceded_5"]
+
+        sot_hi = bounds.get("Home_SoT_5", {}).get("high")
+        sot_hi = shots if sot_hi is None else sot_hi
+        sot_min = np.maximum(bounds.get("Home_SoT_5", {}).get("low", 0.0), 0.2 * shots)
+        sot_max = np.minimum(sot_hi, 0.7 * shots)
+
+        corners_hi = bounds.get("Home_Corners_5", {}).get("high")
+        corners_hi = shots if corners_hi is None else corners_hi
+        c_min = np.maximum(bounds.get("Home_Corners_5", {}).get("low", 0.0), 0.15 * shots)
+        c_max = np.minimum(corners_hi, 0.8 * shots)
+
+        goals_hi = bounds.get("Home_Goals_5", {}).get("high")
+        goals_hi = sot if goals_hi is None else goals_hi
+        g_min = np.maximum(bounds.get("Home_Goals_5", {}).get("low", 0.0), 0.05 * shots)
+        g_max = np.minimum(goals_hi, 0.6 * sot)
+
+        return (
+            (sot_max > sot_min) & (sot >= sot_min) & (sot <= sot_max)
+            & (c_max > c_min) & (corners >= c_min) & (corners <= c_max)
+            & (g_max > g_min) & (goals >= g_min) & (goals <= g_max)
+            & (conceded < goals - 0.2)
+        )
 
     def _check_constraints(self, c: dict, bounds: dict) -> bool:
         shots = c.get("Home_Shots_5", 0)

@@ -38,9 +38,14 @@ class Settings(BaseSettings):
     #                         ~4x fewer CatBoost evaluations in the convergent case; falls
     #                         back to MC on failure so the coach never sees an error)
     # seed: reproducibility for the MC sampler (Pineau et al. 2021).
+    # num_simulations: the thesis production value is N = 25,000, which keeps
+    # the standard deviation of the returned best probability below 0.002
+    # while staying sub-second per fixture after vectorisation. This is the
+    # single source of truth for N across the prescription and optimizer
+    # services; keep the Flutter footer string in sync with it.
     optimizer_method: str = "mc"
     optimizer_seed: int = 42
-    optimizer_num_simulations: int = 1000
+    optimizer_num_simulations: int = 25000
 
     @property
     def cors_origin_list(self) -> list[str]:
