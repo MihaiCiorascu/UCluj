@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from app.config import settings
 from services.model_service import ModelService
 
 _HOME_STATS = [
@@ -42,16 +43,26 @@ class PrescriptionService:
         self,
         features: pd.DataFrame,
         ucl_is_home: bool,
-        num_simulations: int = 800,
-        random_state: int = 42,
+        num_simulations: int | None = None,
+        random_state: int | None = None,
     ) -> dict:
         """Run the constrained Monte Carlo optimizer from the notebook (Cell 38).
 
         Returns baseline_prob, best_prob, improvement, and a human-readable
-        prescription string in Romanian.
+        prescription string in Romanian. When ``num_simulations`` or
+        ``random_state`` are not given they default to the thesis production
+        values from ``settings`` (N = 25,000, seed = 42), so the sample count
+        is configured in exactly one place. The loop builds every candidate
+        first and predicts the whole batch in a single CatBoost call, so the
+        larger N stays sub-second per fixture.
         """
         if not self._model.is_ready:
             return {"text": "", "improvement": 0.0}
+
+        if num_simulations is None:
+            num_simulations = settings.optimizer_num_simulations
+        if random_state is None:
+            random_state = settings.optimizer_seed
 
         feature_cols = self._model.feature_cols
         bounds = self._model.bounds          # {stat: {'low': x, 'high': y}}
