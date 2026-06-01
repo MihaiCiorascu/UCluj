@@ -93,6 +93,7 @@ class L10n extends ChangeNotifier {
     'dashboard.emptyBody': 'Reveniți după runda următoare pentru meciurile actualizate.',
     'dashboard.winChance': 'ȘANSĂ CÂȘTIG',
     'dashboard.analysis': 'ANALIZĂ',
+    'dashboard.statusUpcoming': 'PRE-MECI',
 
     // Demo-mode ribbon
     'demoMode.label': 'MOD DEMO',
@@ -214,6 +215,7 @@ class L10n extends ChangeNotifier {
     'dashboard.emptyBody': 'Check back after the next matchday for refreshed fixtures.',
     'dashboard.winChance': 'WIN CHANCE',
     'dashboard.analysis': 'ANALYSIS',
+    'dashboard.statusUpcoming': 'PRE-MATCH',
 
     // Demo-mode ribbon
     'demoMode.label': 'DEMO MODE',

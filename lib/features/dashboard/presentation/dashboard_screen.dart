@@ -343,8 +343,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildMatchCard(WeekFixture f, {required bool highlight, required AppColorTokens c}) {
     final isHome = f.isUCLujHome;
-    final prob = f.homeWinProbability;
-    final uclProb = highlight ? prob : prob;
+    final uclProb = f.homeWinProbability;
+    final isUpcoming = !f.isCompleted;
 
     final probPct = uclProb != null ? '${(uclProb * 100).round()}%' : '--';
     final probColor = uclProb == null
@@ -365,6 +365,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       else { result = 'E'; resultColor = c.accent; }
     }
 
+    final leading = _leadingTag(f, result, resultColor, c);
+
     return GestureDetector(
       onTap: () => _openStats(f),
       child: Container(
@@ -377,7 +379,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           border: highlight
               ? Border.all(color: c.accent.withValues(alpha: 0.4))
               : Border.all(color: c.divider),
-          boxShadow: highlight
+          // PR 13 pre/post split: the glow is the "live, prepare this" signal,
+          // so it is reserved for an upcoming highlighted (U Cluj) fixture. A
+          // completed U Cluj card is history and reads flat and archival.
+          boxShadow: highlight && isUpcoming
               ? [
                   BoxShadow(
                     color: c.cardGlow,
@@ -389,66 +394,64 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(6),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Gold accent left bar for highlighted card
-                if (highlight)
-                  Container(
-                    width: 3,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [c.accent, c.accentStrong],
-                      ),
-                    ),
-                  ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            // Result badge
-                            if (result.isNotEmpty) ...[
-                              Container(
-                                width: 22,
-                                height: 22,
-                                decoration: BoxDecoration(
-                                  color: resultColor.withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(3),
-                                ),
-                                child: Center(
-                                  child: Text(result,
-                                      style: TypographyTokens.sectionLabel
-                                          .copyWith(color: resultColor, fontSize: 10)),
-                                ),
-                              ),
-                              const SizedBox(width: SpacingTokens.sm),
-                            ],
-
-                            // Teams
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _teamRow(f.homeTeam, highlight && isHome, c),
-                                  const SizedBox(height: 3),
-                                  _teamRow(f.awayTeam, highlight && !isHome, c),
-                                ],
-                              ),
-                            ),
-
-                            // Score or probability
-                            f.isCompleted
-                                ? _scoreBlock(f, c)
-                                : _probabilityBlock(probPct, probColor, highlight, c),
-                          ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // PR 13 pre/post split: a 2 px cobalt top rule marks every
+              // upcoming fixture (U Cluj and the rest of the league alike) as
+              // pre-match, where the prescriptive flow is available. Completed
+              // fixtures omit the rule so the eye separates "to play" from
+              // "already played" before reading a single team name.
+              if (isUpcoming)
+                Container(height: 2, color: c.accent),
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Gold accent left bar for highlighted card
+                    if (highlight)
+                      Container(
+                        width: 3,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [c.accent, c.accentStrong],
+                          ),
                         ),
+                      ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                // Status tag: V/Î/E result (completed U Cluj)
+                                // or a PRE-MECI chip (any upcoming fixture).
+                                if (leading != null) ...[
+                                  leading,
+                                  const SizedBox(width: SpacingTokens.sm),
+                                ],
+
+                                // Teams
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _teamRow(f.homeTeam, highlight && isHome, c),
+                                      const SizedBox(height: 3),
+                                      _teamRow(f.awayTeam, highlight && !isHome, c),
+                                    ],
+                                  ),
+                                ),
+
+                                // Right rail: final score, U Cluj win chance,
+                                // or a VS marker for an upcoming neutral match.
+                                _rightRail(f, highlight, probPct, probColor, c),
+                              ],
+                            ),
 
                         // Date + venue
                         const SizedBox(height: SpacingTokens.xs),
@@ -478,11 +481,72 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                 ),
-              ],
-            ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  /// Status tag rendered at the leading edge of a fixture card. A completed
+  /// U Cluj fixture shows its V/Î/E result badge; any upcoming fixture shows
+  /// a cobalt PRE-MECI chip. Other completed fixtures return null (the final
+  /// score on the right rail already signals that the match is over).
+  Widget? _leadingTag(
+      WeekFixture f, String result, Color resultColor, AppColorTokens c) {
+    if (f.isCompleted) {
+      if (result.isEmpty) return null;
+      return Container(
+        width: 22,
+        height: 22,
+        decoration: BoxDecoration(
+          color: resultColor.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(3),
+        ),
+        child: Center(
+          child: Text(result,
+              style: TypographyTokens.sectionLabel
+                  .copyWith(color: resultColor, fontSize: 10)),
+        ),
+      );
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(
+        color: c.accent.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(3),
+      ),
+      child: Text(L10n.t('dashboard.statusUpcoming'),
+          style: TypographyTokens.sectionLabel
+              .copyWith(color: c.accent, fontSize: 8, letterSpacing: 1)),
+    );
+  }
+
+  /// Right-rail content for a fixture card: the final score for a completed
+  /// match, the U Cluj win chance for an upcoming highlighted fixture, or a
+  /// VS marker for an upcoming neutral fixture so the rail never reads empty.
+  Widget _rightRail(WeekFixture f, bool highlight, String probPct,
+      Color probColor, AppColorTokens c) {
+    if (f.isCompleted) return _scoreBlock(f, c);
+    if (highlight) return _probabilityBlock(probPct, probColor, true, c);
+    return _vsBlock(c);
+  }
+
+  Widget _vsBlock(AppColorTokens c) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+          horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
+      decoration: BoxDecoration(
+        color: c.surfaceHigh,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: c.divider),
+      ),
+      child: Text('VS',
+          style: TypographyTokens.sectionLabel
+              .copyWith(color: c.accent, fontSize: 12, letterSpacing: 1)),
     );
   }
 
