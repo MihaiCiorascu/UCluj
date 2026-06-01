@@ -8,7 +8,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, Query, Request
 
-from app.config import settings
+from app.config import effective_season, settings
 from clients.sportradar_client import SportradarClient
 from core.dependencies import get_feature_service, get_stadium_map
 from core.models import StandingsRow
@@ -138,6 +138,11 @@ async def standings(
         except Exception:
             logger.warning("Sportradar standings fetch failed; falling back to CSV")
 
-    # 3. Instant CSV fallback — wrap in the same grouped format
+    # 3. Instant CSV fallback — wrap in the same grouped format. When the
+    # client did not pin a season, derive it from the server's effective
+    # clock so demo mode (and any other "what season are we in" query) lands
+    # on a single season instead of cumulative cross-season totals.
+    if season is None:
+        season = effective_season()
     csv_rows = svc.standings(season=season)
     return {"regular": csv_rows, "championship": [], "relegation": []}
