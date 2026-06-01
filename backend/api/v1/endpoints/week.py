@@ -8,7 +8,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, Query, Request
 
-from app.config import effective_now, settings
+from app.config import effective_now, effective_season_id, settings
 from clients.sportradar_client import SportradarClient
 from core.dependencies import get_feature_service
 from core.security import get_current_user
@@ -110,12 +110,16 @@ async def week_fixtures(
     sunday = monday + timedelta(days=7)
 
     # ── 1. Check local Sportradar cache (instant if fresh) ──────────────────
-    # In demo mode we deliberately skip the cache and the live fetch so the
-    # CSV-backed historical week is the single source of truth.
+    # The cache is skipped in demo mode so a stale production response never
+    # bleeds into a demo dashboard (and vice versa). The cache write below
+    # is gated the same way.
     sr_all: list[dict] | None = None if settings.demo_mode else _load_cache()
 
     # ── 2. If cache stale/missing, try Sportradar (cap at 20 s total) ──────
-    if sr_all is None and settings.sportradar_api_key and not settings.demo_mode:
+    # Demo mode now hits Sportradar too, pinned to the 2024-25 season via
+    # effective_season_id(); the cache write below is the only place demo
+    # mode still diverges from production.
+    if sr_all is None and settings.sportradar_api_key:
         try:
             fetched = await asyncio.wait_for(
                 _fetch_all_sr_fixtures(),
@@ -123,7 +127,8 @@ async def week_fixtures(
             )
             if fetched:
                 sr_all = fetched
-                _save_cache(sr_all)  # persist for next 6 h
+                if not settings.demo_mode:
+                    _save_cache(sr_all)  # persist for next 6 h
         except Exception as exc:
             logger.warning("Sportradar fetch failed/timed-out; using CSV fallback: %s", exc)
 
@@ -192,17 +197,21 @@ async def week_fixtures(
 
 
 # ---------------------------------------------------------------------------
-# Sportradar: fetch the full U Cluj schedule for 2025 (cached for 6 h)
+# Sportradar: fetch the whole-season schedule (cached for 6 h)
 # ---------------------------------------------------------------------------
 
 async def _fetch_all_sr_fixtures() -> list[dict]:
-    """Fetch the complete U Cluj competitor schedule from Sportradar.
+    """Fetch the full season schedule from Sportradar.
 
-    Returns a flat list of all fixture dicts (past + future).
-    Runs concurrent daily calls; the entire function is capped at 4 s by caller.
+    Uses ``season_schedules(effective_season_id())`` so the demo mode lands
+    on the 2024-25 season and production lands on the 25/26 season. Returns
+    every Superliga fixture in the season (past + future) so the dashboard
+    can render both the U-Cluj-this-week section and the "other Liga 1"
+    section without an extra hop. Past matches with no score (postponed or
+    cancelled) are filtered out.
     """
     client = SportradarClient()
-    data = await client.competitor_schedules(TRACKED_TEAM_ID)
+    data = await client.season_schedules(effective_season_id())
     fixtures: list[dict] = []
     now = datetime.now(timezone.utc)
 
@@ -212,10 +221,6 @@ async def _fetch_all_sr_fixtures() -> list[dict]:
         ctx = se.get("sport_event_context", {})
         comp = ctx.get("competition", {})
         if comp.get("id") != SUPERLIGA_COMPETITION_ID:
-            continue
-
-        dt = _parse_dt(_event_kickoff(se))
-        if dt.year < 2025:
             continue
 
         competitors = se.get("competitors", [])
@@ -272,15 +277,25 @@ def _slice_fixtures(all_fixtures: list[dict], monday: datetime, sunday: datetime
 # ---------------------------------------------------------------------------
 
 def _csv_week_fixtures(fix_svc: FixtureService, monday: datetime, sunday: datetime) -> list[dict]:
-    """Return fixtures involving U Cluj within [monday, sunday) from in-memory CSV."""
-    all_f = fix_svc.list_fixtures(team=TRACKED_TEAM_NAME, limit=500)
-    week = [f for f in all_f if monday <= _parse_dt(f.get("match_date", "")) < sunday]
-    if week:
-        return sorted(week, key=lambda f: f.get("match_date", ""))
+    """Return every Liga 1 fixture inside [monday, sunday) from the in-memory CSV.
 
-    # No match this week — show nearest surrounding fixtures
-    past = [f for f in all_f if _parse_dt(f.get("match_date", "")) < monday]
-    future = [f for f in all_f if _parse_dt(f.get("match_date", "")) >= sunday]
+    Previously this only returned U Cluj fixtures, which made the dashboard's
+    "Alte meciuri" section permanently empty whenever U Cluj had no match in
+    the requested week. Now it widens to the whole league for the season that
+    contains the window (derived from the monday parameter), so the dashboard
+    populates even on a U Cluj rest week. If the week is genuinely empty we
+    still fall back to the nearest U Cluj match either side.
+    """
+    season_str = str(monday.year if monday.month >= 7 else monday.year - 1)
+    week = fix_svc.list_week_fixtures(monday, sunday, season=season_str)
+    if week:
+        return week
+
+    # Nothing in the requested window. Fall back to the nearest U Cluj
+    # fixture either side so the screen is not completely empty.
+    all_ucluj = fix_svc.list_fixtures(team=TRACKED_TEAM_NAME, limit=500)
+    past = [f for f in all_ucluj if _parse_dt(f.get("match_date", "")) < monday]
+    future = [f for f in all_ucluj if _parse_dt(f.get("match_date", "")) >= sunday]
     out: list[dict] = []
     if past:
         out.append(past[-1])

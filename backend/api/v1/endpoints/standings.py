@@ -8,7 +8,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, Depends, Query, Request
 
-from app.config import effective_season, settings
+from app.config import effective_season, effective_season_id, settings
 from clients.sportradar_client import SportradarClient
 from core.dependencies import get_feature_service, get_stadium_map
 from core.models import StandingsRow
@@ -20,6 +20,8 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
+# Live Sportradar season ID for the production code path. The demo path
+# resolves through ``effective_season_id()`` in app/config.py.
 SUPERLIGA_SEASON_ID = "sr:season:131507"   # Superliga 25/26
 SUPERLIGA_GROUP_REGULAR = "Superliga"
 SUPERLIGA_GROUP_CHAMPIONSHIP = "Championship Round"
@@ -68,11 +70,11 @@ def _save_cache(rows: list[dict]) -> None:
 # Sportradar standings fetch
 # ---------------------------------------------------------------------------
 
-async def _fetch_sr_standings() -> list[dict] | None:
+async def _fetch_sr_standings() -> dict | None:
     if not settings.sportradar_api_key:
         return None
     client = SportradarClient()
-    data = await client.season_standings(SUPERLIGA_SEASON_ID)
+    data = await client.season_standings(effective_season_id())
     if not data:
         return None
 
@@ -122,27 +124,55 @@ async def standings(
     _user=Depends(get_current_user),
     svc: FixtureService = Depends(_get_fixture_service),
 ):
-    # 1. Try fresh cache (skipped in demo mode so the warped date dominates)
+    # 1. Try fresh cache. Skipped in demo mode so a stale production cache
+    # never bleeds into a demo response and vice versa; the cache write below
+    # is gated the same way.
     if not settings.demo_mode:
         cached = _load_cache()
         if cached is not None:
             return cached
 
-    # 2. Fetch from Sportradar (cap at 5 s; skipped in demo mode)
-    if settings.sportradar_api_key and not settings.demo_mode:
+    # 2. Fetch from Sportradar (cap at 5 s). Demo mode now goes through here
+    # too, pinned to the 2024-25 season via effective_season_id(); only the
+    # cache is bypassed so the demo path stays self-contained.
+    sr_data: dict | None = None
+    if settings.sportradar_api_key:
         try:
             sr_data = await asyncio.wait_for(_fetch_sr_standings(), timeout=5.0)
-            if sr_data:
-                _save_cache(sr_data)
-                return sr_data
         except Exception:
             logger.warning("Sportradar standings fetch failed; falling back to CSV")
+            sr_data = None
 
-    # 3. Instant CSV fallback — wrap in the same grouped format. When the
-    # client did not pin a season, derive it from the server's effective
-    # clock so demo mode (and any other "what season are we in" query) lands
-    # on a single season instead of cumulative cross-season totals.
+    if sr_data:
+        regular = sr_data.get("regular") or []
+        championship = sr_data.get("championship") or []
+        relegation = sr_data.get("relegation") or []
+        # If Sportradar returned the season but the playoff groups have not
+        # been published yet (or the trial tier truncates them), keep the
+        # Sportradar regular table and fill the missing buckets from the CSV
+        # so the demo's GRUPA CAMPIONAT / GRUPA RETROGRADARE tabs are not
+        # empty. In production this rarely triggers; in demo it carries the
+        # split.
+        if regular and (not championship or not relegation):
+            csv_season = season if season is not None else effective_season()
+            csv_groups = svc.standings_with_groups(season=csv_season)
+            if not championship:
+                championship = csv_groups.get("championship") or []
+            if not relegation:
+                relegation = csv_groups.get("relegation") or []
+        merged = {
+            "regular": regular,
+            "championship": championship,
+            "relegation": relegation,
+        }
+        if not settings.demo_mode:
+            _save_cache(merged)
+        return merged
+
+    # 3. CSV fallback (Sportradar key missing, timeout, or empty payload).
+    # Returns the three-bucket dict directly so the demo's playoff tabs are
+    # populated even when Sportradar is unavailable. When the client did not
+    # pin a season the helper derives it from the server's effective clock.
     if season is None:
         season = effective_season()
-    csv_rows = svc.standings(season=season)
-    return {"regular": csv_rows, "championship": [], "relegation": []}
+    return svc.standings_with_groups(season=season)
