@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
+import '../../../core/widgets/app_loading_skeleton.dart';
 import '../../../data/models/match_preview.dart';
 import '../../../data/repositories/xi_repository.dart';
 
@@ -103,7 +104,13 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
         ],
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator(color: c.accent))
+          // PR 14 loading sweep: a skeleton stack matches the match-preview
+          // layout (stats row, pitch, player list) as it loads instead of a
+          // bare centred spinner.
+          ? const Padding(
+              padding: EdgeInsets.all(SpacingTokens.md),
+              child: AppLoadingSkeleton(rows: 6, rowHeight: 56),
+            )
           : _error != null
               ? _buildError(context)
               : _buildBody(context),
