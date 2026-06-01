@@ -80,6 +80,26 @@ if settings.demo_mode:
     _parse_demo_today(settings.demo_today)
 
 
+# Sportradar season IDs for the Romanian Superliga (`sr:competition:152`).
+# Discovered via `GET /competitions/sr:competition:152/seasons.json`. The live
+# constant is the active season at deploy time; the demo constant is the
+# 2024-25 season that the dataset and the Wyscout XI predictor are anchored
+# to. When DEMO_MODE flips, the standings and week-fixture endpoints pivot
+# off ``effective_season_id()`` so Sportradar gets pinned to the right season.
+_LIVE_SEASON_ID = "sr:season:131507"   # Superliga 25/26
+_DEMO_SEASON_ID = "sr:season:119887"   # Superliga 24/25 (2024-07-12 -> 2025-06-02)
+
+
+def effective_season_id() -> str:
+    """Return the Sportradar season ID the backend should query.
+
+    In demo mode every season-pinned Sportradar call points at the 2024-25
+    season, which matches the dataset and the demo date the committee will
+    see. In production the call hits the current 25/26 season.
+    """
+    return _DEMO_SEASON_ID if settings.demo_mode else _LIVE_SEASON_ID
+
+
 def effective_season() -> str:
     """Return the SuperLiga season label that contains ``effective_now()``.
 

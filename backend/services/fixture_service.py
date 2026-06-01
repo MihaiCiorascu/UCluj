@@ -1,9 +1,20 @@
 from __future__ import annotations
 
+from datetime import datetime
+
 import pandas as pd
 import numpy as np
 
 from app.config import effective_now, settings
+
+
+# Regular-season cutoff dates per SuperLiga season. Used by
+# ``standings_with_groups`` to split the league into Championship Round
+# (top 6) and Relegation Round (bottom 10). The Romanian Superliga
+# regular season ends around the start of March; playoffs begin mid-March.
+_REGULAR_SEASON_CUTOFFS: dict[str, str] = {
+    "2024": "2025-03-10",
+}
 
 
 class FixtureService:
@@ -74,28 +85,105 @@ class FixtureService:
         df = self._df.copy()
         if season:
             df = df[df["season"].astype(str) == str(season)]
+        return self._build_standings(df)
 
+    def list_week_fixtures(
+        self,
+        monday: datetime,
+        sunday: datetime,
+        season: str | None = None,
+    ) -> list[dict]:
+        """Return every CSV fixture inside ``[monday, sunday)`` for ``season``.
+
+        Used by the week-fixtures endpoint's CSV fallback so the dashboard's
+        "Alte meciuri" section populates with non-U-Cluj matches when
+        Sportradar is unavailable. Sorted ascending by match_date.
+        """
+        df = self._df.copy()
+        if season:
+            df = df[df["season"].astype(str) == str(season)]
+        dt = pd.to_datetime(df["match_date"], errors="coerce", utc=True)
+        monday_ts = pd.Timestamp(monday).tz_convert("UTC") if pd.Timestamp(monday).tzinfo else pd.Timestamp(monday).tz_localize("UTC")
+        sunday_ts = pd.Timestamp(sunday).tz_convert("UTC") if pd.Timestamp(sunday).tzinfo else pd.Timestamp(sunday).tz_localize("UTC")
+        mask = (dt >= monday_ts) & (dt < sunday_ts)
+        window = df[mask].sort_values("match_date", ascending=True)
+        return [self._row_to_fixture(r) for _, r in window.iterrows()]
+
+    def standings_with_groups(self, season: str | None = None) -> dict:
+        """Return a three-bucket standings dict for the given season.
+
+        ``regular``: the full 16-team table as it stood at the end of the
+        regular season (or all completed fixtures if no cutoff is configured).
+        ``championship``: the top six by regular-season points / GD / GF.
+        ``relegation``: the bottom ten by the same ordering.
+
+        The split mirrors what Sportradar returns for the same season; the
+        function is the demo-time fallback when the trial-tier API does not
+        serve historical playoff groups. When no cutoff is configured for the
+        requested season the function still returns a populated ``regular``
+        and empty playoff buckets, matching the legacy single-table shape.
+        """
+        cutoff_iso = _REGULAR_SEASON_CUTOFFS.get(str(season)) if season else None
+
+        df = self._df.copy()
+        if season:
+            df = df[df["season"].astype(str) == str(season)]
+
+        if cutoff_iso:
+            cutoff_ts = pd.Timestamp(cutoff_iso, tz="UTC")
+            dt = pd.to_datetime(df["match_date"], errors="coerce", utc=True)
+            regular_df = df[dt < cutoff_ts]
+        else:
+            regular_df = df
+
+        regular_rows = self._build_standings(regular_df)
+
+        if cutoff_iso and len(regular_rows) >= 16:
+            top_six = regular_rows[:6]
+            bottom_ten = regular_rows[6:]
+            championship = [dict(r) for r in top_six]
+            relegation = [dict(r) for r in bottom_ten]
+            # Re-rank the playoff groups from 1 inside their own group so the
+            # Flutter table reads "Championship Round 1..6" not "5..10".
+            for i, row in enumerate(championship, 1):
+                row["position"] = i
+            for i, row in enumerate(relegation, 1):
+                row["position"] = i
+        else:
+            championship = []
+            relegation = []
+
+        return {
+            "regular": regular_rows,
+            "championship": championship,
+            "relegation": relegation,
+        }
+
+    def _build_standings(self, df: pd.DataFrame) -> list[dict]:
+        """Aggregate a DataFrame of fixtures into a sorted standings list.
+
+        Shared by ``standings()`` and ``standings_with_groups()``. Returns the
+        same row shape as ``standings()``.
+        """
         completed = df.dropna(subset=["home_score", "away_score"]).copy()
+        if completed.empty:
+            return []
         completed["home_score"] = completed["home_score"].astype(int)
         completed["away_score"] = completed["away_score"].astype(int)
 
         teams: dict[str, dict] = {}
-
         for _, r in completed.iterrows():
             ht, at = r["home_team"], r["away_team"]
             hs, as_ = r["home_score"], r["away_score"]
-
             for t in (ht, at):
                 if t not in teams:
                     teams[t] = {"team": t, "played": 0, "wins": 0, "draws": 0, "losses": 0, "gf": 0, "ga": 0, "pts": 0}
-
             teams[ht]["played"] += 1
             teams[at]["played"] += 1
             teams[ht]["gf"] += hs
             teams[ht]["ga"] += as_
             teams[at]["gf"] += as_
             teams[at]["ga"] += hs
-
             if hs > as_:
                 teams[ht]["wins"] += 1
                 teams[ht]["pts"] += 3
@@ -111,9 +199,8 @@ class FixtureService:
                 teams[at]["pts"] += 1
 
         rows = sorted(teams.values(), key=lambda t: (-t["pts"], -(t["gf"] - t["ga"]), -t["gf"]))
-        result = []
-        for i, t in enumerate(rows, 1):
-            result.append({
+        return [
+            {
                 "position": i,
                 "team": t["team"],
                 "played": t["played"],
@@ -124,8 +211,9 @@ class FixtureService:
                 "goals_against": t["ga"],
                 "goal_difference": t["gf"] - t["ga"],
                 "points": t["pts"],
-            })
-        return result
+            }
+            for i, t in enumerate(rows, 1)
+        ]
 
     def _row_to_fixture(self, r: pd.Series) -> dict:
         venue = self._stadium_map.get(r.get("home_team", ""), None)
