@@ -255,7 +255,10 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
     final List<Widget> sections = [];
 
     for (var group in order) {
-      final groupPlayers = players.where((p) => p.roleGroup == group).toList();
+      // Order players within a coarse section by their official slot so the
+      // list reads in the same sequence as the pitch (left to right).
+      final groupPlayers = players.where((p) => p.roleGroup == group).toList()
+        ..sort((a, b) => a.slotIndex.compareTo(b.slotIndex));
       if (groupPlayers.isEmpty) continue;
 
       sections.add(
@@ -266,6 +269,11 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
       );
 
       for (var p in groupPlayers) {
+        // Prefer the official slot label, then the fine group, then the raw
+        // Wyscout role string.
+        final positionLabel = p.officialPosition.isNotEmpty
+            ? p.officialPosition
+            : (p.positionGroupFine.isNotEmpty ? p.positionGroupFine : p.role);
         sections.add(
           Container(
             margin: const EdgeInsets.only(bottom: 2),
@@ -279,7 +287,7 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(p.shortName, style: TypographyTokens.headline.copyWith(fontSize: 16)),
-                      Text(p.role, style: TypographyTokens.body.copyWith(color: c.textMuted, fontSize: 12)),
+                      Text(positionLabel, style: TypographyTokens.body.copyWith(color: c.textMuted, fontSize: 12)),
                     ],
                   ),
                 ),
