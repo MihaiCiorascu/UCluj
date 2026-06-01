@@ -20,26 +20,35 @@ class _PrescriptionBlueprint extends StatelessWidget {
   const _PrescriptionBlueprint({required this.prescription});
   final Prescription prescription;
 
+  // PR 12 hierarchy shift: the diagnostic pod is the third tier of the
+  // Match Intelligence surface (after the dominant probability headline
+  // and the tone-tagged drivers strip). The pod earns its weight via a
+  // 4 px cobalt top accent rule, an explicit baseline → optimised
+  // before-and-after layout that tells the predictive-to-prescriptive
+  // story in one glance, and a tactical-levers section that surfaces the
+  // optimiser's actual recommendations under a clear section label.
+
   @override
   Widget build(BuildContext context) {
-    final uplift = prescription.improvement;
+    final baselinePct = '${(prescription.baselineProb * 100).round()}%';
     final bestPct = '${(prescription.bestProb * 100).round()}%';
-    final upliftPct = '+${(uplift * 100).round()}%';
+    final upliftPct = '+${(prescription.improvement * 100).round()}%';
     final recs = prescription.recommendations;
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: ColorTokens.surfaceLow,
-        border: Border.all(color: ColorTokens.accent.withValues(alpha: 0.4), width: 1),
+        border: Border(
+          top: BorderSide(color: ColorTokens.accent, width: 4),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // ── Header ──────────────────────────────────────────────────────
-          Container(
-            color: ColorTokens.accent.withValues(alpha: 0.12),
-            padding: const EdgeInsets.symmetric(
-                horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
+          // ── Header label ────────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+                SpacingTokens.md, SpacingTokens.md, SpacingTokens.md, SpacingTokens.sm),
             child: Row(
               children: [
                 const Icon(Icons.auto_awesome,
@@ -48,71 +57,87 @@ class _PrescriptionBlueprint extends StatelessWidget {
                 Text(L10n.t('sheet.optimalPlan'),
                     style: TypographyTokens.sectionLabel
                         .copyWith(color: ColorTokens.accent, fontSize: 11)),
-                const Spacer(),
-                // Iteration N polish: uplift badge moves from positive-green
-                // (which collided with the projected-probability value below)
-                // to a cobalt accent with a strong top rule. Reads as a delta
-                // annotation rather than a second metric competing with the
-                // headline percentage.
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: SpacingTokens.sm, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: ColorTokens.accent.withValues(alpha: 0.12),
-                    border: const Border(
-                      top: BorderSide(color: ColorTokens.accent, width: 2),
-                    ),
-                  ),
-                  child: Text(upliftPct,
-                      style: TypographyTokens.sectionLabel
-                          .copyWith(color: ColorTokens.accent, fontSize: 10)),
-                ),
               ],
             ),
           ),
 
-          // ── Projected probability ────────────────────────────────────────
+          // ── Baseline → Optimised before/after ───────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(
-                SpacingTokens.md, SpacingTokens.md, SpacingTokens.md, SpacingTokens.xs),
+                SpacingTokens.md, 0, SpacingTokens.md, SpacingTokens.md),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(bestPct,
-                    style: TypographyTokens.displayHero
-                        .copyWith(color: ColorTokens.positive, fontSize: 40)),
-                const SizedBox(width: SpacingTokens.sm),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(L10n.t('sheet.projectedProb'),
-                        style: TypographyTokens.sectionLabel.copyWith(
-                            fontSize: 8, color: ColorTokens.textMuted)),
-                    Text(L10n.t('sheet.projected'),
-                        style: TypographyTokens.sectionLabel.copyWith(
-                            fontSize: 8, color: ColorTokens.textMuted)),
-                  ],
+                Expanded(
+                  child: _ProbColumn(
+                    label: L10n.t('sheet.baselineLabel'),
+                    value: baselinePct,
+                    valueColor: ColorTokens.textMuted,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: SpacingTokens.sm),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.arrow_forward,
+                          color: ColorTokens.accent, size: 16),
+                      const SizedBox(height: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: SpacingTokens.sm, vertical: 3),
+                        color: ColorTokens.accent.withValues(alpha: 0.14),
+                        child: Text(upliftPct,
+                            style: TypographyTokens.sectionLabel.copyWith(
+                                color: ColorTokens.accent,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800)),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(L10n.t('sheet.upliftLabel'),
+                          style: TypographyTokens.sectionLabel.copyWith(
+                              color: ColorTokens.textMuted, fontSize: 8)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: _ProbColumn(
+                    label: L10n.t('sheet.optimisedLabel'),
+                    value: bestPct,
+                    valueColor: ColorTokens.positive,
+                  ),
                 ),
               ],
             ),
           ),
 
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: SpacingTokens.md),
-            child: Divider(height: 1, color: ColorTokens.divider),
-          ),
-
-          // ── Recommendation chips ─────────────────────────────────────────
-          if (recs.isNotEmpty)
+          // ── Tactical-levers section ──────────────────────────────────────
+          if (recs.isNotEmpty) ...[
+            const Divider(height: 1, color: ColorTokens.divider),
             Padding(
-              padding: const EdgeInsets.all(SpacingTokens.md),
+              padding: const EdgeInsets.fromLTRB(
+                  SpacingTokens.md, SpacingTokens.md, SpacingTokens.md, SpacingTokens.xs),
+              child: Row(
+                children: [
+                  Container(width: 2, height: 12, color: ColorTokens.accent),
+                  const SizedBox(width: SpacingTokens.xs),
+                  Text(L10n.t('sheet.tacticalLevers'),
+                      style: TypographyTokens.sectionLabel
+                          .copyWith(color: ColorTokens.textMuted)),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(SpacingTokens.md,
+                  SpacingTokens.xs, SpacingTokens.md, SpacingTokens.md),
               child: Wrap(
                 spacing: SpacingTokens.sm,
                 runSpacing: SpacingTokens.sm,
                 children: recs.map(_buildRecChip).toList(),
               ),
             ),
+          ],
 
           // ── Footer ──────────────────────────────────────────────────────
           Padding(
@@ -307,17 +332,18 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     const SizedBox(height: SpacingTokens.xl),
                   ],
 
-                  if (f.keyDrivers.isNotEmpty) ...[
+                  // PR 12 hierarchy shift: drivers + risks live in one
+                  // horizontal strip below the headline probability. The
+                  // earlier full-width bullet rows for each looked so similar
+                  // a coach skimming the screen could not tell them apart at
+                  // thumb distance; collapsing both into a tone-tagged chip
+                  // row (▲ green for drivers, ▼ red for risks) reads in a
+                  // single glance and frees vertical space for the
+                  // tactical-plan pod underneath.
+                  if (f.keyDrivers.isNotEmpty || f.topRisks.isNotEmpty) ...[
                     _sectionLabel(L10n.t('sheet.keyDrivers')),
                     const SizedBox(height: SpacingTokens.sm),
-                    ...f.keyDrivers.map(_buildDriverRow),
-                    const SizedBox(height: SpacingTokens.md),
-                  ],
-
-                  if (f.topRisks.isNotEmpty) ...[
-                    _sectionLabel(L10n.t('sheet.risks')),
-                    const SizedBox(height: SpacingTokens.sm),
-                    ...f.topRisks.map((r) => _buildDriverRow(r, isRisk: true)),
+                    _buildDriverStrip(f),
                     const SizedBox(height: SpacingTokens.md),
                   ],
 
@@ -873,80 +899,160 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   }
 
   // ── ML block (upcoming) ──────────────────────────────────────────────────
+  //
+  // PR 12 hierarchy shift: the headline probability is the screen's anchor,
+  // so the percentage is promoted to a 72 px hero glyph and the surrounding
+  // chrome is trimmed. The dual Win + Rest pills collapsed into a single
+  // verdict tag (dominant / favoured / contested / risky), because telling a
+  // coach "win = 65% and rest = 35%" twice is just visual noise. A vertical
+  // tone-coded rail on the left replaces the appended chart and a thin top
+  // accent line keeps the block in the same editorial rhythm as the
+  // drivers strip and the diagnostic pod below.
 
   Widget _buildMLBlock(WeekFixture f, double uclProb) {
-    final winPct  = (uclProb * 100).round();
-    final restPct = 100 - winPct;
+    final winPct = (uclProb * 100).round();
     final col = uclProb >= 0.55
         ? ColorTokens.positive
         : uclProb >= 0.40
             ? ColorTokens.accent
             : ColorTokens.negative;
+    final verdictKey = uclProb >= 0.65
+        ? 'sheet.verdictDominant'
+        : uclProb >= 0.50
+            ? 'sheet.verdictFavoured'
+            : uclProb >= 0.35
+                ? 'sheet.verdictContested'
+                : 'sheet.verdictRisky';
 
     return Container(
-      color: ColorTokens.surfaceLow,
-      padding: const EdgeInsets.all(SpacingTokens.md),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(L10n.t('sheet.winChanceUcluj'),
-                    style: TypographyTokens.sectionLabel
-                        .copyWith(color: ColorTokens.textMuted)),
-                const SizedBox(height: SpacingTokens.xs),
-                Text('$winPct%',
-                    style: TypographyTokens.displayHero
-                        .copyWith(color: col, fontSize: 44)),
-                const SizedBox(height: SpacingTokens.xs),
-                Row(
-                  children: [
-                    _OutcomePill(label: L10n.t('sheet.outcomeWin'), pct: winPct, color: col),
-                    const SizedBox(width: SpacingTokens.xs),
-                    _OutcomePill(
-                        label: L10n.t('sheet.outcomeRest'),
-                        pct: restPct,
-                        color: ColorTokens.textMuted),
-                  ],
-                ),
-                const SizedBox(height: SpacingTokens.xs),
-                Text(L10n.t('sheet.modelCaption'),
-                    style: TypographyTokens.sectionLabel.copyWith(
-                        fontSize: 8, color: ColorTokens.textMuted)),
-              ],
+      decoration: BoxDecoration(
+        color: ColorTokens.surfaceLow,
+        border: Border(
+          top: BorderSide(color: col.withValues(alpha: 0.8), width: 1),
+        ),
+      ),
+      padding: const EdgeInsets.fromLTRB(
+          SpacingTokens.md, SpacingTokens.md, SpacingTokens.md, SpacingTokens.md),
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Tone-coded vertical rail. Replaces the old _ProbBar; reads as
+            // a colour accent first and a magnitude cue second (the rail
+            // height tracks the probability via the inner fill below).
+            SizedBox(
+              width: 4,
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: (uclProb * 100).round().clamp(1, 99),
+                    child: Container(color: col),
+                  ),
+                  Expanded(
+                    flex: (100 - (uclProb * 100).round()).clamp(1, 99),
+                    child: Container(color: ColorTokens.surfaceHigh),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: SpacingTokens.sm),
-          _ProbBar(probability: uclProb, color: col),
-        ],
+            const SizedBox(width: SpacingTokens.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(L10n.t('sheet.winChanceUcluj'),
+                      style: TypographyTokens.sectionLabel
+                          .copyWith(color: ColorTokens.textMuted, fontSize: 10)),
+                  const SizedBox(height: SpacingTokens.xs),
+                  Text('$winPct%',
+                      style: TypographyTokens.displayHero
+                          .copyWith(color: col, fontSize: 72, height: 1.0)),
+                  const SizedBox(height: SpacingTokens.sm),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: SpacingTokens.sm, vertical: 3),
+                    color: col.withValues(alpha: 0.14),
+                    child: Text(L10n.t(verdictKey),
+                        style: TypographyTokens.sectionLabel
+                            .copyWith(color: col, fontSize: 10)),
+                  ),
+                  const SizedBox(height: SpacingTokens.sm),
+                  Text(L10n.t('sheet.modelCaption'),
+                      style: TypographyTokens.sectionLabel.copyWith(
+                          fontSize: 8, color: ColorTokens.textMuted)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildDriverRow(WeekFixtureDriver d, {bool isRisk = false}) {
+  // ── Drivers + risks chip strip ───────────────────────────────────────────
+  //
+  // One horizontal strip combines positive drivers (▲ green) and risks
+  // (▼ red), in that order, so the eye scans tone-tagged chips left to
+  // right and weighs them against the headline probability above. Each
+  // chip is a compact tone-rule + sign + label + importance percent. The
+  // strip scrolls horizontally so it never wraps into the layout below.
+
+  Widget _buildDriverStrip(WeekFixture f) {
+    final chips = <Widget>[];
+    for (final d in f.keyDrivers) {
+      chips.add(_buildDriverChip(d, isRisk: false));
+    }
+    for (final r in f.topRisks) {
+      chips.add(_buildDriverChip(r, isRisk: true));
+    }
+    return SizedBox(
+      height: 54,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.zero,
+        physics: const BouncingScrollPhysics(),
+        itemCount: chips.length,
+        separatorBuilder: (_, __) => const SizedBox(width: SpacingTokens.xs),
+        itemBuilder: (_, i) => chips[i],
+      ),
+    );
+  }
+
+  Widget _buildDriverChip(WeekFixtureDriver d, {required bool isRisk}) {
     final col = isRisk ? ColorTokens.negative : ColorTokens.positive;
     final sign = isRisk ? '▼' : '▲';
     return Container(
-      margin: const EdgeInsets.only(bottom: 2),
-      color: ColorTokens.surfaceLow,
       padding: const EdgeInsets.symmetric(
-          horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
-      child: Row(
+          horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
+      decoration: BoxDecoration(
+        color: ColorTokens.surfaceLow,
+        border: Border(
+          top: BorderSide(color: col, width: 2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(sign,
-              style: TypographyTokens.sectionLabel
-                  .copyWith(color: col, fontSize: 9)),
-          const SizedBox(width: SpacingTokens.xs),
-          Expanded(
-              child: Text(d.label.toUpperCase(),
-                  style: TypographyTokens.body.copyWith(
-                      fontSize: 12, color: ColorTokens.textPrimary))),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(sign,
+                  style: TypographyTokens.sectionLabel
+                      .copyWith(color: col, fontSize: 10)),
+              const SizedBox(width: 4),
+              Text(
+                '${(d.importance * 100).toStringAsFixed(0)}%',
+                style: TypographyTokens.body.copyWith(
+                    color: col, fontWeight: FontWeight.w800, fontSize: 12),
+              ),
+            ],
+          ),
+          const SizedBox(height: 3),
           Text(
-            '${(d.importance * 100).toStringAsFixed(0)}%',
-            style: TypographyTokens.body
-                .copyWith(color: col, fontWeight: FontWeight.w700, fontSize: 12),
+            d.label.toUpperCase(),
+            style: TypographyTokens.sectionLabel
+                .copyWith(color: ColorTokens.textPrimary, fontSize: 9),
           ),
         ],
       ),
@@ -1221,63 +1327,38 @@ class _ActualPlayerChip extends StatelessWidget {
 
 // ── Shared widgets ───────────────────────────────────────────────────────────
 
-class _OutcomePill extends StatelessWidget {
-  const _OutcomePill({
+/// One column of the diagnostic before/after pod. Renders an uppercase
+/// label above a hero-scaled probability glyph in the supplied tone, so
+/// the baseline and the optimised value sit on the same baseline and
+/// can be compared at a glance.
+class _ProbColumn extends StatelessWidget {
+  const _ProbColumn({
     required this.label,
-    required this.pct,
-    required this.color,
+    required this.value,
+    required this.valueColor,
   });
   final String label;
-  final int pct;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        border: Border.all(color: color.withValues(alpha: 0.35)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('$pct%',
-              style: TypographyTokens.sectionLabel
-                  .copyWith(color: color, fontSize: 10)),
-          const SizedBox(width: 3),
-          Text(label,
-              style: TypographyTokens.sectionLabel
-                  .copyWith(color: color.withValues(alpha: 0.7), fontSize: 8)),
-        ],
-      ),
-    );
-  }
-}
-
-class _ProbBar extends StatelessWidget {
-  const _ProbBar({required this.probability, required this.color});
-  final double probability;
-  final Color color;
+  final String value;
+  final Color valueColor;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          height: 80,
-          width: 20,
-          child: RotatedBox(
-            quarterTurns: 3,
-            child: LinearProgressIndicator(
-              value: probability,
-              backgroundColor: ColorTokens.surfaceHigh,
-              valueColor: AlwaysStoppedAnimation<Color>(color),
-              minHeight: 20,
-            ),
-          ),
-        ),
+        Text(label,
+            style: TypographyTokens.sectionLabel
+                .copyWith(color: ColorTokens.textMuted, fontSize: 9)),
+        const SizedBox(height: 4),
+        Text(value,
+            style: TypographyTokens.displayHero
+                .copyWith(color: valueColor, fontSize: 36, height: 1.0)),
       ],
     );
   }
 }
+
+// _OutcomePill and _ProbBar were removed in the PR 12 hierarchy shift.
+// The dual Win + Rest pills collapsed into a single verdict tag and the
+// vertical bar moved into _buildMLBlock as an inline tone-coded rail.
