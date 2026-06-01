@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/services/api_client.dart';
+import '../../../core/state/meta_state.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
@@ -206,6 +207,23 @@ class _StandingsScreenState extends State<StandingsScreen>
     }
   }
 
+  /// Season label for the hero header. The Romanian Superliga calendar runs
+  /// July to May, so the season is anchored to the effective "now": in demo
+  /// mode that is MetaState.demoToday (pinned to the 2024-25 window), and in
+  /// production it is the wall clock. This keeps the committee from seeing a
+  /// "2025/26" caption above a 2024-25 demo table.
+  String _seasonLabel() {
+    final meta = MetaState.instance;
+    DateTime now = DateTime.now().toUtc();
+    if (meta.demoMode && meta.demoToday.isNotEmpty) {
+      final parsed = DateTime.tryParse('${meta.demoToday}T12:00:00Z');
+      if (parsed != null) now = parsed.toUtc();
+    }
+    final startYear = now.month >= 7 ? now.year : now.year - 1;
+    final endYy = ((startYear + 1) % 100).toString().padLeft(2, '0');
+    return 'SUPERLIGA ROMANIA  ·  $startYear/$endYy';
+  }
+
   _TeamStanding? _findTracked(List<_TeamStanding> list) {
     if (list.isEmpty) return null;
     final t = _team;
@@ -278,17 +296,32 @@ class _StandingsScreenState extends State<StandingsScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('LEAGUE',
-                      style: TypographyTokens.displayHero
-                          .copyWith(fontSize: 72, height: 0.9, color: c.textPrimary)),
-                  Text('STANDINGS',
-                      style: TypographyTokens.displayHero.copyWith(
-                        fontSize: 72,
-                        height: 0.9,
-                        color: c.textMuted.withValues(alpha: 0.15),
-                      )),
+                  // PR 13 header polish: the 72 px hero title is wrapped in a
+                  // scale-down FittedBox per line so it never clips or
+                  // line-breaks awkwardly on a narrow phone. The display size
+                  // is preserved on roomy viewports and shrinks gracefully on
+                  // the tightest ones instead of overflowing.
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text('LEAGUE',
+                        maxLines: 1,
+                        style: TypographyTokens.displayHero.copyWith(
+                            fontSize: 72, height: 0.9, color: c.textPrimary)),
+                  ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text('STANDINGS',
+                        maxLines: 1,
+                        style: TypographyTokens.displayHero.copyWith(
+                          fontSize: 72,
+                          height: 0.9,
+                          color: c.textMuted.withValues(alpha: 0.15),
+                        )),
+                  ),
                   const SizedBox(height: SpacingTokens.sm),
-                  Text('SUPERLIGA ROMANIA  ·  2025/26',
+                  Text(_seasonLabel(),
                       style: TypographyTokens.sectionLabel.copyWith(
                         color: c.accent,
                         letterSpacing: 2.0,
@@ -516,15 +549,27 @@ class _HeroClubCard extends StatelessWidget {
             // Iteration N polish: ratio between rank (48 px) and the RANK
             // label (12 px) is now ~4:1, closer to the Stoic Analyst spec's
             // display-lg / label-sm contrast than the previous 7:1.
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('#${team.pos}', style: TypographyTokens.displayHero.copyWith(
-                  fontSize: 48, height: 0.85, color: c.accent)),
-              const SizedBox(height: SpacingTokens.xxs),
-              Text('RANK',
-                  style: TypographyTokens.sectionLabel
-                      .copyWith(fontSize: 12, letterSpacing: 2.4, color: c.textMuted)),
-            ]),
-            const SizedBox(width: 32),
+            //
+            // PR 13 header polish: the rank sits in a pod with a 3 px cobalt
+            // left rule so it reads as the anchor metric of the hero card,
+            // distinct from the PTS / GD / V-E-Î metrics that follow it.
+            Container(
+              padding: const EdgeInsets.only(left: SpacingTokens.sm),
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(color: c.accent, width: 3),
+                ),
+              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('#${team.pos}', style: TypographyTokens.displayHero.copyWith(
+                    fontSize: 48, height: 0.85, color: c.accent)),
+                const SizedBox(height: SpacingTokens.xxs),
+                Text('RANK',
+                    style: TypographyTokens.sectionLabel
+                        .copyWith(fontSize: 12, letterSpacing: 2.4, color: c.textMuted)),
+              ]),
+            ),
+            const SizedBox(width: 28),
             _metric('${team.points}', 'PTS', c),
             const SizedBox(width: SpacingTokens.xl),
             _metric('${team.gd > 0 ? "+" : ""}${team.gd}', 'GD', c),
@@ -622,7 +667,10 @@ class _StandingsRow extends StatelessWidget {
 
     return Container(
       color: bg,
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      // PR 13 header polish: tighten row height from 10 to 8 vertical so all
+      // sixteen rows of the regular table read as one continuous ledger
+      // rather than a loose, scroll-heavy list.
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(children: [
         SizedBox(
           width: 28,
