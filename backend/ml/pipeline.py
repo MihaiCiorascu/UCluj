@@ -300,6 +300,7 @@ def _format_output(result: Dict, my_team_id: int, opponent_team_id: Optional[int
         if df is None or df.empty:
             return []
         cols = ["playerId", "shortName", "role", "role_group",
+                "position_group_fine", "official_position", "slot_index",
                 "predicted_score", "performance_score", "recent_form_score",
                 "total_minutes", "matches_played"]
         cols = [c for c in cols if c in df.columns]

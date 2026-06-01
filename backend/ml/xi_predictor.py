@@ -45,15 +45,162 @@ except Exception:  # pragma: no cover - scipy is an optional dependency
 
 
 # ── Formation library ─────────────────────────────────────────────────────────
-# Each entry maps a positional group to the number of slots it must fill.
+# Each entry maps a positional group to the number of slots it must fill. The
+# thirteen formations here mirror the Flutter ``kSupportedFormations`` list so
+# every option the coach can pick has a backend slot layout.
 FORMATIONS: Dict[str, Dict[str, int]] = {
-    "4-3-3": {"GK": 1, "DEF": 4, "MID": 3, "FWD": 3},
-    "4-4-2": {"GK": 1, "DEF": 4, "MID": 4, "FWD": 2},
-    "3-5-2": {"GK": 1, "DEF": 3, "MID": 5, "FWD": 2},
+    "4-4-2":   {"GK": 1, "DEF": 4, "MID": 4, "FWD": 2},
+    "4-3-3":   {"GK": 1, "DEF": 4, "MID": 3, "FWD": 3},
     "4-2-3-1": {"GK": 1, "DEF": 4, "MID": 5, "FWD": 1},
-    "5-3-2": {"GK": 1, "DEF": 5, "MID": 3, "FWD": 2},
-    "3-4-3": {"GK": 1, "DEF": 3, "MID": 4, "FWD": 3},
+    "4-5-1":   {"GK": 1, "DEF": 4, "MID": 5, "FWD": 1},
+    "4-1-4-1": {"GK": 1, "DEF": 4, "MID": 5, "FWD": 1},
+    "4-3-2-1": {"GK": 1, "DEF": 4, "MID": 5, "FWD": 1},
+    "4-2-2-2": {"GK": 1, "DEF": 4, "MID": 4, "FWD": 2},
+    "3-1-4-2": {"GK": 1, "DEF": 3, "MID": 5, "FWD": 2},
+    "3-5-2":   {"GK": 1, "DEF": 3, "MID": 5, "FWD": 2},
+    "3-4-3":   {"GK": 1, "DEF": 3, "MID": 4, "FWD": 3},
+    "3-6-1":   {"GK": 1, "DEF": 3, "MID": 6, "FWD": 1},
+    "5-3-2":   {"GK": 1, "DEF": 5, "MID": 3, "FWD": 2},
+    "5-4-1":   {"GK": 1, "DEF": 5, "MID": 4, "FWD": 1},
 }
+
+# Official-position slot templates. Each formation maps to an ordered list of
+# eleven (official_label, coarse_group) tuples. The order IS the slot_index:
+# the goalkeeper is index 0, then the lines run back to front (defence, then
+# midfield, then attack), and within each line the slots run left to right (in
+# the same left-to-right order the Flutter pitch template paints them). This
+# ordering is the single source of truth that lib/core/constants/
+# formation_slots.dart mirrors on the frontend; keep the two in sync.
+FORMATION_SLOTS: Dict[str, List[tuple[str, str]]] = {
+    "4-4-2": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("RM", "MID"), ("RCM", "MID"), ("LCM", "MID"), ("LM", "MID"),
+        ("RST", "FWD"), ("LST", "FWD"),
+    ],
+    "4-3-3": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("DM", "MID"), ("RCM", "MID"), ("LCM", "MID"),
+        ("RW", "FWD"), ("ST", "FWD"), ("LW", "FWD"),
+    ],
+    "4-2-3-1": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("RDM", "MID"), ("LDM", "MID"),
+        ("RAM", "MID"), ("CAM", "MID"), ("LAM", "MID"),
+        ("ST", "FWD"),
+    ],
+    "4-5-1": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("RM", "MID"), ("RCM", "MID"), ("CM", "MID"), ("LCM", "MID"), ("LM", "MID"),
+        ("ST", "FWD"),
+    ],
+    "4-1-4-1": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("DM", "MID"),
+        ("RM", "MID"), ("RCM", "MID"), ("LCM", "MID"), ("LM", "MID"),
+        ("ST", "FWD"),
+    ],
+    "4-3-2-1": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("RCM", "MID"), ("CDM", "MID"), ("LCM", "MID"),
+        ("RAM", "MID"), ("LAM", "MID"),
+        ("ST", "FWD"),
+    ],
+    "4-2-2-2": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("RDM", "MID"), ("LDM", "MID"),
+        ("RAM", "MID"), ("LAM", "MID"),
+        ("RST", "FWD"), ("LST", "FWD"),
+    ],
+    "3-1-4-2": [
+        ("GK", "GK"),
+        ("RCB", "DEF"), ("CB", "DEF"), ("LCB", "DEF"),
+        ("DM", "MID"),
+        ("RM", "MID"), ("RCM", "MID"), ("LCM", "MID"), ("LM", "MID"),
+        ("RST", "FWD"), ("LST", "FWD"),
+    ],
+    "3-5-2": [
+        ("GK", "GK"),
+        ("RCB", "DEF"), ("CB", "DEF"), ("LCB", "DEF"),
+        ("RWB", "MID"), ("RCM", "MID"), ("CM", "MID"), ("LCM", "MID"), ("LWB", "MID"),
+        ("RST", "FWD"), ("LST", "FWD"),
+    ],
+    "3-4-3": [
+        ("GK", "GK"),
+        ("RCB", "DEF"), ("CB", "DEF"), ("LCB", "DEF"),
+        ("RM", "MID"), ("RCM", "MID"), ("LCM", "MID"), ("LM", "MID"),
+        ("RW", "FWD"), ("ST", "FWD"), ("LW", "FWD"),
+    ],
+    "3-6-1": [
+        ("GK", "GK"),
+        ("RCB", "DEF"), ("CB", "DEF"), ("LCB", "DEF"),
+        ("RWB", "MID"), ("RCM", "MID"), ("RDM", "MID"), ("LDM", "MID"), ("LCM", "MID"), ("LWB", "MID"),
+        ("ST", "FWD"),
+    ],
+    "5-3-2": [
+        ("GK", "GK"),
+        ("RWB", "DEF"), ("RCB", "DEF"), ("CB", "DEF"), ("LCB", "DEF"), ("LWB", "DEF"),
+        ("RCM", "MID"), ("CM", "MID"), ("LCM", "MID"),
+        ("RST", "FWD"), ("LST", "FWD"),
+    ],
+    "5-4-1": [
+        ("GK", "GK"),
+        ("RWB", "DEF"), ("RCB", "DEF"), ("CB", "DEF"), ("LCB", "DEF"), ("LWB", "DEF"),
+        ("RM", "MID"), ("RCM", "MID"), ("LCM", "MID"), ("LM", "MID"),
+        ("ST", "FWD"),
+    ],
+}
+
+# Which fine-position groups (the ten-group Wyscout taxonomy: GK, CB, FB, WB,
+# DM, CM, AM, W, WF, ST) may legitimately fill a slot family. A slot family is
+# the official label stripped of its left/right/centre prefix (see
+# ``_slot_family``). The first group in each set is the natural fit; the rest
+# are acceptable adjacent roles so the assignment never fails for lack of a
+# perfect specialist.
+SLOT_ADMISSIBLE_FINE: Dict[str, set] = {
+    "GK": {"GK"},
+    "CB": {"CB", "FB"},
+    "FB": {"FB", "WB", "CB"},
+    "WB": {"WB", "FB", "W"},
+    "DM": {"DM", "CM"},
+    "CM": {"CM", "DM", "AM"},
+    "AM": {"AM", "CM", "W"},
+    "M":  {"W", "WB", "CM", "AM"},
+    "W":  {"W", "WF", "AM"},
+    "WF": {"WF", "ST", "W"},
+    "ST": {"ST", "WF", "W"},
+}
+
+
+def _validate_formation_slots() -> None:
+    """Fail fast at import time if a slot template is internally inconsistent.
+
+    Each formation must have exactly eleven slots, a goalkeeper at index 0, and
+    a coarse-group breakdown that matches the count map in ``FORMATIONS``.
+    """
+    from collections import Counter
+
+    for name, specs in FORMATION_SLOTS.items():
+        if len(specs) != 11:
+            raise ValueError(f"FORMATION_SLOTS[{name!r}] has {len(specs)} slots, expected 11")
+        if specs[0][1] != "GK":
+            raise ValueError(f"FORMATION_SLOTS[{name!r}] does not start with the goalkeeper")
+        coarse_counts = Counter(coarse for _, coarse in specs)
+        expected = FORMATIONS.get(name)
+        if expected is not None and dict(coarse_counts) != dict(expected):
+            raise ValueError(
+                f"FORMATION_SLOTS[{name!r}] coarse counts {dict(coarse_counts)} "
+                f"do not match FORMATIONS[{name!r}] {dict(expected)}"
+            )
+
+
+_validate_formation_slots()
 
 # Position-specific composite-score weights. Each weight applies to a
 # z-scored, shrinkage-corrected feature; the linear combination is passed
@@ -451,7 +598,7 @@ class StartingXIPredictor:
                     ] *= adj.get("mid_weight", 1.0)
 
         slots = self._resolve_formation(formation)
-        xi_df = self._assign_xi(pool, slots)
+        xi_df = self._assign_xi(pool, formation)
         used_ids: set = set(xi_df["playerId"].tolist()) if not xi_df.empty else set()
         bench_df = (
             pool[~pool["playerId"].isin(used_ids)]
@@ -532,67 +679,171 @@ class StartingXIPredictor:
     def _assign_xi(
         self,
         pool: pd.DataFrame,
-        slots: Dict[str, int],
+        formation: str,
     ) -> pd.DataFrame:
-        """Pick the eleven highest-utility players subject to the slot mix.
+        """Assign eleven players to the formation's official position slots.
 
-        Returns a DataFrame with eleven rows (or fewer if the pool is too
-        small to fill the formation). The implementation prefers the
-        Hungarian assignment when SciPy is available and falls back to a
-        greedy per-position top-N otherwise.
+        The cost matrix has one row per candidate and one column per ordered
+        official slot (see :data:`FORMATION_SLOTS`). A player whose fine
+        position group is a natural fit for the slot (per
+        :data:`SLOT_ADMISSIBLE_FINE`) gets a cost of minus their predicted
+        score; a player whose fine group is not admissible but whose coarse
+        ``role_group`` matches the slot's coarse group gets the same cost plus
+        a small soft penalty, so a coarse match is allowed but dispreferred;
+        anything else is forbidden. The Hungarian algorithm then returns the
+        globally optimal one-to-one assignment, which maximises the summed
+        score under the official-position constraint.
+
+        The returned DataFrame carries ``official_position`` and ``slot_index``
+        (the position on the pitch) plus a coarse ``slot`` for back-compat, and
+        is ordered by ``slot_index``. When SciPy is unavailable, or the squad
+        cannot fill every slot even under the soft fallback, a greedy fill that
+        guarantees eleven players is used instead.
         """
         if pool.empty:
             return pd.DataFrame()
 
-        # Build the (player × slot) cost matrix.
-        slot_labels: List[str] = []
-        for role, count in slots.items():
-            slot_labels.extend([role.upper()] * int(count))
-        n_slots = len(slot_labels)
+        slot_specs = self._formation_slot_specs(formation)
+        n_slots = len(slot_specs)
         n_players = len(pool)
         if n_players < n_slots or linear_sum_assignment is None:
-            return self._greedy_assign(pool, slots)
+            return self._greedy_assign_fine(pool, slot_specs)
 
         pool_indexed = pool.reset_index(drop=True)
-        roles_upper = pool_indexed["role_group"].astype(str).str.upper().to_numpy()
+        fine_arr = (
+            pool_indexed.get("position_group_fine", pd.Series("", index=pool_indexed.index))
+            .astype(str).str.upper().to_numpy()
+        )
+        coarse_arr = pool_indexed["role_group"].astype(str).str.upper().to_numpy()
         scores = pool_indexed["predicted_score"].astype(float).to_numpy()
 
-        BIG = 1e6  # finite penalty for ineligible matches (Hungarian dislikes inf).
+        BIG = 1e6   # finite penalty for forbidden matches (Hungarian dislikes inf).
+        SOFT = 0.5  # soft penalty for a coarse-only (not fine-admissible) match.
         cost = np.full((n_players, n_slots), BIG, dtype=float)
-        for j, slot_role in enumerate(slot_labels):
-            eligible = roles_upper == slot_role
-            cost[eligible, j] = -scores[eligible]
+        for j, (label, coarse) in enumerate(slot_specs):
+            admissible = SLOT_ADMISSIBLE_FINE.get(self._slot_family(label), set())
+            fine_ok = np.isin(fine_arr, list(admissible))
+            coarse_ok = (coarse_arr == coarse) & ~fine_ok
+            cost[fine_ok, j] = -scores[fine_ok]
+            cost[coarse_ok, j] = -scores[coarse_ok] + SOFT
 
         try:
             row_ind, col_ind = linear_sum_assignment(cost)
         except ValueError:
-            return self._greedy_assign(pool, slots)
+            return self._greedy_assign_fine(pool, slot_specs)
 
-        # Keep only assignments where the player was actually eligible.
-        selected_rows: List[int] = []
-        for r, c in zip(row_ind, col_ind):
-            if cost[r, c] < BIG / 2:
-                selected_rows.append(int(r))
-        if not selected_rows:
-            return self._greedy_assign(pool, slots)
-        xi_df = pool_indexed.iloc[selected_rows].copy()
-        # Preserve a slot label for diagnostic introspection.
-        xi_df["slot"] = [slot_labels[int(c)] for r, c in zip(row_ind, col_ind)
-                         if cost[r, c] < BIG / 2]
+        pairs = [(int(r), int(c)) for r, c in zip(row_ind, col_ind) if cost[r, c] < BIG / 2]
+        if len(pairs) < n_slots:
+            # Some slot could not be filled even under the soft fallback (the
+            # squad is short in a coarse line); guarantee eleven via greedy.
+            return self._greedy_assign_fine(pool, slot_specs)
+
+        pairs.sort(key=lambda rc: rc[1])  # order by slot index
+        rows = [r for r, _ in pairs]
+        xi_df = pool_indexed.iloc[rows].copy()
+        xi_df["slot_index"] = [c for _, c in pairs]
+        xi_df["official_position"] = [slot_specs[c][0] for _, c in pairs]
+        xi_df["slot"] = [slot_specs[c][1] for _, c in pairs]
         return xi_df.reset_index(drop=True)
 
     @staticmethod
-    def _greedy_assign(pool: pd.DataFrame, slots: Dict[str, int]) -> pd.DataFrame:
-        """Legacy greedy top-N-per-position fill, kept as a SciPy-free fallback."""
-        rows: List[pd.DataFrame] = []
-        for role, count in slots.items():
-            role_pool = pool[
-                pool["role_group"].astype(str).str.upper() == role.upper()
-            ].sort_values("predicted_score", ascending=False)
-            selected = role_pool.head(count).copy()
-            selected["slot"] = role.upper()
-            rows.append(selected)
-        return pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
+    def _slot_family(label: str) -> str:
+        """Map an official slot label to its admissibility family.
+
+        Strips the left / right / centre prefix so RB and LB share the FB
+        family, RCB and LCB share CB, RWB and LWB share WB, and so on. Order of
+        the checks matters: the more specific suffixes are tested first.
+        """
+        l = (label or "").upper()
+        if l == "GK":
+            return "GK"
+        if l.endswith("WB"):
+            return "WB"
+        if l.endswith("CB"):
+            return "CB"
+        if l.endswith("B"):
+            return "FB"
+        if l.endswith("WF"):
+            return "WF"
+        if l.endswith("DM"):
+            return "DM"
+        if l.endswith("AM"):
+            return "AM"
+        if l.endswith("CM"):
+            return "CM"
+        if l.endswith("ST") or l == "CF":
+            return "ST"
+        if l.endswith("W"):
+            return "W"
+        if l.endswith("M"):
+            return "M"
+        return "M"
+
+    @staticmethod
+    def _formation_slot_specs(formation: str) -> List[tuple[str, str]]:
+        """Return the ordered (official_label, coarse_group) slots for a formation.
+
+        Known formations use their :data:`FORMATION_SLOTS` template. An unknown
+        but parseable dash string falls back to generic coarse slots so the
+        assignment still runs (official label equals the coarse group).
+        """
+        if formation in FORMATION_SLOTS:
+            return FORMATION_SLOTS[formation]
+        counts = StartingXIPredictor._resolve_formation(formation)
+        specs: List[tuple[str, str]] = [("GK", "GK")]
+        for coarse in ("DEF", "MID", "FWD"):
+            specs.extend([(coarse, coarse)] * int(counts.get(coarse, 0)))
+        return specs
+
+    @staticmethod
+    def _greedy_assign_fine(pool: pd.DataFrame, slot_specs: List[tuple[str, str]]) -> pd.DataFrame:
+        """SciPy-free fallback that still fills official slots and guarantees 11.
+
+        Each slot is filled, best-score first, by the highest unused player who
+        is fine-admissible, then by any unused player of the slot's coarse
+        group, and finally (a last backfill pass) by the best unused player of
+        any position, so the eleven are always returned in slot order.
+        """
+        if pool.empty:
+            return pd.DataFrame()
+
+        p = pool.reset_index(drop=True)
+        scores = p["predicted_score"].astype(float)
+        coarse = p["role_group"].astype(str).str.upper()
+        fine = (
+            p.get("position_group_fine", pd.Series("", index=p.index)).astype(str).str.upper()
+        )
+        order = list(scores.sort_values(ascending=False).index)  # best players first
+        used: set = set()
+        result: List[tuple[int, int, str, str]] = []  # (player_idx, slot_idx, label, coarse)
+
+        for j, (label, cg) in enumerate(slot_specs):
+            admissible = SLOT_ADMISSIBLE_FINE.get(StartingXIPredictor._slot_family(label), set())
+            pick = next((i for i in order if i not in used and fine[i] in admissible), None)
+            if pick is None:
+                pick = next((i for i in order if i not in used and coarse[i] == cg), None)
+            if pick is not None:
+                used.add(pick)
+                result.append((pick, j, label, cg))
+
+        filled = {j for _, j, _, _ in result}
+        for j, (label, cg) in enumerate(slot_specs):
+            if j in filled:
+                continue
+            pick = next((i for i in order if i not in used), None)
+            if pick is not None:
+                used.add(pick)
+                result.append((pick, j, label, cg))
+
+        if not result:
+            return pd.DataFrame()
+        result.sort(key=lambda t: t[1])
+        rows = [t[0] for t in result]
+        xi = p.iloc[rows].copy()
+        xi["slot_index"] = [t[1] for t in result]
+        xi["official_position"] = [t[2] for t in result]
+        xi["slot"] = [t[3] for t in result]
+        return xi.reset_index(drop=True)
 
     # ── Helpers ──────────────────────────────────────────────────────────────
 

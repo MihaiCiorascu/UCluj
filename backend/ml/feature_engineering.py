@@ -66,16 +66,17 @@ POSITION_CODE_TO_FINE_GROUP: Dict[str, str] = {
     "lwb": "WB", "rwb": "WB",
     # Defensive Midfielders
     "dmf": "DM", "ldmf": "DM", "rdmf": "DM",
-    # Centre Midfielders (left / right variants)
-    "lcmf": "CM", "rcmf": "CM",
+    # Centre Midfielders (left / right / central, incl. 3-mid variants)
+    "lcmf": "CM", "rcmf": "CM", "cmf": "CM",
+    "lcmf3": "CM", "rcmf3": "CM",
     # Attacking Midfielders
     "amf": "AM", "lamf": "AM", "ramf": "AM",
     # Wingers
     "lw": "W", "rw": "W",
     # Wing Forwards
     "lwf": "WF", "rwf": "WF",
-    # Centre Forward / Striker
-    "cf": "ST",
+    # Centre Forward / Striker / Second Striker
+    "cf": "ST", "ss": "ST",
 }
 
 FINE_GROUP_TO_COARSE: Dict[str, str] = {
