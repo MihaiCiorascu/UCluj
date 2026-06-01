@@ -609,13 +609,16 @@ class _StandingsRow extends StatelessWidget {
       fontWeight: hl ? FontWeight.w700 : FontWeight.w400,
     );
 
+    // Iteration N polish: when GD = 0 and the row is not highlighted, drop to
+    // textMuted so the neutral case does not collide with the PCT column,
+    // which otherwise renders in the same `primary` colour.
     final gdColor = hl
         ? c.accent
         : team.gd > 0
             ? c.positive
             : team.gd < 0
                 ? c.negative
-                : primary;
+                : c.textMuted;
 
     return Container(
       color: bg,
@@ -657,7 +660,13 @@ class _StandingsRow extends StatelessWidget {
         ),
         SizedBox(width: 34,
             child: Text('${team.points}',
-                style: numStyle.copyWith(fontWeight: FontWeight.w800),
+                // PCT is the dominant column in a standings row, so explicit
+                // primary colour + bold weight makes it the visual anchor.
+                style: numStyle.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: primary,
+                  fontSize: 13,
+                ),
                 textAlign: TextAlign.end)),
       ]),
     );

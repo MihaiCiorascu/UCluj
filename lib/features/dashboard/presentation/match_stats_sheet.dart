@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/supported_formations.dart';
 import '../../../core/l10n/strings.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
@@ -48,17 +49,23 @@ class _PrescriptionBlueprint extends StatelessWidget {
                     style: TypographyTokens.sectionLabel
                         .copyWith(color: ColorTokens.accent, fontSize: 11)),
                 const Spacer(),
+                // Iteration N polish: uplift badge moves from positive-green
+                // (which collided with the projected-probability value below)
+                // to a cobalt accent with a strong top rule. Reads as a delta
+                // annotation rather than a second metric competing with the
+                // headline percentage.
                 Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: SpacingTokens.sm, vertical: 2),
+                      horizontal: SpacingTokens.sm, vertical: 3),
                   decoration: BoxDecoration(
-                    color: ColorTokens.positive.withValues(alpha: 0.15),
-                    border: Border.all(
-                        color: ColorTokens.positive.withValues(alpha: 0.5)),
+                    color: ColorTokens.accent.withValues(alpha: 0.12),
+                    border: const Border(
+                      top: BorderSide(color: ColorTokens.accent, width: 2),
+                    ),
                   ),
                   child: Text(upliftPct,
                       style: TypographyTokens.sectionLabel
-                          .copyWith(color: ColorTokens.positive, fontSize: 10)),
+                          .copyWith(color: ColorTokens.accent, fontSize: 10)),
                 ),
               ],
             ),
@@ -562,6 +569,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             children: [
               SizedBox(
                 width: 48,
+                // Iteration N polish: when neither team is U Cluj, the home
+                // value keeps the strong primary tone and the away value
+                // drops to 65% alpha. Same hue, different weight, so the eye
+                // anchors on the home side first instead of seeing twins.
                 child: Text(homeStr,
                     style: TypographyTokens.body.copyWith(
                       fontSize: 12,
@@ -582,7 +593,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     style: TypographyTokens.body.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: !isUCLujHome ? uclColor : ColorTokens.textPrimary,
+                      color: !isUCLujHome
+                          ? uclColor
+                          : ColorTokens.textPrimary.withValues(alpha: 0.65),
                     ),
                     textAlign: TextAlign.right),
               ),
@@ -1052,6 +1065,7 @@ class _ActualLineupPitchPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final placements = _placements();
+    final tokens = context.colors;
 
     return AspectRatio(
       aspectRatio: 4 / 5,
@@ -1073,7 +1087,15 @@ class _ActualLineupPitchPanel extends StatelessWidget {
           return Stack(
             fit: StackFit.expand,
             children: [
-              CustomPaint(painter: FifaPitchPainter()),
+              CustomPaint(
+                painter: FifaPitchPainter(
+                  surface: tokens.pitchSurface,
+                  line: tokens.pitchLine,
+                  halo: tokens.pitchHalo,
+                  accent: tokens.accent,
+                  border: tokens.chromeDeep,
+                ),
+              ),
               for (final p in placements)
                 Positioned(
                   left: p.offset.dx * c.maxWidth - chipSize / 2,
@@ -1095,18 +1117,21 @@ class _ActualPlayerChip extends StatelessWidget {
   final MatchPlayer player;
   final double chipSize;
 
-  Color get _posColor {
+  /// Map a one-letter position code to the matching role colour. Reads from
+  /// ``AppColorTokens`` so the Match Stats pitch agrees with the Match
+  /// Preview pitch and so GK does not silently disagree across the app.
+  Color _roleColor(AppColorTokens c) {
     switch (player.position.toUpperCase()) {
       case 'G':
-        return const Color(0xFFFFAA00);
+        return c.roleGoalkeeper;
       case 'D':
-        return ColorTokens.positive;
+        return c.roleDefender;
       case 'M':
-        return ColorTokens.accent;
+        return c.roleMidfielder;
       case 'F':
-        return ColorTokens.negative;
+        return c.roleForward;
       default:
-        return ColorTokens.textMuted;
+        return c.textMuted;
     }
   }
 
@@ -1121,14 +1146,16 @@ class _ActualPlayerChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
+    final posColor = _roleColor(c);
     final hasGoal = player.goalsScored > 0;
     final hasYellow = player.yellowCards > 0;
     final hasRed = player.redCards > 0;
 
     return Container(
       decoration: BoxDecoration(
-        color: ColorTokens.surface,
-        border: Border.all(color: _posColor.withValues(alpha: 0.7), width: 1.5),
+        color: c.surface,
+        border: Border.all(color: posColor.withValues(alpha: 0.7), width: 1.5),
       ),
       padding: EdgeInsets.all(chipSize * 0.06),
       child: Column(
@@ -1139,7 +1166,7 @@ class _ActualPlayerChip extends StatelessWidget {
             player.position.isNotEmpty ? player.position : '?',
             style: TypographyTokens.body.copyWith(
               fontSize: chipSize * 0.13,
-              color: _posColor,
+              color: posColor,
             ),
           ),
           // Jersey number (prominent)
@@ -1147,7 +1174,7 @@ class _ActualPlayerChip extends StatelessWidget {
             player.jerseyNumber != null ? '${player.jerseyNumber}' : '—',
             style: TypographyTokens.headline.copyWith(
               fontSize: chipSize * 0.22,
-              color: _posColor,
+              color: posColor,
             ),
           ),
           // Last name
@@ -1158,7 +1185,7 @@ class _ActualPlayerChip extends StatelessWidget {
             style: TypographyTokens.body.copyWith(
               fontSize: chipSize * 0.14,
               fontWeight: FontWeight.w700,
-              color: ColorTokens.textPrimary,
+              color: c.textPrimary,
             ),
           ),
           // Event indicators
