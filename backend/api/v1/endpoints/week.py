@@ -140,6 +140,16 @@ async def week_fixtures(
         fix_svc = _fixture_service(request)
         fixtures = _csv_week_fixtures(fix_svc, monday, sunday)
 
+    # ── 3b. Demo horizon ────────────────────────────────────────────────────
+    # The 2024-2025 dataset is fully played, so every fixture carries a
+    # final score. For the committee demo we want fixtures dated after the
+    # pinned demo "now" to render as "not yet played" so the pre-match flow
+    # (win probability + drivers + tactical blueprint) lights up. The
+    # downstream is_completed check in _compute_predictions then routes
+    # them through the prescription path automatically.
+    if settings.demo_mode:
+        fixtures = _apply_demo_horizon(fixtures, effective_now())
+
     # ── 4. ML predictions (offloaded to thread pool — CPU-bound) ────────────
     model_svc = ModelService(getattr(request.app.state, "bundle", None))
     expl_svc = ExplanationService(model_svc)
@@ -275,6 +285,31 @@ def _slice_fixtures(all_fixtures: list[dict], monday: datetime, sunday: datetime
 # ---------------------------------------------------------------------------
 # CSV-based fixture source (instant fallback, no network)
 # ---------------------------------------------------------------------------
+
+def _apply_demo_horizon(fixtures: list[dict], horizon: datetime) -> list[dict]:
+    """Null out scores for fixtures dated strictly after ``horizon``.
+
+    The 2024-25 dataset carries a final score for every fixture because the
+    season is fully played. Demo mode wants the coach to walk through the
+    pre-match flow (Match Intelligence, tactical blueprint, recommended XI)
+    on fixtures the demo treats as "upcoming," which means stripping the
+    scores from anything after the pinned demo date so
+    ``_compute_predictions`` routes them through the ``not is_completed``
+    branch and produces a prescription.
+
+    Returns a NEW list of fixture dicts; the input list and any cached
+    Sportradar payload underneath it stay unchanged.
+    """
+    result: list[dict] = []
+    for f in fixtures:
+        match_dt = _parse_dt(f.get("match_date", ""))
+        if match_dt > horizon:
+            f = dict(f)
+            f["home_score"] = None
+            f["away_score"] = None
+        result.append(f)
+    return result
+
 
 def _csv_week_fixtures(fix_svc: FixtureService, monday: datetime, sunday: datetime) -> list[dict]:
     """Return every Liga 1 fixture inside [monday, sunday) from the in-memory CSV.
