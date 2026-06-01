@@ -3,6 +3,14 @@ class MatchPreviewPlayer {
   final String shortName;
   final String role;
   final String roleGroup;
+  // Official-position fields (thesis fine taxonomy + Hungarian slot assignment).
+  // officialPosition is the slot label (RB, RCB, DM, RW, ST, ...), slotIndex is
+  // the position on the pitch (0 = GK), and positionGroupFine is the player's
+  // primary fine group (GK, CB, FB, WB, DM, CM, AM, W, WF, ST). All optional so
+  // bench players and older payloads still parse.
+  final String officialPosition;
+  final int slotIndex;
+  final String positionGroupFine;
   final double predictedScore;
   final double compositeScore;
   final double performanceScore;
@@ -23,6 +31,9 @@ class MatchPreviewPlayer {
     required this.shortName,
     required this.role,
     required this.roleGroup,
+    this.officialPosition = '',
+    this.slotIndex = -1,
+    this.positionGroupFine = '',
     required this.predictedScore,
     required this.compositeScore,
     required this.performanceScore,
@@ -45,6 +56,9 @@ class MatchPreviewPlayer {
         shortName: j['shortName'] as String? ?? '',
         role: j['role'] as String? ?? '',
         roleGroup: j['role_group'] as String? ?? '',
+        officialPosition: j['official_position'] as String? ?? '',
+        slotIndex: (j['slot_index'] as num?)?.toInt() ?? -1,
+        positionGroupFine: j['position_group_fine'] as String? ?? '',
         predictedScore: (j['predicted_score'] as num?)?.toDouble() ?? 0,
         compositeScore: (j['composite_score'] as num?)?.toDouble() ?? 0,
         performanceScore: (j['performance_score'] as num?)?.toDouble() ?? 0,

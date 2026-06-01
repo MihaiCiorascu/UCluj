@@ -3,6 +3,10 @@ class XiPlayer {
   final String shortName;
   final String role;
   final String roleGroup;
+  // Official-position fields (see MatchPreviewPlayer for the convention).
+  final String officialPosition;
+  final int slotIndex;
+  final String positionGroupFine;
   final double predictedScore;
   final double performanceScore;
   final double recentFormScore;
@@ -14,6 +18,9 @@ class XiPlayer {
     required this.shortName,
     required this.role,
     required this.roleGroup,
+    this.officialPosition = '',
+    this.slotIndex = -1,
+    this.positionGroupFine = '',
     required this.predictedScore,
     required this.performanceScore,
     required this.recentFormScore,
@@ -27,6 +34,9 @@ class XiPlayer {
       shortName: json['shortName'] as String? ?? 'Unknown',
       role: json['role'] as String? ?? '',
       roleGroup: json['role_group'] as String? ?? '',
+      officialPosition: json['official_position'] as String? ?? '',
+      slotIndex: (json['slot_index'] as num?)?.toInt() ?? -1,
+      positionGroupFine: json['position_group_fine'] as String? ?? '',
       predictedScore: (json['predicted_score'] as num?)?.toDouble() ?? 0.0,
       performanceScore: (json['performance_score'] as num?)?.toDouble() ?? 0.0,
       recentFormScore: (json['recent_form_score'] as num?)?.toDouble() ?? 0.0,

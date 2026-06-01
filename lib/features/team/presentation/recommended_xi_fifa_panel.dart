@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/formation_slots.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
@@ -215,7 +216,16 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         itemBuilder: (context, i) {
           final pl = bench[i];
           final sel = _selected?.playerId == pl.playerId;
-          final roleColor = recommendedXiRoleColor(pl.roleGroup, c);
+          // Bench players are not slot-assigned, so colour and label come from
+          // their primary fine group (CB, ST, ...) when known, else the coarse
+          // role group.
+          final benchCoarse = pl.positionGroupFine.isNotEmpty
+              ? coarseForFineGroup(pl.positionGroupFine)
+              : pl.roleGroup;
+          final benchLabel =
+              pl.positionGroupFine.isNotEmpty ? pl.positionGroupFine : pl.roleGroup;
+          final roleColor = recommendedXiRoleColor(
+              benchCoarse.isNotEmpty ? benchCoarse : pl.roleGroup, c);
           return GestureDetector(
             onTap: () => setState(() => _selected = pl),
             child: Container(
@@ -263,7 +273,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
                   ),
                   const SizedBox(height: 1),
                   Text(
-                    pl.roleGroup,
+                    benchLabel,
                     style: TypographyTokens.sectionLabel.copyWith(
                       fontSize: 8,
                       color: c.textMuted,
@@ -366,6 +376,14 @@ class _PlayerDetailColumn extends StatelessWidget {
     }
     final rating = ratingForDisplay(p).clamp(0, 100).toInt();
     final attrs  = _fifaAttrs(p);
+    // Prefer the official slot label, then the fine group, then the coarse
+    // role; colour by the corresponding coarse group.
+    final detailLabel = p.officialPosition.isNotEmpty
+        ? p.officialPosition
+        : (p.positionGroupFine.isNotEmpty ? p.positionGroupFine : p.roleGroup);
+    final detailCoarse = p.positionGroupFine.isNotEmpty
+        ? coarseForFineGroup(p.positionGroupFine)
+        : p.roleGroup;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(SpacingTokens.md),
@@ -388,10 +406,13 @@ class _PlayerDetailColumn extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        p.roleGroup,
+                        detailLabel,
                         style: TypographyTokens.sectionLabel.copyWith(
                           fontSize: 10,
-                          color: recommendedXiRoleColor(p.roleGroup, c),
+                          color: recommendedXiRoleColor(
+                            detailCoarse.isNotEmpty ? detailCoarse : p.roleGroup,
+                            c,
+                          ),
                           letterSpacing: 1.5,
                         ),
                       ),
@@ -539,6 +560,30 @@ class FifaRecommendedXiPitch extends StatelessWidget {
   final double Function(MatchPreviewPlayer p) ratingForDisplay;
 
   List<_PitchPlacement> _placements() {
+    // Preferred path: the backend assigns every starter an official slot via
+    // the Hungarian matching and returns a slot_index. When all eleven carry a
+    // valid slot_index we place each player at its official pitch slot (label
+    // and coarse colour come from the shared formation_slots table, whose order
+    // mirrors the backend FORMATION_SLOTS). Otherwise we fall back to the
+    // legacy coarse-bucket layout so older payloads still render.
+    final slots = kFormationSlots[formation];
+    if (slots != null &&
+        players.isNotEmpty &&
+        players.every((p) => p.slotIndex >= 0 && p.slotIndex < slots.length)) {
+      final out = <_PitchPlacement>[];
+      for (final p in players) {
+        final slot = slots[p.slotIndex];
+        out.add(_PitchPlacement(
+          player: p,
+          offset: Offset(slot.x, slot.y),
+          label: slot.label,
+          coarse: slot.coarse,
+        ));
+      }
+      return out;
+    }
+
+    // ── Legacy coarse-bucket fallback ────────────────────────────────────
     final gk = players.where((p) => p.roleGroup == 'GK').toList();
     final defs = players.where((p) => p.roleGroup == 'DEF').toList();
     final mids = players.where((p) => p.roleGroup == 'MID').toList();
@@ -699,6 +744,8 @@ class FifaRecommendedXiPitch extends StatelessWidget {
                   rating: ratingForDisplay(p.player),
                   chipSize: chipSize,
                   onTap: () => onSelect(p.player),
+                  positionLabel: p.label,
+                  coarseGroup: p.coarse,
                 ),
               ),
           ],
@@ -732,9 +779,19 @@ class _PitchLine {
 }
 
 class _PitchPlacement {
-  const _PitchPlacement({required this.player, required this.offset});
+  const _PitchPlacement({
+    required this.player,
+    required this.offset,
+    this.label,
+    this.coarse,
+  });
   final MatchPreviewPlayer player;
   final Offset offset;
+
+  /// Official slot label and coarse group when placed by slot_index; null on
+  /// the legacy coarse-bucket fallback path.
+  final String? label;
+  final String? coarse;
 }
 
 class FifaPitchPainter extends CustomPainter {
@@ -845,6 +902,8 @@ class FifaPitchPlayerChip extends StatelessWidget {
     required this.rating,
     required this.chipSize,
     required this.onTap,
+    this.positionLabel,
+    this.coarseGroup,
   });
 
   final MatchPreviewPlayer player;
@@ -853,10 +912,25 @@ class FifaPitchPlayerChip extends StatelessWidget {
   final double chipSize;
   final VoidCallback onTap;
 
+  /// Official slot label to show on the chip (RB, RCB, DM, RW, ST, ...). Falls
+  /// back to the player's coarse role group when not supplied.
+  final String? positionLabel;
+
+  /// Coarse group used for the role colour. Falls back to the player's role
+  /// group. On the pitch this is the SLOT's coarse group so the colour reads
+  /// positionally even when a player covers an adjacent role.
+  final String? coarseGroup;
+
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final roleColor = recommendedXiRoleColor(player.roleGroup, c);
+    final label = (positionLabel != null && positionLabel!.isNotEmpty)
+        ? positionLabel!
+        : player.roleGroup;
+    final roleColor = recommendedXiRoleColor(
+      (coarseGroup != null && coarseGroup!.isNotEmpty) ? coarseGroup! : player.roleGroup,
+      c,
+    );
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -907,9 +981,10 @@ class FifaPitchPlayerChip extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 1),
-            // Position label demoted; the left-edge rule carries the role.
+            // Official position label (RB, RCB, DM, RW, ST, ...); the
+            // left-edge rule still carries the coarse role colour.
             Text(
-              player.roleGroup,
+              label,
               style: TypographyTokens.sectionLabel.copyWith(
                 fontSize: chipSize * 0.10,
                 color: c.textMuted,
