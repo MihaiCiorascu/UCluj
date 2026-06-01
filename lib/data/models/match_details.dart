@@ -49,6 +49,11 @@ class MatchPlayer {
   final int? jerseyNumber;
   final String type; // "starter" | "substitute"
   final String position; // G, D, M, F
+  // Official slot label (RB, RCB, DM, RW, ST, ...) and pitch slot index for
+  // starters, assigned server-side from the Sportradar shape. Empty / -1 for
+  // substitutes and older payloads.
+  final String officialPosition;
+  final int slotIndex;
   final int goalsScored;
   final int assists;
   final int yellowCards;
@@ -61,6 +66,8 @@ class MatchPlayer {
     this.jerseyNumber,
     required this.type,
     required this.position,
+    this.officialPosition = '',
+    this.slotIndex = -1,
     required this.goalsScored,
     required this.assists,
     required this.yellowCards,
@@ -76,6 +83,8 @@ class MatchPlayer {
         jerseyNumber: (j['jersey_number'] as num?)?.toInt(),
         type: j['type'] as String? ?? 'starter',
         position: j['position'] as String? ?? '',
+        officialPosition: j['official_position'] as String? ?? '',
+        slotIndex: (j['slot_index'] as num?)?.toInt() ?? -1,
         goalsScored: (j['goals_scored'] as num?)?.toInt() ?? 0,
         assists: (j['assists'] as num?)?.toInt() ?? 0,
         yellowCards: (j['yellow_cards'] as num?)?.toInt() ?? 0,
@@ -91,6 +100,11 @@ class MatchDetails {
   final MatchTeamStats awayStats;
   final List<MatchPlayer> homeLineup;
   final List<MatchPlayer> awayLineup;
+  // Formation key the backend used to assign each lineup's official slots, so
+  // the pitch lays players out with the matching slot order. Empty when no
+  // full eleven was assigned.
+  final String homeFormation;
+  final String awayFormation;
 
   MatchDetails({
     required this.matchId,
@@ -98,6 +112,8 @@ class MatchDetails {
     required this.awayStats,
     required this.homeLineup,
     required this.awayLineup,
+    this.homeFormation = '',
+    this.awayFormation = '',
   });
 
   bool get hasStats => homeStats.hasData || awayStats.hasData;
@@ -117,5 +133,7 @@ class MatchDetails {
                 ?.map((e) => MatchPlayer.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
+        homeFormation: j['home_formation'] as String? ?? '',
+        awayFormation: j['away_formation'] as String? ?? '',
       );
 }

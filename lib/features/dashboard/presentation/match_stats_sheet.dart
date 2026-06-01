@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/formation_slots.dart';
 import '../../../core/constants/supported_formations.dart';
 import '../../../core/l10n/strings.dart';
 import '../../../core/theme/app_colors.dart';
@@ -684,7 +685,11 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
     final starters = players.where((p) => p.isStarter).toList();
     final subs = players.where((p) => !p.isStarter).toList();
-    final formation = _inferFormation(starters);
+    // Prefer the backend-assigned formation key (so the pitch slot order
+    // matches the official-position assignment); fall back to the coarse shape.
+    final backendFormation = isShowingHome ? d.homeFormation : d.awayFormation;
+    final formation =
+        backendFormation.isNotEmpty ? backendFormation : _inferFormation(starters);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -724,7 +729,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             }
           },
           child: starters.isNotEmpty
-              ? _ActualLineupPitchPanel(starters: starters)
+              ? _ActualLineupPitchPanel(starters: starters, formation: formation)
               : const SizedBox.shrink(),
         ),
 
@@ -886,7 +891,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   Color _positionColor(String pos) {
     switch (pos.toUpperCase()) {
       case 'G':
-        return const Color(0xFFFFAA00);
+        // Amber goalkeeper marker; the named warning token replaces the old
+        // hardcoded literal so it tracks the palette.
+        return ColorTokens.warning;
       case 'D':
         return ColorTokens.positive;
       case 'M':
@@ -1130,8 +1137,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 // ── Actual lineup pitch widgets ──────────────────────────────────────────────
 
 class _ActualLineupPitchPanel extends StatelessWidget {
-  const _ActualLineupPitchPanel({required this.starters});
+  const _ActualLineupPitchPanel({required this.starters, this.formation = ''});
   final List<MatchPlayer> starters;
+  final String formation;
 
   List<double> _distributedXs(int count) {
     if (count <= 1) return const [0.50];
@@ -1141,23 +1149,40 @@ class _ActualLineupPitchPanel extends StatelessWidget {
     return List<double>.generate(count, (i) => left + step * i);
   }
 
-  List<({MatchPlayer player, Offset offset})> _placements() {
+  List<({MatchPlayer player, Offset offset, String? label})> _placements() {
+    // Preferred path: place by the official slot index the backend assigned,
+    // using the shared formation_slots geometry (same order the backend used).
+    final slots = kFormationSlots[formation];
+    if (slots != null &&
+        starters.isNotEmpty &&
+        starters.every((p) => p.slotIndex >= 0 && p.slotIndex < slots.length)) {
+      return [
+        for (final p in starters)
+          (
+            player: p,
+            offset: Offset(slots[p.slotIndex].x, slots[p.slotIndex].y),
+            label: slots[p.slotIndex].label,
+          ),
+      ];
+    }
+
+    // ── Legacy coarse-row fallback ───────────────────────────────────────
     final gk = starters.where((p) => p.position == 'G').toList();
     final defs = starters.where((p) => p.position == 'D').toList();
     final mids = starters.where((p) => p.position == 'M').toList();
     final fwds = starters.where((p) => p.position == 'F').toList();
 
-    final result = <({MatchPlayer player, Offset offset})>[];
+    final result = <({MatchPlayer player, Offset offset, String? label})>[];
 
     if (gk.isNotEmpty) {
-      result.add((player: gk.first, offset: const Offset(0.50, 0.90)));
+      result.add((player: gk.first, offset: const Offset(0.50, 0.90), label: null));
     }
 
     void addRow(List<MatchPlayer> players, double y) {
       if (players.isEmpty) return;
       final xs = _distributedXs(players.length);
       for (var i = 0; i < players.length; i++) {
-        result.add((player: players[i], offset: Offset(xs[i], y)));
+        result.add((player: players[i], offset: Offset(xs[i], y), label: null));
       }
     }
 
@@ -1208,7 +1233,8 @@ class _ActualLineupPitchPanel extends StatelessWidget {
                   top: p.offset.dy * c.maxHeight - chipSize / 2,
                   width: chipSize,
                   height: chipSize,
-                  child: _ActualPlayerChip(player: p.player, chipSize: chipSize),
+                  child: _ActualPlayerChip(
+                      player: p.player, chipSize: chipSize, positionLabel: p.label),
                 ),
             ],
           );
@@ -1219,9 +1245,17 @@ class _ActualLineupPitchPanel extends StatelessWidget {
 }
 
 class _ActualPlayerChip extends StatelessWidget {
-  const _ActualPlayerChip({required this.player, required this.chipSize});
+  const _ActualPlayerChip({
+    required this.player,
+    required this.chipSize,
+    this.positionLabel,
+  });
   final MatchPlayer player;
   final double chipSize;
+
+  /// Official slot label (RB, RCB, DM, ...) when placed by slot index; falls
+  /// back to the player's official position then the coarse code.
+  final String? positionLabel;
 
   /// Map a one-letter position code to the matching role colour. Reads from
   /// ``AppColorTokens`` so the Match Stats pitch agrees with the Match
@@ -1267,11 +1301,16 @@ class _ActualPlayerChip extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Position badge
+          // Official position badge (RB, RCB, DM, ...), falling back to the
+          // player's official position, then the coarse one-letter code.
           Text(
-            player.position.isNotEmpty ? player.position : '?',
+            (positionLabel != null && positionLabel!.isNotEmpty)
+                ? positionLabel!
+                : (player.officialPosition.isNotEmpty
+                    ? player.officialPosition
+                    : (player.position.isNotEmpty ? player.position : '?')),
             style: TypographyTokens.body.copyWith(
-              fontSize: chipSize * 0.13,
+              fontSize: chipSize * 0.12,
               color: posColor,
             ),
           ),
