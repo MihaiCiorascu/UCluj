@@ -406,6 +406,8 @@ class _PlayerDetailColumn extends StatelessWidget {
     final detailCoarse = p.positionGroupFine.isNotEmpty
         ? coarseForFineGroup(p.positionGroupFine)
         : p.roleGroup;
+    final roleColor = recommendedXiRoleColor(
+        detailCoarse.isNotEmpty ? detailCoarse : p.roleGroup, c);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(SpacingTokens.md),
@@ -413,91 +415,115 @@ class _PlayerDetailColumn extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // ── Top row: card + radar ──────────────────────────────────────
-          IntrinsicHeight(
+          // Hero header: large headshot, identity, and the dominant rating,
+          // anchored by a role-coloured left accent rule (tonal depth, sharp
+          // edges, no shadows).
+          Container(
+            decoration: BoxDecoration(
+              color: c.surfaceHigh,
+              border: Border(left: BorderSide(color: roleColor, width: 4)),
+            ),
+            padding: const EdgeInsets.all(SpacingTokens.md),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Left: position card
-                Container(
-                  width: 90,
-                  color: c.surfaceHigh,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: SpacingTokens.md,
-                  ),
+                PlayerPhotoAvatar(
+                  photoUrl: p.photoUrl,
+                  name: p.shortName,
+                  ringColor: roleColor,
+                  size: 84,
+                ),
+                const SizedBox(width: SpacingTokens.md),
+                Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Player headshot (the profile picture), ringed in the
-                      // role colour; initials fallback when no photo.
-                      PlayerPhotoAvatar(
-                        photoUrl: p.photoUrl,
-                        name: p.shortName,
-                        ringColor: recommendedXiRoleColor(
-                          detailCoarse.isNotEmpty ? detailCoarse : p.roleGroup,
-                          c,
-                        ),
-                        size: 72,
-                      ),
-                      const SizedBox(height: SpacingTokens.xs),
                       Text(
-                        detailLabel,
-                        style: TypographyTokens.sectionLabel.copyWith(
-                          fontSize: 10,
-                          color: recommendedXiRoleColor(
-                            detailCoarse.isNotEmpty ? detailCoarse : p.roleGroup,
-                            c,
-                          ),
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      Text(
-                        '$rating',
-                        style: TypographyTokens.displayHero.copyWith(
-                          fontSize: 44,
-                          height: 0.95,
-                          color: c.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        p.shortName.toUpperCase(),
+                        p.shortName,
                         maxLines: 2,
-                        textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
-                        style: TypographyTokens.body.copyWith(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.4,
+                        style: TypographyTokens.cardTitle.copyWith(
                           color: c.textPrimary,
+                          height: 1.1,
                         ),
                       ),
-                      Text(
-                        p.role.toUpperCase(),
-                        style: TypographyTokens.body.copyWith(
-                          fontSize: 8,
-                          color: c.textMuted,
-                        ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
+                            color: roleColor.withValues(alpha: 0.16),
+                            child: Text(
+                              detailLabel.toUpperCase(),
+                              style: TypographyTokens.sectionLabel.copyWith(
+                                fontSize: 10,
+                                color: roleColor,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: SpacingTokens.xs),
+                          Flexible(
+                            child: Text(
+                              p.role.toUpperCase(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TypographyTokens.sectionLabel.copyWith(
+                                fontSize: 9,
+                                color: c.textMuted,
+                                letterSpacing: 0.8,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: SpacingTokens.sm),
-                // Right: radar. Reduced height (130 vs 170) so the radar
-                // reads as a quick-glance shape signal and the attribute
-                // bars below carry the actual numeric detail. Keeping both
-                // means the radar gives instant "this is an attacker /
-                // defender" silhouette and the bars give the exact values.
-                Expanded(
-                  child: SizedBox(
-                    height: 130,
-                    child: FifaPlayerRadar(
-                      player: p,
-                      accentColor: c.accent,
-                      labelColor: c.textMuted,
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '$rating',
+                      style: TypographyTokens.displayHero.copyWith(
+                        fontSize: 56,
+                        height: 0.9,
+                        letterSpacing: -1.5,
+                        color: c.textPrimary,
+                      ),
                     ),
-                  ),
+                    Text(
+                      'RATING',
+                      style: TypographyTokens.sectionLabel.copyWith(
+                        fontSize: 8,
+                        color: c.textMuted,
+                        letterSpacing: 2.0,
+                      ),
+                    ),
+                  ],
                 ),
               ],
+            ),
+          ),
+
+          const SizedBox(height: SpacingTokens.lg),
+
+          // Radar: larger and role-coloured so the silhouette reads as an
+          // attacker / defender shape at a glance, on a tonal tray.
+          Container(
+            color: c.surfaceLow,
+            padding: const EdgeInsets.symmetric(vertical: SpacingTokens.md),
+            child: SizedBox(
+              height: 210,
+              child: FifaPlayerRadar(
+                player: p,
+                accentColor: roleColor,
+                labelColor: c.textSecondary,
+              ),
             ),
           ),
 
@@ -540,45 +566,45 @@ class _PlayerDetailColumn extends StatelessWidget {
     final col = _attrColor(v, c);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 9),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
           // Value
           SizedBox(
-            width: 28,
+            width: 30,
             child: Text(
               v.toStringAsFixed(0),
               style: TypographyTokens.body.copyWith(
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w800,
                 color: col,
               ),
               textAlign: TextAlign.right,
             ),
           ),
-          const SizedBox(width: 6),
-          // Bar
+          const SizedBox(width: SpacingTokens.xs),
+          // Bar on a tonal tray
           Expanded(
             child: Container(
-              height: 5,
+              height: 8,
               color: c.surfaceHigh,
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: t,
                 alignment: Alignment.centerLeft,
-                child: Container(height: 5, color: col),
+                child: Container(height: 8, color: col),
               ),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: SpacingTokens.sm),
           // Label
           SizedBox(
-            width: 62,
+            width: 70,
             child: Text(
               a.label,
               style: TypographyTokens.body.copyWith(
                 fontSize: 11,
-                color: c.textMuted,
+                color: c.textSecondary,
               ),
             ),
           ),
