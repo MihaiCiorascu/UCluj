@@ -6,6 +6,7 @@ import '../../../core/constants/formation_slots.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
+import '../../../core/widgets/player_photo_avatar.dart';
 import '../../../data/models/match_preview.dart';
 
 /// Map an XI role group to its colour. Reads from the role family in
@@ -247,14 +248,21 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
                 SpacingTokens.xs,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  PlayerPhotoAvatar(
+                    photoUrl: pl.photoUrl,
+                    name: pl.shortName,
+                    ringColor: roleColor,
+                    size: 34,
+                  ),
+                  const SizedBox(height: 4),
                   Text(
                     rf(pl).toStringAsFixed(0),
                     style: TypographyTokens.headline.copyWith(
                       color: c.textPrimary,
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: FontWeight.w900,
                       height: 1.0,
                       letterSpacing: -0.5,
@@ -419,6 +427,18 @@ class _PlayerDetailColumn extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // Player headshot (the profile picture), ringed in the
+                      // role colour; initials fallback when no photo.
+                      PlayerPhotoAvatar(
+                        photoUrl: p.photoUrl,
+                        name: p.shortName,
+                        ringColor: recommendedXiRoleColor(
+                          detailCoarse.isNotEmpty ? detailCoarse : p.roleGroup,
+                          c,
+                        ),
+                        size: 56,
+                      ),
+                      const SizedBox(height: SpacingTokens.xs),
                       Text(
                         detailLabel,
                         style: TypographyTokens.sectionLabel.copyWith(
@@ -433,7 +453,7 @@ class _PlayerDetailColumn extends StatelessWidget {
                       Text(
                         '$rating',
                         style: TypographyTokens.displayHero.copyWith(
-                          fontSize: 52,
+                          fontSize: 44,
                           height: 0.95,
                           color: c.textPrimary,
                         ),
@@ -961,59 +981,43 @@ class FifaPitchPlayerChip extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: c.surfaceHigh,
-          border: Border(
-            // Thick left-edge rule in the role colour. Makes GK / DEF / MID
-            // / FWD identifiable from peripheral vision without reading the
-            // small position label.
-            left: BorderSide(color: roleColor, width: 3),
-            top: BorderSide(color: selected ? c.accent : c.divider, width: selected ? 2 : 1),
-            right: BorderSide(color: selected ? c.accent : c.divider, width: selected ? 2 : 1),
-            bottom: BorderSide(color: selected ? c.accent : c.divider, width: selected ? 2 : 1),
+          border: Border.all(
+            color: selected ? c.accent : c.divider,
+            width: selected ? 2 : 1,
           ),
         ),
-        padding: EdgeInsets.fromLTRB(
-          chipSize * 0.10,
-          chipSize * 0.06,
-          chipSize * 0.06,
-          chipSize * 0.06,
-        ),
+        padding: EdgeInsets.all(chipSize * 0.06),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Rating is the dominant element so the FIFA-style "85" reads
-            // first from across the screen.
+            // Face-forward FIFA card: the headshot is the chip, ringed in the
+            // role colour (the ring replaces the old left-edge rule). The
+            // avatar degrades to initials when no photo is available.
+            PlayerPhotoAvatar(
+              photoUrl: player.photoUrl,
+              name: player.shortName,
+              ringColor: roleColor,
+              size: chipSize * 0.52,
+            ),
+            const SizedBox(height: 2),
+            // League-relative rating stays prominent beneath the face.
             Text(
               rating.toStringAsFixed(0),
               style: TypographyTokens.headline.copyWith(
                 color: c.textPrimary,
-                fontSize: chipSize * 0.32,
+                fontSize: chipSize * 0.24,
                 fontWeight: FontWeight.w900,
                 height: 1.0,
-                letterSpacing: -1,
+                letterSpacing: -0.5,
               ),
             ),
-            const SizedBox(height: 2),
-            Text(
-              player.shortName.split(' ').last,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TypographyTokens.body.copyWith(
-                fontSize: chipSize * 0.14,
-                fontWeight: FontWeight.w800,
-                color: c.textPrimary,
-                height: 1.0,
-              ),
-            ),
-            const SizedBox(height: 1),
-            // Official position label (RB, RCB, DM, RW, ST, ...); the
-            // left-edge rule still carries the coarse role colour.
+            // Official position label (RB, RCB, DM, RW, ST, ...).
             Text(
               label,
               style: TypographyTokens.sectionLabel.copyWith(
                 fontSize: chipSize * 0.10,
                 color: c.textMuted,
-                letterSpacing: 1.2,
+                letterSpacing: 1.0,
               ),
             ),
           ],
