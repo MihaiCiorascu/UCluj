@@ -255,7 +255,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
                     photoUrl: pl.photoUrl,
                     name: pl.shortName,
                     ringColor: roleColor,
-                    size: 34,
+                    size: 46,
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -436,7 +436,7 @@ class _PlayerDetailColumn extends StatelessWidget {
                           detailCoarse.isNotEmpty ? detailCoarse : p.roleGroup,
                           c,
                         ),
-                        size: 56,
+                        size: 72,
                       ),
                       const SizedBox(height: SpacingTokens.xs),
                       Text(
@@ -809,7 +809,7 @@ class FifaRecommendedXiPitch extends StatelessWidget {
   }
 
   double _chipSizeFor(double width, int maxLineCount) {
-    final base = width < 430 ? 44.0 : 50.0;
+    final base = width < 430 ? 50.0 : 58.0;
     if (maxLineCount >= 5) return base - 6;
     if (maxLineCount >= 4) return base - 3;
     return base;
@@ -997,7 +997,7 @@ class FifaPitchPlayerChip extends StatelessWidget {
               photoUrl: player.photoUrl,
               name: player.shortName,
               ringColor: roleColor,
-              size: chipSize * 0.52,
+              size: chipSize * 0.62,
             ),
             const SizedBox(height: 2),
             // League-relative rating stays prominent beneath the face.
@@ -1015,7 +1015,7 @@ class FifaPitchPlayerChip extends StatelessWidget {
             Text(
               label,
               style: TypographyTokens.sectionLabel.copyWith(
-                fontSize: chipSize * 0.10,
+                fontSize: chipSize * 0.11,
                 color: c.textMuted,
                 letterSpacing: 1.0,
               ),
