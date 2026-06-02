@@ -112,10 +112,13 @@ async def week_fixtures(
     sunday = monday + timedelta(days=7)
 
     # ── 1. Check local Sportradar cache (instant if fresh) ──────────────────
-    # The cache is skipped in demo mode so a stale production response never
-    # bleeds into a demo dashboard (and vice versa). The cache write below
-    # is gated the same way.
-    sr_all: list[dict] | None = None if settings.demo_mode else _load_cache()
+    # The cache is used in demo mode too: the demo now mirrors the live 25/26
+    # season (effective_season_id), so there is no demo-vs-prod season to keep
+    # apart. Caching is essential because the trial Sportradar tier returns 429
+    # when every dashboard load (five parallel week requests) re-fetches the
+    # full season schedule; the raw fixtures are cached and the demo horizon is
+    # applied per request after slicing, so one cache serves both modes.
+    sr_all: list[dict] | None = _load_cache()
 
     # ── 2. If cache stale/missing, try Sportradar (cap at 20 s total) ──────
     # Demo mode now hits Sportradar too, pinned to the 2024-25 season via
@@ -129,8 +132,7 @@ async def week_fixtures(
             )
             if fetched:
                 sr_all = fetched
-                if not settings.demo_mode:
-                    _save_cache(sr_all)  # persist for next 6 h
+                _save_cache(sr_all)  # persist for next 6 h (raw fixtures)
         except Exception as exc:
             logger.warning("Sportradar fetch failed/timed-out; using CSV fallback: %s", exc)
 
