@@ -35,8 +35,15 @@ import time
 from pathlib import Path
 from typing import Any
 
-import httpx
+# curl_cffi impersonates a real browser TLS fingerprint to clear SofaScore's
+# Cloudflare bot check, which 403s plain httpx/requests from any IP.
+from curl_cffi import requests as cffi
 
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows cp1252 safety for diacritics
+except Exception:
+    pass
 
 SOFASCORE_SEARCH = "https://api.sofascore.com/api/v1/search/player-team-persons"
 USER_AGENT = (
@@ -73,7 +80,7 @@ def _search_query(player: dict) -> str:
     return short
 
 
-def _sofascore_search(client: httpx.Client, query: str) -> list[dict]:
+def _sofascore_search(client, query: str) -> list[dict]:
     """Hit the SofaScore search endpoint and return the player results.
 
     The endpoint returns an envelope ``{"results": [{"entity": {...},
@@ -84,10 +91,9 @@ def _sofascore_search(client: httpx.Client, query: str) -> list[dict]:
         resp = client.get(
             SOFASCORE_SEARCH,
             params={"q": query, "page": 0},
-            timeout=httpx.Timeout(15.0),
-            headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
+            timeout=15,
         )
-    except httpx.HTTPError as exc:
+    except Exception as exc:
         print(f"  [http-error] {exc}", file=sys.stderr)
         return []
     if resp.status_code == 429:
@@ -224,7 +230,7 @@ def main() -> int:
     review_rows: list[dict] = []
     delay = 1.0 / max(args.rps, 0.1)
 
-    with httpx.Client() as client:
+    with cffi.Session(impersonate="chrome") as client:
         for idx, player in enumerate(players, start=1):
             wy_id = str(player.get("wyId"))
             if not wy_id:
