@@ -1,0 +1,39 @@
+name: Deploy frontend
+
+# Amplify Hosting builds the Flutter web app from the umbraro branch, and the
+# live URL (umbraro.d2j9yfctr6ipf6.amplifyapp.com) is named after that branch.
+# This workflow keeps umbraro in lock step with main whenever the app changes,
+# so a push to main triggers an Amplify build with no manual branch push.
+# umbraro is a managed mirror of main: do not commit to it directly.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lib/**'
+      - 'web/**'
+      - 'assets/**'
+      - 'pubspec.yaml'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Mirror main onto umbraro for Amplify
+        run: |
+          git push --force origin HEAD:umbraro
+          echo "umbraro updated to $(git rev-parse --short HEAD); Amplify will build."

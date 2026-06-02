@@ -1,0 +1,68 @@
+name: Deploy backend
+
+# Builds the FastAPI Docker image and ships it to App Runner whenever the
+# backend (or the data baked into the image) changes on main. Authentication
+# uses GitHub OIDC against the IAM role github-actions-ucluj-deploy, so there
+# are no long lived AWS keys stored in the repository.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'data/All_Data.csv'
+      - 'data/reference/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: eu-central-1
+  ECR_REPO: 302432776212.dkr.ecr.eu-central-1.amazonaws.com/ucluj-backend
+  SERVICE_ARN: arn:aws:apprunner:eu-central-1:302432776212:service/ucluj-backend/f393d2096ee14841a28955d9cfd98d7b
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::302432776212:role/github-actions-ucluj-deploy
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        run: |
+          TAG="${GITHUB_SHA::7}"
+          docker build -f backend/Dockerfile -t "$ECR_REPO:latest" -t "$ECR_REPO:$TAG" .
+          docker push "$ECR_REPO:latest"
+          docker push "$ECR_REPO:$TAG"
+
+      - name: Deploy to App Runner and wait
+        run: |
+          OP=$(aws apprunner start-deployment --service-arn "$SERVICE_ARN" --query OperationId --output text)
+          echo "Started App Runner deployment: $OP"
+          for i in $(seq 1 40); do
+            sleep 15
+            ST=$(aws apprunner list-operations --service-arn "$SERVICE_ARN" \
+                  --query "OperationSummaryList[?Id=='$OP'].Status | [0]" --output text 2>/dev/null || echo UNKNOWN)
+            echo "operation status: $ST"
+            case "$ST" in
+              SUCCEEDED) echo "Backend deployment succeeded."; exit 0 ;;
+              FAILED|ROLLBACK_SUCCEEDED|ROLLBACK_FAILED) echo "Backend deployment failed."; exit 1 ;;
+            esac
+          done
+          echo "::warning::Timed out waiting for App Runner; it may still be deploying."
