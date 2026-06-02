@@ -717,14 +717,23 @@ class StartingXIPredictor:
         coarse_arr = pool_indexed["role_group"].astype(str).str.upper().to_numpy()
         scores = pool_indexed["predicted_score"].astype(float).to_numpy()
 
-        BIG = 1e6   # finite penalty for forbidden matches (Hungarian dislikes inf).
-        SOFT = 0.5  # soft penalty for a coarse-only (not fine-admissible) match.
+        BIG = 1e6    # finite penalty for forbidden matches (Hungarian dislikes inf).
+        NEAR = 0.30  # penalty for an admissible but off-primary fine match (a CB at full-back).
+        SOFT = 0.60  # penalty for a coarse-only match (no admissible fine overlap).
+        # predicted_score sits in a narrow band, so even NEAR dominates the score
+        # gaps between players. The effect: each player is placed in their PRIMARY
+        # fine position (fine group == slot family) whenever the squad allows, and
+        # only covers out of position when no specialist for that slot is free.
         cost = np.full((n_players, n_slots), BIG, dtype=float)
         for j, (label, coarse) in enumerate(slot_specs):
-            admissible = SLOT_ADMISSIBLE_FINE.get(self._slot_family(label), set())
+            family = self._slot_family(label)
+            admissible = SLOT_ADMISSIBLE_FINE.get(family, set())
+            primary = fine_arr == family
             fine_ok = np.isin(fine_arr, list(admissible))
+            secondary = fine_ok & ~primary
             coarse_ok = (coarse_arr == coarse) & ~fine_ok
-            cost[fine_ok, j] = -scores[fine_ok]
+            cost[primary, j] = -scores[primary]
+            cost[secondary, j] = -scores[secondary] + NEAR
             cost[coarse_ok, j] = -scores[coarse_ok] + SOFT
 
         try:
@@ -818,8 +827,13 @@ class StartingXIPredictor:
         result: List[tuple[int, int, str, str]] = []  # (player_idx, slot_idx, label, coarse)
 
         for j, (label, cg) in enumerate(slot_specs):
-            admissible = SLOT_ADMISSIBLE_FINE.get(StartingXIPredictor._slot_family(label), set())
-            pick = next((i for i in order if i not in used and fine[i] in admissible), None)
+            family = StartingXIPredictor._slot_family(label)
+            admissible = SLOT_ADMISSIBLE_FINE.get(family, set())
+            # Prefer the player's primary fine position (fine == slot family),
+            # then an adjacent admissible role, then any coarse-line match.
+            pick = next((i for i in order if i not in used and fine[i] == family), None)
+            if pick is None:
+                pick = next((i for i in order if i not in used and fine[i] in admissible), None)
             if pick is None:
                 pick = next((i for i in order if i not in used and coarse[i] == cg), None)
             if pick is not None:
