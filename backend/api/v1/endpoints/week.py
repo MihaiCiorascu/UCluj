@@ -196,6 +196,12 @@ async def week_fixtures(
                     )
                     item["prescription"] = None
             except Exception:
+                logger.warning(
+                    "Prediction failed for %s vs %s",
+                    f.get("home_team"),
+                    f.get("away_team"),
+                    exc_info=True,
+                )
                 item["home_win_probability"] = None
                 item["key_drivers"] = []
                 item["top_risks"] = []
