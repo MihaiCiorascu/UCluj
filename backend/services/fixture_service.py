@@ -64,22 +64,10 @@ class FixtureService:
 
         upcoming = df[df["home_score"].isna()]
 
-        fixtures = [self._row_to_fixture(r) for _, r in upcoming.head(n).iterrows()]
-
-        if not fixtures:
-            # Mock upcoming match for presentation purposes
-            fixtures.append({
-                "match_id": "mock_fcsb_1",
-                "season": "2024",
-                "match_date": "2024-05-10T20:00:00Z",
-                "home_team": team,
-                "away_team": "FCSB",
-                "home_score": None,
-                "away_score": None,
-                "venue": self._stadium_map.get(team, "Cluj Arena"),
-            })
-
-        return fixtures[:n]
+        # Return the real upcoming fixtures only (possibly empty). The demo
+        # path above already populates the committee view; production no longer
+        # injects a synthetic placeholder match.
+        return [self._row_to_fixture(r) for _, r in upcoming.head(n).iterrows()]
 
     def standings(self, season: str | None = None) -> list[dict]:
         df = self._df.copy()
