@@ -26,8 +26,15 @@ import time
 from pathlib import Path
 
 import boto3
-import httpx
+# curl_cffi impersonates a real browser TLS fingerprint to clear SofaScore's
+# Cloudflare bot check, which 403s plain httpx/requests from any IP.
+from curl_cffi import requests as cffi
 
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows cp1252 safety for diacritics
+except Exception:
+    pass
 
 SOFASCORE_IMAGE = "https://api.sofascore.app/api/v1/player/{id}/image"
 USER_AGENT = (
@@ -92,7 +99,7 @@ def main() -> int:
     skipped = 0
     failed = 0
 
-    with httpx.Client(timeout=httpx.Timeout(20.0)) as client:
+    with cffi.Session(impersonate="chrome") as client:
         for idx, (wy_id, record) in enumerate(mapping.items(), start=1):
             sofascore_id = record.get("sofascore_id")
             if not sofascore_id:
@@ -103,8 +110,8 @@ def main() -> int:
 
             url = SOFASCORE_IMAGE.format(id=sofascore_id)
             try:
-                resp = client.get(url, headers={"User-Agent": USER_AGENT})
-            except httpx.HTTPError as exc:
+                resp = client.get(url, timeout=25)
+            except Exception as exc:
                 print(f"[{idx}] wy={wy_id} sr={sofascore_id} http-error: {exc}", file=sys.stderr)
                 failed += 1
                 continue

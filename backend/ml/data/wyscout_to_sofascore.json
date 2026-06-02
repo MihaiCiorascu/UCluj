@@ -3,37 +3,43 @@
     "sofascore_id": 2430358,
     "sofascore_name": "Sebastian Ritivoi",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1292552.jpg"
   },
   "1208673": {
     "sofascore_id": 2193827,
     "sofascore_name": "Dan-Cristian Neicu",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1208673.jpg"
   },
   "1207665": {
     "sofascore_id": 2181733,
     "sofascore_name": "Nicolas Constantinescu",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1207665.jpg"
   },
   "1195330": {
     "sofascore_id": 2154555,
     "sofascore_name": "Radu Postelnicu",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1195330.jpg"
   },
   "1086040": {
     "sofascore_id": 1530600,
     "sofascore_name": "Ioan Barstan",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1086040.jpg"
   },
   "1085571": {
     "sofascore_id": 1524937,
     "sofascore_name": "Luca Stancu",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1085571.jpg"
   },
   "1083169": {
     "sofascore_id": 1891917,
@@ -45,19 +51,22 @@
     "sofascore_id": 2161786,
     "sofascore_name": "Andrei Sucu",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1047335.jpg"
   },
   "1047321": {
     "sofascore_id": 2073970,
     "sofascore_name": "Sebastian Banu",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1047321.jpg"
   },
   "1047047": {
     "sofascore_id": 1878597,
     "sofascore_name": "Răzvan Gligor",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1047047.jpg"
   },
   "1033686": {
     "sofascore_id": 1890323,
@@ -75,91 +84,106 @@
     "sofascore_id": 1974277,
     "sofascore_name": "Alexandru Goncear",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1024583.jpg"
   },
   "1024571": {
     "sofascore_id": 1974291,
     "sofascore_name": "Răzvan Marincean",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1024571.jpg"
   },
   "1018334": {
     "sofascore_id": 1562194,
     "sofascore_name": "David Barbu",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "subset-name"
+    "reason": "subset-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1018334.jpg"
   },
   "950515": {
     "sofascore_id": 1404617,
     "sofascore_name": "George Gligor",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/950515.jpg"
   },
   "946137": {
     "sofascore_id": 1144857,
     "sofascore_name": "Gabriel Ursu",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/946137.jpg"
   },
   "914388": {
     "sofascore_id": 1916038,
     "sofascore_name": "Casian Soare",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/914388.jpg"
   },
   "913464": {
     "sofascore_id": 1477485,
     "sofascore_name": "Alexandru Bota",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/913464.jpg"
   },
   "905052": {
     "sofascore_id": 1500748,
     "sofascore_name": "David Matei",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/905052.jpg"
   },
   "897654": {
     "sofascore_id": 1468940,
     "sofascore_name": "Andrei Dumitru",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/897654.jpg"
   },
   "892108": {
     "sofascore_id": 1566298,
     "sofascore_name": "Patrick Dulcea",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/892108.jpg"
   },
   "892106": {
     "sofascore_id": 1426622,
     "sofascore_name": "Luca Basceanu",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/892106.jpg"
   },
   "885074": {
     "sofascore_id": 1446612,
     "sofascore_name": "Mihai Toma",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/885074.jpg"
   },
   "884773": {
     "sofascore_id": 1436307,
     "sofascore_name": "Denis Bordun",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/884773.jpg"
   },
   "880237": {
     "sofascore_id": 1500697,
     "sofascore_name": "Raul Rotund",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/880237.jpg"
   },
   "875968": {
     "sofascore_id": 1402906,
     "sofascore_name": "Kevin Ciubotaru",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/875968.jpg"
   },
   "860667": {
     "sofascore_id": 1605277,
@@ -171,841 +195,981 @@
     "sofascore_id": 1504963,
     "sofascore_name": "Iustin Doicaru",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/860666.jpg"
   },
   "860649": {
     "sofascore_id": 1495850,
     "sofascore_name": "David Popa",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/860649.jpg"
   },
   "847059": {
     "sofascore_id": 1435018,
     "sofascore_name": "Drilon Hazrollaj",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/847059.jpg"
   },
   "846397": {
     "sofascore_id": 1389690,
     "sofascore_name": "Danel Dongmo",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "subset-name"
+    "reason": "subset-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/846397.jpg"
   },
   "845197": {
     "sofascore_id": 1500495,
     "sofascore_name": "Antonio Dumitru",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/845197.jpg"
   },
   "845186": {
     "sofascore_id": 1436052,
     "sofascore_name": "David Ciubăncan",
     "sofascore_team": "UTA Arad",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/845186.jpg"
   },
   "845124": {
     "sofascore_id": 1890319,
     "sofascore_name": "Andrei Dorobantu",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/845124.jpg"
   },
   "838829": {
     "sofascore_id": 1391981,
     "sofascore_name": "Dan Emilian Neicu",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/838829.jpg"
   },
   "837919": {
     "sofascore_id": 1144853,
     "sofascore_name": "Andrei Rus",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/837919.jpg"
   },
   "828623": {
     "sofascore_id": 1469868,
     "sofascore_name": "Mihnea Rădulescu",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/828623.jpg"
   },
   "827001": {
     "sofascore_id": 1426620,
     "sofascore_name": "Gabriel Gheorghe",
     "sofascore_team": "FC Rapid București",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/827001.jpg"
   },
   "825398": {
     "sofascore_id": 1427105,
     "sofascore_name": "Alexandru Stoian",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/825398.jpg"
   },
   "812734": {
     "sofascore_id": 1882437,
     "sofascore_name": "David Ilie",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/812734.jpg"
   },
   "812729": {
     "sofascore_id": 1432645,
     "sofascore_name": "Ianis Mihart",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/812729.jpg"
   },
   "809979": {
     "sofascore_id": 1183894,
     "sofascore_name": "Gabriel David",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/809979.jpg"
   },
   "798255": {
     "sofascore_id": 1383903,
     "sofascore_name": "Ștefan Bană",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "subset-name"
+    "reason": "subset-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/798255.jpg"
   },
   "794799": {
     "sofascore_id": 1170279,
     "sofascore_name": "Ianis Gindila",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/794799.jpg"
   },
   "794309": {
     "sofascore_id": 1492729,
     "sofascore_name": "Andres Șfaiț",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/794309.jpg"
   },
   "779381": {
     "sofascore_id": 1435789,
     "sofascore_name": "Flavius Iacob",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/779381.jpg"
   },
   "778883": {
     "sofascore_id": 1113174,
     "sofascore_name": "Andrei Gheorghita",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/778883.jpg"
   },
   "774257": {
     "sofascore_id": 1520822,
     "sofascore_name": "David Ciurel",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/774257.jpg"
   },
   "770400": {
     "sofascore_id": 1426621,
     "sofascore_name": "Ianis Tarbă",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/770400.jpg"
   },
   "762971": {
     "sofascore_id": 1152489,
     "sofascore_name": "Luca Banu",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/762971.jpg"
   },
   "762967": {
     "sofascore_id": 1200978,
     "sofascore_name": "Laurenţiu Vlăsceanu",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/762967.jpg"
   },
   "759616": {
     "sofascore_id": 1146209,
     "sofascore_name": "Omar El Sawy",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/759616.jpg"
   },
   "756295": {
     "sofascore_id": 1875754,
     "sofascore_name": "Cristian Licsandru",
     "sofascore_team": "FC Dinamo București",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/756295.jpg"
   },
   "756156": {
     "sofascore_id": 1468501,
     "sofascore_name": "Cristian Chira",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/756156.jpg"
   },
   "753764": {
     "sofascore_id": 1129974,
     "sofascore_name": "Mihai Lixandru",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/753764.jpg"
   },
   "748513": {
     "sofascore_id": 1907275,
     "sofascore_name": "Atanas Trică",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/748513.jpg"
   },
   "747286": {
     "sofascore_id": 1126975,
     "sofascore_name": "Cristian Mihai",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/747286.jpg"
   },
   "747238": {
     "sofascore_id": 1390747,
     "sofascore_name": "Ionuț Cojocaru",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/747238.jpg"
   },
   "739220": {
     "sofascore_id": 1113023,
     "sofascore_name": "Răzvan Andrei Tănasă",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/739220.jpg"
   },
   "735669": {
     "sofascore_id": 1142723,
     "sofascore_name": "Alexandru Musi",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/735669.jpg"
   },
   "732107": {
     "sofascore_id": 1104891,
     "sofascore_name": "Antonio Alexandru Bordușanu",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/732107.jpg"
   },
   "731172": {
     "sofascore_id": 1884683,
     "sofascore_name": "Christ Afalna",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/731172.jpg"
   },
   "705980": {
     "sofascore_id": 1152491,
     "sofascore_name": "Matei Moraru",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/705980.jpg"
   },
   "696194": {
     "sofascore_id": 1152449,
     "sofascore_name": "Adrian Mazilu",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/696194.jpg"
   },
   "696185": {
     "sofascore_id": 1153177,
     "sofascore_name": "Adrian Caragea",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/696185.jpg"
   },
   "696173": {
     "sofascore_id": 1152501,
     "sofascore_name": "Andrei Borza",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/696173.jpg"
   },
   "684806": {
     "sofascore_id": 1155668,
     "sofascore_name": "Adrian Chică-Roșă",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/684806.jpg"
   },
   "682829": {
     "sofascore_id": 1067660,
     "sofascore_name": "Octavian Popescu",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/682829.jpg"
   },
   "681583": {
     "sofascore_id": 1033266,
     "sofascore_name": "Alexandru Grigoras Pantea",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/681583.jpg"
   },
   "673678": {
     "sofascore_id": 1022057,
     "sofascore_name": "Richard Odada",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/673678.jpg"
   },
   "657843": {
     "sofascore_id": 1067388,
     "sofascore_name": "Zoran Mitrov",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/657843.jpg"
   },
   "655465": {
     "sofascore_id": 1020202,
     "sofascore_name": "Carlos Mora",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/655465.jpg"
   },
   "650096": {
     "sofascore_id": 1199434,
     "sofascore_name": "Luan",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/650096.jpg"
   },
   "649828": {
     "sofascore_id": 1463902,
     "sofascore_name": "Talisson",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/649828.jpg"
   },
   "645620": {
     "sofascore_id": 1150392,
     "sofascore_name": "Eduard Radaslavescu",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/645620.jpg"
   },
   "645614": {
     "sofascore_id": 1409042,
     "sofascore_name": "David Maftei",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/645614.jpg"
   },
   "644450": {
     "sofascore_id": 1013409,
     "sofascore_name": "Kalifa Kujabi",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/644450.jpg"
   },
   "642344": {
     "sofascore_id": 1085422,
     "sofascore_name": "Baba Alhassan",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/642344.jpg"
   },
   "635248": {
     "sofascore_id": 1476703,
     "sofascore_name": "Lorenzo Biliboc",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/635248.jpg"
   },
   "632600": {
     "sofascore_id": 1131675,
     "sofascore_name": "Cristian Ignat",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/632600.jpg"
   },
   "630552": {
     "sofascore_id": 1152493,
     "sofascore_name": "Matteo Dutu",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/630552.jpg"
   },
   "630268": {
     "sofascore_id": 1101617,
     "sofascore_name": "Andrei Coubis",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/630268.jpg"
   },
   "625962": {
     "sofascore_id": 1068254,
     "sofascore_name": "Luca Mihai",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/625962.jpg"
   },
   "624454": {
     "sofascore_id": 993535,
     "sofascore_name": "Alin Fică",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/624454.jpg"
   },
   "622286": {
     "sofascore_id": 1130145,
     "sofascore_name": "Ștefan Pănoiu",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/622286.jpg"
   },
   "619309": {
     "sofascore_id": 1101178,
     "sofascore_name": "Oucasse Mendy",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/619309.jpg"
   },
   "618306": {
     "sofascore_id": 1003349,
     "sofascore_name": "Victor Dican",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/618306.jpg"
   },
   "618151": {
     "sofascore_id": 991653,
     "sofascore_name": "Kader Keïta",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/618151.jpg"
   },
   "612385": {
     "sofascore_id": 1006041,
     "sofascore_name": "Charles Petro",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/612385.jpg"
   },
   "603499": {
     "sofascore_id": 1003297,
     "sofascore_name": "Alexandru Işfan",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/603499.jpg"
   },
   "598939": {
     "sofascore_id": 884538,
     "sofascore_name": "Mohammed Kamara",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/598939.jpg"
   },
   "595649": {
     "sofascore_id": 1036263,
     "sofascore_name": "Cătălin Vulturar",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/595649.jpg"
   },
   "595340": {
     "sofascore_id": 1066691,
     "sofascore_name": "Manuel Lopes",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/595340.jpg"
   },
   "593080": {
     "sofascore_id": 1090603,
     "sofascore_name": "Diogo Batista",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/593080.jpg"
   },
   "591005": {
     "sofascore_id": 942091,
     "sofascore_name": "Claudiu Petrila",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/591005.jpg"
   },
   "590216": {
     "sofascore_id": 964678,
     "sofascore_name": "Denis Hrezdac",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/590216.jpg"
   },
   "590121": {
     "sofascore_id": 1014034,
     "sofascore_name": "Aviel Zargari",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/590121.jpg"
   },
   "587667": {
     "sofascore_id": 1155295,
     "sofascore_name": "Sota Mino",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/587667.jpg"
   },
   "586612": {
     "sofascore_id": 988577,
     "sofascore_name": "Ovidiu Perianu",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/586612.jpg"
   },
   "583396": {
     "sofascore_id": 991336,
     "sofascore_name": "Jayson Papeau",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/583396.jpg"
   },
   "577452": {
     "sofascore_id": 946446,
     "sofascore_name": "Dorin Codrea",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/577452.jpg"
   },
   "577446": {
     "sofascore_id": 1092984,
     "sofascore_name": "Daniel Paraschiv",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/577446.jpg"
   },
   "574712": {
     "sofascore_id": 943711,
     "sofascore_name": "Marian Huja",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/574712.jpg"
   },
   "568864": {
     "sofascore_id": 1020866,
     "sofascore_name": "Moonga Aluta Simba",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/568864.jpg"
   },
   "565494": {
     "sofascore_id": 1101229,
     "sofascore_name": "Dan Sîrbu",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/565494.jpg"
   },
   "564613": {
     "sofascore_id": 1110526,
     "sofascore_name": "Teodor Lungu",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/564613.jpg"
   },
   "563154": {
     "sofascore_id": 974196,
     "sofascore_name": "Mamoudou Karamoko",
     "sofascore_team": "FC Dinamo București",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/563154.jpg"
   },
   "561907": {
     "sofascore_id": 927988,
     "sofascore_name": "Alexandru Dinu",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/561907.jpg"
   },
   "560364": {
     "sofascore_id": 927797,
     "sofascore_name": "Jovo Lukić",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/560364.jpg"
   },
   "558098": {
     "sofascore_id": 1022783,
     "sofascore_name": "Enzo López",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/558098.jpg"
   },
   "551419": {
     "sofascore_id": 944049,
     "sofascore_name": "Alberto Soro",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/551419.jpg"
   },
   "544547": {
     "sofascore_id": 1012439,
     "sofascore_name": "Marc Tsoungui",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/544547.jpg"
   },
   "530655": {
     "sofascore_id": 944628,
     "sofascore_name": "Andrei Cordea",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/530655.jpg"
   },
   "528190": {
     "sofascore_id": 988473,
     "sofascore_name": "Ștefan Baiaram",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/528190.jpg"
   },
   "528185": {
     "sofascore_id": 999025,
     "sofascore_name": "Ștefan Bodișteanu",
     "sofascore_team": "FC Botoșani",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/528185.jpg"
   },
   "528176": {
     "sofascore_id": 998989,
     "sofascore_name": "Constantin Grameni",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/528176.jpg"
   },
   "517742": {
     "sofascore_id": 992208,
     "sofascore_name": "Marko Gjorgjievski",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/517742.jpg"
   },
   "511261": {
     "sofascore_id": 970969,
     "sofascore_name": "Daniel Bîrligea",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/511261.jpg"
   },
   "509301": {
     "sofascore_id": 928336,
     "sofascore_name": "Joyskim Dawa Tchakonte",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/509301.jpg"
   },
   "83617": {
     "sofascore_id": 36883,
     "sofascore_name": "Ciprian Deac",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83617.jpg"
   },
   "83590": {
     "sofascore_id": 44435,
     "sofascore_name": "Alexandru Chipciu",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83590.jpg"
   },
   "83699": {
     "sofascore_id": 44443,
     "sofascore_name": "Alexandru Mateiu",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83699.jpg"
   },
   "83959": {
     "sofascore_id": 69213,
     "sofascore_name": "Gheorghe Grozav",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83959.jpg"
   },
   "38598": {
     "sofascore_id": 44417,
     "sofascore_name": "Denis Alibec",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/38598.jpg"
   },
   "83616": {
     "sofascore_id": 44478,
     "sofascore_name": "Valentin Crețu",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83616.jpg"
   },
   "83575": {
     "sofascore_id": 69295,
     "sofascore_name": "Vlad Chiriches",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83575.jpg"
   },
   "83744": {
     "sofascore_id": 69336,
     "sofascore_name": "Paul Papp",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83744.jpg"
   },
   "85338": {
     "sofascore_id": 75031,
     "sofascore_name": "Adnan Aganović",
     "sofascore_team": "Sepsi OSK",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/85338.jpg"
   },
   "68126": {
     "sofascore_id": 78201,
     "sofascore_name": "Georgi Milanov",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/68126.jpg"
   },
   "83838": {
     "sofascore_id": 93842,
     "sofascore_name": "Dan Nistor",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83838.jpg"
   },
   "22389": {
     "sofascore_id": 98291,
     "sofascore_name": "Jakub Vojtuš",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/22389.jpg"
   },
   "106397": {
     "sofascore_id": 852018,
     "sofascore_name": "Dmytro Pospelov",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/106397.jpg"
   },
   "84343": {
     "sofascore_id": 115585,
     "sofascore_name": "Aurelian Chiţu",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84343.jpg"
   },
   "128732": {
     "sofascore_id": 117128,
     "sofascore_name": "Risto Radunović",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/128732.jpg"
   },
   "84336": {
     "sofascore_id": 149648,
     "sofascore_name": "Gabriel Iancu",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84336.jpg"
   },
   "84373": {
     "sofascore_id": 135146,
     "sofascore_name": "Roman Alin",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84373.jpg"
   },
   "84397": {
     "sofascore_id": 229678,
     "sofascore_name": "Alexandru Crețu",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84397.jpg"
   },
   "84047": {
     "sofascore_id": 70723,
     "sofascore_name": "Sergiu Buş",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84047.jpg"
   },
   "135847": {
     "sofascore_id": 127758,
     "sofascore_name": "Diego Živulić",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/135847.jpg"
   },
   "20650": {
     "sofascore_id": 151076,
     "sofascore_name": "Juri Cisotti",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/20650.jpg"
   },
   "84353": {
     "sofascore_id": 202426,
     "sofascore_name": "Ionuț Vînă",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84353.jpg"
   },
   "68734": {
     "sofascore_id": 840307,
     "sofascore_name": "Milen Zhelev",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/68734.jpg"
   },
   "85307": {
     "sofascore_id": 82889,
     "sofascore_name": "Mihai Bordeianu",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/85307.jpg"
   },
   "85276": {
     "sofascore_id": 199092,
     "sofascore_name": "Nicușor Bancu",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/85276.jpg"
   },
   "136551": {
     "sofascore_id": 818259,
     "sofascore_name": "Andreas Karo",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/136551.jpg"
   },
   "137155": {
     "sofascore_id": 940658,
     "sofascore_name": "Adrian Păun",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/137155.jpg"
   },
   "137161": {
     "sofascore_id": 190319,
     "sofascore_name": "George Pușcaș",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/137161.jpg"
   },
   "135924": {
     "sofascore_id": 190169,
     "sofascore_name": "Cristian Ponde",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/135924.jpg"
   },
   "134514": {
     "sofascore_id": 191174,
     "sofascore_name": "Hervin Ongenda",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/134514.jpg"
   },
   "8109": {
     "sofascore_id": 218298,
     "sofascore_name": "Eddy Gnahore",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/8109.jpg"
   },
   "169037": {
     "sofascore_id": 812807,
     "sofascore_name": "Ovidiu Bic",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/169037.jpg"
   },
   "173293": {
     "sofascore_id": 232162,
     "sofascore_name": "Luka Zahovič",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/173293.jpg"
   },
   "220694": {
     "sofascore_id": 245249,
     "sofascore_name": "Dino Mikanović",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/220694.jpg"
   },
   "224047": {
     "sofascore_id": 252473,
     "sofascore_name": "Bozhidar Chorbadzhiyski",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/224047.jpg"
   },
   "227957": {
     "sofascore_id": 847828,
     "sofascore_name": "Ionut Stoica",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/227957.jpg"
   },
   "227873": {
     "sofascore_id": 888276,
     "sofascore_name": "Enriko Papa",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/227873.jpg"
   },
   "227952": {
     "sofascore_id": 797718,
     "sofascore_name": "Andrei Artean",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/227952.jpg"
   },
   "236768": {
     "sofascore_id": 886663,
     "sofascore_name": "Florinel Ibrian",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/236768.jpg"
   },
   "236759": {
     "sofascore_id": 1387871,
     "sofascore_name": "Constantin Toma",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/236759.jpg"
   },
   "236823": {
     "sofascore_id": 279607,
     "sofascore_name": "Silviu Balaure",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/236823.jpg"
   },
   "238585": {
     "sofascore_id": 283837,
     "sofascore_name": "Marko Stolnik",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/238585.jpg"
   },
   "239290": {
     "sofascore_id": 284355,
     "sofascore_name": "Elio Capradossi",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/239290.jpg"
   },
   "240953": {
     "sofascore_id": 287023,
     "sofascore_name": "Ahmed Said",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/240953.jpg"
   },
   "252564": {
     "sofascore_id": 316433,
     "sofascore_name": "Cristian Ganea",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/252564.jpg"
   },
   "253319": {
     "sofascore_id": 798307,
     "sofascore_name": "David Kiki",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/253319.jpg"
   },
   "262984": {
     "sofascore_id": 537032,
     "sofascore_name": "Florin Tănase",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/262984.jpg"
   },
   "263024": {
     "sofascore_id": 316441,
     "sofascore_name": "Cristi Bărbut",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/263024.jpg"
   },
   "273125": {
     "sofascore_id": 1094379,
@@ -1017,319 +1181,372 @@
     "sofascore_id": 797595,
     "sofascore_name": "Ovidiu Popescu",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/283965.jpg"
   },
   "278515": {
     "sofascore_id": 789193,
     "sofascore_name": "Mamadou Thiam",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/278515.jpg"
   },
   "283961": {
     "sofascore_id": 797673,
     "sofascore_name": "Iustin Popescu",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/283961.jpg"
   },
   "283833": {
     "sofascore_id": 326435,
     "sofascore_name": "Jakub Hromada",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/283833.jpg"
   },
   "285677": {
     "sofascore_id": 851687,
     "sofascore_name": "Din Alomerovic",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/285677.jpg"
   },
   "286009": {
     "sofascore_id": 361150,
     "sofascore_name": "Cristian Manea",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/286009.jpg"
   },
   "286015": {
     "sofascore_id": 827540,
     "sofascore_name": "Alexandru Cicâldău",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/286015.jpg"
   },
   "293344": {
     "sofascore_id": 360902,
     "sofascore_name": "Elvir Koljić",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/293344.jpg"
   },
   "292613": {
     "sofascore_id": 790189,
     "sofascore_name": "Paul Iacob",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/292613.jpg"
   },
   "295757": {
     "sofascore_id": 940244,
     "sofascore_name": "Tidiane Keita",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/295757.jpg"
   },
   "302018": {
     "sofascore_id": 794638,
     "sofascore_name": "Alexandru Albu",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/302018.jpg"
   },
   "302088": {
     "sofascore_id": 895765,
     "sofascore_name": "Danny Armstrong",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/302088.jpg"
   },
   "327219": {
     "sofascore_id": 887741,
     "sofascore_name": "Florin Ștefan",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/327219.jpg"
   },
   "331434": {
     "sofascore_id": 812798,
     "sofascore_name": "Eduard Florescu",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/331434.jpg"
   },
   "333626": {
     "sofascore_id": 584434,
     "sofascore_name": "Pedro Nuno",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/333626.jpg"
   },
   "345748": {
     "sofascore_id": 845821,
     "sofascore_name": "Bruno Paz",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/345748.jpg"
   },
   "347151": {
     "sofascore_id": 889735,
     "sofascore_name": "Yohan Roche",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/347151.jpg"
   },
   "346531": {
     "sofascore_id": 1126663,
     "sofascore_name": "Vlad Pop",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/346531.jpg"
   },
   "346908": {
     "sofascore_id": 559470,
     "sofascore_name": "Alessandro Murgia",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/346908.jpg"
   },
   "346542": {
     "sofascore_id": 856555,
     "sofascore_name": "Tiberiu Capusa",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/346542.jpg"
   },
   "346549": {
     "sofascore_id": 852436,
     "sofascore_name": "Andrei Ciobanu",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/346549.jpg"
   },
   "346555": {
     "sofascore_id": 891460,
     "sofascore_name": "Nicolae Carnat",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/346555.jpg"
   },
   "355910": {
     "sofascore_id": 792803,
     "sofascore_name": "Mykola Kovtalyuk",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/355910.jpg"
   },
   "358660": {
     "sofascore_id": 1001667,
     "sofascore_name": "Samuel Teles",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/358660.jpg"
   },
   "361179": {
     "sofascore_id": 810531,
     "sofascore_name": "Alibek Aliev",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/361179.jpg"
   },
   "366784": {
     "sofascore_id": 877614,
     "sofascore_name": "Hakim Abdallah",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/366784.jpg"
   },
   "363609": {
     "sofascore_id": 798298,
     "sofascore_name": "Mihai Popescu",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/363609.jpg"
   },
   "368012": {
     "sofascore_id": 897623,
     "sofascore_name": "Alex Dobre",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/368012.jpg"
   },
   "372880": {
     "sofascore_id": 795187,
     "sofascore_name": "Benjamin Van Durmen",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/372880.jpg"
   },
   "376363": {
     "sofascore_id": 838890,
     "sofascore_name": "Jair",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/376363.jpg"
   },
   "376565": {
     "sofascore_id": 932021,
     "sofascore_name": "Aly Abeid",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/376565.jpg"
   },
   "380865": {
     "sofascore_id": 937446,
     "sofascore_name": "Cristian Negut",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/380865.jpg"
   },
   "380866": {
     "sofascore_id": 852435,
     "sofascore_name": "Tudor Băluță",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/380866.jpg"
   },
   "387061": {
     "sofascore_id": 897590,
     "sofascore_name": "Karlo Muhar",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/387061.jpg"
   },
   "393264": {
     "sofascore_id": 989522,
     "sofascore_name": "Florent Poulolo",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/393264.jpg"
   },
   "404908": {
     "sofascore_id": 920622,
     "sofascore_name": "Marco Dulca",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/404908.jpg"
   },
   "402476": {
     "sofascore_id": 886248,
     "sofascore_name": "Marius Catalin Coman",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/402476.jpg"
   },
   "402409": {
     "sofascore_id": 812808,
     "sofascore_name": "Darius Olaru",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/402409.jpg"
   },
   "399649": {
     "sofascore_id": 855669,
     "sofascore_name": "João Lameira",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/399649.jpg"
   },
   "404846": {
     "sofascore_id": 822240,
     "sofascore_name": "Sebastian Mailat",
     "sofascore_team": "FC Botoșani",
-    "reason": "exact-name"
+    "reason": "exact-name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/404846.jpg"
   },
   "404648": {
     "sofascore_id": 905030,
     "sofascore_name": "Guy Dahan",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/404648.jpg"
   },
   "406084": {
     "sofascore_id": 855812,
     "sofascore_name": "Denis Yanakov",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/406084.jpg"
   },
   "409007": {
     "sofascore_id": 833613,
     "sofascore_name": "Olimpiu Morutan",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/409007.jpg"
   },
   "412678": {
     "sofascore_id": 938672,
     "sofascore_name": "Meriton Korenica",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/412678.jpg"
   },
   "411139": {
     "sofascore_id": 831185,
     "sofascore_name": "Elhadji Pape Diaw",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/411139.jpg"
   },
   "412695": {
     "sofascore_id": 845365,
     "sofascore_name": "Valentin Gheorghe",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/412695.jpg"
   },
   "421354": {
     "sofascore_id": 845884,
     "sofascore_name": "Kennedy Boateng",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/421354.jpg"
   },
   "431961": {
     "sofascore_id": 795107,
     "sofascore_name": "Sheriff Sinyan",
     "sofascore_team": "CFR 1907 Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/431961.jpg"
   },
   "433613": {
     "sofascore_id": 839694,
     "sofascore_name": "Alexandru Pop",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/433613.jpg"
   },
   "435748": {
     "sofascore_id": 840529,
     "sofascore_name": "Vladimir Screciu",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/435748.jpg"
   },
   "436359": {
     "sofascore_id": 840780,
     "sofascore_name": "Ofri Arad",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/436359.jpg"
   },
   "437020": {
     "sofascore_id": 887011,
     "sofascore_name": "Adrian Rus",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/437020.jpg"
   },
   "441683": {
     "sofascore_id": 849788,
     "sofascore_name": "Gabriel Simion",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/441683.jpg"
   },
   "443858": {
     "sofascore_id": 878045,
@@ -1341,204 +1558,1423 @@
     "sofascore_id": 848330,
     "sofascore_name": "Gabriel Debeljuh",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/444454.jpg"
   },
   "444594": {
     "sofascore_id": 905541,
     "sofascore_name": "Siyabonga Ngezana",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/444594.jpg"
   },
   "445824": {
     "sofascore_id": 824206,
     "sofascore_name": "Andrej Fábry",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/445824.jpg"
   },
   "475721": {
     "sofascore_id": 965260,
     "sofascore_name": "Anzor Mekvabishvili",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/475721.jpg"
   },
   "475980": {
     "sofascore_id": 867804,
     "sofascore_name": "Tommi Jyry",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/475980.jpg"
   },
   "479610": {
     "sofascore_id": 994193,
     "sofascore_name": "Andrei Dumiter",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/479610.jpg"
   },
   "481134": {
     "sofascore_id": 962999,
     "sofascore_name": "Dennis Politic",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/481134.jpg"
   },
   "486209": {
     "sofascore_id": 867494,
     "sofascore_name": "Jovan Marković",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/486209.jpg"
   },
   "486564": {
     "sofascore_id": 864056,
     "sofascore_name": "Diogo Ramalho",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/486564.jpg"
   },
   "489204": {
     "sofascore_id": 883812,
     "sofascore_name": "Renato Espinosa",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/489204.jpg"
   },
   "491990": {
     "sofascore_id": 981487,
     "sofascore_name": "Brahima Doukansy",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/491990.jpg"
   },
   "495815": {
     "sofascore_id": 892021,
     "sofascore_name": "Luka Gojković",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/495815.jpg"
   },
   "499666": {
     "sofascore_id": 877234,
     "sofascore_name": "Oleksandr Safronov",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/499666.jpg"
   },
   "499832": {
     "sofascore_id": 822231,
     "sofascore_name": "Tobias Christensen",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/499832.jpg"
   },
   "503199": {
     "sofascore_id": 878671,
     "sofascore_name": "Raul Oprut",
     "sofascore_team": "FC Dinamo București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/503199.jpg"
   },
   "504570": {
     "sofascore_id": 882446,
     "sofascore_name": "Monday Etim",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/504570.jpg"
   },
   "506853": {
     "sofascore_id": 1085101,
     "sofascore_name": "Mouhamadou Drammeh",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/506853.jpg"
   },
   "507596": {
     "sofascore_id": 882662,
     "sofascore_name": "Conrado Buchanelli Holz",
     "sofascore_team": "SC Oțelul Galați",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/507596.jpg"
   },
   "512664": {
     "sofascore_id": 937188,
     "sofascore_name": "Oleksandr Romanchuk",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/512664.jpg"
   },
   "518067": {
     "sofascore_id": 1102675,
     "sofascore_name": "Ionuţ Coadă",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/518067.jpg"
   },
   "518465": {
     "sofascore_id": 1068627,
     "sofascore_name": "Aldair Ferreira",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/518465.jpg"
   },
   "519484": {
     "sofascore_id": 1160856,
     "sofascore_name": "Esteban Orozco",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/519484.jpg"
   },
   "525537": {
     "sofascore_id": 1102081,
     "sofascore_name": "Steven Nsimba",
     "sofascore_team": "Universitatea Craiova",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/525537.jpg"
   },
   "526387": {
     "sofascore_id": 1101188,
     "sofascore_name": "Issouf Macalou",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/526387.jpg"
   },
   "532568": {
     "sofascore_id": 901913,
     "sofascore_name": "Virgiliu Postolachi",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/532568.jpg"
   },
   "536651": {
     "sofascore_id": 979157,
     "sofascore_name": "Lucas de Vega",
     "sofascore_team": "FC Botoșani",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/536651.jpg"
   },
   "537093": {
     "sofascore_id": 905096,
     "sofascore_name": "David Miculescu",
     "sofascore_team": "FCSB",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/537093.jpg"
   },
   "541971": {
     "sofascore_id": 889106,
     "sofascore_name": "Jug Stanojev",
     "sofascore_team": "FC Universitatea Cluj",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/541971.jpg"
   },
   "542739": {
     "sofascore_id": 1884691,
     "sofascore_name": "Mihaita Lemnaru",
     "sofascore_team": "AFC Unirea 04 Slobozia",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/542739.jpg"
   },
   "543832": {
     "sofascore_id": 928639,
     "sofascore_name": "Narek Grigoryan",
     "sofascore_team": "FC Farul Constanța",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/543832.jpg"
   },
   "544331": {
     "sofascore_id": 899024,
     "sofascore_name": "Marinos Tzionis",
     "sofascore_team": "UTA Arad",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/544331.jpg"
   },
   "544631": {
     "sofascore_id": 954031,
     "sofascore_name": "Borisav Burmaz",
     "sofascore_team": "FC Rapid București",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/544631.jpg"
   },
   "545262": {
     "sofascore_id": 1000581,
     "sofascore_name": "Andres Dumitrescu",
     "sofascore_team": "FC Petrolul Ploiești",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/545262.jpg"
   },
   "545275": {
     "sofascore_id": 1129836,
     "sofascore_name": "Dragos Albu",
     "sofascore_team": "FC Hermannstadt",
-    "reason": "dob+name"
+    "reason": "dob+name",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/545275.jpg"
+  },
+  "1256304": {
+    "sofascore_id": 2420129,
+    "sofascore_name": "Mario Gabriel Dudu",
+    "sofascore_team": "FC Petrolul Ploiești",
+    "reason": "dob-match"
+  },
+  "1105408": {
+    "sofascore_id": 1916477,
+    "sofascore_name": "Gabriel Dumitru",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1105408.jpg"
+  },
+  "1086818": {
+    "sofascore_id": 1906867,
+    "sofascore_name": "Mark Tutu",
+    "sofascore_team": "UTA Arad",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1086818.jpg"
+  },
+  "1082698": {
+    "sofascore_id": 1440446,
+    "sofascore_name": "Franck Tchassem",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1082698.jpg"
+  },
+  "1082290": {
+    "sofascore_id": 1537075,
+    "sofascore_name": "Moussa Samake",
+    "sofascore_team": "Concordia Chiajna",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/1082290.jpg"
+  },
+  "994032": {
+    "sofascore_id": 2370959,
+    "sofascore_name": "Mircea-Mario Tache",
+    "sofascore_team": "Concordia Chiajna",
+    "reason": "search+dob"
+  },
+  "955803": {
+    "sofascore_id": 1435786,
+    "sofascore_name": "Marius Lupu",
+    "sofascore_team": "CSM Slatina",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/955803.jpg"
+  },
+  "932812": {
+    "sofascore_id": 2067072,
+    "sofascore_name": "Alexandru Soare",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/932812.jpg"
+  },
+  "858732": {
+    "sofascore_id": 1916035,
+    "sofascore_name": "Alexandru Gheorghe",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/858732.jpg"
+  },
+  "849722": {
+    "sofascore_id": 1897382,
+    "sofascore_name": "Patrick Vuc",
+    "sofascore_team": "CSC 1599 Șelimbăr",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/849722.jpg"
+  },
+  "844699": {
+    "sofascore_id": 1108156,
+    "sofascore_name": "Bence Végh",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/844699.jpg"
+  },
+  "842097": {
+    "sofascore_id": 1392762,
+    "sofascore_name": "Adams Friday",
+    "sofascore_team": "FC Botoșani",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/842097.jpg"
+  },
+  "837459": {
+    "sofascore_id": 1479043,
+    "sofascore_name": "Serban Tomache",
+    "sofascore_team": "FC Botoșani",
+    "reason": "search+dob"
+  },
+  "830137": {
+    "sofascore_id": 1383321,
+    "sofascore_name": "Viktor Kun",
+    "sofascore_team": "CFR 1907 Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/830137.jpg"
+  },
+  "826254": {
+    "sofascore_id": 1926465,
+    "sofascore_name": "Adrian Sîrbu",
+    "sofascore_team": "No team",
+    "reason": "search+dob"
+  },
+  "826080": {
+    "sofascore_id": 1213606,
+    "sofascore_name": "Rareș Pop",
+    "sofascore_team": "FC Petrolul Ploiești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/826080.jpg"
+  },
+  "821944": {
+    "sofascore_id": 1465151,
+    "sofascore_name": "Ioan Catalin Tolea",
+    "sofascore_team": "FC Voluntari",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/821944.jpg"
+  },
+  "813110": {
+    "sofascore_id": 1436284,
+    "sofascore_name": "Iustin Răducan",
+    "sofascore_team": "No team",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/813110.jpg"
+  },
+  "791217": {
+    "sofascore_id": 1836730,
+    "sofascore_name": "Ime Udo Ndon",
+    "sofascore_team": "UTA Arad",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/791217.jpg"
+  },
+  "784809": {
+    "sofascore_id": 1918317,
+    "sofascore_name": "Bogdan Marian",
+    "sofascore_team": "FC Petrolul Ploiești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/784809.jpg"
+  },
+  "784397": {
+    "sofascore_id": 1408990,
+    "sofascore_name": "Stefan Duțu",
+    "sofascore_team": "FC Farul Constanța II",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/784397.jpg"
+  },
+  "779379": {
+    "sofascore_id": 1435791,
+    "sofascore_name": "Lefter Daniel Stefan",
+    "sofascore_team": "FC Corvinul Hunedoara",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/779379.jpg"
+  },
+  "765045": {
+    "sofascore_id": 1196780,
+    "sofascore_name": "Endri Celaj",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/765045.jpg"
+  },
+  "763170": {
+    "sofascore_id": 1385457,
+    "sofascore_name": "Rareș Gal",
+    "sofascore_team": "CFR 1907 Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/763170.jpg"
+  },
+  "761469": {
+    "sofascore_id": 1160518,
+    "sofascore_name": "Alexandru Luca",
+    "sofascore_team": "CSC 1599 Șelimbăr",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/761469.jpg"
+  },
+  "754380": {
+    "sofascore_id": 1147940,
+    "sofascore_name": "Szabolcs Szilágyi",
+    "sofascore_team": "Szentlőrinc SE",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/754380.jpg"
+  },
+  "749390": {
+    "sofascore_id": 1146212,
+    "sofascore_name": "Mark Karacsony",
+    "sofascore_team": "CSM Olimpia Satu Mare",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/749390.jpg"
+  },
+  "745987": {
+    "sofascore_id": 1216815,
+    "sofascore_name": "Juraj Badelj",
+    "sofascore_team": "Universitatea Craiova",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/745987.jpg"
+  },
+  "734173": {
+    "sofascore_id": 1106409,
+    "sofascore_name": "Tarek Aggoun",
+    "sofascore_team": "Al-Shorta",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/734173.jpg"
+  },
+  "733083": {
+    "sofascore_id": 1169419,
+    "sofascore_name": "Moses Abbey",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/733083.jpg"
+  },
+  "725275": {
+    "sofascore_id": 1383308,
+    "sofascore_name": "Lindon Emërllahu",
+    "sofascore_team": "Polissya Zhytomyr",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/725275.jpg"
+  },
+  "707184": {
+    "sofascore_id": 1975944,
+    "sofascore_name": "Razvan Milea",
+    "sofascore_team": "AFC Metalul Buzău",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/707184.jpg"
+  },
+  "696195": {
+    "sofascore_id": 1153227,
+    "sofascore_name": "Mario Tudose",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/696195.jpg"
+  },
+  "683516": {
+    "sofascore_id": 1513448,
+    "sofascore_name": "Aboubacar Camara",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/683516.jpg"
+  },
+  "682774": {
+    "sofascore_id": 1409011,
+    "sofascore_name": "Alin Boțogan",
+    "sofascore_team": "Chindia Târgoviște",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/682774.jpg"
+  },
+  "682684": {
+    "sofascore_id": 1126662,
+    "sofascore_name": "Radu Negru",
+    "sofascore_team": "Bylis Ballsh B",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/682684.jpg"
+  },
+  "679439": {
+    "sofascore_id": 1032918,
+    "sofascore_name": "Drilon Islami",
+    "sofascore_team": "KF Shkëndija",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/679439.jpg"
+  },
+  "675862": {
+    "sofascore_id": 1033269,
+    "sofascore_name": "Mihai Udrea",
+    "sofascore_team": "FCSB II",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/675862.jpg"
+  },
+  "654448": {
+    "sofascore_id": 1031665,
+    "sofascore_name": "Ottó Hindrich",
+    "sofascore_team": "Legia Warszawa",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/654448.jpg"
+  },
+  "645240": {
+    "sofascore_id": 1139772,
+    "sofascore_name": "Razvan Pascalau",
+    "sofascore_team": "FC Dinamo București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/645240.jpg"
+  },
+  "636258": {
+    "sofascore_id": 1003355,
+    "sofascore_name": "Andrei Gorcea",
+    "sofascore_team": "UTA Arad",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/636258.jpg"
+  },
+  "634633": {
+    "sofascore_id": 999095,
+    "sofascore_name": "Riad Suta",
+    "sofascore_team": "FC Botoșani",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/634633.jpg"
+  },
+  "634497": {
+    "sofascore_id": 1139914,
+    "sofascore_name": "Gabriel Buta",
+    "sofascore_team": "CSM Slatina",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/634497.jpg"
+  },
+  "633039": {
+    "sofascore_id": 1033909,
+    "sofascore_name": "Timotej Jambor",
+    "sofascore_team": "Śląsk Wrocław",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/633039.jpg"
+  },
+  "621237": {
+    "sofascore_id": 1006137,
+    "sofascore_name": "Michael Pavlović",
+    "sofascore_team": "FC Botoșani",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/621237.jpg"
+  },
+  "618368": {
+    "sofascore_id": 1494220,
+    "sofascore_name": "Robert Dimitrie Popa",
+    "sofascore_team": "FCU 1948 Craiova",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/618368.jpg"
+  },
+  "608289": {
+    "sofascore_id": 1130100,
+    "sofascore_name": "Nicolas Popescu",
+    "sofascore_team": "Steaua București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/608289.jpg"
+  },
+  "608286": {
+    "sofascore_id": 1161079,
+    "sofascore_name": "Robert Popescu",
+    "sofascore_team": "Steaua București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/608286.jpg"
+  },
+  "607434": {
+    "sofascore_id": 1035687,
+    "sofascore_name": "Alexandru Oroian",
+    "sofascore_team": "ASA Târgu Mureş",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/607434.jpg"
+  },
+  "603977": {
+    "sofascore_id": 985279,
+    "sofascore_name": "Pavlo Isenko",
+    "sofascore_team": "Universitatea Craiova",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/603977.jpg"
+  },
+  "602966": {
+    "sofascore_id": 1092521,
+    "sofascore_name": "Attila Csűrös",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/602966.jpg"
+  },
+  "601785": {
+    "sofascore_id": 974832,
+    "sofascore_name": "Dániel Zsóri",
+    "sofascore_team": "Kozármisleny FC",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/601785.jpg"
+  },
+  "586805": {
+    "sofascore_id": 983522,
+    "sofascore_name": "Szabolcs Szalay",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/586805.jpg"
+  },
+  "576188": {
+    "sofascore_id": 942238,
+    "sofascore_name": "Florin Borța",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/576188.jpg"
+  },
+  "573542": {
+    "sofascore_id": 941892,
+    "sofascore_name": "Ilija Mašić",
+    "sofascore_team": "CFR 1907 Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/573542.jpg"
+  },
+  "573194": {
+    "sofascore_id": 985848,
+    "sofascore_name": "Franz Stolz",
+    "sofascore_team": "Grazer AK 1902",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/573194.jpg"
+  },
+  "556020": {
+    "sofascore_id": 925011,
+    "sofascore_name": "Jasper van der Werff",
+    "sofascore_team": "FC Universitatea Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/556020.jpg"
+  },
+  "551713": {
+    "sofascore_id": 914414,
+    "sofascore_name": "Ștefan Târnovanu",
+    "sofascore_team": "FCSB",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/551713.jpg"
+  },
+  "489688": {
+    "sofascore_id": 978658,
+    "sofascore_name": "Alexandru Țîrlea",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/489688.jpg"
+  },
+  "422702": {
+    "sofascore_id": 1131639,
+    "sofascore_name": "Yassine Zakir",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/422702.jpg"
+  },
+  "83587": {
+    "sofascore_id": 21564,
+    "sofascore_name": "Eric Bicfalvi",
+    "sofascore_team": "No team",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83587.jpg"
+  },
+  "84325": {
+    "sofascore_id": 48051,
+    "sofascore_name": "Ionuț Larie",
+    "sofascore_team": "FC Farul Constanța",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84325.jpg"
+  },
+  "83665": {
+    "sofascore_id": 98566,
+    "sofascore_name": "Alexandru Benga",
+    "sofascore_team": "UTA Arad",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83665.jpg"
+  },
+  "83966": {
+    "sofascore_id": 44556,
+    "sofascore_name": "Silviu Lung Jr.",
+    "sofascore_team": "Universitatea Craiova",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83966.jpg"
+  },
+  "83983": {
+    "sofascore_id": 844531,
+    "sofascore_name": "Takayuki Seto",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83983.jpg"
+  },
+  "81100": {
+    "sofascore_id": 66034,
+    "sofascore_name": "Denis Rusu",
+    "sofascore_team": "AFC Unirea 04 Slobozia",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/81100.jpg"
+  },
+  "119630": {
+    "sofascore_id": 238708,
+    "sofascore_name": "Islam Slimani",
+    "sofascore_team": "No team",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/119630.jpg"
+  },
+  "84321": {
+    "sofascore_id": 99430,
+    "sofascore_name": "Florin Bejan",
+    "sofascore_team": "ASA Târgu Mureş",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84321.jpg"
+  },
+  "85113": {
+    "sofascore_id": 110210,
+    "sofascore_name": "Alin Toșca",
+    "sofascore_team": "FC Universitatea Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/85113.jpg"
+  },
+  "11588": {
+    "sofascore_id": 104579,
+    "sofascore_name": "Mike Cestor",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/11588.jpg"
+  },
+  "104898": {
+    "sofascore_id": 121796,
+    "sofascore_name": "Péter Gál Andrezly",
+    "sofascore_team": "FC Bihor Oradea",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/104898.jpg"
+  },
+  "84880": {
+    "sofascore_id": 113743,
+    "sofascore_name": "Sergiu Hanca",
+    "sofascore_team": "FC Petrolul Ploiești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84880.jpg"
+  },
+  "104842": {
+    "sofascore_id": 116314,
+    "sofascore_name": "Jozef Dolný",
+    "sofascore_team": "AFC Odorheiu Secuiesc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/104842.jpg"
+  },
+  "169081": {
+    "sofascore_id": 790186,
+    "sofascore_name": "Andrei Sava",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/169081.jpg"
+  },
+  "75008": {
+    "sofascore_id": 75044,
+    "sofascore_name": "Dávid Kelemen",
+    "sofascore_team": "Békéscsaba 1912 Előre II",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/75008.jpg"
+  },
+  "84779": {
+    "sofascore_id": 927942,
+    "sofascore_name": "Marius Antoche",
+    "sofascore_team": "AFC Unirea 04 Slobozia",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84779.jpg"
+  },
+  "83786": {
+    "sofascore_id": 71393,
+    "sofascore_name": "Mihai Roman II",
+    "sofascore_team": "FC Voluntari",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83786.jpg"
+  },
+  "75148": {
+    "sofascore_id": 117066,
+    "sofascore_name": "Márton Eppel",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/75148.jpg"
+  },
+  "80986": {
+    "sofascore_id": 98082,
+    "sofascore_name": "Vadim Rață",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/80986.jpg"
+  },
+  "64958": {
+    "sofascore_id": 134646,
+    "sofascore_name": "Stefan Krell",
+    "sofascore_team": "FC Petrolul Ploiești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/64958.jpg"
+  },
+  "74982": {
+    "sofascore_id": 125937,
+    "sofascore_name": "János Ferenczi",
+    "sofascore_team": "Kazincbarcikai SC",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/74982.jpg"
+  },
+  "84318": {
+    "sofascore_id": 185267,
+    "sofascore_name": "Alexandru Buzbuchi",
+    "sofascore_team": "FC Farul Constanța",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84318.jpg"
+  },
+  "84331": {
+    "sofascore_id": 131342,
+    "sofascore_name": "Romario Benzar",
+    "sofascore_team": "ACS Știința Politehnica Timișoara",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84331.jpg"
+  },
+  "83986": {
+    "sofascore_id": 946331,
+    "sofascore_name": "Alexandru Țigănașu",
+    "sofascore_team": "FC Botoșani",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83986.jpg"
+  },
+  "74943": {
+    "sofascore_id": 134877,
+    "sofascore_name": "László Kleinheisler",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/74943.jpg"
+  },
+  "83820": {
+    "sofascore_id": 131433,
+    "sofascore_name": "David Lazar",
+    "sofascore_team": "FC Hermannstadt",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/83820.jpg"
+  },
+  "137041": {
+    "sofascore_id": 135602,
+    "sofascore_name": "Lukáš Zima",
+    "sofascore_team": "FCSB",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/137041.jpg"
+  },
+  "84477": {
+    "sofascore_id": 786172,
+    "sofascore_name": "Marius Briceag",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84477.jpg"
+  },
+  "28528": {
+    "sofascore_id": 139223,
+    "sofascore_name": "Jordan Ikoko",
+    "sofascore_team": "FC Dinamo București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/28528.jpg"
+  },
+  "25854": {
+    "sofascore_id": 139227,
+    "sofascore_name": "Kurt Zouma",
+    "sofascore_team": "Al Wasl",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/25854.jpg"
+  },
+  "84342": {
+    "sofascore_id": 135151,
+    "sofascore_name": "Bogdan Țîru",
+    "sofascore_team": "FC Farul Constanța",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/84342.jpg"
+  },
+  "75043": {
+    "sofascore_id": 154225,
+    "sofascore_name": "János Nagy",
+    "sofascore_team": "Pécsi MFC",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/75043.jpg"
+  },
+  "19445": {
+    "sofascore_id": 163733,
+    "sofascore_name": "Christopher Braun",
+    "sofascore_team": "CFR 1907 Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/19445.jpg"
+  },
+  "95": {
+    "sofascore_id": 181495,
+    "sofascore_name": "Kevin Luckassen Brobbey",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/95.jpg"
+  },
+  "136045": {
+    "sofascore_id": 94815,
+    "sofascore_name": "Daniel Graovac",
+    "sofascore_team": "FCSB",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/136045.jpg"
+  },
+  "136788": {
+    "sofascore_id": 189193,
+    "sofascore_name": "Abat Aimbetov",
+    "sofascore_team": "FC Petrolul Ploiești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/136788.jpg"
+  },
+  "136092": {
+    "sofascore_id": 898083,
+    "sofascore_name": "Dejan Iliev",
+    "sofascore_team": "FC Rapid București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/136092.jpg"
+  },
+  "136151": {
+    "sofascore_id": 195974,
+    "sofascore_name": "Boban Nikolov",
+    "sofascore_team": "FK Vardar Skopje",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/136151.jpg"
+  },
+  "220767": {
+    "sofascore_id": 267703,
+    "sofascore_name": "Alessandro Micai",
+    "sofascore_team": "Reggiana",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/220767.jpg"
+  },
+  "223105": {
+    "sofascore_id": 252319,
+    "sofascore_name": "Desley Ubbink",
+    "sofascore_team": "RBC Roosendaal",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/223105.jpg"
+  },
+  "226046": {
+    "sofascore_id": 263111,
+    "sofascore_name": "Benjamin Babati",
+    "sofascore_team": "Pécsi MFC",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/226046.jpg"
+  },
+  "236731": {
+    "sofascore_id": 828024,
+    "sofascore_name": "Octavian Vâlceanu",
+    "sofascore_team": "CFR 1907 Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/236731.jpg"
+  },
+  "234533": {
+    "sofascore_id": 284845,
+    "sofascore_name": "Stipe Perica",
+    "sofascore_team": "Neftchi Fergana",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/234533.jpg"
+  },
+  "235454": {
+    "sofascore_id": 280461,
+    "sofascore_name": "Lyes Houri",
+    "sofascore_team": "No team",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/235454.jpg"
+  },
+  "236828": {
+    "sofascore_id": 283213,
+    "sofascore_name": "Eduard Pap",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/236828.jpg"
+  },
+  "238582": {
+    "sofascore_id": 283849,
+    "sofascore_name": "Anton Krešić",
+    "sofascore_team": "KF Tirana",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/238582.jpg"
+  },
+  "238584": {
+    "sofascore_id": 190427,
+    "sofascore_name": "Franjo Prce",
+    "sofascore_team": "FC Petrolul Ploiești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/238584.jpg"
+  },
+  "239276": {
+    "sofascore_id": 794755,
+    "sofascore_name": "János Hegedűs",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/239276.jpg"
+  },
+  "240057": {
+    "sofascore_id": 825789,
+    "sofascore_name": "Luka Kukić",
+    "sofascore_team": "FC Botoșani",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/240057.jpg"
+  },
+  "240507": {
+    "sofascore_id": 285953,
+    "sofascore_name": "Edvinas Gertmonas",
+    "sofascore_team": "FC Universitatea Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/240507.jpg"
+  },
+  "263038": {
+    "sofascore_id": 385988,
+    "sofascore_name": "Szilard Veres",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/263038.jpg"
+  },
+  "262961": {
+    "sofascore_id": 792313,
+    "sofascore_name": "Ionuţ Pop",
+    "sofascore_team": "FC Hermannstadt",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/262961.jpg"
+  },
+  "262969": {
+    "sofascore_id": 317571,
+    "sofascore_name": "Vlad Muțiu",
+    "sofascore_team": "FC Hermannstadt",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/262969.jpg"
+  },
+  "270356": {
+    "sofascore_id": 578526,
+    "sofascore_name": "Iulian Cristea",
+    "sofascore_team": "FC Universitatea Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/270356.jpg"
+  },
+  "270318": {
+    "sofascore_id": 871668,
+    "sofascore_name": "Antoni Ivanov",
+    "sofascore_team": "No team",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/270318.jpg"
+  },
+  "284069": {
+    "sofascore_id": 934795,
+    "sofascore_name": "Lucian Dumitriu",
+    "sofascore_team": "FC Petrolul Ploiești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/284069.jpg"
+  },
+  "280007": {
+    "sofascore_id": 788308,
+    "sofascore_name": "Iacopo Cernigoi",
+    "sofascore_team": "Virtus Verona",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/280007.jpg"
+  },
+  "286007": {
+    "sofascore_id": 790187,
+    "sofascore_name": "Árpád Tordai",
+    "sofascore_team": "UTA Arad",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/286007.jpg"
+  },
+  "286014": {
+    "sofascore_id": 845883,
+    "sofascore_name": "Ronaldo Deaconu",
+    "sofascore_team": "FC Corvinul Hunedoara",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/286014.jpg"
+  },
+  "286005": {
+    "sofascore_id": 798229,
+    "sofascore_name": "Cosmin Florin Achim",
+    "sofascore_team": "CS Minerul Motru 2008",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/286005.jpg"
+  },
+  "287504": {
+    "sofascore_id": 1023427,
+    "sofascore_name": "Lóránd Pászka",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/287504.jpg"
+  },
+  "302036": {
+    "sofascore_id": 361164,
+    "sofascore_name": "Andrei Ivan",
+    "sofascore_team": "MGS Panserraikos",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/302036.jpg"
+  },
+  "330387": {
+    "sofascore_id": 785418,
+    "sofascore_name": "Marcus Coco",
+    "sofascore_team": "Hapoel Tel Aviv",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/330387.jpg"
+  },
+  "331420": {
+    "sofascore_id": 958598,
+    "sofascore_name": "Mihai Popa",
+    "sofascore_team": "CFR 1907 Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/331420.jpg"
+  },
+  "347148": {
+    "sofascore_id": 987832,
+    "sofascore_name": "Adel Bettaieb",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/347148.jpg"
+  },
+  "346448": {
+    "sofascore_id": 845165,
+    "sofascore_name": "Daniel Popa",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/346448.jpg"
+  },
+  "346550": {
+    "sofascore_id": 818304,
+    "sofascore_name": "Valentin Costache",
+    "sofascore_team": "FC Noah",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/346550.jpg"
+  },
+  "352143": {
+    "sofascore_id": 936764,
+    "sofascore_name": "Bálint Szabó",
+    "sofascore_team": "Kecskemét TE",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/352143.jpg"
+  },
+  "352227": {
+    "sofascore_id": 891423,
+    "sofascore_name": "Mátyás Tajti",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/352227.jpg"
+  },
+  "363588": {
+    "sofascore_id": 1067793,
+    "sofascore_name": "Răzvan Trif",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/363588.jpg"
+  },
+  "366563": {
+    "sofascore_id": 846145,
+    "sofascore_name": "Vahid Selimović",
+    "sofascore_team": "FC Iberia 1999",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/366563.jpg"
+  },
+  "380863": {
+    "sofascore_id": 797678,
+    "sofascore_name": "Robert Moldoveanu",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/380863.jpg"
+  },
+  "399270": {
+    "sofascore_id": 921373,
+    "sofascore_name": "Claudiu Micovschi",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/399270.jpg"
+  },
+  "395131": {
+    "sofascore_id": 914777,
+    "sofascore_name": "Rober Sierra",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/395131.jpg"
+  },
+  "397975": {
+    "sofascore_id": 844468,
+    "sofascore_name": "Laurenţiu Popescu",
+    "sofascore_team": "Universitatea Craiova",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/397975.jpg"
+  },
+  "396846": {
+    "sofascore_id": 817981,
+    "sofascore_name": "Arian Kabashi",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/396846.jpg"
+  },
+  "404829": {
+    "sofascore_id": 1006983,
+    "sofascore_name": "Marian Aioani",
+    "sofascore_team": "FC Rapid București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/404829.jpg"
+  },
+  "410035": {
+    "sofascore_id": 840697,
+    "sofascore_name": "Filip Blažek",
+    "sofascore_team": "DAC 1904",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/410035.jpg"
+  },
+  "408933": {
+    "sofascore_id": 877843,
+    "sofascore_name": "Kilian Ludewig",
+    "sofascore_team": "ACS Unirea DMO",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/408933.jpg"
+  },
+  "412915": {
+    "sofascore_id": 827933,
+    "sofascore_name": "Xian Emmers",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/412915.jpg"
+  },
+  "424244": {
+    "sofascore_id": 836623,
+    "sofascore_name": "Denis Ciobotariu",
+    "sofascore_team": "FC Rapid București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/424244.jpg"
+  },
+  "420975": {
+    "sofascore_id": 834180,
+    "sofascore_name": "Nikola Stevanović",
+    "sofascore_team": "Universitatea Craiova",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/420975.jpg"
+  },
+  "422535": {
+    "sofascore_id": 946396,
+    "sofascore_name": "Benjamin Hadžić",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/422535.jpg"
+  },
+  "433693": {
+    "sofascore_id": 839577,
+    "sofascore_name": "Adrian Șut",
+    "sofascore_team": "Al-Ain",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/433693.jpg"
+  },
+  "446565": {
+    "sofascore_id": 845373,
+    "sofascore_name": "Antonio Bosec",
+    "sofascore_team": "HNK Vukovar 1991",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/446565.jpg"
+  },
+  "453653": {
+    "sofascore_id": 852552,
+    "sofascore_name": "Wilhelm Loeper",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/453653.jpg"
+  },
+  "462140": {
+    "sofascore_id": 1005396,
+    "sofascore_name": "Jonathan Cissé",
+    "sofascore_team": "FC Universitatea Cluj",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/462140.jpg"
+  },
+  "470748": {
+    "sofascore_id": 850554,
+    "sofascore_name": "Soufiane Jebari",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/470748.jpg"
+  },
+  "474195": {
+    "sofascore_id": 939306,
+    "sofascore_name": "Daniel Dumbravanu",
+    "sofascore_team": "FC Voluntari",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/474195.jpg"
+  },
+  "474747": {
+    "sofascore_id": 861250,
+    "sofascore_name": "Maks Juraj Čelić",
+    "sofascore_team": "Chungnam Asan FC",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/474747.jpg"
+  },
+  "504410": {
+    "sofascore_id": 880183,
+    "sofascore_name": "Alexander Torvund",
+    "sofascore_team": "Budafoki MTE",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/504410.jpg"
+  },
+  "509635": {
+    "sofascore_id": 2489171,
+    "sofascore_name": "Julian Andres Bonilla Tovar",
+    "sofascore_team": "Paju Frontier FC",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/509635.jpg"
+  },
+  "510846": {
+    "sofascore_id": 914034,
+    "sofascore_name": "Fabio Patrick dos Reis dos Santos Fernandes",
+    "sofascore_team": "Felgueiras",
+    "reason": "search+dob"
+  },
+  "512592": {
+    "sofascore_id": 888779,
+    "sofascore_name": "Valon Hamdiu",
+    "sofascore_team": "FK Septemvri Sofia",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/512592.jpg"
+  },
+  "514662": {
+    "sofascore_id": 909033,
+    "sofascore_name": "Dorinel Oancea",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/514662.jpg"
+  },
+  "514666": {
+    "sofascore_id": 1916034,
+    "sofascore_name": "George Alexandru Caramalău",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/514666.jpg"
+  },
+  "518478": {
+    "sofascore_id": 906814,
+    "sofascore_name": "Mariano Bettini",
+    "sofascore_team": "FK Csíkszereda Miercurea Ciuc",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/518478.jpg"
+  },
+  "522105": {
+    "sofascore_id": 994004,
+    "sofascore_name": "Răzvan Onea",
+    "sofascore_team": "FC Rapid București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/522105.jpg"
+  },
+  "530165": {
+    "sofascore_id": 1129490,
+    "sofascore_name": "Andrei Dragu",
+    "sofascore_team": "AFC Unirea 04 Slobozia",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/530165.jpg"
+  },
+  "530669": {
+    "sofascore_id": 1162857,
+    "sofascore_name": "Stefan Visic",
+    "sofascore_team": "FC Metaloglobus București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/530669.jpg"
+  },
+  "535038": {
+    "sofascore_id": 943270,
+    "sofascore_name": "Lucas Pellegrini",
+    "sofascore_team": "FC Farul Constanța",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/535038.jpg"
+  },
+  "539343": {
+    "sofascore_id": 973754,
+    "sofascore_name": "Jakov Blagaić",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/539343.jpg"
+  },
+  "541820": {
+    "sofascore_id": 942138,
+    "sofascore_name": "Valentin Țicu",
+    "sofascore_team": "FC Dinamo București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/541820.jpg"
+  },
+  "542894": {
+    "sofascore_id": 923917,
+    "sofascore_name": "Leard Sadriu",
+    "sofascore_team": "FC Argeș Pitești",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/542894.jpg"
+  },
+  "545258": {
+    "sofascore_id": 942189,
+    "sofascore_name": "Răzvan Ducan",
+    "sofascore_team": "CSM Unirea Alba Iulia",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/545258.jpg"
+  },
+  "545276": {
+    "sofascore_id": 960307,
+    "sofascore_name": "Louis Munteanu",
+    "sofascore_team": "DC United",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/545276.jpg"
+  },
+  "545144": {
+    "sofascore_id": 908750,
+    "sofascore_name": "Lars Kramer",
+    "sofascore_team": "FC Rapid București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/545144.jpg"
+  },
+  "545792": {
+    "sofascore_id": 1001769,
+    "sofascore_name": "Andrei Mărginean",
+    "sofascore_team": "FC Dinamo București",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/545792.jpg"
+  },
+  "545949": {
+    "sofascore_id": 910316,
+    "sofascore_name": "Ianis Stoica",
+    "sofascore_team": "CF Estrela Amadora",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/545949.jpg"
+  },
+  "547271": {
+    "sofascore_id": 1014575,
+    "sofascore_name": "Assad Al-Hamlawi",
+    "sofascore_team": "Universitatea Craiova",
+    "reason": "search+dob",
+    "photo_url": "https://ucluj-player-photos.s3.eu-central-1.amazonaws.com/players/547271.jpg"
   }
 }
