@@ -11,6 +11,16 @@ class MatchPreviewPlayer {
   final String officialPosition;
   final int slotIndex;
   final String positionGroupFine;
+  // Honest display rating (0-99) = within-position league percentile of the
+  // player's performance score. positionNorm is FINE or COARSE depending on
+  // which group the percentiles were taken against (small groups fall back to
+  // coarse). statPct holds every within-position league percentile keyed by the
+  // raw KPI name (e.g. 'per90_goals', 'pass_accuracy'). photoUrl is the
+  // self-hosted headshot (empty until the photo pipeline runs).
+  final int rating;
+  final String positionNorm;
+  final Map<String, double> statPct;
+  final String photoUrl;
   final double predictedScore;
   final double compositeScore;
   final double performanceScore;
@@ -34,6 +44,10 @@ class MatchPreviewPlayer {
     this.officialPosition = '',
     this.slotIndex = -1,
     this.positionGroupFine = '',
+    this.rating = 0,
+    this.positionNorm = 'COARSE',
+    this.statPct = const {},
+    this.photoUrl = '',
     required this.predictedScore,
     required this.compositeScore,
     required this.performanceScore,
@@ -59,6 +73,14 @@ class MatchPreviewPlayer {
         officialPosition: j['official_position'] as String? ?? '',
         slotIndex: (j['slot_index'] as num?)?.toInt() ?? -1,
         positionGroupFine: j['position_group_fine'] as String? ?? '',
+        rating: (j['rating'] as num?)?.toInt() ?? 0,
+        positionNorm: j['position_norm'] as String? ?? 'COARSE',
+        statPct: {
+          for (final e in j.entries)
+            if (e.key.endsWith('_pct'))
+              e.key.substring(0, e.key.length - 4): (e.value as num?)?.toDouble() ?? 0,
+        },
+        photoUrl: j['photo_url'] as String? ?? '',
         predictedScore: (j['predicted_score'] as num?)?.toDouble() ?? 0,
         compositeScore: (j['composite_score'] as num?)?.toDouble() ?? 0,
         performanceScore: (j['performance_score'] as num?)?.toDouble() ?? 0,

@@ -302,7 +302,11 @@ def _format_output(result: Dict, my_team_id: int, opponent_team_id: Optional[int
         cols = ["playerId", "shortName", "role", "role_group",
                 "position_group_fine", "official_position", "slot_index",
                 "predicted_score", "performance_score", "recent_form_score",
-                "total_minutes", "matches_played"]
+                "total_minutes", "matches_played",
+                "pass_accuracy", "duel_win_rate",
+                "shot_accuracy", "dribble_success", "def_action_success", "aerial_win_rate",
+                "per90_goals", "per90_assists", "per90_keyPasses", "per90_shots",
+                "per90_interceptions", "per90_gkSaves", "per90_gkCleanSheets"]
         cols = [c for c in cols if c in df.columns]
         return df[cols].fillna(0).to_dict(orient="records")
 

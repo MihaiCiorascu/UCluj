@@ -294,8 +294,13 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(p.predictedScore.toStringAsFixed(2), style: TypographyTokens.headline.copyWith(color: c.accent, fontSize: 16)),
-                    Text('SCORE', style: TypographyTokens.body.copyWith(color: c.textMuted, fontSize: 10)),
+                    Text(
+                      p.rating > 0
+                          ? '${p.rating}'
+                          : (p.predictedScore * 100).clamp(0, 99).round().toString(),
+                      style: TypographyTokens.headline.copyWith(color: c.accent, fontSize: 16),
+                    ),
+                    Text('RATING', style: TypographyTokens.body.copyWith(color: c.textMuted, fontSize: 10)),
                   ],
                 ),
               ],

@@ -22,6 +22,7 @@ import os
 import pickle
 from typing import Dict, List, Optional
 
+import numpy as np
 import pandas as pd
 
 from ml.feature_engineering import get_team_squad_from_matches
@@ -60,6 +61,24 @@ FIXTURE_NAME_TO_ID: dict[str, int] = {
 }
 
 
+# Columns shown on the player card / radar. Each is normalised into a
+# within-position league percentile (0-100) so a striker is ranked against
+# strikers and a left-back against left-backs, never across roles. These are
+# all real Wyscout-derived aggregates already emitted by feature_engineering.
+_RAW_COLS = [
+    "performance_score", "recent_form_score",
+    "pass_accuracy", "duel_win_rate",
+    "shot_accuracy", "dribble_success", "def_action_success", "aerial_win_rate",
+    "per90_goals", "per90_assists", "per90_keyPasses", "per90_shots",
+    "per90_interceptions", "per90_gkSaves", "per90_gkCleanSheets",
+]
+
+# A fine position group needs at least this many league players for a stable
+# percentile; below it (for example wing-backs, of which the league has only a
+# handful) the player is ranked against the coarse group instead.
+_MIN_FINE_GROUP = 15
+
+
 class XiService:
     """Starting-XI predictor service that supports any Romanian Superliga team.
 
@@ -79,6 +98,11 @@ class XiService:
         self._df_by_team: Dict[str, pd.DataFrame] = {}
         self._squad_by_team: Dict[str, set] = {}
         self._profiles: Dict = {}
+        # League-wide frame + per-group percentile tables, built once and reused
+        # for the within-position rating and stat normalisation.
+        self._league_df: Optional[pd.DataFrame] = None
+        self._pct_fine: Optional[Dict[str, Dict[str, np.ndarray]]] = None
+        self._pct_coarse: Optional[Dict[str, Dict[str, np.ndarray]]] = None
 
         # Pre-load the heuristic-predictor pickle.
         if os.path.exists(model_path):
@@ -168,6 +192,95 @@ class XiService:
         self._squad_by_team[cache_key] = squad_ids
         return df
 
+    # ── League-relative normalisation (within fine position group) ────────────
+
+    def _get_league_df(self) -> pd.DataFrame:
+        """Return one row per league player, used as the percentile reference.
+
+        Built once from every match file (so it spans all sixteen clubs) with
+        no availability-team coupling. Deduplicated by playerId, keeping the
+        row with the most matches played.
+        """
+        if self._league_df is not None:
+            return self._league_df
+
+        match_files = sorted(glob.glob(os.path.join(self.data_dir, "*.json")))
+        profile_path = os.path.join(self.data_dir, "players (1).json")
+        if not self._profiles and os.path.exists(profile_path):
+            self._profiles = load_player_profiles(profile_path)
+
+        df = build_dataset_from_files(match_files, self._profiles)
+        if "playerId" in df.columns and "matches_played" in df.columns:
+            df = df.sort_values("matches_played", ascending=False).drop_duplicates("playerId")
+        self._league_df = df
+        return df
+
+    @staticmethod
+    def _build_percentile_table(
+        league_df: pd.DataFrame, group_col: str
+    ) -> Dict[str, Dict[str, np.ndarray]]:
+        """Sorted league values for each (position group, KPI), for percentiles."""
+        table: Dict[str, Dict[str, np.ndarray]] = {}
+        if group_col not in league_df.columns:
+            return table
+        for gval, gdf in league_df.groupby(group_col):
+            arrays: Dict[str, np.ndarray] = {}
+            for col in _RAW_COLS:
+                if col in gdf.columns:
+                    arr = pd.to_numeric(gdf[col], errors="coerce").dropna().to_numpy()
+                    if arr.size:
+                        arrays[col] = np.sort(arr)
+            table[str(gval).upper()] = arrays
+        return table
+
+    def _ensure_percentile_tables(self) -> None:
+        if self._pct_fine is None or self._pct_coarse is None:
+            league_df = self._get_league_df()
+            self._pct_fine = self._build_percentile_table(league_df, "position_group_fine")
+            self._pct_coarse = self._build_percentile_table(league_df, "role_group")
+
+    @staticmethod
+    def _pct_of(value: float, sorted_arr: Optional[np.ndarray]) -> float:
+        """Percentile (0-100) of ``value`` within a sorted league array."""
+        if sorted_arr is None or sorted_arr.size == 0:
+            return 50.0
+        left = int(np.searchsorted(sorted_arr, value, side="left"))
+        right = int(np.searchsorted(sorted_arr, value, side="right"))
+        return float(((left + right) / 2.0) / sorted_arr.size * 100.0)
+
+    def _normalise_player(self, rec: Dict) -> None:
+        """Attach within-position league percentiles + an honest rating in place.
+
+        The same fine-or-coarse decision drives the rating and every stat axis,
+        so a player's card tells one coherent story. ``position_norm`` records
+        which basis was used so the UI caption ("vs league CB" / "vs league
+        DEF") is truthful.
+        """
+        fine = str(rec.get("position_group_fine", "") or "").upper()
+        coarse = str(rec.get("role_group", "MID") or "MID").upper()
+
+        fine_arrs = (self._pct_fine or {}).get(fine, {})
+        perf_fine = fine_arrs.get("performance_score")
+        use_fine = perf_fine is not None and perf_fine.size >= _MIN_FINE_GROUP
+
+        table = self._pct_fine if use_fine else self._pct_coarse
+        key = fine if use_fine else coarse
+        group_arrs = (table or {}).get(key, {})
+
+        for col in _RAW_COLS:
+            rec[f"{col}_pct"] = round(
+                self._pct_of(float(rec.get(col, 0) or 0), group_arrs.get(col)), 1
+            )
+
+        # Honest display rating: within-position percentile of the
+        # position-weighted performance score, mapped to a discriminative band
+        # (best in a position read high-80s to low-90s, role players 60-72).
+        perf_pct = self._pct_of(
+            float(rec.get("performance_score", 0) or 0), group_arrs.get("performance_score")
+        ) / 100.0
+        rec["rating"] = int(max(40, min(95, round(55 + 40 * perf_pct))))
+        rec["position_norm"] = "FINE" if use_fine else "COARSE"
+
     # ── Public API ───────────────────────────────────────────────────────────
 
     def predict_xi(
@@ -211,6 +324,12 @@ class XiService:
         out = _format_output(result, FIXTURE_NAME_TO_ID.get(home.short), opponent_team_id)
         out["home_team_short"] = home.short
         out["home_team_sr_id"] = home.sr_id
+        # Attach the honest within-position rating + stat percentiles so the
+        # standalone XI screen matches the Match Intelligence card.
+        self._ensure_percentile_tables()
+        for grp in ("startingXI", "bench"):
+            for rec in out.get(grp, []):
+                self._normalise_player(rec)
         return out
 
     def match_preview(
@@ -257,15 +376,26 @@ class XiService:
             "predicted_score", "performance_score", "recent_form_score",
             "total_minutes", "matches_played",
             "pass_accuracy", "duel_win_rate",
+            "shot_accuracy", "dribble_success", "def_action_success", "aerial_win_rate",
             "per90_goals", "per90_assists", "per90_shots",
             "per90_keyPasses", "per90_interceptions", "per90_gkSaves",
+            "per90_gkCleanSheets",
         ]
+
+        # Build the within-position league percentile tables once for this call.
+        self._ensure_percentile_tables()
 
         def _fmt(frame: pd.DataFrame) -> List[Dict]:
             if frame is None or frame.empty:
                 return []
             cols = [c for c in _PLAYER_COLS if c in frame.columns]
-            return frame[cols].fillna(0).to_dict(orient="records")
+            records = frame[cols].fillna(0).to_dict(orient="records")
+            for rec in records:
+                # Adds <col>_pct (within-position league percentile), an honest
+                # rating, and position_norm. predicted_score is left untouched
+                # so the selected eleven do not change.
+                self._normalise_player(rec)
+            return records
 
         # Team aggregate stats
         all_df = result.get("all_scored", pd.DataFrame())

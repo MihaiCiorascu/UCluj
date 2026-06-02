@@ -40,13 +40,14 @@ class RecommendedXiFifaPanel extends StatefulWidget {
   final double Function(MatchPreviewPlayer p) ratingForDisplay;
 
   static double _defaultRatingForDisplay(MatchPreviewPlayer p) =>
-      // The XI predictor backend emits the rolling-form composite under the
-      // key `predicted_score` (the in-code helper `_composite_score` writes
-      // to that column). The Dart model carries both `predictedScore` and
-      // `compositeScore`, but the JSON response only populates the former,
-      // so reading `compositeScore` always returned 0 and every chip showed
-      // a 0 rating. Pull from `predictedScore` instead.
-      (p.predictedScore * 100).clamp(0, 99).toDouble();
+      // Honest display rating: the backend `rating` is the within-position
+      // league percentile of the player's performance score (a striker ranked
+      // among strikers, a left-back among left-backs), mapped to a
+      // discriminative band. Fall back to the legacy start-probability scaling
+      // only if an older backend has not sent `rating`.
+      p.rating > 0
+          ? p.rating.toDouble()
+          : (p.predictedScore * 100).clamp(0, 99).toDouble();
 
   @override
   State<RecommendedXiFifaPanel> createState() => _RecommendedXiFifaPanelState();
@@ -299,49 +300,62 @@ class _FifaAttr {
   final double value; // 0–100
 }
 
-// All per90_* and performance/form scores arrive pre-normalized to 0-100
-// by the backend (league-wide, within position group, 5th-95th percentile).
-// pass_accuracy and duel_win_rate are raw percentages (already 0-100).
+// Honest attribute bars. Every value is the player's WITHIN-POSITION league
+// percentile (0-100) for a real Wyscout-derived KPI, computed server-side
+// (statPct), so a striker is ranked among strikers and a left-back among
+// left-backs. Labels name the actual metric, not a fabricated FIFA attribute.
 List<_FifaAttr> _fifaAttrs(MatchPreviewPlayer p) {
-  // GK gets keeper-specific attribute labels
+  double pct(String key) => (p.statPct[key] ?? 50.0).clamp(0, 100).toDouble();
+
   if (p.roleGroup == 'GK') {
     return [
-      _FifaAttr('Speed',       p.recentFormScore.clamp(0, 100).toDouble()),
-      _FifaAttr('Reflexes',    p.per90GkSaves.clamp(0, 100).toDouble()),
-      _FifaAttr('Kicking',     p.passAccuracy.clamp(0, 100).toDouble()),
-      _FifaAttr('Positioning', p.performanceScore.clamp(0, 100).toDouble()),
-      _FifaAttr('Handling',    p.duelWinRate.clamp(0, 100).toDouble()),
-      _FifaAttr('Diving',      p.per90GkCleanSheets.clamp(0, 100).toDouble()),
+      _FifaAttr('Saves', pct('per90_gkSaves')),
+      _FifaAttr('Clean Sheets', pct('per90_gkCleanSheets')),
+      _FifaAttr('Aerial', pct('aerial_win_rate')),
+      _FifaAttr('Distribution', pct('pass_accuracy')),
+      _FifaAttr('Form', pct('recent_form_score')),
+      _FifaAttr('Rating', pct('performance_score')),
     ];
   }
 
-  final pace      = p.recentFormScore.clamp(0, 100).toDouble();
-  final physical  = p.performanceScore.clamp(0, 100).toDouble();
-  final passing   = p.passAccuracy.clamp(0, 100).toDouble();
-  final defending = p.duelWinRate.clamp(0, 100).toDouble();
-  final double shooting;
-  final double dribbling;
-
   switch (p.roleGroup) {
     case 'DEF':
-      shooting  = p.per90Interceptions.clamp(0, 100).toDouble();
-      dribbling = p.per90Assists.clamp(0, 100).toDouble();
+      return [
+        _FifaAttr('Tackling', pct('duel_win_rate')),
+        _FifaAttr('Interceptions', pct('per90_interceptions')),
+        _FifaAttr('Def Actions', pct('def_action_success')),
+        _FifaAttr('Aerial', pct('aerial_win_rate')),
+        _FifaAttr('Passing', pct('pass_accuracy')),
+        _FifaAttr('Form', pct('recent_form_score')),
+      ];
     case 'MID':
-      shooting  = p.per90KeyPasses.clamp(0, 100).toDouble();
-      dribbling = p.per90Assists.clamp(0, 100).toDouble();
+      return [
+        _FifaAttr('Passing', pct('pass_accuracy')),
+        _FifaAttr('Key Passes', pct('per90_keyPasses')),
+        _FifaAttr('Dribbling', pct('dribble_success')),
+        _FifaAttr('Duels', pct('duel_win_rate')),
+        _FifaAttr('Assists', pct('per90_assists')),
+        _FifaAttr('Form', pct('recent_form_score')),
+      ];
     default: // FWD
-      shooting  = p.per90Goals.clamp(0, 100).toDouble();
-      dribbling = p.per90KeyPasses.clamp(0, 100).toDouble();
+      return [
+        _FifaAttr('Goals', pct('per90_goals')),
+        _FifaAttr('Shots', pct('per90_shots')),
+        _FifaAttr('Shot Acc', pct('shot_accuracy')),
+        _FifaAttr('Dribbling', pct('dribble_success')),
+        _FifaAttr('Key Passes', pct('per90_keyPasses')),
+        _FifaAttr('Form', pct('recent_form_score')),
+      ];
   }
+}
 
-  return [
-    _FifaAttr('Pace',      pace),
-    _FifaAttr('Shooting',  shooting),
-    _FifaAttr('Passing',   passing),
-    _FifaAttr('Physical',  physical),
-    _FifaAttr('Defending', defending),
-    _FifaAttr('Dribbling', dribbling),
-  ];
+/// The comparison group the attribute percentiles were computed against: the
+/// fine position when the backend used it, otherwise the coarse role group.
+String _attrCompareLabel(MatchPreviewPlayer p) {
+  if (p.positionNorm == 'FINE' && p.positionGroupFine.isNotEmpty) {
+    return p.positionGroupFine.toUpperCase();
+  }
+  return p.roleGroup.toUpperCase();
 }
 
 Color _attrColor(double v, AppColorTokens c) {
@@ -480,6 +494,17 @@ class _PlayerDetailColumn extends StatelessWidget {
               fontSize: 9,
               color: c.accent,
               letterSpacing: 1.5,
+            ),
+          ),
+          // Each bar is a within-position league percentile, so name the
+          // comparison group honestly (the fine position when it was used,
+          // else the coarse group).
+          Text(
+            'percentilă în liga · ${_attrCompareLabel(p)}',
+            style: TypographyTokens.sectionLabel.copyWith(
+              fontSize: 8,
+              color: c.textMuted,
+              letterSpacing: 1.0,
             ),
           ),
           const SizedBox(height: SpacingTokens.sm),
