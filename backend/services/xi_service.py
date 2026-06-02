@@ -78,6 +78,12 @@ _RAW_COLS = [
 # percentile; below it (for example wing-backs, of which the league has only a
 # handful) the player is ranked against the coarse group instead.
 _MIN_FINE_GROUP = 15
+# Minimum minutes for a player to enter the percentile reference pool. Rate
+# stats (duel %, pass %, per-90s) from tiny samples are noise, and including
+# them made the within-position percentiles and the derived rating jumpy, e.g.
+# a regular centre-back reading an 11th-percentile duel rate against fringe
+# players with fluky high rates. Regulars only give a stable, fair reference.
+_MIN_MINUTES = 450
 
 
 class XiService:
@@ -220,6 +226,15 @@ class XiService:
         df = build_dataset_from_files(match_files, self._profiles)
         if "playerId" in df.columns and "matches_played" in df.columns:
             df = df.sort_values("matches_played", ascending=False).drop_duplicates("playerId")
+        # The percentiles and the rating are league-relative, so the reference
+        # pool must be players with enough minutes for their rate stats to be
+        # real. Filter to regulars, but only when that still leaves a usable
+        # pool, so a thin data slice never collapses the reference to nothing.
+        if "total_minutes" in df.columns:
+            mins = pd.to_numeric(df["total_minutes"], errors="coerce").fillna(0)
+            regulars = df[mins >= _MIN_MINUTES]
+            if len(regulars) >= 80:
+                df = regulars
         self._league_df = df
         return df
 

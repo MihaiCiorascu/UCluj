@@ -92,7 +92,12 @@ if settings.demo_mode:
 # to. When DEMO_MODE flips, the standings and week-fixture endpoints pivot
 # off ``effective_season_id()`` so Sportradar gets pinned to the right season.
 _LIVE_SEASON_ID = "sr:season:131507"   # Superliga 25/26
-_DEMO_SEASON_ID = "sr:season:119887"   # Superliga 24/25 (2024-07-12 -> 2025-06-02)
+# The demo now mirrors 2025-26, the season the Wyscout XI roster and the
+# drive_cache match data actually belong to (verified: the roster includes
+# players only at their clubs since 2025-26, e.g. Coubis at U Cluj). Pinning
+# the demo here makes fixtures, standings, the recommended XI, stats, and
+# photos one coherent season instead of 2025-26 rosters over 2024-25 fixtures.
+_DEMO_SEASON_ID = "sr:season:131507"   # Superliga 25/26
 
 
 def effective_season_id() -> str:
