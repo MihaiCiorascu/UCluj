@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/l10n/strings.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/state/meta_state.dart';
+import '../../../core/widgets/team_crest.dart';
 import '../../../core/services/api_client.dart' show ApiException;
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
@@ -552,13 +553,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _teamRow(String name, bool isMine, AppColorTokens c) {
     final display = name.replaceAll('Universitatea Cluj', 'U CLUJ');
-    return Text(
-      display.toUpperCase(),
-      style: TypographyTokens.cardTitle.copyWith(
-        fontWeight: isMine ? FontWeight.w800 : FontWeight.w400,
-        color: isMine ? c.textPrimary : c.textSecondary,
-        fontSize: 12,
-      ),
+    return Row(
+      children: [
+        TeamCrest(teamName: name, size: 18),
+        const SizedBox(width: 6),
+        Flexible(
+          child: Text(
+            display.toUpperCase(),
+            overflow: TextOverflow.ellipsis,
+            style: TypographyTokens.cardTitle.copyWith(
+              fontWeight: isMine ? FontWeight.w800 : FontWeight.w400,
+              color: isMine ? c.textPrimary : c.textSecondary,
+              fontSize: 12,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

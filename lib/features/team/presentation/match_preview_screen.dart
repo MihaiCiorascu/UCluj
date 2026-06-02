@@ -4,6 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_loading_skeleton.dart';
+import '../../../core/widgets/team_crest.dart';
 import '../../../data/models/match_preview.dart';
 import '../../../data/repositories/xi_repository.dart';
 
@@ -151,6 +152,8 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
     return ListView(
       padding: const EdgeInsets.all(SpacingTokens.md),
       children: [
+        _buildCrestHeader(context),
+        const SizedBox(height: SpacingTokens.lg),
         _buildStatsRow(context, p),
         const SizedBox(height: SpacingTokens.xl),
         _buildOpponentStatsRow(context, p),
@@ -163,6 +166,41 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
         const SizedBox(height: SpacingTokens.xl),
         _buildBench(context, p.bench),
         const SizedBox(height: SpacingTokens.xl),
+      ],
+    );
+  }
+
+  Widget _buildCrestHeader(BuildContext context) {
+    final c = context.colors;
+    final opp = _preview?.opponentName ?? '';
+    Widget side(String name) => Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TeamCrest(teamName: name, size: 24),
+              const SizedBox(width: SpacingTokens.xs),
+              Flexible(
+                child: Text(
+                  name.replaceAll('Universitatea Cluj', 'U CLUJ').toUpperCase(),
+                  overflow: TextOverflow.ellipsis,
+                  style: TypographyTokens.body.copyWith(
+                      fontWeight: FontWeight.w800, fontSize: 13, color: c.textPrimary),
+                ),
+              ),
+            ],
+          ),
+        );
+    return Row(
+      children: [
+        side(widget.myTeam),
+        Container(
+          padding: const EdgeInsets.symmetric(
+              horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
+          color: c.surfaceHigh,
+          child: Text('VS',
+              style: TypographyTokens.sectionLabel.copyWith(color: c.accent)),
+        ),
+        side(opp),
       ],
     );
   }

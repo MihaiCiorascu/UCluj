@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/formation_slots.dart';
 import '../../../core/constants/supported_formations.dart';
 import '../../../core/l10n/strings.dart';
+import '../../../core/widgets/team_crest.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/color_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
@@ -388,12 +389,22 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       child: Row(
         children: [
           Expanded(
-            child: Text(homeDisplay,
-                style: TypographyTokens.body.copyWith(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 13,
-                    color: ColorTokens.textPrimary),
-                textAlign: TextAlign.center),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TeamCrest(teamName: f.homeTeam, size: 22),
+                const SizedBox(width: SpacingTokens.xs),
+                Flexible(
+                  child: Text(homeDisplay,
+                      style: TypographyTokens.body.copyWith(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                          color: ColorTokens.textPrimary),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis),
+                ),
+              ],
+            ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(
@@ -404,12 +415,22 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     .copyWith(color: ColorTokens.accent)),
           ),
           Expanded(
-            child: Text(awayDisplay,
-                style: TypographyTokens.body.copyWith(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 13,
-                    color: ColorTokens.textPrimary),
-                textAlign: TextAlign.center),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(awayDisplay,
+                      style: TypographyTokens.body.copyWith(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                          color: ColorTokens.textPrimary),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis),
+                ),
+                const SizedBox(width: SpacingTokens.xs),
+                TeamCrest(teamName: f.awayTeam, size: 22),
+              ],
+            ),
           ),
         ],
       ),
