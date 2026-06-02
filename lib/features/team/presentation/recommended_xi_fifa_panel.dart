@@ -329,7 +329,7 @@ List<_FifaAttr> _fifaAttrs(MatchPreviewPlayer p) {
   switch (p.roleGroup) {
     case 'DEF':
       return [
-        _FifaAttr('Tackling', pct('duel_win_rate')),
+        _FifaAttr('Duels', pct('duel_win_rate')),
         _FifaAttr('Interceptions', pct('per90_interceptions')),
         _FifaAttr('Def Actions', pct('def_action_success')),
         _FifaAttr('Aerial', pct('aerial_win_rate')),
