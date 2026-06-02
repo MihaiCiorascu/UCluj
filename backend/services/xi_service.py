@@ -28,6 +28,7 @@ import pandas as pd
 from ml.feature_engineering import get_team_squad_from_matches
 from ml.pipeline import _format_output, build_dataset_from_files, load_player_profiles
 from ml.xi_predictor import StartingXIPredictor
+from services.player_photo_service import PlayerPhotoService
 from sportradar.team_registry import (
     SUPERLIGA_TEAMS,
     TeamRef,
@@ -103,6 +104,13 @@ class XiService:
         self._league_df: Optional[pd.DataFrame] = None
         self._pct_fine: Optional[Dict[str, Dict[str, np.ndarray]]] = None
         self._pct_coarse: Optional[Dict[str, Dict[str, np.ndarray]]] = None
+
+        # Self-hosted player headshots (Wyscout id -> S3 URL). Reads a committed
+        # mapping next to the match data; empty/missing means the UI uses
+        # initials. Never calls SofaScore or AWS at runtime.
+        self._photos = PlayerPhotoService(
+            os.path.join(os.path.dirname(data_dir), "wyscout_to_sofascore.json")
+        )
 
         # Pre-load the heuristic-predictor pickle.
         if os.path.exists(model_path):
@@ -280,6 +288,10 @@ class XiService:
         ) / 100.0
         rec["rating"] = int(max(40, min(95, round(55 + 40 * perf_pct))))
         rec["position_norm"] = "FINE" if use_fine else "COARSE"
+        # Self-hosted headshot URL (empty when the photo pipeline has not run);
+        # the UI falls back to initials. Both the match-preview and predict
+        # paths run through here, so photos attach in one place.
+        rec["photo_url"] = self._photos.url_for(rec.get("playerId")) or ""
 
     # ── Public API ───────────────────────────────────────────────────────────
 
