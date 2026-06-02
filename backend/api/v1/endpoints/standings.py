@@ -124,13 +124,12 @@ async def standings(
     _user=Depends(get_current_user),
     svc: FixtureService = Depends(_get_fixture_service),
 ):
-    # 1. Try fresh cache. Skipped in demo mode so a stale production cache
-    # never bleeds into a demo response and vice versa; the cache write below
-    # is gated the same way.
-    if not settings.demo_mode:
-        cached = _load_cache()
-        if cached is not None:
-            return cached
+    # 1. Try fresh cache. Used in demo mode too now that the demo mirrors the
+    # live 25/26 season, so there is no demo-vs-prod season to keep apart, and
+    # caching avoids the trial-tier 429 the standings load otherwise hits.
+    cached = _load_cache()
+    if cached is not None:
+        return cached
 
     # 2. Fetch from Sportradar (cap at 5 s). Demo mode now goes through here
     # too, pinned to the 2024-25 season via effective_season_id(); only the
@@ -165,8 +164,7 @@ async def standings(
             "championship": championship,
             "relegation": relegation,
         }
-        if not settings.demo_mode:
-            _save_cache(merged)
+        _save_cache(merged)
         return merged
 
     # 3. CSV fallback (Sportradar key missing, timeout, or empty payload).
