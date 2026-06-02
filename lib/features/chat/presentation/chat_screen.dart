@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../core/l10n/strings.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/color_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
@@ -336,9 +335,9 @@ class _ChatScreenState extends State<ChatScreen> {
           Padding(
             padding: const EdgeInsets.only(left: SpacingTokens.sm),
             child: ActionChip(
-              label: const Icon(Icons.group_add, size: 18, color: ColorTokens.accent),
+              label: Icon(Icons.group_add, size: 18, color: context.colors.accent),
               backgroundColor: Colors.transparent,
-              side: const BorderSide(color: ColorTokens.accent),
+              side: BorderSide(color: context.colors.accent),
               onPressed: _showCreateGroupDialog,
             ),
           ),
@@ -370,8 +369,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     decoration: InputDecoration(
                       hintText: L10n.t('chat.groupName'),
                       hintStyle: const TextStyle(color: Colors.white54),
-                      enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: ColorTokens.accent)),
-                      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: ColorTokens.accent)),
+                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: context.colors.accent)),
+                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: context.colors.accent)),
                     ),
                   ),
                   const SizedBox(height: SpacingTokens.md),
@@ -387,8 +386,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         return CheckboxListTile(
                           title: Text(name, style: const TextStyle(color: Colors.white)),
                           value: isSelected,
-                          activeColor: ColorTokens.accent,
-                          checkColor: ColorTokens.onAccent,
+                          activeColor: context.colors.accent,
+                          checkColor: context.colors.onAccent,
                           onChanged: (val) {
                             setDialogState(() {
                               if (val == true) {
@@ -411,7 +410,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Text(L10n.t('chat.cancel'), style: const TextStyle(color: Colors.white54)),
               ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: ColorTokens.accent),
+                style: ElevatedButton.styleFrom(backgroundColor: context.colors.accent),
                 onPressed: () async {
                   final name = groupNameCtrl.text.trim();
                   if (name.isEmpty || selectedUserIds.isEmpty) return;
@@ -430,7 +429,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                   if (mounted) Navigator.pop(ctx);
                 },
-                child: Text(L10n.t('chat.create'), style: const TextStyle(color: ColorTokens.onAccent)),
+                child: Text(L10n.t('chat.create'), style: TextStyle(color: context.colors.onAccent)),
               ),
             ],
           );
@@ -444,11 +443,11 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: const EdgeInsets.only(right: SpacingTokens.sm),
       child: ActionChip(
         label: Text(name),
-        backgroundColor: isSelected ? ColorTokens.accent : Colors.transparent,
+        backgroundColor: isSelected ? context.colors.accent : Colors.transparent,
         labelStyle: TextStyle(
-          color: isSelected ? ColorTokens.onAccent : ColorTokens.textPrimary,
+          color: isSelected ? context.colors.onAccent : context.colors.textPrimary,
         ),
-        side: const BorderSide(color: ColorTokens.accent),
+        side: BorderSide(color: context.colors.accent),
         onPressed: () => _switchChannel(id, name),
       ),
     );
@@ -460,13 +459,13 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.forum_outlined,
-                size: 40, color: ColorTokens.textMuted),
+            Icon(Icons.forum_outlined,
+                size: 40, color: context.colors.textMuted),
             const SizedBox(height: SpacingTokens.sm),
             Text(
               L10n.t('chat.empty'),
               style: TypographyTokens.sectionLabel
-                  .copyWith(color: ColorTokens.textMuted),
+                  .copyWith(color: context.colors.textMuted),
             ),
           ],
         ),
@@ -490,12 +489,12 @@ class _ChatScreenState extends State<ChatScreen> {
           bottom: SpacingTokens.xs, left: SpacingTokens.xxs),
       child: Row(
         children: [
-          Container(width: 2, height: 14, color: ColorTokens.accent),
+          Container(width: 2, height: 14, color: context.colors.accent),
           const SizedBox(width: SpacingTokens.xs),
           Text(
             '$_senderName ${L10n.t('chat.typing')}',
             style: TypographyTokens.sectionLabel
-                .copyWith(color: ColorTokens.accent),
+                .copyWith(color: context.colors.accent),
           ),
         ],
       ),
@@ -505,33 +504,33 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildInput() {
     return Container(
       margin: const EdgeInsets.only(top: SpacingTokens.sm),
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: ColorTokens.divider, width: 1)),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: context.colors.divider, width: 1)),
       ),
       child: Row(
         children: [
           IconButton(
             icon: _uploading
-                ? const SizedBox(
+                ? SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
-                        strokeWidth: 2, color: ColorTokens.accent))
-                : const Icon(Icons.attach_file, color: ColorTokens.textMuted),
+                        strokeWidth: 2, color: context.colors.accent))
+                : Icon(Icons.attach_file, color: context.colors.textMuted),
             onPressed: _uploading ? null : _pickFile,
           ),
           Expanded(
             child: TextField(
               controller: _ctrl,
               style: TypographyTokens.body
-                  .copyWith(color: ColorTokens.textPrimary, fontSize: 14),
+                  .copyWith(color: context.colors.textPrimary, fontSize: 14),
               maxLines: null,
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => _send(),
               decoration: InputDecoration(
                 hintText: L10n.t('chat.writeMessage'),
                 hintStyle: TypographyTokens.body
-                    .copyWith(color: ColorTokens.textMuted, fontSize: 14),
+                    .copyWith(color: context.colors.textMuted, fontSize: 14),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
                     horizontal: SpacingTokens.sm, vertical: 14),
@@ -561,13 +560,13 @@ class _Header extends StatelessWidget {
           Text(
             L10n.t('chat.channel'),
             style: TypographyTokens.sectionLabel
-                .copyWith(color: ColorTokens.accent),
+                .copyWith(color: context.colors.accent),
           ),
           const SizedBox(height: SpacingTokens.sm),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(width: 3, height: 40, color: ColorTokens.accent),
+              Container(width: 3, height: 40, color: context.colors.accent),
               const SizedBox(width: SpacingTokens.md),
               Expanded(
                 child: Text(
@@ -630,11 +629,11 @@ class _Bubble extends StatelessWidget {
                 ),
                 border: Border(
                   right: isMe
-                      ? const BorderSide(color: ColorTokens.accent, width: 2)
+                      ? BorderSide(color: context.colors.accent, width: 2)
                       : BorderSide.none,
                   left: isMe
                       ? BorderSide.none
-                      : const BorderSide(color: ColorTokens.accent, width: 2),
+                      : BorderSide(color: context.colors.accent, width: 2),
                 ),
               ),
               child: Column(
@@ -683,9 +682,9 @@ class _Bubble extends StatelessWidget {
                             _buildFileUrl(msg.fileUrl!),
                             width: 200,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => const Icon(
+                            errorBuilder: (_, __, ___) => Icon(
                                 Icons.broken_image,
-                                color: ColorTokens.textMuted),
+                                color: context.colors.textMuted),
                           ),
                         ),
                       ),
@@ -694,7 +693,7 @@ class _Bubble extends StatelessWidget {
                     Text(
                       msg.text,
                       style: TypographyTokens.body.copyWith(
-                          color: ColorTokens.textPrimary, fontSize: 16),
+                          color: context.colors.textPrimary, fontSize: 16),
                     ),
                 ],
               ),
@@ -724,10 +723,10 @@ class _SendButton extends StatelessWidget {
       child: Container(
         width: 56,
         height: 48,
-        color: ColorTokens.accent,
+        color: context.colors.accent,
         alignment: Alignment.center,
-        child: const Icon(Icons.send_rounded,
-            color: ColorTokens.onAccent, size: 20),
+        child: Icon(Icons.send_rounded,
+            color: context.colors.onAccent, size: 20),
       ),
     );
   }

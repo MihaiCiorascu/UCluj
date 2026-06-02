@@ -5,7 +5,6 @@ import '../../../core/constants/supported_formations.dart';
 import '../../../core/l10n/strings.dart';
 import '../../../core/widgets/team_crest.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/color_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../data/models/week_fixture.dart';
@@ -38,10 +37,10 @@ class _PrescriptionBlueprint extends StatelessWidget {
     final recs = prescription.recommendations;
 
     return Container(
-      decoration: const BoxDecoration(
-        color: ColorTokens.surfaceLow,
+      decoration: BoxDecoration(
+        color: context.colors.surfaceLow,
         border: Border(
-          top: BorderSide(color: ColorTokens.accent, width: 4),
+          top: BorderSide(color: context.colors.accent, width: 4),
         ),
       ),
       child: Column(
@@ -53,12 +52,12 @@ class _PrescriptionBlueprint extends StatelessWidget {
                 SpacingTokens.md, SpacingTokens.md, SpacingTokens.md, SpacingTokens.sm),
             child: Row(
               children: [
-                const Icon(Icons.auto_awesome,
-                    color: ColorTokens.accent, size: 14),
+                Icon(Icons.auto_awesome,
+                    color: context.colors.accent, size: 14),
                 const SizedBox(width: SpacingTokens.xs),
                 Text(L10n.t('sheet.optimalPlan'),
                     style: TypographyTokens.sectionLabel
-                        .copyWith(color: ColorTokens.accent, fontSize: 11)),
+                        .copyWith(color: context.colors.accent, fontSize: 11)),
               ],
             ),
           ),
@@ -74,7 +73,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
                   child: _ProbColumn(
                     label: L10n.t('sheet.baselineLabel'),
                     value: baselinePct,
-                    valueColor: ColorTokens.textMuted,
+                    valueColor: context.colors.textMuted,
                   ),
                 ),
                 Padding(
@@ -83,23 +82,23 @@ class _PrescriptionBlueprint extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.arrow_forward,
-                          color: ColorTokens.accent, size: 16),
+                      Icon(Icons.arrow_forward,
+                          color: context.colors.accent, size: 16),
                       const SizedBox(height: 4),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: SpacingTokens.sm, vertical: 3),
-                        color: ColorTokens.accent.withValues(alpha: 0.14),
+                        color: context.colors.accent.withValues(alpha: 0.14),
                         child: Text(upliftPct,
                             style: TypographyTokens.sectionLabel.copyWith(
-                                color: ColorTokens.accent,
+                                color: context.colors.accent,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w800)),
                       ),
                       const SizedBox(height: 4),
                       Text(L10n.t('sheet.upliftLabel'),
                           style: TypographyTokens.sectionLabel.copyWith(
-                              color: ColorTokens.textMuted, fontSize: 8)),
+                              color: context.colors.textMuted, fontSize: 8)),
                     ],
                   ),
                 ),
@@ -107,7 +106,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
                   child: _ProbColumn(
                     label: L10n.t('sheet.optimisedLabel'),
                     value: bestPct,
-                    valueColor: ColorTokens.positive,
+                    valueColor: context.colors.positive,
                   ),
                 ),
               ],
@@ -116,17 +115,17 @@ class _PrescriptionBlueprint extends StatelessWidget {
 
           // ── Tactical-levers section ──────────────────────────────────────
           if (recs.isNotEmpty) ...[
-            const Divider(height: 1, color: ColorTokens.divider),
+            Divider(height: 1, color: context.colors.divider),
             Padding(
               padding: const EdgeInsets.fromLTRB(
                   SpacingTokens.md, SpacingTokens.md, SpacingTokens.md, SpacingTokens.xs),
               child: Row(
                 children: [
-                  Container(width: 2, height: 12, color: ColorTokens.accent),
+                  Container(width: 2, height: 12, color: context.colors.accent),
                   const SizedBox(width: SpacingTokens.xs),
                   Text(L10n.t('sheet.tacticalLevers'),
                       style: TypographyTokens.sectionLabel
-                          .copyWith(color: ColorTokens.textMuted)),
+                          .copyWith(color: context.colors.textMuted)),
                 ],
               ),
             ),
@@ -136,7 +135,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
               child: Wrap(
                 spacing: SpacingTokens.sm,
                 runSpacing: SpacingTokens.sm,
-                children: recs.map(_buildRecChip).toList(),
+                children: recs.map((r) => _buildRecChip(context, r)).toList(),
               ),
             ),
           ],
@@ -148,7 +147,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
             child: Text(
               L10n.t('sheet.modelFooter'),
               style: TypographyTokens.sectionLabel
-                  .copyWith(color: ColorTokens.textMuted, fontSize: 8),
+                  .copyWith(color: context.colors.textMuted, fontSize: 8),
             ),
           ),
         ],
@@ -156,9 +155,9 @@ class _PrescriptionBlueprint extends StatelessWidget {
     );
   }
 
-  Widget _buildRecChip(PrescriptionRec rec) {
+  Widget _buildRecChip(BuildContext context, PrescriptionRec rec) {
     final isUp = rec.direction == 'up';
-    final color = isUp ? ColorTokens.positive : ColorTokens.accent;
+    final color = isUp ? context.colors.positive : context.colors.accent;
     final arrow = isUp ? '▲' : '▼';
     final unitStr = rec.unit;
 
@@ -174,7 +173,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
         children: [
           Text(rec.label.toUpperCase(),
               style: TypographyTokens.sectionLabel
-                  .copyWith(color: ColorTokens.textMuted, fontSize: 8)),
+                  .copyWith(color: context.colors.textMuted, fontSize: 8)),
           const SizedBox(height: 2),
           Row(
             mainAxisSize: MainAxisSize.min,
@@ -188,7 +187,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
                 style: TypographyTokens.body.copyWith(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: ColorTokens.textPrimary),
+                    color: context.colors.textPrimary),
               ),
             ],
           ),
@@ -281,9 +280,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
     return Container(
       height: screenH * 0.92,
-      decoration: const BoxDecoration(
-        color: ColorTokens.surface,
-        border: Border(top: BorderSide(color: ColorTokens.accent, width: 2)),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        border: Border(top: BorderSide(color: context.colors.accent, width: 2)),
       ),
       child: Column(
         children: [
@@ -292,11 +291,11 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               margin: const EdgeInsets.only(top: SpacingTokens.sm),
               width: 40,
               height: 3,
-              color: ColorTokens.divider,
+              color: context.colors.divider,
             ),
           ),
           _buildHeader(f),
-          const Divider(height: 1, color: ColorTokens.divider),
+          Divider(height: 1, color: context.colors.divider),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(SpacingTokens.md),
@@ -307,10 +306,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 if (f.isCompleted) ...[
                   // Official stats from Sportradar
                   if (_loadingDetails)
-                    const Padding(
-                      padding: EdgeInsets.all(SpacingTokens.xl),
+                    Padding(
+                      padding: const EdgeInsets.all(SpacingTokens.xl),
                       child: Center(
-                        child: CircularProgressIndicator(color: ColorTokens.accent),
+                        child: CircularProgressIndicator(color: context.colors.accent),
                       ),
                     )
                   else if (_matchDetails != null) ...[
@@ -358,11 +357,11 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     _sectionLabel(L10n.t('sheet.diagnostic')),
                     const SizedBox(height: SpacingTokens.sm),
                     Container(
-                      color: ColorTokens.surfaceLow,
+                      color: context.colors.surfaceLow,
                       padding: const EdgeInsets.all(SpacingTokens.md),
                       child: Text(f.narrative,
                           style: TypographyTokens.body
-                              .copyWith(color: ColorTokens.textMuted, fontSize: 13)),
+                              .copyWith(color: context.colors.textMuted, fontSize: 13)),
                     ),
                     const SizedBox(height: SpacingTokens.xl),
                   ],
@@ -399,7 +398,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                       style: TypographyTokens.body.copyWith(
                           fontWeight: FontWeight.w800,
                           fontSize: 13,
-                          color: ColorTokens.textPrimary),
+                          color: context.colors.textPrimary),
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis),
                 ),
@@ -409,10 +408,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           Container(
             padding: const EdgeInsets.symmetric(
                 horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
-            color: ColorTokens.surfaceHigh,
+            color: context.colors.surfaceHigh,
             child: Text('VS',
                 style: TypographyTokens.sectionLabel
-                    .copyWith(color: ColorTokens.accent)),
+                    .copyWith(color: context.colors.accent)),
           ),
           Expanded(
             child: Row(
@@ -423,7 +422,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                       style: TypographyTokens.body.copyWith(
                           fontWeight: FontWeight.w800,
                           fontSize: 13,
-                          color: ColorTokens.textPrimary),
+                          color: context.colors.textPrimary),
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis),
                 ),
@@ -444,9 +443,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       final theirScore = isHome ? f.awayScore! : f.homeScore!;
       String result;
       Color col;
-      if (myScore > theirScore) { result = L10n.t('sheet.win'); col = ColorTokens.positive; }
-      else if (myScore < theirScore) { result = L10n.t('sheet.loss'); col = ColorTokens.negative; }
-      else { result = L10n.t('sheet.draw'); col = ColorTokens.accent; }
+      if (myScore > theirScore) { result = L10n.t('sheet.win'); col = context.colors.positive; }
+      else if (myScore < theirScore) { result = L10n.t('sheet.loss'); col = context.colors.negative; }
+      else { result = L10n.t('sheet.draw'); col = context.colors.accent; }
 
       return Column(
         children: [
@@ -455,16 +454,16 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             children: [
               Text('${f.homeScore}',
                   style: TypographyTokens.displayHero.copyWith(
-                      fontSize: 64, color: ColorTokens.textPrimary)),
+                      fontSize: 64, color: context.colors.textPrimary)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
                 child: Text('—',
                     style: TypographyTokens.displayHero.copyWith(
-                        fontSize: 32, color: ColorTokens.textMuted)),
+                        fontSize: 32, color: context.colors.textMuted)),
               ),
               Text('${f.awayScore}',
                   style: TypographyTokens.displayHero.copyWith(
-                      fontSize: 64, color: ColorTokens.textPrimary)),
+                      fontSize: 64, color: context.colors.textPrimary)),
             ],
           ),
           const SizedBox(height: SpacingTokens.xs),
@@ -481,18 +480,18 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     }
 
     return Container(
-      color: ColorTokens.surfaceLow,
+      color: context.colors.surfaceLow,
       padding: const EdgeInsets.all(SpacingTokens.md),
       child: Row(
         children: [
-          const Icon(Icons.schedule, color: ColorTokens.accent, size: 14),
+          Icon(Icons.schedule, color: context.colors.accent, size: 14),
           const SizedBox(width: SpacingTokens.xs),
           Text(f.displayDate,
-              style: TypographyTokens.sectionLabel.copyWith(color: ColorTokens.accent)),
+              style: TypographyTokens.sectionLabel.copyWith(color: context.colors.accent)),
           if (f.venue != null) ...[
             Text('  ·  ${f.venue}',
                 style: TypographyTokens.sectionLabel
-                    .copyWith(color: ColorTokens.textMuted)),
+                    .copyWith(color: context.colors.textMuted)),
           ],
         ],
       ),
@@ -506,7 +505,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     final a = d.awayStats;
 
     return Container(
-      color: ColorTokens.surfaceLow,
+      color: context.colors.surfaceLow,
       padding: const EdgeInsets.all(SpacingTokens.md),
       child: Column(
         children: [
@@ -517,7 +516,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 child: Text(
                   f.homeTeam.replaceAll('Universitatea Cluj', 'U CLUJ').toUpperCase(),
                   style: TypographyTokens.sectionLabel.copyWith(
-                    color: f.isUCLujHome ? ColorTokens.accent : ColorTokens.textMuted,
+                    color: f.isUCLujHome ? context.colors.accent : context.colors.textMuted,
                     fontSize: 9,
                   ),
                 ),
@@ -533,7 +532,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 child: Text(
                   f.awayTeam.replaceAll('Universitatea Cluj', 'U CLUJ').toUpperCase(),
                   style: TypographyTokens.sectionLabel.copyWith(
-                    color: !f.isUCLujHome ? ColorTokens.accent : ColorTokens.textMuted,
+                    color: !f.isUCLujHome ? context.colors.accent : context.colors.textMuted,
                     fontSize: 9,
                   ),
                   textAlign: TextAlign.right,
@@ -542,7 +541,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             ],
           ),
           const SizedBox(height: SpacingTokens.sm),
-          const Divider(height: 1, color: ColorTokens.divider),
+          Divider(height: 1, color: context.colors.divider),
           const SizedBox(height: SpacingTokens.sm),
 
           if (h.ballPossession != null || a.ballPossession != null)
@@ -606,8 +605,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     final uclVal = isUCLujHome ? homeVal : awayVal;
     final oppVal = isUCLujHome ? awayVal : homeVal;
     final uclColor = higherIsBetter
-        ? (uclVal >= oppVal ? ColorTokens.positive : ColorTokens.negative)
-        : (uclVal <= oppVal ? ColorTokens.positive : ColorTokens.negative);
+        ? (uclVal >= oppVal ? context.colors.positive : context.colors.negative)
+        : (uclVal <= oppVal ? context.colors.positive : context.colors.negative);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -625,14 +624,14 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     style: TypographyTokens.body.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: isUCLujHome ? uclColor : ColorTokens.textPrimary,
+                      color: isUCLujHome ? uclColor : context.colors.textPrimary,
                     )),
               ),
               Expanded(
                 child: Center(
                   child: Text(label,
                       style: TypographyTokens.sectionLabel
-                          .copyWith(fontSize: 8, color: ColorTokens.textMuted)),
+                          .copyWith(fontSize: 8, color: context.colors.textMuted)),
                 ),
               ),
               SizedBox(
@@ -643,7 +642,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                       fontWeight: FontWeight.w700,
                       color: !isUCLujHome
                           ? uclColor
-                          : ColorTokens.textPrimary.withValues(alpha: 0.65),
+                          : context.colors.textPrimary.withValues(alpha: 0.65),
                     ),
                     textAlign: TextAlign.right),
               ),
@@ -659,7 +658,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     height: 4,
                     color: isUCLujHome
                         ? uclColor
-                        : ColorTokens.textMuted.withValues(alpha: 0.5),
+                        : context.colors.textMuted.withValues(alpha: 0.5),
                   ),
                 ),
                 Expanded(
@@ -668,7 +667,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     height: 4,
                     color: !isUCLujHome
                         ? uclColor
-                        : ColorTokens.textMuted.withValues(alpha: 0.5),
+                        : context.colors.textMuted.withValues(alpha: 0.5),
                   ),
                 ),
               ],
@@ -720,7 +719,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           children: [
             _teamTab(homeDisplay, f.isUCLujHome, _lineupTeamIndex == 0,
                 () => setState(() => _lineupTeamIndex = 0)),
-            Container(width: 1, color: ColorTokens.divider),
+            Container(width: 1, color: context.colors.divider),
             _teamTab(awayDisplay, !f.isUCLujHome, _lineupTeamIndex == 1,
                 () => setState(() => _lineupTeamIndex = 1)),
           ],
@@ -734,7 +733,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             child: Text(
               formation,
               style: TypographyTokens.sectionLabel.copyWith(
-                color: isUCluj ? ColorTokens.accent : ColorTokens.textMuted,
+                color: isUCluj ? context.colors.accent : context.colors.textMuted,
                 fontSize: 10,
               ),
             ),
@@ -758,12 +757,12 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
         if (subs.isNotEmpty) ...[
           const SizedBox(height: SpacingTokens.xs),
           Container(
-            color: ColorTokens.surfaceLow,
+            color: context.colors.surfaceLow,
             padding: const EdgeInsets.symmetric(
                 horizontal: SpacingTokens.md, vertical: 4),
             child: Text(L10n.t('sheet.subs'),
                 style: TypographyTokens.sectionLabel
-                    .copyWith(fontSize: 8, color: ColorTokens.textMuted)),
+                    .copyWith(fontSize: 8, color: context.colors.textMuted)),
           ),
           ...subs.map((p) => _buildPlayerRow(p, isUCluj: isUCluj, isSub: true)),
         ],
@@ -779,12 +778,12 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
         child: Container(
           padding: const EdgeInsets.symmetric(
               vertical: SpacingTokens.sm, horizontal: SpacingTokens.xs),
-          color: selected ? ColorTokens.surfaceLow : ColorTokens.surfaceHigh,
+          color: selected ? context.colors.surfaceLow : context.colors.surfaceHigh,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (isUCluj) ...[
-                const Icon(Icons.shield, color: ColorTokens.accent, size: 10),
+                Icon(Icons.shield, color: context.colors.accent, size: 10),
                 const SizedBox(width: 4),
               ],
               Flexible(
@@ -793,8 +792,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   style: TypographyTokens.sectionLabel.copyWith(
                     fontSize: 9,
                     color: selected
-                        ? (isUCluj ? ColorTokens.accent : ColorTokens.textPrimary)
-                        : ColorTokens.textMuted,
+                        ? (isUCluj ? context.colors.accent : context.colors.textPrimary)
+                        : context.colors.textMuted,
                   ),
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -821,8 +820,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     return Container(
       margin: const EdgeInsets.only(bottom: 1),
       color: isSub
-          ? ColorTokens.surface
-          : ColorTokens.surfaceLow.withValues(alpha: 0.6),
+          ? context.colors.surface
+          : context.colors.surfaceLow.withValues(alpha: 0.6),
       padding: const EdgeInsets.symmetric(
           horizontal: SpacingTokens.md, vertical: 6),
       child: Row(
@@ -834,7 +833,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               p.jerseyNumber != null ? '${p.jerseyNumber}' : '—',
               style: TypographyTokens.sectionLabel.copyWith(
                 fontSize: 10,
-                color: ColorTokens.textMuted,
+                color: context.colors.textMuted,
               ),
             ),
           ),
@@ -859,7 +858,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               style: TypographyTokens.body.copyWith(
                 fontSize: 12,
                 fontWeight: isSub ? FontWeight.w400 : FontWeight.w600,
-                color: isSub ? ColorTokens.textMuted : ColorTokens.textPrimary,
+                color: isSub ? context.colors.textMuted : context.colors.textPrimary,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -875,19 +874,19 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     final badges = <Widget>[];
 
     if (p.goalsScored > 0) {
-      badges.add(_badge('⚽ ${p.goalsScored}', ColorTokens.positive));
+      badges.add(_badge('⚽ ${p.goalsScored}', context.colors.positive));
     }
     if (p.assists > 0) {
-      badges.add(_badge('A${p.assists}', ColorTokens.accent));
+      badges.add(_badge('A${p.assists}', context.colors.accent));
     }
     if (p.yellowCards > 0) {
       badges.add(_badge('▪', const Color(0xFFFFD700)));
     }
     if (p.redCards > 0) {
-      badges.add(_badge('▪', ColorTokens.negative));
+      badges.add(_badge('▪', context.colors.negative));
     }
     if (p.minutesPlayed != null && p.minutesPlayed! < 90 && !p.isStarter) {
-      badges.add(_badge("${p.minutesPlayed}'", ColorTokens.textMuted));
+      badges.add(_badge("${p.minutesPlayed}'", context.colors.textMuted));
     }
 
     if (badges.isEmpty) return const SizedBox.shrink();
@@ -914,15 +913,15 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       case 'G':
         // Amber goalkeeper marker; the named warning token replaces the old
         // hardcoded literal so it tracks the palette.
-        return ColorTokens.warning;
+        return context.colors.roleGoalkeeper;
       case 'D':
-        return ColorTokens.positive;
+        return context.colors.positive;
       case 'M':
-        return ColorTokens.accent;
+        return context.colors.accent;
       case 'F':
-        return ColorTokens.negative;
+        return context.colors.negative;
       default:
-        return ColorTokens.textMuted;
+        return context.colors.textMuted;
     }
   }
 
@@ -940,10 +939,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   Widget _buildMLBlock(WeekFixture f, double uclProb) {
     final winPct = (uclProb * 100).round();
     final col = uclProb >= 0.55
-        ? ColorTokens.positive
+        ? context.colors.positive
         : uclProb >= 0.40
-            ? ColorTokens.accent
-            : ColorTokens.negative;
+            ? context.colors.accent
+            : context.colors.negative;
     final verdictKey = uclProb >= 0.65
         ? 'sheet.verdictDominant'
         : uclProb >= 0.50
@@ -954,7 +953,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
     return Container(
       decoration: BoxDecoration(
-        color: ColorTokens.surfaceLow,
+        color: context.colors.surfaceLow,
         border: Border(
           top: BorderSide(color: col.withValues(alpha: 0.8), width: 1),
         ),
@@ -978,7 +977,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   ),
                   Expanded(
                     flex: (100 - (uclProb * 100).round()).clamp(1, 99),
-                    child: Container(color: ColorTokens.surfaceHigh),
+                    child: Container(color: context.colors.surfaceHigh),
                   ),
                 ],
               ),
@@ -990,7 +989,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 children: [
                   Text(L10n.t('sheet.winChanceUcluj'),
                       style: TypographyTokens.sectionLabel
-                          .copyWith(color: ColorTokens.textMuted, fontSize: 10)),
+                          .copyWith(color: context.colors.textMuted, fontSize: 10)),
                   const SizedBox(height: SpacingTokens.xs),
                   Text('$winPct%',
                       style: TypographyTokens.displayHero
@@ -1007,7 +1006,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   const SizedBox(height: SpacingTokens.sm),
                   Text(L10n.t('sheet.modelCaption'),
                       style: TypographyTokens.sectionLabel.copyWith(
-                          fontSize: 8, color: ColorTokens.textMuted)),
+                          fontSize: 8, color: context.colors.textMuted)),
                 ],
               ),
             ),
@@ -1047,13 +1046,13 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   }
 
   Widget _buildDriverChip(WeekFixtureDriver d, {required bool isRisk}) {
-    final col = isRisk ? ColorTokens.negative : ColorTokens.positive;
+    final col = isRisk ? context.colors.negative : context.colors.positive;
     final sign = isRisk ? '▼' : '▲';
     return Container(
       padding: const EdgeInsets.symmetric(
           horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
       decoration: BoxDecoration(
-        color: ColorTokens.surfaceLow,
+        color: context.colors.surfaceLow,
         border: Border(
           top: BorderSide(color: col, width: 2),
         ),
@@ -1080,7 +1079,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           Text(
             d.label.toUpperCase(),
             style: TypographyTokens.sectionLabel
-                .copyWith(color: ColorTokens.textPrimary, fontSize: 9),
+                .copyWith(color: context.colors.textPrimary, fontSize: 9),
           ),
         ],
       ),
@@ -1091,18 +1090,18 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
   Widget _buildXiSection() {
     if (_loadingXi) {
-      return const Padding(
-        padding: EdgeInsets.all(SpacingTokens.xl),
-        child: Center(child: CircularProgressIndicator(color: ColorTokens.accent)),
+      return Padding(
+        padding: const EdgeInsets.all(SpacingTokens.xl),
+        child: Center(child: CircularProgressIndicator(color: context.colors.accent)),
       );
     }
     if (_xiError != null) {
       return Container(
-        color: ColorTokens.surfaceLow,
+        color: context.colors.surfaceLow,
         padding: const EdgeInsets.all(SpacingTokens.md),
         child: Text('${L10n.t('sheet.xiUnavailable')}: $_xiError',
             style: TypographyTokens.body
-                .copyWith(color: ColorTokens.textMuted, fontSize: 12)),
+                .copyWith(color: context.colors.textMuted, fontSize: 12)),
       );
     }
     if (_preview == null) return const SizedBox.shrink();
@@ -1117,11 +1116,11 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: _formation,
-                dropdownColor: ColorTokens.surfaceLow,
+                dropdownColor: context.colors.surfaceLow,
                 style: TypographyTokens.body
-                    .copyWith(color: ColorTokens.textPrimary, fontSize: 12),
-                icon: const Icon(Icons.keyboard_arrow_down,
-                    color: ColorTokens.accent, size: 16),
+                    .copyWith(color: context.colors.textPrimary, fontSize: 12),
+                icon: Icon(Icons.keyboard_arrow_down,
+                    color: context.colors.accent, size: 16),
                 onChanged: (v) {
                   if (v != null && v != _formation) {
                     setState(() => _formation = v);
@@ -1146,11 +1145,11 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
   Widget _sectionLabel(String text) => Row(
         children: [
-          Container(width: 2, height: 12, color: ColorTokens.accent),
+          Container(width: 2, height: 12, color: context.colors.accent),
           const SizedBox(width: SpacingTokens.xs),
           Text(text,
               style: TypographyTokens.sectionLabel
-                  .copyWith(color: ColorTokens.textMuted)),
+                  .copyWith(color: context.colors.textMuted)),
         ],
       );
 }
@@ -1374,7 +1373,7 @@ class _ActualPlayerChip extends StatelessWidget {
                   Container(
                     width: chipSize * 0.1,
                     height: chipSize * 0.14,
-                    color: ColorTokens.negative,
+                    color: context.colors.negative,
                     margin: const EdgeInsets.symmetric(horizontal: 1),
                   ),
               ],
@@ -1409,7 +1408,7 @@ class _ProbColumn extends StatelessWidget {
       children: [
         Text(label,
             style: TypographyTokens.sectionLabel
-                .copyWith(color: ColorTokens.textMuted, fontSize: 9)),
+                .copyWith(color: context.colors.textMuted, fontSize: 9)),
         const SizedBox(height: 4),
         Text(value,
             style: TypographyTokens.displayHero

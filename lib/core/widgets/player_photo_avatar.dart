@@ -70,7 +70,7 @@ class PlayerPhotoAvatar extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         color: c.surfaceHigh,
-        border: Border.all(color: ringColor, width: 2),
+        border: Border.all(color: ringColor, width: (size * 0.07).clamp(2.0, 3.5)),
       ),
       child: ClipRect(child: inner),
     );
