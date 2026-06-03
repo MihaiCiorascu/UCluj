@@ -112,7 +112,7 @@ SUPERLIGA_TEAMS: List[TeamRef] = [
     TeamRef(short="UTA Arad",              wy_substr="UTA Arad",
             sr_id="sr:competitor:221210", aliases=("FC Uta Arad", "Uta Arad")),
     TeamRef(short="Csikszereda",           wy_substr="Csikszereda",
-            sr_id="sr:competitor:391688", aliases=("AFK Csikszereda Miercurea Ciuc", "Csikszereda M. Ciuc")),
+            sr_id="sr:competitor:391688", aliases=("AFK Csikszereda Miercurea Ciuc", "Csikszereda Miercurea Ciuc", "Csikszereda M. Ciuc")),
     TeamRef(short="FC Argeş",              wy_substr="Argeș",
             sr_id="sr:competitor:116221", aliases=("ACS Champions FC Arges", "FC Arges")),
     TeamRef(short="U Craiova",             wy_substr="Universitatea Craiova",
