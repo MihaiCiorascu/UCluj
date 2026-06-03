@@ -716,14 +716,25 @@ class StartingXIPredictor:
         )
         coarse_arr = pool_indexed["role_group"].astype(str).str.upper().to_numpy()
         scores = pool_indexed["predicted_score"].astype(float).to_numpy()
+        # Preferred pitch side per player (L/R/C). Defaults to central when the
+        # column is absent, so an older feature frame behaves exactly as before.
+        side_arr = (
+            pool_indexed.get("position_side", pd.Series("C", index=pool_indexed.index))
+            .astype(str).str.upper().to_numpy()
+        )
 
         BIG = 1e6    # finite penalty for forbidden matches (Hungarian dislikes inf).
         NEAR = 0.30  # penalty for an admissible but off-primary fine match (a CB at full-back).
         SOFT = 0.60  # penalty for a coarse-only match (no admissible fine overlap).
+        SIDE = 0.15  # penalty for filling a sided slot with an opposite-flank player.
         # predicted_score sits in a narrow band, so even NEAR dominates the score
         # gaps between players. The effect: each player is placed in their PRIMARY
         # fine position (fine group == slot family) whenever the squad allows, and
         # only covers out of position when no specialist for that slot is free.
+        # SIDE (< NEAR) then breaks the tie on the correct flank: a right-sided
+        # player prefers the right slot, but playing the correct position on the
+        # wrong foot still beats covering out of position, and a clearly higher
+        # score still wins the slot regardless of side.
         cost = np.full((n_players, n_slots), BIG, dtype=float)
         for j, (label, coarse) in enumerate(slot_specs):
             family = self._slot_family(label)
@@ -735,6 +746,17 @@ class StartingXIPredictor:
             cost[primary, j] = -scores[primary]
             cost[secondary, j] = -scores[secondary] + NEAR
             cost[coarse_ok, j] = -scores[coarse_ok] + SOFT
+            # Correct-flank preference: an opposite-side player in a sided slot
+            # pays SIDE on top of the family penalty. Central slots and central /
+            # two-footed players are exempt. Applied only to assignable cells.
+            slot_sd = self._slot_side(label)
+            if slot_sd in ("L", "R"):
+                wrong_side = (
+                    np.isin(side_arr, ["L", "R"])
+                    & (side_arr != slot_sd)
+                    & (primary | secondary | coarse_ok)
+                )
+                cost[wrong_side, j] += SIDE
 
         try:
             row_ind, col_ind = linear_sum_assignment(cost)
@@ -789,6 +811,21 @@ class StartingXIPredictor:
         return "M"
 
     @staticmethod
+    def _slot_side(label: str) -> str:
+        """Return the slot's pitch side: ``"L"``, ``"R"`` or ``"C"`` (central).
+
+        Official slot labels carry the side as a leading ``L`` / ``R`` (LB, LCB,
+        LWB, LM, LCM, LDM, LAM, LW, LST and the right mirrors); GK, DM, CM, CB,
+        CAM, CDM and ST are central.
+        """
+        l = (label or "").upper()
+        if l.startswith("L"):
+            return "L"
+        if l.startswith("R"):
+            return "R"
+        return "C"
+
+    @staticmethod
     def _formation_slot_specs(formation: str) -> List[tuple[str, str]]:
         """Return the ordered (official_label, coarse_group) slots for a formation.
 
@@ -822,6 +859,17 @@ class StartingXIPredictor:
         fine = (
             p.get("position_group_fine", pd.Series("", index=p.index)).astype(str).str.upper()
         )
+        side = (
+            p.get("position_side", pd.Series("C", index=p.index)).astype(str).str.upper()
+        )
+
+        def _side_ok(i: int, slot_sd: str) -> bool:
+            # A central slot, or a central / two-footed player, fits either flank.
+            if slot_sd == "C":
+                return True
+            s = side[i]
+            return s not in ("L", "R") or s == slot_sd
+
         order = list(scores.sort_values(ascending=False).index)  # best players first
         used: set = set()
         result: List[tuple[int, int, str, str]] = []  # (player_idx, slot_idx, label, coarse)
@@ -829,9 +877,15 @@ class StartingXIPredictor:
         for j, (label, cg) in enumerate(slot_specs):
             family = StartingXIPredictor._slot_family(label)
             admissible = SLOT_ADMISSIBLE_FINE.get(family, set())
-            # Prefer the player's primary fine position (fine == slot family),
-            # then an adjacent admissible role, then any coarse-line match.
-            pick = next((i for i in order if i not in used and fine[i] == family), None)
+            slot_sd = StartingXIPredictor._slot_side(label)
+            # Prefer the player's primary fine position on the correct flank,
+            # then primary on any flank, then an adjacent admissible role on the
+            # correct flank, then any admissible role, then a coarse-line match.
+            pick = next((i for i in order if i not in used and fine[i] == family and _side_ok(i, slot_sd)), None)
+            if pick is None:
+                pick = next((i for i in order if i not in used and fine[i] == family), None)
+            if pick is None:
+                pick = next((i for i in order if i not in used and fine[i] in admissible and _side_ok(i, slot_sd)), None)
             if pick is None:
                 pick = next((i for i in order if i not in used and fine[i] in admissible), None)
             if pick is None:

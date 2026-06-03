@@ -175,6 +175,55 @@ def derive_primary_fine_position(match_stats_list: List[Dict]) -> str:
     return weights.most_common(1)[0][0]
 
 
+def _code_to_side(code: str) -> str:
+    """Map a Wyscout position code to its pitch side: ``"L"``, ``"R"`` or ``"C"``.
+
+    Every flank code in :data:`POSITION_CODE_TO_FINE_GROUP` is prefixed ``l``
+    (lcb, lb, lwb, lw, ldmf, lcmf, lamf, lwf and their 3-/5-back variants) or
+    ``r`` (the right mirrors); the rest are central (gk, cb, cb3, dmf, cmf, amf,
+    cf, ss).
+    """
+    c = (code or "").strip().lower()
+    if c.startswith("l"):
+        return "L"
+    if c.startswith("r"):
+        return "R"
+    return "C"
+
+
+def derive_primary_side(match_stats_list: List[Dict]) -> str:
+    """Return the player's preferred pitch side: ``"L"``, ``"R"`` or ``"C"``.
+
+    Mirrors :func:`derive_primary_fine_position`: each match contributes
+    ``minutes * percent/100`` to the side of every position code it carries. A
+    player is called left- or right-sided when one flank clearly dominates;
+    when there is no flank play, or the two flanks are within roughly even
+    shares (the dominant flank holds less than 60% of the L+R total, i.e. the
+    player is genuinely two-footed or used on both sides), the player is
+    treated as central / flexible (``"C"``) so the slot assignment applies no
+    side penalty either way.
+    """
+    weights = {"L": 0.0, "R": 0.0, "C": 0.0}
+    for match in match_stats_list:
+        minutes = (match.get("total", match) or {}).get("minutesOnField", 0) or 0
+        if minutes <= 0:
+            continue
+        for entry in match.get("positions", []) or []:
+            pos = (entry.get("position", {}) or {})
+            code = (pos.get("code") or "").strip().lower()
+            if code not in POSITION_CODE_TO_FINE_GROUP:
+                continue
+            percent = float(entry.get("percent", 100) or 100)
+            weights[_code_to_side(code)] += minutes * (percent / 100.0)
+    sided = weights["L"] + weights["R"]
+    if sided <= 0:
+        return "C"
+    dominant = "L" if weights["L"] >= weights["R"] else "R"
+    if weights[dominant] < 0.60 * sided:
+        return "C"  # roughly two-footed / used on both flanks
+    return dominant
+
+
 def role_to_group(role_name: str) -> str:
     for key, group in ROLE_TO_GROUP.items():
         if key.lower() in role_name.lower():
@@ -608,6 +657,7 @@ def build_player_feature_vector(
     # We pass match_stats_list verbatim because the entries already contain
     # `positions` and `minutesOnField` at the top level after `build_dataset_from_files`.
     position_group_fine = derive_primary_fine_position(match_stats_list)
+    position_side = derive_primary_side(match_stats_list)
 
     # ── Aggregate stats across matches ──────────────────────────────────────
     agg = {}
@@ -700,6 +750,7 @@ def build_player_feature_vector(
         "role": role_name,
         "role_group": role_group,
         "position_group_fine": position_group_fine,
+        "position_side": position_side,
         "age": round(age, 1),
         "matches_played": count,
         "total_minutes": minutes_total,
