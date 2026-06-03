@@ -28,7 +28,12 @@ async def lifespan(app: FastAPI):
     # app.state so the task is not garbage-collected mid-flight.
     from app.prewarm import prewarm_caches
     app.state._prewarm_task = asyncio.create_task(
-        prewarm_caches(app.state.df, app.state.stadium_map)
+        prewarm_caches(
+            app.state.df,
+            app.state.stadium_map,
+            xi_service=app.state.xi_service,
+            bundle=app.state.bundle,
+        )
     )
     yield
 
