@@ -102,7 +102,7 @@ _MIN_MINUTES = 450
 # radar can be built from the rating's own components.
 _PLAYER_COLS = [
     "playerId", "shortName", "role", "role_group",
-    "position_group_fine", "official_position", "slot_index",
+    "position_group_fine", "position_side", "official_position", "slot_index",
     "predicted_score", "performance_score", "recent_form_score",
     "total_minutes", "matches_played",
     "pass_accuracy", "duel_win_rate",
