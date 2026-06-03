@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 import 'color_tokens.dart';
@@ -37,9 +36,9 @@ class AppTheme {
       error: ColorTokens.negative,
     );
 
-    // Inter as the default family for every text role, then Epilogue on the
-    // editorial roles and explicit colours per role.
-    final t = GoogleFonts.interTextTheme(base.textTheme).copyWith(
+    // Inter as the default family for every text role (bundled, offline),
+    // then Epilogue on the editorial roles and explicit colours per role.
+    final t = base.textTheme.apply(fontFamily: 'Inter').copyWith(
       displayLarge: TypographyTokens.displayHero.copyWith(color: p.textPrimary),
       headlineLarge: TypographyTokens.headline.copyWith(color: p.textPrimary),
       headlineMedium: TypographyTokens.headline.copyWith(color: p.textPrimary),

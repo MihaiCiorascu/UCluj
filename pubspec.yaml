@@ -16,7 +16,6 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   logger: ^2.4.0
   cached_network_image: ^3.4.1
-  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -33,3 +32,10 @@ flutter:
     - assets/branding/logo_full.png
     - assets/branding/umbraro_wordmark.png
     - assets/teams/
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf
+    - family: Epilogue
+      fonts:
+        - asset: assets/fonts/Epilogue.ttf
