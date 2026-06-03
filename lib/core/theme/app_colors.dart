@@ -112,6 +112,25 @@ class AppColorTokens {
 
   bool get isDark => brightness == Brightness.dark;
 
+  // ── Redesign semantic getters (non-breaking, computed) ───────────────────
+  // Reserved amber highlight — used for the single most important number on a
+  // screen (e.g. the probability uplift), never as a wash. Reuses the existing
+  // goalkeeper amber so it stays within the documented palette.
+  Color get highlight => roleGoalkeeper;
+  Color get highlightSubtle => roleGoalkeeper.withValues(alpha: 0.16);
+
+  /// Modal scrim behind sheets and dialogs.
+  Color get scrim =>
+      Colors.black.withValues(alpha: isDark ? 0.62 : 0.42);
+
+  /// Base colour for the soft, brand-tinted elevation shadows (alpha applied
+  /// by `ShapeTokens`).
+  Color get shadowBase => isDark ? Colors.black : chromeDeep;
+
+  /// Neutral track behind bars, arcs, and sliders.
+  Color get track =>
+      isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06);
+
   // ── Iteration N gradient helpers ─────────────────────────────────────────
   LinearGradient get surfaceBaseGradient => LinearGradient(
         begin: Alignment.topCenter,
