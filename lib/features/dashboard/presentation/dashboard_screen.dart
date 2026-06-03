@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/strings.dart';
+import '../../../core/primitives/haptics.dart';
+import '../../../core/primitives/pressable.dart';
+import '../../../core/primitives/reveal.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/state/meta_state.dart';
 import '../../../core/widgets/team_crest.dart';
 import '../../../core/services/api_client.dart' show ApiException;
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/motion_tokens.dart';
+import '../../../core/theme/shape_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
@@ -107,7 +112,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         .toSet();
 
     for (final id in completed) {
-      _detailsRepo.fetchMatchDetails(id).catchError((_) => throw _);
+      // Fire-and-forget prefetch: swallow failures, this only warms a cache.
+      _detailsRepo.fetchMatchDetails(id).then(
+        (_) {},
+        onError: (Object _, StackTrace __) {},
+      );
     }
   }
 
@@ -140,6 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void _changeWeek(int delta) {
     final next = _weekOffset + delta;
     if (!_cachedOffsets.contains(next)) return;
+    AppHaptics.selection();
     setState(() => _weekOffset = next);
   }
 
@@ -148,6 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      barrierColor: context.colors.scrim,
       builder: (_) => MatchStatsSheet(
         fixture: f,
         myTeam: _myTeam,
@@ -172,7 +183,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: _loading
             ? const Padding(
                 padding: EdgeInsets.symmetric(vertical: SpacingTokens.lg),
-                child: AppLoadingSkeleton(rows: 5, rowHeight: 72),
+                child: AppLoadingSkeleton(rows: 5, rowHeight: 84),
               )
             : _error != null
                 ? _buildError(c)
@@ -196,7 +207,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           TextButton(
             onPressed: _loadAll,
             child: Text(L10n.t('dashboard.retry'),
-                style: TypographyTokens.sectionLabel.copyWith(color: c.accent)),
+                style: TypographyTokens.buttonLabel.copyWith(color: c.primary)),
           ),
         ],
       ),
@@ -208,8 +219,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final uclFixtures   = weekFixtures.where((f) => f.involvesUCluj).toList();
     final otherFixtures = weekFixtures.where((f) => !f.involvesUCluj).toList();
 
+    // Continuous index so the whole list staggers in as one sequence.
+    var index = 0;
+
     return RefreshIndicator(
-      color: c.accent,
+      color: c.primary,
       backgroundColor: c.surfaceHigh,
       onRefresh: () => _loadAll(forceRefresh: true),
       child: ListView(
@@ -225,11 +239,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   : _weekOffset == 0
                       ? L10n.t('dashboard.uclujThisWeek')
                       : L10n.t('dashboard.uclujNextRound'),
-              c.accent,
+              c.primary,
               c,
             ),
             const SizedBox(height: SpacingTokens.sm),
-            ...uclFixtures.map((f) => _buildMatchCard(f, highlight: true, c: c)),
+            ...uclFixtures.map(
+                (f) => _buildMatchCard(f, highlight: true, c: c, index: index++)),
             const SizedBox(height: SpacingTokens.xl),
           ],
 
@@ -237,7 +252,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (otherFixtures.isNotEmpty) ...[
             _buildSectionLabel(L10n.t('dashboard.otherMatches'), c.textMuted, c),
             const SizedBox(height: SpacingTokens.sm),
-            ...otherFixtures.map((f) => _buildMatchCard(f, highlight: false, c: c)),
+            ...otherFixtures.map(
+                (f) => _buildMatchCard(f, highlight: false, c: c, index: index++)),
           ],
 
           if (weekFixtures.isEmpty)
@@ -253,77 +269,72 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildWeekHeader(AppColorTokens c) {
-    final label = _visibleRangeLabel();
-    final weekWord = L10n.t('dashboard.weekRelative');
-    final weekLabel = _weekOffset == 0
-        ? L10n.t('dashboard.weekCurrent')
-        : _weekOffset > 0
-            ? '$weekWord +$_weekOffset'
-            : '$weekWord $_weekOffset';
+  // ── Week control ──────────────────────────────────────────────────────────
 
+  Widget _buildWeekHeader(AppColorTokens c) {
+    final canBack = _weekOffset > _cachedOffsets.first;
+    final canFwd = _weekOffset < _cachedOffsets.last;
     return Container(
       decoration: BoxDecoration(
         color: c.surfaceLow,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: ShapeTokens.control,
         border: Border.all(color: c.divider),
       ),
-      padding: const EdgeInsets.symmetric(
-          horizontal: SpacingTokens.xs, vertical: SpacingTokens.xs),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       child: Row(
         children: [
-          IconButton(
-            icon: Icon(Icons.chevron_left,
-                color: _weekOffset > _cachedOffsets.first
-                    ? c.accent
-                    : c.textMuted,
-                size: 20),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-            onPressed: _weekOffset > _cachedOffsets.first ? () => _changeWeek(-1) : null,
-          ),
-          Icon(Icons.calendar_today, color: c.accent, size: 13),
-          const SizedBox(width: SpacingTokens.xs),
+          _chevron(Icons.chevron_left, canBack, () => _changeWeek(-1), c),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(weekLabel,
+                Text(_visibleRangeLabel(),
+                    style: TypographyTokens.meta.copyWith(
+                        color: c.textPrimary, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 1),
+                Text(_relativeWeekLabel(),
                     style: TypographyTokens.sectionLabel
                         .copyWith(color: c.textMuted, fontSize: 9)),
-                Text(label,
-                    style: TypographyTokens.sectionLabel
-                        .copyWith(color: c.accent, fontSize: 10)),
               ],
             ),
           ),
-          IconButton(
-            icon: Icon(Icons.chevron_right,
-                color: _weekOffset < _cachedOffsets.last
-                    ? c.accent
-                    : c.textMuted,
-                size: 20),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-            onPressed: _weekOffset < _cachedOffsets.last ? () => _changeWeek(1) : null,
-          ),
+          _chevron(Icons.chevron_right, canFwd, () => _changeWeek(1), c),
         ],
       ),
     );
   }
 
+  Widget _chevron(
+      IconData icon, bool enabled, VoidCallback onTap, AppColorTokens c) {
+    return SizedBox(
+      width: 44,
+      height: 44,
+      child: IconButton(
+        icon: Icon(icon, size: 22),
+        color: enabled ? c.primary : c.textMuted.withValues(alpha: 0.4),
+        padding: EdgeInsets.zero,
+        onPressed: enabled ? onTap : null,
+      ),
+    );
+  }
+
+  String _relativeWeekLabel() {
+    final weekWord = L10n.t('dashboard.weekRelative');
+    return _weekOffset == 0
+        ? L10n.t('dashboard.weekCurrent')
+        : _weekOffset > 0
+            ? '$weekWord +$_weekOffset'
+            : '$weekWord $_weekOffset';
+  }
+
   String _visibleRangeLabel() {
     final monday = _weekMonday();
     final sunday = monday.add(const Duration(days: 6));
-    return '${_fmtDate(monday)} — ${_fmtDate(sunday, withYear: true)}';
+    final ro = L10n.instance.isRomanian;
+    return '${monday.day} ${_monAbbr(monday.month, ro)} - '
+        '${sunday.day} ${_monAbbr(sunday.month, ro)} ${sunday.year}';
   }
 
-  String _fmtDate(DateTime d, {bool withYear = false}) {
-    final dd = d.day.toString().padLeft(2, '0');
-    final mm = d.month.toString().padLeft(2, '0');
-    if (withYear) return '$dd.$mm.${d.year}';
-    return '$dd.$mm';
-  }
+  // ── Section label ───────────────────────────────────────────────────────────
 
   Widget _buildSectionLabel(String text, Color color, AppColorTokens c) {
     return Row(
@@ -342,229 +353,186 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildMatchCard(WeekFixture f, {required bool highlight, required AppColorTokens c}) {
+  // ── Fixture card ────────────────────────────────────────────────────────────
+
+  Widget _buildMatchCard(
+    WeekFixture f, {
+    required bool highlight,
+    required AppColorTokens c,
+    required int index,
+  }) {
     final isHome = f.isUCLujHome;
-    final uclProb = f.homeWinProbability;
     final isUpcoming = !f.isCompleted;
 
-    final probPct = uclProb != null ? '${(uclProb * 100).round()}%' : '--';
-    final probColor = uclProb == null
-        ? c.textMuted
-        : uclProb >= 0.55
-            ? c.positive
-            : uclProb >= 0.40
-                ? c.accent
-                : c.negative;
-
-    String result = '';
-    Color resultColor = c.textMuted;
-    if (f.isCompleted && highlight) {
+    // Result for the W/D/L dot + score colour (U Cluj completed only).
+    Color? resultColor;
+    String? resultLetter;
+    if (f.isCompleted && f.involvesUCluj) {
       final myScore = isHome ? f.homeScore! : f.awayScore!;
       final theirScore = isHome ? f.awayScore! : f.homeScore!;
-      if (myScore > theirScore) { result = 'V'; resultColor = c.positive; }
-      else if (myScore < theirScore) { result = 'Î'; resultColor = c.negative; }
-      else { result = 'E'; resultColor = c.accent; }
+      final won = myScore > theirScore;
+      final lost = myScore < theirScore;
+      resultColor = won ? c.positive : (lost ? c.negative : c.textMuted);
+      resultLetter = _resultLetter(won, lost);
     }
 
-    final leading = _leadingTag(f, result, resultColor, c);
-
-    return GestureDetector(
-      onTap: () => _openStats(f),
-      child: Container(
-        // Iteration N polish: lift the inter-card gap from 3 px to 12 px so
-        // the fixture list reads with editorial rhythm instead of compressed.
-        margin: const EdgeInsets.only(bottom: SpacingTokens.sm),
-        decoration: BoxDecoration(
-          color: c.surfaceLow,
-          borderRadius: BorderRadius.circular(6),
-          border: highlight
-              ? Border.all(color: c.accent.withValues(alpha: 0.4))
-              : Border.all(color: c.divider),
-          // PR 13 pre/post split: the glow is the "live, prepare this" signal,
-          // so it is reserved for an upcoming highlighted (U Cluj) fixture. A
-          // completed U Cluj card is history and reads flat and archival.
-          boxShadow: highlight && isUpcoming
-              ? [
-                  BoxShadow(
-                    color: c.cardGlow,
-                    blurRadius: 12,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // PR 13 pre/post split: a 2 px cobalt top rule marks every
-              // upcoming fixture (U Cluj and the rest of the league alike) as
-              // pre-match, where the prescriptive flow is available. Completed
-              // fixtures omit the rule so the eye separates "to play" from
-              // "already played" before reading a single team name.
-              if (isUpcoming)
-                Container(height: 2, color: c.accent),
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Gold accent left bar for highlighted card
-                    if (highlight)
-                      Container(
-                        width: 3,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [c.accent, c.accentStrong],
-                          ),
-                        ),
-                      ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                // Status tag: V/Î/E result (completed U Cluj)
-                                // or a PRE-MECI chip (any upcoming fixture).
-                                if (leading != null) ...[
-                                  leading,
-                                  const SizedBox(width: SpacingTokens.sm),
-                                ],
-
-                                // Teams
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      _teamRow(f.homeTeam, highlight && isHome, c),
-                                      const SizedBox(height: 3),
-                                      _teamRow(f.awayTeam, highlight && !isHome, c),
-                                    ],
-                                  ),
-                                ),
-
-                                // Right rail: final score, U Cluj win chance,
-                                // or a VS marker for an upcoming neutral match.
-                                _rightRail(f, highlight, probPct, probColor, c),
-                              ],
-                            ),
-
-                        // Date + venue
-                        const SizedBox(height: SpacingTokens.xs),
-                        Row(
-                          children: [
-                            Text(f.displayDate,
-                                style: TypographyTokens.meta
-                                    .copyWith(color: c.textMuted, fontSize: 10)),
-                            if (f.venue != null) ...[
-                              Text('  ·  ${f.venue}',
-                                  style: TypographyTokens.meta
-                                      .copyWith(color: c.textMuted, fontSize: 10)),
-                            ],
-                            const Spacer(),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(L10n.t('dashboard.analysis'),
-                                    style: TypographyTokens.sectionLabel
-                                        .copyWith(color: c.accent, fontSize: 9)),
-                                Icon(Icons.chevron_right, size: 10, color: c.accent),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                  ],
-                ),
+    return Reveal(
+      delay: MotionTokens.stagger * index,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: SpacingTokens.sm),
+        child: Pressable(
+          onTap: () => _openStats(f),
+          semanticLabel: '${f.homeTeam} ${f.awayTeam}',
+          child: Container(
+            decoration: BoxDecoration(
+              color: c.surfaceLow,
+              borderRadius: ShapeTokens.card,
+              border: Border.all(
+                color: highlight
+                    ? c.primary.withValues(alpha: 0.35)
+                    : c.divider,
               ),
-            ],
+              boxShadow:
+                  highlight && isUpcoming ? ShapeTokens.e1(context) : null,
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Cobalt top rule marks an upcoming fixture (prescriptive flow
+                // available); completed fixtures omit it and read archival.
+                if (isUpcoming) Container(height: 2, color: c.primary),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    SpacingTokens.md,
+                    SpacingTokens.sm,
+                    SpacingTokens.md,
+                    SpacingTokens.sm,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _teamRow(f.homeTeam, highlight && isHome, c),
+                                const SizedBox(height: SpacingTokens.xs),
+                                _teamRow(f.awayTeam, highlight && !isHome, c),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: SpacingTokens.sm),
+                          _headline(f, highlight, resultColor, resultLetter, c),
+                        ],
+                      ),
+                      const SizedBox(height: SpacingTokens.xs),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _fmtMeta(f),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TypographyTokens.meta
+                                  .copyWith(color: c.textMuted),
+                            ),
+                          ),
+                          Icon(Icons.chevron_right,
+                              size: 16,
+                              color: c.textMuted.withValues(alpha: 0.7)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  /// Status tag rendered at the leading edge of a fixture card. A completed
-  /// U Cluj fixture shows its V/Î/E result badge; any upcoming fixture shows
-  /// a cobalt PRE-MECI chip. Other completed fixtures return null (the final
-  /// score on the right rail already signals that the match is over).
-  Widget? _leadingTag(
-      WeekFixture f, String result, Color resultColor, AppColorTokens c) {
+  /// The single headline on the right of a card: final score (completed),
+  /// U Cluj win chance (upcoming highlighted), or a quiet "vs" otherwise.
+  Widget _headline(WeekFixture f, bool highlight, Color? resultColor,
+      String? resultLetter, AppColorTokens c) {
     if (f.isCompleted) {
-      if (result.isEmpty) return null;
-      return Container(
-        width: 22,
-        height: 22,
-        decoration: BoxDecoration(
-          color: resultColor.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(3),
-        ),
-        child: Center(
-          child: Text(result,
-              style: TypographyTokens.sectionLabel
-                  .copyWith(color: resultColor, fontSize: 10)),
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (resultColor != null && resultLetter != null)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 7,
+                  height: 7,
+                  decoration: BoxDecoration(
+                      color: resultColor, shape: BoxShape.circle),
+                ),
+                const SizedBox(width: 5),
+                Text(resultLetter,
+                    style: TypographyTokens.meta.copyWith(
+                        color: resultColor, fontWeight: FontWeight.w700)),
+              ],
+            ),
+          const SizedBox(height: 2),
+          Text(
+            '${f.homeScore} - ${f.awayScore}',
+            style: TypographyTokens.statValue
+                .copyWith(fontSize: 22, color: c.textPrimary),
+          ),
+        ],
       );
     }
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-      decoration: BoxDecoration(
-        color: c.accent.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(3),
-      ),
-      child: Text(L10n.t('dashboard.statusUpcoming'),
-          style: TypographyTokens.sectionLabel
-              .copyWith(color: c.accent, fontSize: 8, letterSpacing: 1)),
-    );
+
+    final uclProb = f.homeWinProbability;
+    if (highlight && uclProb != null) {
+      final band = uclProb >= 0.55
+          ? c.positive
+          : uclProb >= 0.40
+              ? c.primary
+              : c.negative;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text('${(uclProb * 100).round()}%',
+              style: TypographyTokens.statValue
+                  .copyWith(color: band, fontSize: 24)),
+          Text(L10n.t('dashboard.winChance'),
+              style: TypographyTokens.sectionLabel
+                  .copyWith(color: c.textMuted, fontSize: 8)),
+        ],
+      );
+    }
+
+    return Text('vs',
+        style: TypographyTokens.cardTitle.copyWith(color: c.textMuted));
   }
 
-  /// Right-rail content for a fixture card: the final score for a completed
-  /// match, the U Cluj win chance for an upcoming highlighted fixture, or a
-  /// VS marker for an upcoming neutral fixture so the rail never reads empty.
-  Widget _rightRail(WeekFixture f, bool highlight, String probPct,
-      Color probColor, AppColorTokens c) {
-    if (f.isCompleted) return _scoreBlock(f, c);
-    if (highlight) return _probabilityBlock(probPct, probColor, true, c);
-    return _vsBlock(c);
-  }
-
-  Widget _vsBlock(AppColorTokens c) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
-      decoration: BoxDecoration(
-        color: c.surfaceHigh,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: c.divider),
-      ),
-      child: Text('VS',
-          style: TypographyTokens.sectionLabel
-              .copyWith(color: c.accent, fontSize: 12, letterSpacing: 1)),
-    );
+  String _resultLetter(bool won, bool lost) {
+    final ro = L10n.instance.isRomanian;
+    if (won) return ro ? 'V' : 'W';
+    if (lost) return ro ? 'Î' : 'L';
+    return ro ? 'E' : 'D';
   }
 
   Widget _teamRow(String name, bool isMine, AppColorTokens c) {
-    final display = name.replaceAll('Universitatea Cluj', 'U CLUJ');
     return Row(
       children: [
-        TeamCrest(teamName: name, size: 18),
-        const SizedBox(width: 6),
+        TeamCrest(teamName: name, size: 22),
+        const SizedBox(width: SpacingTokens.xs),
         Flexible(
           child: Text(
-            display.toUpperCase(),
+            _shortName(name),
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TypographyTokens.cardTitle.copyWith(
-              fontWeight: isMine ? FontWeight.w800 : FontWeight.w400,
+              fontWeight: isMine ? FontWeight.w700 : FontWeight.w500,
               color: isMine ? c.textPrimary : c.textSecondary,
-              fontSize: 12,
             ),
           ),
         ),
@@ -572,35 +540,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _scoreBlock(WeekFixture f, AppColorTokens c) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
-      decoration: BoxDecoration(
-        color: c.surfaceHigh,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: c.divider),
-      ),
-      child: Text(
-        '${f.homeScore} — ${f.awayScore}',
-        style: TypographyTokens.statValue.copyWith(
-            fontSize: 16, letterSpacing: 2, color: c.textPrimary),
-      ),
-    );
+  String _shortName(String name) =>
+      name.replaceAll('Universitatea Cluj', 'U Cluj');
+
+  String _fmtMeta(WeekFixture f) {
+    final ro = L10n.instance.isRomanian;
+    final dt = DateTime.tryParse(f.matchDate);
+    final datePart =
+        dt != null ? '${dt.day} ${_monAbbr(dt.month, ro)}' : f.displayDate;
+    if (f.venue != null && f.venue!.isNotEmpty) {
+      return '$datePart  ·  ${f.venue}';
+    }
+    return datePart;
   }
 
-  Widget _probabilityBlock(String pct, Color color, bool highlight, AppColorTokens c) {
-    if (!highlight) return const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(pct,
-            style: TypographyTokens.statValue.copyWith(
-                color: color, fontSize: 20, letterSpacing: 0)),
-        Text(L10n.t('dashboard.winChance'),
-            style: TypographyTokens.sectionLabel
-                .copyWith(color: c.textMuted, fontSize: 8)),
-      ],
-    );
+  String _monAbbr(int month, bool ro) {
+    const en = [
+      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    const roMonths = [
+      '', 'ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.',
+      'iul.', 'aug.', 'sep.', 'oct.', 'nov.', 'dec.',
+    ];
+    if (month < 1 || month > 12) return '';
+    return ro ? roMonths[month] : en[month];
   }
 }
