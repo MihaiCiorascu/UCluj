@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import logging
 import math
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -32,6 +34,16 @@ TRACKED_TEAM_NAME = "Universitatea Cluj"
 _CACHE_PATH = Path(__file__).parent / "_sr_fixtures_cache.json"
 _CACHE_TTL_SECONDS = 6 * 3600
 
+# In-process cache for the computed week predictions. The heavy cost in
+# /week-fixtures is the per-fixture Monte Carlo prescription, which is
+# deterministic given the fixtures plus the (static) model and feature data.
+# The cache is keyed on the post-horizon fixture state (teams + scores), so a
+# score update or a different week busts it automatically; the TTL is only a
+# backstop. The startup pre-warm populates the current week, so even the first
+# dashboard load is instant.
+_PRED_CACHE: dict[str, tuple[float, list[dict]]] = {}
+_PRED_CACHE_TTL_SECONDS = 6 * 3600
+
 
 def _ucluj_is_home(home_team: str, away_team: str) -> bool:
     home = str(home_team or "").strip().lower()
@@ -39,7 +51,7 @@ def _ucluj_is_home(home_team: str, away_team: str) -> bool:
 
 
 def _to_ucluj_win_prob(home_win_prob: float, home_team: str, away_team: str) -> float:
-    """Convert P(Home Win) → P(U Cluj Win) for this fixture."""
+    """Convert P(Home Win) to P(U Cluj Win) for this fixture."""
     if _ucluj_is_home(home_team, away_team):
         return home_win_prob
     return 1.0 - home_win_prob
@@ -87,6 +99,25 @@ def _save_cache(fixtures: list[dict]) -> None:
         logger.warning("Could not write fixture cache: %s", exc)
 
 
+def _predictions_signature(week_offset: int, fixtures: list[dict]) -> str:
+    """Stable cache key for a week's computed predictions.
+
+    Encodes the week and each fixture's identity plus score, so the cache is
+    reused only while those are unchanged and recomputes the moment a score
+    lands or a different week is requested.
+    """
+    parts = [str(week_offset)]
+    for f in fixtures:
+        parts.append("|".join((
+            str(f.get("match_id", "")),
+            str(f.get("home_team", "")),
+            str(f.get("away_team", "")),
+            str(f.get("home_score")),
+            str(f.get("away_score")),
+        )))
+    return hashlib.md5("\n".join(parts).encode("utf-8")).hexdigest()
+
+
 # ---------------------------------------------------------------------------
 # Main endpoint
 # ---------------------------------------------------------------------------
@@ -95,14 +126,28 @@ def _save_cache(fixtures: list[dict]) -> None:
 async def week_fixtures(
     request: Request,
     _user=Depends(get_current_user),
-    feature_svc: FeatureService = Depends(get_feature_service),
     week_offset: int = Query(default=0, ge=-52, le=52),
 ):
     """Return Liga 1 fixtures for the requested week with U Cluj-centric ML predictions.
 
-    week_offset=0 → current week, week_offset=1 → next week, etc.
-    home_win_probability in each response item is P(U Cluj Win), not P(Home Win).
+    week_offset=0 is the current week, week_offset=1 the next week, etc.
+    home_win_probability in each item is P(U Cluj Win), not P(Home Win).
     key_drivers and top_risks are from U Cluj's perspective regardless of home/away.
+    """
+    st = request.app.state
+    return await _compute_week(
+        st.df, st.stadium_map, getattr(st, "bundle", None), week_offset
+    )
+
+
+async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list[dict]:
+    """Slice the requested week's fixtures, attach U-Cluj-centric ML predictions,
+    and memoise the result.
+
+    Extracted from the endpoint so the startup pre-warm can populate the same
+    in-process cache (_PRED_CACHE). The expensive step is the per-fixture Monte
+    Carlo prescription; it runs only on a cache miss (a new week or a changed
+    score). Returns the sanitised, client-ready list.
     """
     now = effective_now()
     this_monday = (now - timedelta(days=now.weekday())).replace(
@@ -111,51 +156,43 @@ async def week_fixtures(
     monday = this_monday + timedelta(weeks=week_offset)
     sunday = monday + timedelta(days=7)
 
-    # ── 1. Check local Sportradar cache (instant if fresh) ──────────────────
-    # The cache is used in demo mode too: the demo now mirrors the live 25/26
-    # season (effective_season_id), so there is no demo-vs-prod season to keep
-    # apart. Caching is essential because the trial Sportradar tier returns 429
-    # when every dashboard load (five parallel week requests) re-fetches the
-    # full season schedule; the raw fixtures are cached and the demo horizon is
-    # applied per request after slicing, so one cache serves both modes.
+    # 1-2. Sportradar fixtures: served from the on-disk cache, fetched once
+    # (capped at 20 s) when stale. Caching matters because the trial tier
+    # answers a multi-week dashboard burst with 429s.
     sr_all: list[dict] | None = _load_cache()
-
-    # ── 2. If cache stale/missing, try Sportradar (cap at 20 s total) ──────
-    # Demo mode now hits Sportradar too, pinned to the 2024-25 season via
-    # effective_season_id(); the cache write below is the only place demo
-    # mode still diverges from production.
     if sr_all is None and settings.sportradar_api_key:
         try:
-            fetched = await asyncio.wait_for(
-                _fetch_all_sr_fixtures(),
-                timeout=20.0,
-            )
+            fetched = await asyncio.wait_for(_fetch_all_sr_fixtures(), timeout=20.0)
             if fetched:
                 sr_all = fetched
-                _save_cache(sr_all)  # persist for next 6 h (raw fixtures)
+                _save_cache(sr_all)
         except Exception as exc:
             logger.warning("Sportradar fetch failed/timed-out; using CSV fallback: %s", exc)
 
-    # ── 3. Slice the cached/live Sportradar list to this week + nearest ─────
+    # 3. Slice to the week; fall back to the in-memory CSV when Sportradar is
+    # unavailable (no network, always instant).
     if sr_all:
         fixtures = _slice_fixtures(sr_all, monday, sunday)
     else:
-        # Fall back to in-memory CSV (no network, always instant)
-        fix_svc = _fixture_service(request)
-        fixtures = _csv_week_fixtures(fix_svc, monday, sunday)
+        fixtures = _csv_week_fixtures(FixtureService(df, stadium_map), monday, sunday)
 
-    # ── 3b. Demo horizon ────────────────────────────────────────────────────
-    # The 2024-2025 dataset is fully played, so every fixture carries a
-    # final score. For the committee demo we want fixtures dated after the
-    # pinned demo "now" to render as "not yet played" so the pre-match flow
-    # (win probability + drivers + tactical blueprint) lights up. The
-    # downstream is_completed check in _compute_predictions then routes
-    # them through the prescription path automatically.
+    # 3b. Demo horizon: treat fixtures dated after the pinned demo "now" as not
+    # yet played, so the pre-match flow (win probability + drivers + blueprint)
+    # lights up and the prescription branch below runs for them.
     if settings.demo_mode:
-        fixtures = _apply_demo_horizon(fixtures, effective_now())
+        fixtures = _apply_demo_horizon(fixtures, now)
 
-    # ── 4. ML predictions (offloaded to thread pool — CPU-bound) ────────────
-    model_svc = ModelService(getattr(request.app.state, "bundle", None))
+    # 3c. Cache: the signature captures the post-horizon fixture state, so a
+    # score change or a different week recomputes; otherwise this returns
+    # instantly and skips the per-fixture Monte Carlo below.
+    cache_key = _predictions_signature(week_offset, fixtures)
+    hit = _PRED_CACHE.get(cache_key)
+    if hit is not None and (time.monotonic() - hit[0]) < _PRED_CACHE_TTL_SECONDS:
+        return hit[1]
+
+    # 4. ML predictions (offloaded to a thread; CPU-bound).
+    feature_svc = FeatureService(df)
+    model_svc = ModelService(bundle)
     expl_svc = ExplanationService(model_svc)
     presc_svc = PrescriptionService(model_svc)
 
@@ -213,12 +250,11 @@ async def week_fixtures(
         return result
 
     result = await asyncio.to_thread(_compute_predictions, fixtures)
-    # The prescriptive optimiser and the explanation service can produce NaN
-    # or +/-Inf for edge-case feature vectors (e.g. a team with too few rolling
-    # samples in the demo horizon). Strict JSON has no representation for
-    # those, so Starlette's serialiser would 500 the whole response. Sanitise
-    # them to None so the rest of the payload still reaches the client.
-    return _sanitize_floats(result)
+    # NaN and +/-Inf are not valid JSON and would 500 the whole response;
+    # sanitise so one edge-case fixture cannot break the page.
+    result = _sanitize_floats(result)
+    _PRED_CACHE[cache_key] = (time.monotonic(), result)
+    return result
 
 
 # ---------------------------------------------------------------------------

@@ -101,6 +101,20 @@ async def _warm_model(df, bundle) -> None:
     logger.info("Pre-warm: CatBoost win-probability path ready")
 
 
+async def _warm_week(df, stadium_map: dict, bundle) -> None:
+    """Pre-compute the current week's dashboard predictions into the in-process
+    cache so the first /week-fixtures load is instant.
+
+    /week-fixtures is otherwise the heaviest endpoint: it runs a Monte Carlo
+    prescription per upcoming fixture. week.py memoises the result, so a single
+    warm here makes the panel return immediately for the first user.
+    """
+    from api.v1.endpoints.week import _compute_week
+
+    await _compute_week(df, stadium_map, bundle, 0)
+    logger.info("Pre-warm: week-fixtures predictions cached (current week)")
+
+
 async def _warm_xi(xi_service) -> None:
     """Exercise the XI match-preview path once (the heaviest cold cost).
 
@@ -142,6 +156,10 @@ async def prewarm_caches(df, stadium_map: dict, xi_service=None, bundle=None) ->
         await _warm_model(df, bundle)
     except Exception as exc:  # noqa: BLE001
         logger.warning("Pre-warm model failed (non-fatal): %s", exc)
+    try:
+        await _warm_week(df, stadium_map, bundle)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Pre-warm week predictions failed (non-fatal): %s", exc)
     try:
         await _warm_xi(xi_service)
     except Exception as exc:  # noqa: BLE001
