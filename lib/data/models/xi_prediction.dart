@@ -71,6 +71,10 @@ class XiPredictionResponse {
   final String formation;
   final List<XiPlayer> startingXI;
   final List<XiPlayer> bench;
+  // The 'ideal' eleven by pure within-position rating, alongside the predicted
+  // lineup, for the best-XI toggle. Empty on older backends.
+  final List<XiPlayer> bestXI;
+  final List<XiPlayer> bestBench;
 
   XiPredictionResponse({
     required this.myTeamId,
@@ -78,21 +82,24 @@ class XiPredictionResponse {
     required this.formation,
     required this.startingXI,
     required this.bench,
+    this.bestXI = const [],
+    this.bestBench = const [],
   });
 
   factory XiPredictionResponse.fromJson(Map<String, dynamic> json) {
+    List<XiPlayer> parse(String key) =>
+        (json[key] as List<dynamic>?)
+            ?.map((e) => XiPlayer.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
     return XiPredictionResponse(
       myTeamId: json['myTeamId'] as int? ?? 0,
       opponentTeamId: json['opponentTeamId'] as int?,
       formation: json['formation'] as String? ?? '4-3-3',
-      startingXI: (json['startingXI'] as List<dynamic>?)
-              ?.map((e) => XiPlayer.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      bench: (json['bench'] as List<dynamic>?)
-              ?.map((e) => XiPlayer.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+      startingXI: parse('startingXI'),
+      bench: parse('bench'),
+      bestXI: parse('bestXI'),
+      bestBench: parse('bestBench'),
     );
   }
 }

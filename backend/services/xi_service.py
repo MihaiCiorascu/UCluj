@@ -72,6 +72,16 @@ _RAW_COLS = [
     "shot_accuracy", "dribble_success", "def_action_success", "aerial_win_rate",
     "per90_goals", "per90_assists", "per90_keyPasses", "per90_shots",
     "per90_interceptions", "per90_gkSaves", "per90_gkCleanSheets",
+    # Output / volume drivers (per-90 raw counts). These are the stats that
+    # actually build performance_score, so the card can show WHY a player earns
+    # their rating (the radar), kept distinct from the efficiency rates above
+    # (the "quality per action" strip). All confirmed present in the Wyscout
+    # total block.
+    "per90_defensiveDuelsWon", "per90_aerialDuelsWon", "per90_clearances",
+    "per90_recoveries", "per90_shotsBlocked", "per90_successfulPasses",
+    "per90_progressivePasses", "per90_successfulCrosses", "per90_successfulDribbles",
+    "per90_passesToFinalThird", "per90_touchInBox", "per90_shotsOnTarget",
+    "per90_gkSuccessfulExits", "per90_gkAerialDuelsWon",
 ]
 
 # A fine position group needs at least this many league players for a stable
@@ -84,6 +94,28 @@ _MIN_FINE_GROUP = 15
 # a regular centre-back reading an 11th-percentile duel rate against fringe
 # players with fluky high rates. Regulars only give a stable, fair reference.
 _MIN_MINUTES = 450
+
+# Columns pulled from the feature frame into each player record before
+# ``_normalise_player`` attaches the within-position percentiles + rating.
+# Mirrors ml.pipeline._format_output so the standalone XI screen and the match
+# preview carry the same fields, and includes the per-90 output drivers so the
+# radar can be built from the rating's own components.
+_PLAYER_COLS = [
+    "playerId", "shortName", "role", "role_group",
+    "position_group_fine", "official_position", "slot_index",
+    "predicted_score", "performance_score", "recent_form_score",
+    "total_minutes", "matches_played",
+    "pass_accuracy", "duel_win_rate",
+    "shot_accuracy", "dribble_success", "def_action_success", "aerial_win_rate",
+    "per90_goals", "per90_assists", "per90_shots",
+    "per90_keyPasses", "per90_interceptions", "per90_gkSaves",
+    "per90_gkCleanSheets",
+    "per90_defensiveDuelsWon", "per90_aerialDuelsWon", "per90_clearances",
+    "per90_recoveries", "per90_shotsBlocked", "per90_successfulPasses",
+    "per90_progressivePasses", "per90_successfulCrosses", "per90_successfulDribbles",
+    "per90_passesToFinalThird", "per90_touchInBox", "per90_shotsOnTarget",
+    "per90_gkSuccessfulExits", "per90_gkAerialDuelsWon",
+]
 
 
 class XiService:
@@ -298,15 +330,85 @@ class XiService:
         # Honest display rating: within-position percentile of the
         # position-weighted performance score, mapped to a discriminative band
         # (best in a position read high-80s to low-90s, role players 60-72).
-        perf_pct = self._pct_of(
-            float(rec.get("performance_score", 0) or 0), group_arrs.get("performance_score")
-        ) / 100.0
-        rec["rating"] = int(max(40, min(95, round(55 + 40 * perf_pct))))
+        # Shared with the best-by-rating XI through ``_rating_of``.
+        rec["rating"] = self._rating_of(rec.get("performance_score", 0), fine, coarse)
         rec["position_norm"] = "FINE" if use_fine else "COARSE"
         # Self-hosted headshot URL (empty when the photo pipeline has not run);
         # the UI falls back to initials. Both the match-preview and predict
         # paths run through here, so photos attach in one place.
         rec["photo_url"] = self._photos.url_for(rec.get("playerId")) or ""
+
+    def _rating_of(self, performance_score, fine: str, coarse: str) -> int:
+        """Within-position rating (40-95) from the performance-score percentile.
+
+        Self-contained twin of the rating mapping in ``_normalise_player`` so the
+        best-by-rating XI can score the whole squad on the identical basis (same
+        fine-or-coarse pool, same ``55 + 40 * percentile`` map).
+        """
+        fine = (fine or "").upper()
+        coarse = (coarse or "MID").upper()
+        fine_arrs = (self._pct_fine or {}).get(fine, {})
+        perf_fine = fine_arrs.get("performance_score")
+        use_fine = perf_fine is not None and perf_fine.size >= _MIN_FINE_GROUP
+        table = self._pct_fine if use_fine else self._pct_coarse
+        key = fine if use_fine else coarse
+        arrs = (table or {}).get(key, {})
+        perf_pct = self._pct_of(
+            float(performance_score or 0), arrs.get("performance_score")
+        ) / 100.0
+        return int(max(40, min(95, round(55 + 40 * perf_pct))))
+
+    def _format_records(self, frame: Optional[pd.DataFrame]) -> List[Dict]:
+        """Select the player columns and attach percentiles + rating in place."""
+        if frame is None or frame.empty:
+            return []
+        cols = [c for c in _PLAYER_COLS if c in frame.columns]
+        records = frame[cols].fillna(0).to_dict(orient="records")
+        for rec in records:
+            self._normalise_player(rec)
+        return records
+
+    def _best_xi_by_rating(
+        self, squad_df: Optional[pd.DataFrame], formation: str
+    ) -> Dict[str, pd.DataFrame]:
+        """The 'ideal' eleven by pure within-position rating (opponent-agnostic).
+
+        The squad is scored by each player's rating, scaled to the same 0..1 band
+        as ``predicted_score`` so the predictor's slot penalties still enforce a
+        primary-position-first assignment, then the SAME Hungarian slot fill used
+        for the predicted XI (``StartingXIPredictor._assign_xi``) places the
+        eleven. This contrasts raw quality against the predicted-most-likely
+        lineup; ``xi_predictor.py`` itself is not touched.
+        """
+        empty = {"xi": pd.DataFrame(), "bench": pd.DataFrame()}
+        if (
+            squad_df is None
+            or squad_df.empty
+            or self.predictor is None
+            or "performance_score" not in squad_df.columns
+        ):
+            return empty
+        self._ensure_percentile_tables()
+        pool = squad_df.copy()
+        rating = pool.apply(
+            lambda r: self._rating_of(
+                r.get("performance_score", 0),
+                str(r.get("position_group_fine", "") or ""),
+                str(r.get("role_group", "MID") or "MID"),
+            ),
+            axis=1,
+        ).astype(float)
+        # Overwrite predicted_score on this private copy only (the predicted XI
+        # uses its own scored pool, so the selected eleven there do not change).
+        pool["predicted_score"] = rating / 100.0
+        xi_df = self.predictor._assign_xi(pool, formation)
+        used = set(xi_df["playerId"].tolist()) if not xi_df.empty else set()
+        bench_df = (
+            pool[~pool["playerId"].isin(used)]
+            .sort_values("predicted_score", ascending=False)
+            .head(7)
+        )
+        return {"xi": xi_df, "bench": bench_df}
 
     # ── Public API ───────────────────────────────────────────────────────────
 
@@ -357,6 +459,11 @@ class XiService:
         for grp in ("startingXI", "bench"):
             for rec in out.get(grp, []):
                 self._normalise_player(rec)
+        # The 'ideal' eleven by pure within-position rating, alongside the
+        # predicted lineup, for the "best XI" toggle.
+        best = self._best_xi_by_rating(my_team_df, formation)
+        out["bestXI"] = self._format_records(best["xi"])
+        out["bestBench"] = self._format_records(best["bench"])
         return out
 
     def match_preview(
@@ -397,32 +504,12 @@ class XiService:
             opponent_df=opp_team_df,
         )
 
-        _PLAYER_COLS = [
-            "playerId", "shortName", "role", "role_group",
-            "position_group_fine", "official_position", "slot_index",
-            "predicted_score", "performance_score", "recent_form_score",
-            "total_minutes", "matches_played",
-            "pass_accuracy", "duel_win_rate",
-            "shot_accuracy", "dribble_success", "def_action_success", "aerial_win_rate",
-            "per90_goals", "per90_assists", "per90_shots",
-            "per90_keyPasses", "per90_interceptions", "per90_gkSaves",
-            "per90_gkCleanSheets",
-        ]
-
         # Build the within-position league percentile tables once for this call.
         self._ensure_percentile_tables()
 
-        def _fmt(frame: pd.DataFrame) -> List[Dict]:
-            if frame is None or frame.empty:
-                return []
-            cols = [c for c in _PLAYER_COLS if c in frame.columns]
-            records = frame[cols].fillna(0).to_dict(orient="records")
-            for rec in records:
-                # Adds <col>_pct (within-position league percentile), an honest
-                # rating, and position_norm. predicted_score is left untouched
-                # so the selected eleven do not change.
-                self._normalise_player(rec)
-            return records
+        # The 'ideal' eleven by pure within-position rating (opponent-agnostic),
+        # for the "Cel mai bun XI" view shown alongside the predicted lineup.
+        best = self._best_xi_by_rating(my_team_df, formation)
 
         # Team aggregate stats
         all_df = result.get("all_scored", pd.DataFrame())
@@ -515,8 +602,10 @@ class XiService:
             "home_team_sr_id": home.sr_id,
             "opponent_name": opponent_name,
             "opponent_team_id": opp_id,
-            "starting_xi": _fmt(result["xi"]),
-            "bench": _fmt(result["bench"]),
+            "starting_xi": self._format_records(result["xi"]),
+            "bench": self._format_records(result["bench"]),
+            "best_xi": self._format_records(best["xi"]),
+            "best_bench": self._format_records(best["bench"]),
             "team_stats": team_stats,
             "opponent_stats": opponent_stats,
             "head_to_head": h2h,

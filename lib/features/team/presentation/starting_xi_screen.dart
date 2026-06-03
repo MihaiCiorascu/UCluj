@@ -30,6 +30,9 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
   bool _isLoading = false;
   bool _isLoadingOpponents = true;
   XiPredictionResponse? _prediction;
+  // Predicted-most-likely XI (default) vs best-by-rating XI, mirroring the
+  // toggle on the Match Intelligence card.
+  bool _showBest = false;
   String _selectedFormation = '4-3-3';
   String? _errorMessage;
   String? _opponentsError;
@@ -225,18 +228,70 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
 
   Widget _buildResults(BuildContext context) {
     final c = context.colors;
+    final pred = _prediction!;
+    final hasBest = pred.bestXI.isNotEmpty;
+    final xi = _showBest ? pred.bestXI : pred.startingXI;
+    final bench = _showBest ? pred.bestBench : pred.bench;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('SELECTED XI', style: TypographyTokens.sectionLabel.copyWith(color: c.accent)),
+        if (hasBest) ...[
+          _xiModeToggle(context),
+          const SizedBox(height: SpacingTokens.xs),
+          Text(
+            _showBest
+                ? 'Cei mai bine cotați 11, pe poziție (calitate brută)'
+                : 'Cei 11 cel mai probabil titulari (model de selecție)',
+            style: TypographyTokens.body.copyWith(color: c.textMuted, fontSize: 10),
+          ),
+          const SizedBox(height: SpacingTokens.md),
+        ],
+        Text(
+          _showBest ? 'CEL MAI BUN XI' : 'PROBABIL XI',
+          style: TypographyTokens.sectionLabel.copyWith(color: c.accent),
+        ),
         const SizedBox(height: SpacingTokens.sm),
-        _buildPlayerList(context, _prediction!.startingXI),
+        _buildPlayerList(context, xi),
 
         const SizedBox(height: SpacingTokens.xl),
         Text('BENCH', style: TypographyTokens.sectionLabel),
         const SizedBox(height: SpacingTokens.sm),
-        _buildPlayerList(context, _prediction!.bench),
+        _buildPlayerList(context, bench),
         const SizedBox(height: SpacingTokens.xl),
+      ],
+    );
+  }
+
+  Widget _xiModeToggle(BuildContext context) {
+    final c = context.colors;
+    Widget seg(String label, bool active, VoidCallback onTap) => Expanded(
+          child: GestureDetector(
+            onTap: onTap,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
+              decoration: BoxDecoration(
+                color: active ? c.surfaceHigh : c.surfaceLow,
+                border: Border.all(
+                  color: active ? c.accent : c.divider,
+                  width: active ? 2 : 1,
+                ),
+              ),
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TypographyTokens.sectionLabel.copyWith(
+                  color: active ? c.textPrimary : c.textMuted,
+                  fontSize: 11,
+                ),
+              ),
+            ),
+          ),
+        );
+    return Row(
+      children: [
+        seg('PROBABIL XI', !_showBest, () => setState(() => _showBest = false)),
+        const SizedBox(width: SpacingTokens.xs),
+        seg('CEL MAI BUN XI', _showBest, () => setState(() => _showBest = true)),
       ],
     );
   }
