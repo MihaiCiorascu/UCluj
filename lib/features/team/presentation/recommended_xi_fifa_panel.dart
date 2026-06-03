@@ -704,6 +704,22 @@ class _PlayerDetailColumn extends StatelessWidget {
           ),
           const SizedBox(height: SpacingTokens.sm),
           for (final a in effAttrs) _fifaAttrRow(a, c),
+
+          const SizedBox(height: SpacingTokens.lg),
+
+          // ── Fitness / rotation (load advisor) ───────────────────────────
+          // Freshness plus the rotation read from the ACWR + age + season-role
+          // model: a high freshness bar, a status pill, and a "rested, ready"
+          // tag for a rested regular.
+          _sectionCaption(
+            'STARE FIZICA',
+            'ACWR ${p.acwr.toStringAsFixed(2)} · ${p.restDays.toStringAsFixed(0)} zile odihna',
+            c,
+          ),
+          const SizedBox(height: SpacingTokens.sm),
+          _fifaAttrRow(_FifaAttr('Prospetime', p.freshness), c),
+          const SizedBox(height: SpacingTokens.xs),
+          _loadStatusRow(p, c),
         ],
       ),
     );
@@ -758,6 +774,48 @@ class _PlayerDetailColumn extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // Rotation status pill row: fatigue-risk band plus a "rested, ready" tag.
+  Widget _loadStatusRow(MatchPreviewPlayer p, AppColorTokens c) {
+    Color color;
+    String label;
+    switch (p.loadStatus) {
+      case 'at_risk':
+        color = c.negative;
+        label = 'RISC OBOSEALA';
+        break;
+      case 'fresh':
+        color = c.positive;
+        label = 'PROASPAT';
+        break;
+      default:
+        color = c.accent;
+        label = 'APT';
+    }
+    return Wrap(
+      spacing: SpacingTokens.xs,
+      runSpacing: SpacingTokens.xs,
+      children: [
+        _loadPill(label, color, c),
+        if (p.restedAndReady) _loadPill('ODIHNIT, GATA', c.accent, c),
+      ],
+    );
+  }
+
+  Widget _loadPill(String text, Color color, AppColorTokens c) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      color: color.withValues(alpha: 0.16),
+      child: Text(
+        text,
+        style: TypographyTokens.sectionLabel.copyWith(
+          fontSize: 9,
+          color: color,
+          letterSpacing: 1.0,
+        ),
       ),
     );
   }

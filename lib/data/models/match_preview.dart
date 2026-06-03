@@ -35,6 +35,17 @@ class MatchPreviewPlayer {
   final double per90Interceptions;
   final double per90GkSaves;
   final double per90GkCleanSheets;
+  // Load / fatigue / rotation advisor fields (additive; safe defaults so older
+  // payloads still parse). freshness/fatigueRisk are 0-100; loadStatus is one of
+  // fresh / ok / at_risk; restedAndReady flags a rested regular.
+  final double freshness;
+  final double fatigueRisk;
+  final String loadStatus;
+  final bool restedAndReady;
+  final String loadNote;
+  final double restDays;
+  final double ageAtFixture;
+  final double acwr;
 
   MatchPreviewPlayer({
     required this.playerId,
@@ -62,6 +73,14 @@ class MatchPreviewPlayer {
     required this.per90Interceptions,
     required this.per90GkSaves,
     required this.per90GkCleanSheets,
+    this.freshness = 100,
+    this.fatigueRisk = 0,
+    this.loadStatus = 'fresh',
+    this.restedAndReady = false,
+    this.loadNote = '',
+    this.restDays = 0,
+    this.ageAtFixture = 0,
+    this.acwr = 0,
   });
 
   factory MatchPreviewPlayer.fromJson(Map<String, dynamic> j) =>
@@ -95,6 +114,14 @@ class MatchPreviewPlayer {
         per90Interceptions: (j['per90_interceptions'] as num?)?.toDouble() ?? 0,
         per90GkSaves: (j['per90_gkSaves'] as num?)?.toDouble() ?? 0,
         per90GkCleanSheets: (j['per90_gkCleanSheets'] as num?)?.toDouble() ?? 0,
+        freshness: (j['freshness'] as num?)?.toDouble() ?? 100,
+        fatigueRisk: (j['fatigue_risk'] as num?)?.toDouble() ?? 0,
+        loadStatus: j['load_status'] as String? ?? 'fresh',
+        restedAndReady: j['rested_and_ready'] as bool? ?? false,
+        loadNote: j['load_note'] as String? ?? '',
+        restDays: (j['rest_days'] as num?)?.toDouble() ?? 0,
+        ageAtFixture: (j['age_at_fixture'] as num?)?.toDouble() ?? 0,
+        acwr: (j['acwr'] as num?)?.toDouble() ?? 0,
       );
 
   // Returns the most relevant per-90 stat label + value for this player's position
