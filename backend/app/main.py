@@ -1,4 +1,5 @@
 ﻿from contextlib import asynccontextmanager
+import asyncio
 import os
 
 from fastapi import FastAPI
@@ -20,6 +21,15 @@ async def lifespan(app: FastAPI):
     app.state.bundle = load_model_bundle(settings.resolved_model_path)
     from services.xi_service import XiService
     app.state.xi_service = XiService(model_path="ml/xi_model.pkl", data_dir="ml/data/drive_cache")
+    # Warm the Sportradar caches in the background so the first dashboard load
+    # after a cold start (deploy / App Runner resume / autoscale) does not hit
+    # the trial 429 burst that surfaces as a 408 in the UI. Fire-and-forget so
+    # it never delays startup or the health check; the reference is parked on
+    # app.state so the task is not garbage-collected mid-flight.
+    from app.prewarm import prewarm_caches
+    app.state._prewarm_task = asyncio.create_task(
+        prewarm_caches(app.state.df, app.state.stadium_map)
+    )
     yield
 
 
