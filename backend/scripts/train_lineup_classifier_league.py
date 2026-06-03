@@ -45,10 +45,14 @@ sys.path.insert(0, str(ROOT))
 
 from ml.feature_engineering import (  # type: ignore  # noqa: E402
     build_dataset_from_files,
+    build_player_feature_vector,
     compute_availability_features,
+    compute_load_features,
     get_team_match_chronology,
     get_team_squad_from_matches,
+    load_match_stats_json,
 )
+from ml.match_dates import date_for  # type: ignore  # noqa: E402
 from ml.opponent_profile import build_opponent_profile_table  # type: ignore  # noqa: E402
 from ml.pipeline import load_player_profiles  # type: ignore  # noqa: E402
 from sportradar.team_registry import (  # type: ignore  # noqa: E402
@@ -69,6 +73,16 @@ STATIC_PLAYER_COLS = [
     "pass_accuracy", "duel_win_rate", "def_action_success",
     "shot_accuracy", "dribble_success",
     "total_minutes", "matches_played",
+]
+
+# Point-in-time load / fatigue / age block (leakage-free retrain, Iteration L.5).
+# Added to each (player, fixture) row alongside the now point-in-time static
+# columns; the feature_cols auto-detector then picks them up. They restore the
+# availability / regularity signal that the leakage-free static columns no
+# longer encode (the full-season statics previously leaked it).
+LOAD_FEATURE_COLS = [
+    "age_at_fixture", "season_start_rate", "rest_days", "minutes_last_14d",
+    "matches_last_10d", "acute_load", "chronic_load", "acwr", "minutes_trend",
 ]
 
 FINE_GROUPS = ["GK", "CB", "FB", "WB", "DM", "CM", "AM", "W", "WF", "ST"]
@@ -208,57 +222,81 @@ def _zero_opp_xi() -> Dict[str, float]:
     return out
 
 
+def _combined_blocks_by_pid(match_files: List[str]) -> Dict[int, List[dict]]:
+    """playerId -> list of per-match blocks in the format
+    :func:`build_player_feature_vector` consumes (mirrors the assembly inside
+    :func:`build_dataset_from_files`): the ``total`` stats flattened to the top
+    level, plus the nested ``total`` dict, ``matchId``, ``match_date`` (from the
+    committed bridge), ``positions``, ``seasonId`` and ``roundId``."""
+    out: Dict[int, List[dict]] = {}
+    for fp in match_files:
+        for entry in load_match_stats_json(fp):
+            pid = entry.get("playerId")
+            if pid is None:
+                continue
+            c = dict(entry.get("total", {}) or {})
+            c["positions"] = entry.get("positions", [])
+            c["matchId"] = entry.get("matchId")
+            c["match_date"] = date_for(entry.get("matchId"))
+            c["seasonId"] = entry.get("seasonId")
+            c["roundId"] = entry.get("roundId")
+            c["total"] = dict(entry.get("total", {}) or {})
+            out.setdefault(int(pid), []).append(c)
+    return out
+
+
 def _build_training_rows(
     league_history: dict,
     static_by_team: Dict[str, pd.DataFrame],
-    blocks_by_pid: Dict[int, List[dict]],
+    combined_by_pid: Dict[int, List[dict]],
+    profiles: Dict[int, dict],
     opp_xi_lookup: Dict[Tuple[int, str], Dict[str, float]],
 ) -> pd.DataFrame:
+    """One (player, fixture) row per squad member, every per-player feature
+    computed strictly POINT-IN-TIME (leakage-free).
+
+    All static columns, recent form, availability, the cumulative minutes, and
+    the load / fatigue / age block are derived from
+    :func:`build_player_feature_vector` fed ONLY the player's appearances in
+    team matches *before* the fixture (``chrono_before``), as of the fixture
+    date. This is the same function inference uses, so train and serve align. A
+    player with no pre-fixture appearances yields no row (it cannot be scored).
+    """
     rows: List[Dict] = []
-    fixture_dates: Dict[Tuple[str, int], Tuple[int, int]] = {}
 
     for team_blob in league_history["teams"]:
         team_short = team_blob["team_short"]
-        wy_substr = team_blob["team_wy_substr"]
         squad_ids = set(int(p) for p in team_blob["squad_ids"])
-        static_df = static_by_team.get(wy_substr)
-        if static_df is None:
-            continue
-        static_by_pid = static_df.set_index("playerId").to_dict(orient="index")
-
-        # Build this team's chronology (matchIds in calendar order)
         chrono = [int(fx["match_id"]) for fx in team_blob["fixtures"]]
 
         for fixture_idx, fx in enumerate(team_blob["fixtures"]):
             mid = int(fx["match_id"])
             sid = int(fx["season_id"] or 0)
             rid = int(fx["round_id"] or 0)
-            fixture_dates[(team_short, mid)] = (sid, rid)
-
-            chrono_before = chrono[:fixture_idx]
+            before = set(chrono[:fixture_idx])
+            fixture_date = date_for(mid)
             starter_pids = {int(s["playerId"]) for s in fx["starters"]}
             opp_features = opp_xi_lookup.get((mid, team_short), _zero_opp_xi())
 
             for pid in squad_ids:
-                static = static_by_pid.get(pid, {})
-                if not static:
-                    continue
-                blocks = blocks_by_pid.get(int(pid), [])
-                avail = compute_availability_features(blocks, chrono_before)
+                blocks_before = [
+                    b for b in combined_by_pid.get(int(pid), [])
+                    if b.get("matchId") in before
+                ]
+                profile = profiles.get(
+                    int(pid), {"wyId": pid, "role": {"name": "Midfielder"}}
+                )
+                fv = build_player_feature_vector(
+                    profile, blocks_before, None,
+                    team_chronology=list(before), as_of_date=fixture_date,
+                )
+                if not fv:
+                    continue  # no pre-fixture appearances -> not scorable
+                load = compute_load_features(
+                    blocks_before, before, fixture_date, profile.get("birthDate", "")
+                )
 
-                # Cumulative minutes / appearances strictly before this fixture.
-                cum_minutes = 0.0
-                cum_apps = 0
-                for blk in blocks:
-                    bmid = blk.get("matchId")
-                    if bmid is None or int(bmid) not in chrono_before:
-                        continue
-                    mins = float((blk.get("total", {}) or {}).get("minutesOnField", 0) or 0)
-                    if mins > 0:
-                        cum_minutes += mins
-                        cum_apps += 1
-
-                fine = str(static.get("position_group_fine", "MID")).upper()
+                fine = str(fv.get("position_group_fine", "MID")).upper()
                 row: Dict[str, float] = {
                     "playerId": int(pid),
                     "team_short": team_short,
@@ -269,15 +307,18 @@ def _build_training_rows(
                     "started": 1 if int(pid) in starter_pids else 0,
                 }
                 for c in STATIC_PLAYER_COLS:
-                    row[c] = float(static.get(c, 0.0) or 0.0)
+                    row[c] = float(fv.get(c, 0.0) or 0.0)
                 row.update({
-                    "availability_last_5": avail["availability_last_5"],
-                    "started_last_match": avail["started_last_match"],
-                    "match_gap_since_last_appearance": min(avail["match_gap_since_last_appearance"], 35.0),
-                    "availability_score": avail["availability_score"],
-                    "cumulative_minutes_before_fixture": cum_minutes,
-                    "cumulative_appearances": float(cum_apps),
+                    "availability_last_5": float(fv.get("availability_last_5", 0.0) or 0.0),
+                    "started_last_match": float(fv.get("started_last_match", 0.0) or 0.0),
+                    "match_gap_since_last_appearance": min(
+                        float(fv.get("match_gap_since_last_appearance", 0.0) or 0.0), 35.0),
+                    "availability_score": float(fv.get("availability_score", 0.0) or 0.0),
+                    "cumulative_minutes_before_fixture": float(load.get("cumulative_minutes_before_fixture", 0.0) or 0.0),
+                    "cumulative_appearances": float(load.get("cumulative_appearances", 0.0) or 0.0),
                 })
+                for c in LOAD_FEATURE_COLS:
+                    row[c] = float(fv.get(c, load.get(c, 0.0)) or 0.0)
                 row.update(opp_features)
                 # Position one-hot
                 for g in FINE_GROUPS:
@@ -344,16 +385,18 @@ def main() -> int:
     static_by_team = _build_static_df_per_team(SUPERLIGA_TEAMS, profiles, match_files)
     print(f"  built {len(static_by_team)} static DataFrames.")
 
-    print("\nIndexing per-match player blocks ...")
-    blocks_by_pid = _per_match_blocks(match_files)
-    print(f"  indexed {len(blocks_by_pid)} player histories.")
+    print("\nBuilding combined per-player blocks (point-in-time source) ...")
+    combined_by_pid = _combined_blocks_by_pid(match_files)
+    print(f"  indexed {len(combined_by_pid)} player histories.")
 
     print("\nBuilding opponent-XI lookup ...")
     opp_xi_lookup = _build_opp_xi_lookup(league_history, static_by_team)
     print(f"  populated opp_xi for {len(opp_xi_lookup)} (matchId, team) pairs.")
 
-    print("\nAssembling training rows ...")
-    table = _build_training_rows(league_history, static_by_team, blocks_by_pid, opp_xi_lookup)
+    print("\nAssembling POINT-IN-TIME (leakage-free) training rows ...")
+    table = _build_training_rows(
+        league_history, static_by_team, combined_by_pid, profiles, opp_xi_lookup
+    )
     print(f"  training table shape: {table.shape}")
     print(f"  positives: {int(table['started'].sum())}/{len(table)} "
           f"({table['started'].mean():.2%})")
@@ -495,6 +538,11 @@ def main() -> int:
     }
 
     OUT_BUNDLE.parent.mkdir(parents=True, exist_ok=True)
+    if OUT_BUNDLE.exists():
+        import shutil
+        prev_path = OUT_BUNDLE.parent / "xi_lineup_model_league.prev.joblib"
+        shutil.copyfile(OUT_BUNDLE, prev_path)
+        print(f"  backed up previous bundle -> {prev_path.name}")
     joblib.dump(bundle, OUT_BUNDLE)
     sz = os.path.getsize(OUT_BUNDLE)
     print(f"\nSaved league bundle -> {OUT_BUNDLE.relative_to(ROOT)} ({sz:,} bytes)")

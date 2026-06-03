@@ -855,15 +855,13 @@ def build_player_feature_vector(
     load = compute_load_features(
         match_stats_list, _chrono_ids, as_of_date, player_profile.get("birthDate", "")
     )
-    # Do NOT surface cumulative_minutes_before_fixture / cumulative_appearances
-    # at inference: the deployed model lists them in feature_cols but has always
-    # been served zeros for them, so emitting them now would silently shift the
-    # predicted XI. The load-aware retrain re-enables them and re-validates. The
-    # rotation advisor uses the remaining load fields (acwr, rest_days, etc.).
-    _load_emit = {
-        k: v for k, v in load.items()
-        if k not in ("cumulative_minutes_before_fixture", "cumulative_appearances")
-    }
+    # Surface the FULL load block, including cumulative_minutes_before_fixture
+    # and cumulative_appearances. The leakage-free league model (Iteration L.5)
+    # is trained on these point-in-time, so inference must serve them too;
+    # zero-filling them (the previous behaviour) was a train-serve skew. At
+    # inference the team chronology is the whole pre-fixture window, so these
+    # are the player's cumulative minutes / appearances to date.
+    _load_emit = dict(load)
 
     feature = {
         "playerId": player_profile.get("wyId"),
