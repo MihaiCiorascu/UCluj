@@ -7,7 +7,11 @@ import 'package:umbraro/core/config/app_config.dart';
 class ApiClient {
   ApiClient({String? baseUrl}) : _baseUrl = baseUrl ?? AppConfig.apiBaseUrl;
 
-  static const Duration _requestTimeout = Duration(seconds: 35);
+  // 90s, not 35s: a cold App Runner instance (deploy / idle-resume / autoscale)
+  // can take up to ~75s on its first heavy request before the startup pre-warm
+  // lands. A longer ceiling turns that rare cold hit into a slow load behind the
+  // loading skeleton instead of a hard ApiException(408). Warm requests are ~2ms.
+  static const Duration _requestTimeout = Duration(seconds: 90);
 
   final String _baseUrl;
   String? _accessToken;
