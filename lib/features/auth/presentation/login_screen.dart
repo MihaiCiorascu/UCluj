@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/branding/branding_config.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/shape_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 
@@ -24,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   bool _submitting = false;
+  bool _obscure = true;
+  String? _localError;
 
   @override
   void dispose() {
@@ -34,11 +37,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _submit() async {
     if (_submitting) return;
-    setState(() => _submitting = true);
-    await widget.authState.login(
-      email: _emailCtrl.text.trim(),
-      password: _passCtrl.text,
-    );
+    final email = _emailCtrl.text.trim();
+    final pass = _passCtrl.text;
+    if (email.isEmpty || !email.contains('@') || pass.isEmpty) {
+      setState(() => _localError = 'Enter a valid email and password.');
+      return;
+    }
+    setState(() {
+      _submitting = true;
+      _localError = null;
+    });
+    await widget.authState.login(email: email, password: pass);
     if (mounted) setState(() => _submitting = false);
   }
 
@@ -80,20 +89,50 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 48),
                   Text('SIGN IN', style: TypographyTokens.sectionLabel),
                   const SizedBox(height: SpacingTokens.md),
-                  _buildField(context, _emailCtrl, 'EMAIL', false),
+                  _buildField(
+                    context,
+                    controller: _emailCtrl,
+                    label: 'Email',
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [
+                      AutofillHints.username,
+                      AutofillHints.email,
+                    ],
+                  ),
                   const SizedBox(height: SpacingTokens.md),
-                  _buildField(context, _passCtrl, 'PASSWORD', true),
+                  _buildField(
+                    context,
+                    controller: _passCtrl,
+                    label: 'Password',
+                    isPassword: true,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _submit(),
+                    autofillHints: const [AutofillHints.password],
+                  ),
                   const SizedBox(height: SpacingTokens.xl),
-                  if (widget.authState.error != null) ...[
+                  if ((_localError ?? widget.authState.error) != null) ...[
                     Container(
+                      width: double.infinity,
                       padding: const EdgeInsets.all(SpacingTokens.sm),
-                      color: c.negative.withValues(alpha: 0.15),
-                      child: Text(
-                        widget.authState.error!,
-                        style: TypographyTokens.body.copyWith(
-                          color: c.negative,
-                          fontSize: 13,
-                        ),
+                      decoration: BoxDecoration(
+                        color: c.negative.withValues(alpha: 0.12),
+                        borderRadius: ShapeTokens.control,
+                        border:
+                            Border.all(color: c.negative.withValues(alpha: 0.4)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.error_outline, size: 16, color: c.negative),
+                          const SizedBox(width: SpacingTokens.xs),
+                          Expanded(
+                            child: Text(
+                              _localError ?? widget.authState.error!,
+                              style: TypographyTokens.bodySmall
+                                  .copyWith(color: c.negative),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: SpacingTokens.md),
@@ -104,7 +143,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextButton.styleFrom(
                         backgroundColor: c.accent,
                         foregroundColor: c.onAccent,
-                        shape: const RoundedRectangleBorder(),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: ShapeTokens.control),
                       ),
                       onPressed: _submitting ? null : _submit,
                       child: _submitting
@@ -117,8 +157,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           : Text(
-                              'LOGIN',
-                              style: TypographyTokens.sectionLabel
+                              'Sign in',
+                              style: TypographyTokens.buttonLabel
                                   .copyWith(color: c.onAccent),
                             ),
                     ),
@@ -153,20 +193,29 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildField(
-    BuildContext context,
-    TextEditingController controller,
-    String label,
-    bool obscure,
-  ) {
+    BuildContext context, {
+    required TextEditingController controller,
+    required String label,
+    bool isPassword = false,
+    TextInputType? keyboardType,
+    TextInputAction? textInputAction,
+    ValueChanged<String>? onSubmitted,
+    List<String>? autofillHints,
+  }) {
     final c = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TypographyTokens.sectionLabel),
+        Text(label,
+            style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted)),
         const SizedBox(height: SpacingTokens.xs),
         TextField(
           controller: controller,
-          obscureText: obscure,
+          obscureText: isPassword && _obscure,
+          keyboardType: keyboardType,
+          textInputAction: textInputAction,
+          onSubmitted: onSubmitted,
+          autofillHints: autofillHints,
           style: TypographyTokens.body,
           cursorColor: c.accent,
           decoration: InputDecoration(
@@ -174,19 +223,29 @@ class _LoginScreenState extends State<LoginScreen> {
             fillColor: c.surfaceLow,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: SpacingTokens.md,
-              vertical: SpacingTokens.sm,
+              vertical: SpacingTokens.md,
             ),
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _obscure ? Icons.visibility_off : Icons.visibility,
+                      size: 20,
+                      color: c.textMuted,
+                    ),
+                    onPressed: () => setState(() => _obscure = !_obscure),
+                  )
+                : null,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
+              borderRadius: ShapeTokens.control,
               borderSide: BorderSide(color: c.divider),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
+              borderRadius: ShapeTokens.control,
               borderSide: BorderSide(color: c.divider),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.zero,
-              borderSide: BorderSide(color: c.accent),
+              borderRadius: ShapeTokens.control,
+              borderSide: BorderSide(color: c.accent, width: 1.5),
             ),
           ),
         ),

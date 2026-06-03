@@ -33,6 +33,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   SuperligaTeam? _selectedTeam = teamByShort("U Cluj");
 
   bool _submitting = false;
+  bool _obscure = true;
   String? _localError;
 
   @override
@@ -125,14 +126,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       style: TypographyTokens.sectionLabel,
                     ),
                     const SizedBox(height: 48),
-                    _buildField(context, _nameCtrl, 'FULL NAME', false),
-                    const SizedBox(height: SpacingTokens.md),
-                    _buildField(context, _emailCtrl, 'EMAIL', false),
-                    const SizedBox(height: SpacingTokens.md),
-                    _buildField(context, _passCtrl, 'PASSWORD', true),
+                    _buildField(
+                      context,
+                      controller: _nameCtrl,
+                      label: 'Full name',
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.next,
+                      autofillHints: const [AutofillHints.name],
+                    ),
                     const SizedBox(height: SpacingTokens.md),
                     _buildField(
-                        context, _confirmCtrl, 'CONFIRM PASSWORD', true),
+                      context,
+                      controller: _emailCtrl,
+                      label: 'Email',
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      autofillHints: const [AutofillHints.email],
+                    ),
+                    const SizedBox(height: SpacingTokens.md),
+                    _buildField(
+                      context,
+                      controller: _passCtrl,
+                      label: 'Password',
+                      isPassword: true,
+                      textInputAction: TextInputAction.next,
+                      autofillHints: const [AutofillHints.newPassword],
+                    ),
+                    const SizedBox(height: SpacingTokens.md),
+                    _buildField(
+                      context,
+                      controller: _confirmCtrl,
+                      label: 'Confirm password',
+                      isPassword: true,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => _submit(),
+                    ),
                     const SizedBox(height: SpacingTokens.md),
                     _buildTeamPicker(context),
                     const SizedBox(height: SpacingTokens.xl),
@@ -175,8 +203,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                               )
                             : Text(
-                                'REGISTER',
-                                style: TypographyTokens.sectionLabel
+                                'Create account',
+                                style: TypographyTokens.buttonLabel
                                     .copyWith(color: c.onPrimary),
                               ),
                       ),
@@ -212,20 +240,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildField(
-    BuildContext context,
-    TextEditingController controller,
-    String label,
-    bool obscure,
-  ) {
+    BuildContext context, {
+    required TextEditingController controller,
+    required String label,
+    bool isPassword = false,
+    TextInputType? keyboardType,
+    TextInputAction? textInputAction,
+    ValueChanged<String>? onSubmitted,
+    List<String>? autofillHints,
+  }) {
     final c = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TypographyTokens.sectionLabel),
+        Text(label,
+            style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted)),
         const SizedBox(height: SpacingTokens.xs),
         TextField(
           controller: controller,
-          obscureText: obscure,
+          obscureText: isPassword && _obscure,
+          keyboardType: keyboardType,
+          textInputAction: textInputAction,
+          onSubmitted: onSubmitted,
+          autofillHints: autofillHints,
           style: TypographyTokens.body.copyWith(color: c.textPrimary),
           cursorColor: c.primary,
           decoration: InputDecoration(
@@ -233,8 +270,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
             fillColor: c.surfaceElevatedTop,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: SpacingTokens.md,
-              vertical: SpacingTokens.sm,
+              vertical: SpacingTokens.md,
             ),
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _obscure ? Icons.visibility_off : Icons.visibility,
+                      size: 20,
+                      color: c.textMuted,
+                    ),
+                    onPressed: () => setState(() => _obscure = !_obscure),
+                  )
+                : null,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: c.chrome, width: 0.8),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/services/api_client.dart';
 import '../../../core/state/meta_state.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/shape_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/app_bottom_nav.dart';
@@ -355,14 +356,14 @@ class _StandingsScreenState extends State<StandingsScreen>
                 indicatorSize: TabBarIndicatorSize.tab,
                 labelColor: c.onAccent,
                 unselectedLabelColor: c.textMuted,
-                labelStyle: TypographyTokens.sectionLabel.copyWith(fontSize: 11),
-                unselectedLabelStyle: TypographyTokens.sectionLabel.copyWith(fontSize: 11),
+                labelStyle: TypographyTokens.buttonLabel,
+                unselectedLabelStyle: TypographyTokens.buttonLabel,
                 padding: const EdgeInsets.symmetric(
                     horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
                 tabs: const [
-                  Tab(text: 'PRINCIPAL'),
-                  Tab(text: 'GRUPĂ CAMPIONAT'),
-                  Tab(text: 'GRUPĂ RETROGRADARE'),
+                  Tab(text: 'Principal'),
+                  Tab(text: 'Campionat'),
+                  Tab(text: 'Retrogradare'),
                 ],
               ),
               surfaceColor: c.surface,
@@ -501,13 +502,10 @@ class _HeroClubCard extends StatelessWidget {
     final c = context.colors;
     return Container(
       decoration: BoxDecoration(
-        // Iteration N polish: replace the boxShadow with a tonal surfaceHigh
-        // overlay. The Stoic Analyst spec forbids drop shadows; depth here
-        // comes from the surfaceHigh vs surfaceBase gradient contrast plus
-        // the accent-tinted border.
         color: c.surfaceHigh,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: ShapeTokens.card,
         border: Border.all(color: c.accent.withValues(alpha: 0.3)),
+        boxShadow: ShapeTokens.e1(context),
       ),
       padding: const EdgeInsets.fromLTRB(
         SpacingTokens.lg, SpacingTokens.xl,
@@ -562,8 +560,8 @@ class _HeroClubCard extends StatelessWidget {
                 ),
               ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('#${team.pos}', style: TypographyTokens.displayHero.copyWith(
-                    fontSize: 48, height: 0.85, color: c.accent)),
+                Text('#${team.pos}', style: TypographyTokens.statLarge.copyWith(
+                    fontSize: 48, color: c.accent)),
                 const SizedBox(height: SpacingTokens.xxs),
                 Text('RANK',
                     style: TypographyTokens.sectionLabel
@@ -585,7 +583,7 @@ class _HeroClubCard extends StatelessWidget {
   Widget _metric(String value, String label, AppColorTokens c) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(value,
-          style: TypographyTokens.headline
+          style: TypographyTokens.statValue
               .copyWith(fontSize: 22, color: c.textPrimary)),
       const SizedBox(height: 2),
       Text(label,
@@ -649,7 +647,7 @@ class _StandingsRow extends StatelessWidget {
       color: primary,
       letterSpacing: hl ? 0.6 : 0,
     );
-    final numStyle = TypographyTokens.body.copyWith(
+    final numStyle = TypographyTokens.mono.copyWith(
       fontSize: 12,
       color: primary,
       fontWeight: hl ? FontWeight.w700 : FontWeight.w400,
@@ -742,7 +740,7 @@ class _ContextCard extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: c.surfaceLow,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: ShapeTokens.card,
         border: Border.all(color: c.divider),
       ),
       padding: const EdgeInsets.fromLTRB(
@@ -754,8 +752,8 @@ class _ContextCard extends StatelessWidget {
             style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted)),
         const SizedBox(height: SpacingTokens.xs),
         Text(value,
-            style: TypographyTokens.displayHero.copyWith(
-                fontSize: 48, height: 0.9, color: valueColor)),
+            style: TypographyTokens.statLarge.copyWith(
+                fontSize: 48, color: valueColor)),
         const SizedBox(height: SpacingTokens.sm),
         Text(note,
             style: TypographyTokens.body.copyWith(color: c.textSecondary, fontSize: 13)),

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 import 'color_tokens.dart';
+import 'shape_tokens.dart';
 import 'typography_tokens.dart';
 
-/// Iteration N — light + dark Material 3 themes for the early-2000s
-/// glossy aesthetic. Both share the same typography scale; the colour
-/// scheme differs per palette so widgets that consume
-/// ``Theme.of(context).colorScheme`` render the right tones.
+/// Light + dark Material 3 themes for the redesign.
 ///
-/// The legacy ``themeData`` getter is preserved (as an alias to
-/// ``lightTheme``) for any call site that has not migrated yet.
+/// The colour scheme is the documented cobalt-on-navy "Stoic Analyst" palette;
+/// the type system is Inter (default family for all text) with Epilogue on the
+/// display, headline, and title roles. Numeric roles inherit tabular figures
+/// from the tokens. Both themes share the scale; only the palette differs.
 class AppTheme {
   const AppTheme._();
 
@@ -26,23 +27,31 @@ class AppTheme {
         ? ThemeData.dark(useMaterial3: true)
         : ThemeData.light(useMaterial3: true);
 
-    final colorScheme = isDark
-        ? ColorScheme.dark(
-            primary: p.primary,
-            onPrimary: p.onPrimary,
-            secondary: p.glow,
-            surface: p.surfaceBaseTop,
-            onSurface: p.textPrimary,
-            error: ColorTokens.negative,
-          )
-        : ColorScheme.light(
-            primary: p.primary,
-            onPrimary: p.onPrimary,
-            secondary: p.glow,
-            surface: p.surfaceBaseTop,
-            onSurface: p.textPrimary,
-            error: ColorTokens.negative,
-          );
+    final colorScheme = (isDark ? const ColorScheme.dark() : const ColorScheme.light())
+        .copyWith(
+      primary: p.primary,
+      onPrimary: p.onPrimary,
+      secondary: p.glow,
+      surface: p.surfaceBaseTop,
+      onSurface: p.textPrimary,
+      error: ColorTokens.negative,
+    );
+
+    // Inter as the default family for every text role, then Epilogue on the
+    // editorial roles and explicit colours per role.
+    final t = GoogleFonts.interTextTheme(base.textTheme).copyWith(
+      displayLarge: TypographyTokens.displayHero.copyWith(color: p.textPrimary),
+      headlineLarge: TypographyTokens.headline.copyWith(color: p.textPrimary),
+      headlineMedium: TypographyTokens.headline.copyWith(color: p.textPrimary),
+      titleLarge: TypographyTokens.title.copyWith(color: p.textPrimary),
+      titleMedium: TypographyTokens.cardTitle.copyWith(color: p.textPrimary),
+      bodyLarge: TypographyTokens.body.copyWith(color: p.textPrimary),
+      bodyMedium: TypographyTokens.body.copyWith(color: p.textPrimary),
+      bodySmall: TypographyTokens.bodySmall.copyWith(color: p.textSecondary),
+      labelLarge: TypographyTokens.buttonLabel.copyWith(color: p.textPrimary),
+      labelMedium: TypographyTokens.meta.copyWith(color: p.textMuted),
+      labelSmall: TypographyTokens.sectionLabel.copyWith(color: p.textMuted),
+    );
 
     return base.copyWith(
       scaffoldBackgroundColor: p.surfaceBaseTop,
@@ -50,15 +59,7 @@ class AppTheme {
       colorScheme: colorScheme,
       brightness: p.brightness,
       splashFactory: InkRipple.splashFactory,
-      textTheme: base.textTheme.copyWith(
-        displayLarge:
-            TypographyTokens.displayHero.copyWith(color: p.textPrimary),
-        headlineLarge:
-            TypographyTokens.headline.copyWith(color: p.textPrimary),
-        bodyMedium: TypographyTokens.body.copyWith(color: p.textPrimary),
-        labelSmall:
-            TypographyTokens.sectionLabel.copyWith(color: p.textMuted),
-      ),
+      textTheme: t,
       iconTheme: IconThemeData(color: p.textPrimary),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -70,8 +71,8 @@ class AppTheme {
         color: p.surfaceElevatedTop,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          side: BorderSide(color: p.chrome, width: 0.8),
+          borderRadius: ShapeTokens.card,
+          side: BorderSide(color: p.divider),
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -88,10 +89,30 @@ class AppTheme {
           backgroundColor: WidgetStatePropertyAll(p.surfaceElevatedTop),
           surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
           shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: ShapeTokens.control,
             side: BorderSide(color: p.chrome, width: 0.8),
           )),
         ),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: p.surfaceHigh,
+        contentTextStyle:
+            TypographyTokens.bodySmall.copyWith(color: p.textPrimary),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: ShapeTokens.control,
+          side: BorderSide(color: p.divider),
+        ),
+      ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: p.surfaceHigh,
+          borderRadius: ShapeTokens.control,
+          border: Border.all(color: p.divider),
+        ),
+        textStyle: TypographyTokens.bodySmall.copyWith(color: p.textPrimary),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(color: p.primary),
     );

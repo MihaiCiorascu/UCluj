@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/strings.dart';
+import '../../../core/primitives/app_snackbar.dart';
+import '../../../core/primitives/haptics.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
@@ -141,6 +143,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _switchChannel(String id, String name) {
     if (_currentChannelId == id) return;
+    AppHaptics.selection();
     setState(() {
       _currentChannelId = id;
       _currentChannelName = name;
@@ -214,6 +217,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void _send() {
     final text = _ctrl.text.trim();
     if (text.isEmpty) return;
+    AppHaptics.light();
 
     if (_channel != null) {
       _channel!.sink.add(jsonEncode({
@@ -266,9 +270,17 @@ class _ChatScreenState extends State<ChatScreen> {
           'file_type': fileType,
         }));
         _ctrl.clear();
+        if (mounted) {
+          AppSnackbar.success(context,
+              L10n.instance.isRomanian ? 'Imagine trimisă' : 'Image sent');
+        }
       }
     } catch (e) {
       debugPrint('Upload error: $e');
+      if (mounted) {
+        AppSnackbar.error(context,
+            L10n.instance.isRomanian ? 'Încărcare eșuată' : 'Upload failed');
+      }
     } finally {
       if (mounted) {
         setState(() => _uploading = false);
@@ -300,7 +312,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final teamName = widget.authState?.user?.teamName ?? 'general';
     final genId = '${teamName}_general';
     return SizedBox(
-      height: 40,
+      height: 48,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -365,10 +377,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   TextField(
                     controller: groupNameCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: c.textPrimary),
                     decoration: InputDecoration(
                       hintText: L10n.t('chat.groupName'),
-                      hintStyle: const TextStyle(color: Colors.white54),
+                      hintStyle: TextStyle(color: c.textMuted),
                       enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: context.colors.accent)),
                       focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: context.colors.accent)),
                     ),
@@ -384,7 +396,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             : u['email'].toString();
                         final isSelected = selectedUserIds.contains(id);
                         return CheckboxListTile(
-                          title: Text(name, style: const TextStyle(color: Colors.white)),
+                          title: Text(name, style: TextStyle(color: c.textPrimary)),
                           value: isSelected,
                           activeColor: context.colors.accent,
                           checkColor: context.colors.onAccent,
@@ -407,7 +419,7 @@ class _ChatScreenState extends State<ChatScreen> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
-                child: Text(L10n.t('chat.cancel'), style: const TextStyle(color: Colors.white54)),
+                child: Text(L10n.t('chat.cancel'), style: TextStyle(color: c.textMuted)),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: context.colors.accent),
@@ -427,7 +439,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   } catch (e) {
                     debugPrint('Error creating group: $e');
                   }
-                  if (mounted) Navigator.pop(ctx);
+                  if (mounted) {
+                    Navigator.pop(ctx);
+                    AppSnackbar.success(
+                        context,
+                        L10n.instance.isRomanian
+                            ? 'Grup creat'
+                            : 'Group created');
+                  }
                 },
                 child: Text(L10n.t('chat.create'), style: TextStyle(color: context.colors.onAccent)),
               ),
