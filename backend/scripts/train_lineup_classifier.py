@@ -11,8 +11,11 @@ Feature design
 
 For each (player, fixture) pair we assemble:
 
-* **Static-ish player features** (full-season aggregates — slight
-  leakage accepted for BSc thesis purposes):
+* **Static-ish player features** (full-season aggregates — a small,
+  measured leakage: a point-in-time rerun puts the rolling-origin Jaccard
+  at 0.557 versus 0.571 with these columns, an inflation under two Jaccard
+  points, documented in the thesis limitations; the dynamic features below
+  carry the dominant lineup signal):
 
   - ``performance_score`` — Iteration H weighted-KPI composite.
   - ``recent_form_score`` — Iteration H decayed recent-form aggregate.
