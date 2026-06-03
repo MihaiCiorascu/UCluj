@@ -799,6 +799,7 @@ def build_dataset_from_files(
         DataFrame with one row per player
     """
     # Collect all stats per player
+    from ml.match_dates import date_for as _date_for  # committed matchId -> date bridge
     player_stats_map: Dict[int, List[Dict]] = {}
 
     for filepath in match_stat_files:
@@ -813,6 +814,7 @@ def build_dataset_from_files(
             combined = dict(entry.get("total", {}))
             combined["positions"] = entry.get("positions", [])
             combined["matchId"] = entry.get("matchId")
+            combined["match_date"] = _date_for(entry.get("matchId"))
             # Preserve the season + round metadata in the flattened block so
             # callers downstream (e.g. the lineup classifier) can reconstruct
             # the per-match chronology without re-reading the JSON.
