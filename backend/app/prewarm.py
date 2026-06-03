@@ -101,6 +101,20 @@ async def _warm_model(df, bundle) -> None:
     logger.info("Pre-warm: CatBoost win-probability path ready")
 
 
+async def _warm_week(df, stadium_map: dict, bundle) -> None:
+    """Pre-compute the current week's dashboard predictions into the in-process
+    cache so the first /week-fixtures load is instant.
+
+    /week-fixtures is otherwise the heaviest endpoint: it runs a Monte Carlo
+    prescription per upcoming fixture. week.py memoises the result, so a single
+    warm here makes the panel return immediately for the first user.
+    """
+    from api.v1.endpoints.week import _compute_week
+
+    await _compute_week(df, stadium_map, bundle, 0)
+    logger.info("Pre-warm: week-fixtures predictions cached (current week)")
+
+
 async def _warm_xi(xi_service) -> None:
     """Exercise the XI match-preview path once (the heaviest cold cost).
 
@@ -117,31 +131,52 @@ async def _warm_xi(xi_service) -> None:
     logger.info("Pre-warm: XI match-preview path ready")
 
 
-async def prewarm_caches(df, stadium_map: dict, xi_service=None, bundle=None) -> None:
-    """Warm the Sportradar caches and the local ML inference paths once at boot.
+async def prewarm_critical(df, stadium_map: dict, bundle) -> None:
+    """Blocking, panel-critical warm: the Sportradar fixtures cache + the
+    current week's dashboard predictions + the CatBoost path.
 
-    Best-effort and self-contained: a failure in one warm does not stop the
-    others, and none can propagate out of this coroutine.
+    Awaited in lifespan BEFORE the app serves traffic. On a deploy App Runner
+    keeps the old instance live and only swaps to the new one once it is healthy,
+    so blocking here means traffic moves to the new instance only after the
+    dashboard is hot. That removes the cold window where a freshly deployed
+    0.5 vCPU instance ran the heavy /week-fixtures compute under the user's
+    request. Bounded (so it can never hang the boot) and exception-safe.
     """
-    # 1. Sportradar-backed caches (dashboard + standings): the first-screen
-    #    429 -> 408 burst. Needs the trial key; skipped when it is absent.
+    try:
+        await asyncio.wait_for(_run_critical(df, stadium_map, bundle), timeout=70.0)
+    except Exception as exc:  # noqa: BLE001 - boot must proceed even if warm is slow
+        logger.warning("Pre-warm (critical) incomplete (non-fatal): %s", exc)
+
+
+async def _run_critical(df, stadium_map: dict, bundle) -> None:
+    # The Sportradar fixtures cache backs /week-fixtures; warm it once so the
+    # week compute below (and the endpoint) skips the live fetch.
     if settings.sportradar_api_key:
         try:
             await _warm_fixtures()
         except Exception as exc:  # noqa: BLE001 - never let pre-warm break boot
             logger.warning("Pre-warm fixtures failed (non-fatal): %s", exc)
-        try:
-            await _warm_standings(df, stadium_map)
-        except Exception as exc:  # noqa: BLE001
-            logger.warning("Pre-warm standings failed (non-fatal): %s", exc)
-
-    # 2. Local ML inference paths (no Sportradar dependency): the CatBoost
-    #    win-probability path and, most importantly, the XI match-preview path,
-    #    whose first call builds the Wyscout feature dataset.
     try:
         await _warm_model(df, bundle)
     except Exception as exc:  # noqa: BLE001
         logger.warning("Pre-warm model failed (non-fatal): %s", exc)
+    try:
+        await _warm_week(df, stadium_map, bundle)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Pre-warm week predictions failed (non-fatal): %s", exc)
+
+
+async def prewarm_background(xi_service, df, stadium_map: dict) -> None:
+    """Best-effort background warm for the heavier, non-dashboard paths: the
+    standings cache and the XI match-preview dataset build (~50-70s on the small
+    instance). The match screen tolerates one cold hit (covered by the client
+    timeout) far better than the landing dashboard, so these do not block boot.
+    """
+    if settings.sportradar_api_key:
+        try:
+            await _warm_standings(df, stadium_map)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Pre-warm standings failed (non-fatal): %s", exc)
     try:
         await _warm_xi(xi_service)
     except Exception as exc:  # noqa: BLE001
