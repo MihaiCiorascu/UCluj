@@ -35,7 +35,7 @@ class TeamScreen extends StatelessWidget {
           const SizedBox(height: SpacingTokens.sm),
           Text('46 PTS', style: TypographyTokens.headline),
           const SizedBox(height: SpacingTokens.lg),
-          const AppCard(
+          AppCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -51,7 +51,7 @@ class TeamScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: SpacingTokens.md),
-          const AppCard(
+          AppCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

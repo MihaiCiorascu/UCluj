@@ -3,7 +3,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/formation_slots.dart';
+import '../../../core/primitives/app_sheet.dart';
+import '../../../core/primitives/haptics.dart';
+import '../../../core/primitives/segmented_toggle.dart';
+import '../../../core/primitives/stat_tile.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/shape_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/player_photo_avatar.dart';
@@ -102,8 +107,17 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        // Wide layouts keep the inline side panel; on phones, tapping a player
+        // opens the detail in a bottom sheet so the pitch stays the focus.
         final wide = constraints.maxWidth >= 640;
-        final statsRow = _statsBar(p.teamStats, c);
+        void onSelect(MatchPreviewPlayer pl) {
+          if (wide) {
+            setState(() => _selected = pl);
+          } else {
+            _openPlayerSheet(pl);
+          }
+        }
+
         final left = Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
@@ -112,34 +126,27 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
               _xiToggle(c),
               const SizedBox(height: SpacingTokens.md),
             ],
-            statsRow,
+            _statsBar(p.teamStats, c),
             const SizedBox(height: SpacingTokens.md),
             AspectRatio(
               aspectRatio: 4 / 5,
               child: FifaRecommendedXiPitch(
                 formation: widget.formation,
                 players: _activeXi,
-                selected: _selected,
+                selected: wide ? _selected : null,
                 ratingForDisplay: rf,
-                onSelect: (pl) => setState(() => _selected = pl),
+                onSelect: onSelect,
               ),
             ),
             const SizedBox(height: SpacingTokens.md),
             Text(
-              'SUBSTITUTES',
-              style: TypographyTokens.sectionLabel.copyWith(
-                fontSize: 9,
-                color: c.textMuted,
-              ),
+              'Rezerve',
+              style:
+                  TypographyTokens.sectionLabel.copyWith(color: c.textMuted),
             ),
             const SizedBox(height: SpacingTokens.sm),
-            _benchWrap(_activeBench, rf, c),
+            _benchWrap(_activeBench, rf, c, onSelect),
           ],
-        );
-
-        final detail = _PlayerDetailColumn(
-          player: _selected,
-          ratingForDisplay: rf,
         );
 
         if (wide) {
@@ -155,86 +162,99 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
                 Container(width: 1, color: c.divider),
                 Expanded(
                   flex: 9,
-                  child: detail,
+                  child: _PlayerDetailColumn(
+                      player: _selected, ratingForDisplay: rf),
                 ),
               ],
             ),
           );
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            left,
-            Divider(color: c.divider, height: 1),
-            SizedBox(height: 360, child: detail),
-          ],
-        );
+        return left;
       },
     );
   }
 
-  Widget _statsBar(MatchTeamStats s, AppColorTokens c) {
-    return Row(
-      children: [
-        _statCell('FORMĂ', s.avgRecentForm.toStringAsFixed(1), c),
-        _statCell('PERF', s.avgPerformanceScore.toStringAsFixed(1), c),
-        _statCell('PAS%', '${s.avgPassAccuracy.toStringAsFixed(0)}%', c),
-        _statCell('DUEL%', '${s.avgDuelWinRate.toStringAsFixed(0)}%', c),
-      ],
-    );
-  }
-
-  Widget _statCell(String label, String value, AppColorTokens c) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.only(right: 2),
-        color: c.surfaceHigh,
-        padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
-        child: Column(
-          children: [
-            Text(
-              value,
-              style: TypographyTokens.headline.copyWith(
-                fontSize: 15,
-                color: c.textPrimary,
-              ),
-            ),
-            Text(
-              label,
-              style: TypographyTokens.body.copyWith(
-                color: c.textMuted,
-                fontSize: 9,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+  void _openPlayerSheet(MatchPreviewPlayer pl) {
+    AppHaptics.light();
+    showAppSheet<void>(
+      context,
+      title: pl.shortName,
+      builder: (ctx) => _PlayerDetailColumn(
+        player: pl,
+        ratingForDisplay: widget.ratingForDisplay,
+        scrollable: false,
       ),
     );
   }
 
-  // Segmented toggle: predicted-most-likely XI (default) vs the best-by-rating
-  // 'ideal' XI. Lets the committee contrast selection-likelihood against raw
-  // quality on the same pitch.
+  Widget _statsBar(MatchTeamStats s, AppColorTokens c) {
+    return Container(
+      decoration: BoxDecoration(
+        color: c.surfaceLow,
+        borderRadius: ShapeTokens.card,
+        border: Border.all(color: c.divider),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
+      child: Row(
+        children: [
+          Expanded(
+            child: StatTile(
+              value: s.avgRecentForm.toStringAsFixed(1),
+              icon: Icons.show_chart,
+              caption: 'Formă',
+              tooltip: 'Forma medie recentă a titularilor',
+            ),
+          ),
+          Expanded(
+            child: StatTile(
+              value: s.avgPerformanceScore.toStringAsFixed(1),
+              icon: Icons.speed,
+              caption: 'Performanță',
+              tooltip: 'Scor mediu de performanță',
+            ),
+          ),
+          Expanded(
+            child: StatTile(
+              value: '${s.avgPassAccuracy.toStringAsFixed(0)}%',
+              icon: Icons.alt_route,
+              caption: 'Pase',
+              tooltip: 'Acuratețea paselor',
+            ),
+          ),
+          Expanded(
+            child: StatTile(
+              value: '${s.avgDuelWinRate.toStringAsFixed(0)}%',
+              icon: Icons.sports_kabaddi,
+              caption: 'Dueluri',
+              tooltip: 'Dueluri câștigate',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Predicted-most-likely XI (default) vs the best-by-rating 'ideal' XI, so the
+  // committee can contrast selection-likelihood against raw quality.
   Widget _xiToggle(AppColorTokens c) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            _xiToggleSeg('PROBABIL XI', !_showBest, () => _setShowBest(false), c),
-            const SizedBox(width: SpacingTokens.xs),
-            _xiToggleSeg('CEL MAI BUN XI', _showBest, () => _setShowBest(true), c),
+        SegmentedToggle<bool>(
+          value: _showBest,
+          onChanged: _setShowBest,
+          segments: const [
+            SegmentOption(value: false, label: 'Probabil XI'),
+            SegmentOption(value: true, label: 'Cel mai bun XI'),
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         Text(
           _showBest
               ? 'Cei mai bine cotați 11, pe poziție (calitate brută)'
               : 'Cei 11 cel mai probabil titulari (model de selecție)',
-          style: TypographyTokens.body.copyWith(
-            fontSize: 9.5,
+          style: TypographyTokens.bodySmall.copyWith(
             color: c.textMuted,
             height: 1.2,
           ),
@@ -243,45 +263,11 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
     );
   }
 
-  Widget _xiToggleSeg(
-    String label,
-    bool active,
-    VoidCallback onTap,
-    AppColorTokens c,
-  ) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
-          decoration: BoxDecoration(
-            color: active ? c.surfaceHigh : c.surfaceLow,
-            border: Border(
-              top: BorderSide(
-                  color: active ? c.accent : c.divider, width: active ? 2 : 1),
-              left: BorderSide(color: active ? c.accent : c.divider, width: 1),
-              right: BorderSide(color: active ? c.accent : c.divider, width: 1),
-              bottom: BorderSide(color: active ? c.accent : c.divider, width: 1),
-            ),
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TypographyTokens.sectionLabel.copyWith(
-              fontSize: 11,
-              color: active ? c.textPrimary : c.textMuted,
-              letterSpacing: 1.0,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _benchWrap(
     List<MatchPreviewPlayer> bench,
     double Function(MatchPreviewPlayer p) rf,
     AppColorTokens c,
+    void Function(MatchPreviewPlayer) onSelect,
   ) {
     if (bench.isEmpty) {
       return Text(
@@ -314,7 +300,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
           final roleColor = recommendedXiRoleColor(
               benchCoarse.isNotEmpty ? benchCoarse : pl.roleGroup, c);
           return GestureDetector(
-            onTap: () => setState(() => _selected = pl),
+            onTap: () => onSelect(pl),
             child: Container(
               width: 84,
               decoration: BoxDecoration(
@@ -345,12 +331,9 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
                   const SizedBox(height: 4),
                   Text(
                     rf(pl).toStringAsFixed(0),
-                    style: TypographyTokens.headline.copyWith(
+                    style: TypographyTokens.statValue.copyWith(
                       color: c.textPrimary,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w900,
-                      height: 1.0,
-                      letterSpacing: -0.5,
+                      fontSize: 18,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -536,10 +519,15 @@ class _PlayerDetailColumn extends StatelessWidget {
   const _PlayerDetailColumn({
     required this.player,
     required this.ratingForDisplay,
+    this.scrollable = true,
   });
 
   final MatchPreviewPlayer? player;
   final double Function(MatchPreviewPlayer p) ratingForDisplay;
+
+  /// When false (inside a bottom sheet that already scrolls), returns the bare
+  /// content column instead of wrapping it in its own scroll view + padding.
+  final bool scrollable;
 
   @override
   Widget build(BuildContext context) {
@@ -566,11 +554,9 @@ class _PlayerDetailColumn extends StatelessWidget {
     final roleColor = recommendedXiRoleColor(
         detailCoarse.isNotEmpty ? detailCoarse : p.roleGroup, c);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(SpacingTokens.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
+    final content = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
           // ── Top row: card + radar ──────────────────────────────────────
           // Hero header: large headshot, identity, and the dominant rating,
           // anchored by a role-coloured left accent rule (tonal depth, sharp
@@ -646,10 +632,8 @@ class _PlayerDetailColumn extends StatelessWidget {
                   children: [
                     Text(
                       '$rating',
-                      style: TypographyTokens.displayHero.copyWith(
-                        fontSize: 56,
-                        height: 0.9,
-                        letterSpacing: -1.5,
+                      style: TypographyTokens.statLarge.copyWith(
+                        fontSize: 40,
                         color: c.textPrimary,
                       ),
                     ),
@@ -721,7 +705,12 @@ class _PlayerDetailColumn extends StatelessWidget {
           const SizedBox(height: SpacingTokens.xs),
           _loadStatusRow(p, c),
         ],
-      ),
+    );
+
+    if (!scrollable) return content;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(SpacingTokens.md),
+      child: content,
     );
   }
 

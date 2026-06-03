@@ -7,6 +7,11 @@ import '../../../core/widgets/team_crest.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
+import '../../../core/theme/shape_tokens.dart';
+import '../../../core/primitives/haptics.dart';
+import '../../../core/primitives/signed_bar.dart';
+import '../../../core/primitives/win_probability_arc.dart';
+import '../../../core/primitives/skeleton_box.dart';
 import '../../../data/models/week_fixture.dart';
 import '../../../data/models/match_details.dart';
 import '../../../data/models/match_preview.dart' show MatchPreviewResponse;
@@ -31,6 +36,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final baselinePct = '${(prescription.baselineProb * 100).round()}%';
     final bestPct = '${(prescription.bestProb * 100).round()}%';
     final upliftPct = '+${(prescription.improvement * 100).round()}%';
@@ -38,31 +44,30 @@ class _PrescriptionBlueprint extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: context.colors.surfaceLow,
-        border: Border(
-          top: BorderSide(color: context.colors.accent, width: 4),
-        ),
+        color: c.surfaceLow,
+        borderRadius: ShapeTokens.card,
+        border: Border.all(color: c.divider),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // ── Header label ────────────────────────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-                SpacingTokens.md, SpacingTokens.md, SpacingTokens.md, SpacingTokens.sm),
+            padding: const EdgeInsets.fromLTRB(SpacingTokens.md,
+                SpacingTokens.md, SpacingTokens.md, SpacingTokens.sm),
             child: Row(
               children: [
-                Icon(Icons.auto_awesome,
-                    color: context.colors.accent, size: 14),
+                Icon(Icons.auto_awesome, color: c.highlight, size: 15),
                 const SizedBox(width: SpacingTokens.xs),
                 Text(L10n.t('sheet.optimalPlan'),
                     style: TypographyTokens.sectionLabel
-                        .copyWith(color: context.colors.accent, fontSize: 11)),
+                        .copyWith(color: c.highlight)),
               ],
             ),
           ),
 
-          // ── Baseline → Optimised before/after ───────────────────────────
+          // ── Baseline -> optimised, with the uplift as the single reserved
+          //    amber number on the screen ─────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(
                 SpacingTokens.md, 0, SpacingTokens.md, SpacingTokens.md),
@@ -73,7 +78,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
                   child: _ProbColumn(
                     label: L10n.t('sheet.baselineLabel'),
                     value: baselinePct,
-                    valueColor: context.colors.textMuted,
+                    valueColor: c.textMuted,
                   ),
                 ),
                 Padding(
@@ -82,23 +87,23 @@ class _PrescriptionBlueprint extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.arrow_forward,
-                          color: context.colors.accent, size: 16),
-                      const SizedBox(height: 4),
+                      Icon(Icons.arrow_forward, color: c.textMuted, size: 16),
+                      const SizedBox(height: 6),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: SpacingTokens.sm, vertical: 3),
-                        color: context.colors.accent.withValues(alpha: 0.14),
+                            horizontal: SpacingTokens.sm, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: c.highlightSubtle,
+                          borderRadius: ShapeTokens.chip,
+                        ),
                         child: Text(upliftPct,
-                            style: TypographyTokens.sectionLabel.copyWith(
-                                color: context.colors.accent,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800)),
+                            style: TypographyTokens.statValue
+                                .copyWith(color: c.highlight, fontSize: 18)),
                       ),
                       const SizedBox(height: 4),
                       Text(L10n.t('sheet.upliftLabel'),
-                          style: TypographyTokens.sectionLabel.copyWith(
-                              color: context.colors.textMuted, fontSize: 8)),
+                          style: TypographyTokens.sectionLabel
+                              .copyWith(color: c.textMuted, fontSize: 8)),
                     ],
                   ),
                 ),
@@ -106,7 +111,7 @@ class _PrescriptionBlueprint extends StatelessWidget {
                   child: _ProbColumn(
                     label: L10n.t('sheet.optimisedLabel'),
                     value: bestPct,
-                    valueColor: context.colors.positive,
+                    valueColor: c.positive,
                   ),
                 ),
               ],
@@ -115,17 +120,17 @@ class _PrescriptionBlueprint extends StatelessWidget {
 
           // ── Tactical-levers section ──────────────────────────────────────
           if (recs.isNotEmpty) ...[
-            Divider(height: 1, color: context.colors.divider),
+            Divider(height: 1, color: c.divider),
             Padding(
-              padding: const EdgeInsets.fromLTRB(
-                  SpacingTokens.md, SpacingTokens.md, SpacingTokens.md, SpacingTokens.xs),
+              padding: const EdgeInsets.fromLTRB(SpacingTokens.md,
+                  SpacingTokens.md, SpacingTokens.md, SpacingTokens.xs),
               child: Row(
                 children: [
-                  Container(width: 2, height: 12, color: context.colors.accent),
+                  Container(width: 2, height: 12, color: c.primary),
                   const SizedBox(width: SpacingTokens.xs),
                   Text(L10n.t('sheet.tacticalLevers'),
                       style: TypographyTokens.sectionLabel
-                          .copyWith(color: context.colors.textMuted)),
+                          .copyWith(color: c.textMuted)),
                 ],
               ),
             ),
@@ -139,56 +144,43 @@ class _PrescriptionBlueprint extends StatelessWidget {
               ),
             ),
           ],
-
-          // ── Footer ──────────────────────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-                SpacingTokens.md, 0, SpacingTokens.md, SpacingTokens.sm),
-            child: Text(
-              L10n.t('sheet.modelFooter'),
-              style: TypographyTokens.sectionLabel
-                  .copyWith(color: context.colors.textMuted, fontSize: 8),
-            ),
-          ),
         ],
       ),
     );
   }
 
   Widget _buildRecChip(BuildContext context, PrescriptionRec rec) {
+    final c = context.colors;
     final isUp = rec.direction == 'up';
-    final color = isUp ? context.colors.positive : context.colors.accent;
-    final arrow = isUp ? '▲' : '▼';
-    final unitStr = rec.unit;
-
+    final color = isUp ? c.positive : c.primary;
+    final unit = rec.unit;
     return Container(
       padding: const EdgeInsets.symmetric(
           horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        border: Border.all(color: color.withValues(alpha: 0.35)),
+        color: color.withValues(alpha: 0.10),
+        borderRadius: ShapeTokens.control,
+        border: Border.all(color: color.withValues(alpha: 0.30)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(rec.label.toUpperCase(),
-              style: TypographyTokens.sectionLabel
-                  .copyWith(color: context.colors.textMuted, fontSize: 8)),
-          const SizedBox(height: 2),
+          Text(rec.label,
+              style: TypographyTokens.meta.copyWith(color: c.textMuted)),
+          const SizedBox(height: 3),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(arrow,
-                  style: TypographyTokens.sectionLabel
-                      .copyWith(color: color, fontSize: 10)),
-              const SizedBox(width: 3),
-              Text(
-                '${rec.current}$unitStr → ${rec.target}$unitStr',
-                style: TypographyTokens.body.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 13,
-                    color: context.colors.textPrimary),
-              ),
+              Icon(isUp ? Icons.trending_up : Icons.trending_down,
+                  size: 14, color: color),
+              const SizedBox(width: 6),
+              Text('${rec.current}$unit',
+                  style: TypographyTokens.mono.copyWith(color: c.textMuted)),
+              Icon(Icons.arrow_right_alt, size: 16, color: c.textMuted),
+              Text('${rec.target}$unit',
+                  style: TypographyTokens.mono.copyWith(
+                      color: c.textPrimary, fontWeight: FontWeight.w700)),
             ],
           ),
         ],
@@ -275,27 +267,35 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   @override
   Widget build(BuildContext context) {
     final f = widget.fixture;
+    final c = context.colors;
     final screenH = MediaQuery.of(context).size.height;
     final uclProb = f.homeWinProbability;
 
     return Container(
       height: screenH * 0.92,
       decoration: BoxDecoration(
-        color: context.colors.surface,
-        border: Border(top: BorderSide(color: context.colors.accent, width: 2)),
+        color: c.surfaceHigh,
+        borderRadius: ShapeTokens.sheetTop,
+        boxShadow: ShapeTokens.e3(context),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: SpacingTokens.sm),
-              width: 40,
-              height: 3,
-              color: context.colors.divider,
+          Padding(
+            padding: const EdgeInsets.only(top: SpacingTokens.sm, bottom: 2),
+            child: Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: c.textMuted.withValues(alpha: 0.5),
+                  borderRadius: ShapeTokens.chip,
+                ),
+              ),
             ),
           ),
           _buildHeader(f),
-          Divider(height: 1, color: context.colors.divider),
+          Divider(height: 1, color: c.divider),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(SpacingTokens.md),
@@ -307,9 +307,18 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   // Official stats from Sportradar
                   if (_loadingDetails)
                     Padding(
-                      padding: const EdgeInsets.all(SpacingTokens.xl),
-                      child: Center(
-                        child: CircularProgressIndicator(color: context.colors.accent),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: SpacingTokens.md),
+                      child: Column(
+                        children: const [
+                          SkeletonBox(width: double.infinity, height: 18),
+                          SizedBox(height: SpacingTokens.sm),
+                          SkeletonBox(
+                              width: double.infinity, height: 120, radius: 10),
+                          SizedBox(height: SpacingTokens.sm),
+                          SkeletonBox(
+                              width: double.infinity, height: 200, radius: 10),
+                        ],
                       ),
                     )
                   else if (_matchDetails != null) ...[
@@ -368,6 +377,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
                   // XI only for upcoming U Cluj matches
                   if (f.involvesUCluj) _buildXiSection(),
+
+                  const SizedBox(height: SpacingTokens.md),
+                  Text(L10n.t('sheet.modelFooter'),
+                      style: TypographyTokens.meta.copyWith(color: c.textMuted)),
                 ],
 
                 const SizedBox(height: SpacingTokens.xxl),
@@ -380,38 +393,36 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   }
 
   Widget _buildHeader(WeekFixture f) {
-    final homeDisplay = f.homeTeam.replaceAll('Universitatea Cluj', 'U CLUJ').toUpperCase();
-    final awayDisplay = f.awayTeam.replaceAll('Universitatea Cluj', 'U CLUJ').toUpperCase();
+    final c = context.colors;
+    final homeDisplay = f.homeTeam.replaceAll('Universitatea Cluj', 'U Cluj');
+    final awayDisplay = f.awayTeam.replaceAll('Universitatea Cluj', 'U Cluj');
 
     return Padding(
-      padding: const EdgeInsets.all(SpacingTokens.md),
+      padding: const EdgeInsets.fromLTRB(SpacingTokens.md, SpacingTokens.xs,
+          SpacingTokens.md, SpacingTokens.md),
       child: Row(
         children: [
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TeamCrest(teamName: f.homeTeam, size: 22),
+                TeamCrest(teamName: f.homeTeam, size: 26),
                 const SizedBox(width: SpacingTokens.xs),
                 Flexible(
                   child: Text(homeDisplay,
-                      style: TypographyTokens.body.copyWith(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 13,
-                          color: context.colors.textPrimary),
+                      style: TypographyTokens.cardTitle
+                          .copyWith(color: c.textPrimary),
                       textAlign: TextAlign.center,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                 ),
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
-            color: context.colors.surfaceHigh,
-            child: Text('VS',
-                style: TypographyTokens.sectionLabel
-                    .copyWith(color: context.colors.accent)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.sm),
+            child: Text('vs',
+                style: TypographyTokens.meta.copyWith(color: c.textMuted)),
           ),
           Expanded(
             child: Row(
@@ -419,15 +430,14 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               children: [
                 Flexible(
                   child: Text(awayDisplay,
-                      style: TypographyTokens.body.copyWith(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 13,
-                          color: context.colors.textPrimary),
+                      style: TypographyTokens.cardTitle
+                          .copyWith(color: c.textPrimary),
                       textAlign: TextAlign.center,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                 ),
                 const SizedBox(width: SpacingTokens.xs),
-                TeamCrest(teamName: f.awayTeam, size: 22),
+                TeamCrest(teamName: f.awayTeam, size: 26),
               ],
             ),
           ),
@@ -451,19 +461,20 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('${f.homeScore}',
-                  style: TypographyTokens.displayHero.copyWith(
-                      fontSize: 64, color: context.colors.textPrimary)),
+                  style: TypographyTokens.statLarge.copyWith(
+                      fontSize: 60, color: context.colors.textPrimary)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
-                child: Text('—',
-                    style: TypographyTokens.displayHero.copyWith(
-                        fontSize: 32, color: context.colors.textMuted)),
+                child: Text('-',
+                    style: TypographyTokens.statLarge.copyWith(
+                        fontSize: 30, color: context.colors.textMuted)),
               ),
               Text('${f.awayScore}',
-                  style: TypographyTokens.displayHero.copyWith(
-                      fontSize: 64, color: context.colors.textPrimary)),
+                  style: TypographyTokens.statLarge.copyWith(
+                      fontSize: 60, color: context.colors.textPrimary)),
             ],
           ),
           const SizedBox(height: SpacingTokens.xs),
@@ -937,12 +948,12 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   // drivers strip and the diagnostic pod below.
 
   Widget _buildMLBlock(WeekFixture f, double uclProb) {
-    final winPct = (uclProb * 100).round();
+    final c = context.colors;
     final col = uclProb >= 0.55
-        ? context.colors.positive
+        ? c.positive
         : uclProb >= 0.40
-            ? context.colors.accent
-            : context.colors.negative;
+            ? c.primary
+            : c.negative;
     final verdictKey = uclProb >= 0.65
         ? 'sheet.verdictDominant'
         : uclProb >= 0.50
@@ -952,135 +963,79 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 : 'sheet.verdictRisky';
 
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: context.colors.surfaceLow,
-        border: Border(
-          top: BorderSide(color: col.withValues(alpha: 0.8), width: 1),
-        ),
+        color: c.surfaceLow,
+        borderRadius: ShapeTokens.card,
+        border: Border.all(color: c.divider),
       ),
-      padding: const EdgeInsets.fromLTRB(
-          SpacingTokens.md, SpacingTokens.md, SpacingTokens.md, SpacingTokens.md),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Tone-coded vertical rail. Replaces the old _ProbBar; reads as
-            // a colour accent first and a magnitude cue second (the rail
-            // height tracks the probability via the inner fill below).
-            SizedBox(
-              width: 4,
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: (uclProb * 100).round().clamp(1, 99),
-                    child: Container(color: col),
-                  ),
-                  Expanded(
-                    flex: (100 - (uclProb * 100).round()).clamp(1, 99),
-                    child: Container(color: context.colors.surfaceHigh),
-                  ),
-                ],
-              ),
+      padding: const EdgeInsets.symmetric(
+          horizontal: SpacingTokens.md, vertical: SpacingTokens.lg),
+      child: Column(
+        children: [
+          WinProbabilityArc(
+            probability: uclProb,
+            color: col,
+            label: L10n.t('sheet.winChanceUcluj'),
+            size: 184,
+          ),
+          const SizedBox(height: SpacingTokens.md),
+          Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: SpacingTokens.md, vertical: 6),
+            decoration: BoxDecoration(
+              color: col.withValues(alpha: 0.14),
+              borderRadius: ShapeTokens.chip,
             ),
-            const SizedBox(width: SpacingTokens.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(L10n.t('sheet.winChanceUcluj'),
-                      style: TypographyTokens.sectionLabel
-                          .copyWith(color: context.colors.textMuted, fontSize: 10)),
-                  const SizedBox(height: SpacingTokens.xs),
-                  Text('$winPct%',
-                      style: TypographyTokens.displayHero
-                          .copyWith(color: col, fontSize: 72, height: 1.0)),
-                  const SizedBox(height: SpacingTokens.sm),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: SpacingTokens.sm, vertical: 3),
-                    color: col.withValues(alpha: 0.14),
-                    child: Text(L10n.t(verdictKey),
-                        style: TypographyTokens.sectionLabel
-                            .copyWith(color: col, fontSize: 10)),
-                  ),
-                  const SizedBox(height: SpacingTokens.sm),
-                  Text(L10n.t('sheet.modelCaption'),
-                      style: TypographyTokens.sectionLabel.copyWith(
-                          fontSize: 8, color: context.colors.textMuted)),
-                ],
-              ),
-            ),
-          ],
-        ),
+            child: Text(L10n.t(verdictKey),
+                style: TypographyTokens.buttonLabel.copyWith(color: col)),
+          ),
+        ],
       ),
     );
   }
 
-  // ── Drivers + risks chip strip ───────────────────────────────────────────
+  // ── Drivers + risks (signed bars) ────────────────────────────────────────
   //
-  // One horizontal strip combines positive drivers (▲ green) and risks
-  // (▼ red), in that order, so the eye scans tone-tagged chips left to
-  // right and weighs them against the headline probability above. Each
-  // chip is a compact tone-rule + sign + label + importance percent. The
-  // strip scrolls horizontally so it never wraps into the layout below.
+  // Top positive drivers (green, growing right) and top risks (red, growing
+  // left) share a center-origin baseline so direction and magnitude read in
+  // one glance, with the importance percentage right-aligned. Capped at the
+  // three strongest drivers and two strongest risks to keep the block calm.
 
   Widget _buildDriverStrip(WeekFixture f) {
-    final chips = <Widget>[];
-    for (final d in f.keyDrivers) {
-      chips.add(_buildDriverChip(d, isRisk: false));
-    }
-    for (final r in f.topRisks) {
-      chips.add(_buildDriverChip(r, isRisk: true));
-    }
-    return SizedBox(
-      height: 54,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.zero,
-        physics: const BouncingScrollPhysics(),
-        itemCount: chips.length,
-        separatorBuilder: (_, __) => const SizedBox(width: SpacingTokens.xs),
-        itemBuilder: (_, i) => chips[i],
-      ),
-    );
-  }
-
-  Widget _buildDriverChip(WeekFixtureDriver d, {required bool isRisk}) {
-    final col = isRisk ? context.colors.negative : context.colors.positive;
-    final sign = isRisk ? '▼' : '▲';
+    final c = context.colors;
+    final drivers = f.keyDrivers.take(3).toList();
+    final risks = f.topRisks.take(2).toList();
+    final maxImp = [...drivers, ...risks].fold<double>(
+        0, (m, d) => d.importance.abs() > m ? d.importance.abs() : m);
+    String pct(WeekFixtureDriver d) => '${(d.importance * 100).round()}%';
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: SpacingTokens.sm, vertical: SpacingTokens.xs),
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: context.colors.surfaceLow,
-        border: Border(
-          top: BorderSide(color: col, width: 2),
-        ),
+        color: c.surfaceLow,
+        borderRadius: ShapeTokens.card,
+        border: Border.all(color: c.divider),
       ),
+      padding: const EdgeInsets.symmetric(
+          horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(sign,
-                  style: TypographyTokens.sectionLabel
-                      .copyWith(color: col, fontSize: 10)),
-              const SizedBox(width: 4),
-              Text(
-                '${(d.importance * 100).toStringAsFixed(0)}%',
-                style: TypographyTokens.body.copyWith(
-                    color: col, fontWeight: FontWeight.w800, fontSize: 12),
-              ),
-            ],
-          ),
-          const SizedBox(height: 3),
-          Text(
-            d.label.toUpperCase(),
-            style: TypographyTokens.sectionLabel
-                .copyWith(color: context.colors.textPrimary, fontSize: 9),
-          ),
+          for (final d in drivers)
+            SignedBar(
+              label: d.label,
+              magnitude: d.importance.abs(),
+              maxMagnitude: maxImp,
+              positive: true,
+              valueLabel: pct(d),
+            ),
+          for (final r in risks)
+            SignedBar(
+              label: r.label,
+              magnitude: r.importance.abs(),
+              maxMagnitude: maxImp,
+              positive: false,
+              valueLabel: pct(r),
+            ),
         ],
       ),
     );
@@ -1090,9 +1045,19 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
   Widget _buildXiSection() {
     if (_loadingXi) {
-      return Padding(
-        padding: const EdgeInsets.all(SpacingTokens.xl),
-        child: Center(child: CircularProgressIndicator(color: context.colors.accent)),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _sectionLabel(L10n.t('sheet.recommendedXi')),
+          const SizedBox(height: SpacingTokens.sm),
+          const AspectRatio(
+            aspectRatio: 4 / 5,
+            child: SkeletonBox(
+                width: double.infinity,
+                height: 320,
+                radius: ShapeTokens.radiusCard),
+          ),
+        ],
       );
     }
     if (_xiError != null) {
@@ -1123,6 +1088,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     color: context.colors.accent, size: 16),
                 onChanged: (v) {
                   if (v != null && v != _formation) {
+                    AppHaptics.selection();
                     setState(() => _formation = v);
                     _loadXi();
                   }
@@ -1409,10 +1375,10 @@ class _ProbColumn extends StatelessWidget {
         Text(label,
             style: TypographyTokens.sectionLabel
                 .copyWith(color: context.colors.textMuted, fontSize: 9)),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         Text(value,
-            style: TypographyTokens.displayHero
-                .copyWith(color: valueColor, fontSize: 36, height: 1.0)),
+            style: TypographyTokens.statLarge
+                .copyWith(color: valueColor, fontSize: 34)),
       ],
     );
   }
