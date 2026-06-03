@@ -21,18 +21,24 @@ async def lifespan(app: FastAPI):
     app.state.bundle = load_model_bundle(settings.resolved_model_path)
     from services.xi_service import XiService
     app.state.xi_service = XiService(model_path="ml/xi_model.pkl", data_dir="ml/data/drive_cache")
-    # Warm the Sportradar caches in the background so the first dashboard load
-    # after a cold start (deploy / App Runner resume / autoscale) does not hit
-    # the trial 429 burst that surfaces as a 408 in the UI. Fire-and-forget so
-    # it never delays startup or the health check; the reference is parked on
-    # app.state so the task is not garbage-collected mid-flight.
-    from app.prewarm import prewarm_caches
+    # Cold-start strategy. App Runner does zero-downtime deploys: the old
+    # instance keeps serving until the new one passes its health check. So we
+    # BLOCK on the panel-critical warm (Sportradar fixtures cache + current-week
+    # predictions + CatBoost) before the app serves, which means traffic only
+    # swaps to the new instance once the dashboard is hot. This removes the
+    # window where a freshly deployed 0.5 vCPU instance ran the heavy
+    # /week-fixtures compute under the user's request. The blocking warm is
+    # bounded and exception-safe, so it can never hang or break boot.
+    from app.prewarm import prewarm_critical, prewarm_background
+    await prewarm_critical(app.state.df, app.state.stadium_map, app.state.bundle)
+    # The heavier XI dataset build (~50-70s on the small instance) stays in the
+    # background; the match screen tolerates one cold hit far better than the
+    # landing dashboard. Parked on app.state so it is not GC'd mid-flight.
     app.state._prewarm_task = asyncio.create_task(
-        prewarm_caches(
+        prewarm_background(
+            app.state.xi_service,
             app.state.df,
             app.state.stadium_map,
-            xi_service=app.state.xi_service,
-            bundle=app.state.bundle,
         )
     )
     yield
