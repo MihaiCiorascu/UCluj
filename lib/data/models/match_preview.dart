@@ -192,6 +192,11 @@ class MatchPreviewResponse {
   final int? opponentTeamId;
   final List<MatchPreviewPlayer> startingXi;
   final List<MatchPreviewPlayer> bench;
+  // The 'ideal' eleven by pure within-position rating (opponent-agnostic),
+  // returned alongside the predicted lineup so the UI can offer a "best XI"
+  // toggle. Empty on older backends, in which case the toggle is hidden.
+  final List<MatchPreviewPlayer> bestXi;
+  final List<MatchPreviewPlayer> bestBench;
   final MatchTeamStats teamStats;
   final MatchTeamStats opponentStats;
   final H2HStats headToHead;
@@ -202,31 +207,33 @@ class MatchPreviewResponse {
     this.opponentTeamId,
     required this.startingXi,
     required this.bench,
+    this.bestXi = const [],
+    this.bestBench = const [],
     required this.teamStats,
     required this.opponentStats,
     required this.headToHead,
   });
 
-  factory MatchPreviewResponse.fromJson(Map<String, dynamic> j) =>
-      MatchPreviewResponse(
-        formation: j['formation'] as String? ?? '4-3-3',
-        opponentName: j['opponent_name'] as String? ?? '',
-        opponentTeamId: (j['opponent_team_id'] as num?)?.toInt(),
-        startingXi: (j['starting_xi'] as List<dynamic>?)
-                ?.map((e) =>
-                    MatchPreviewPlayer.fromJson(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-        bench: (j['bench'] as List<dynamic>?)
-                ?.map((e) =>
-                    MatchPreviewPlayer.fromJson(e as Map<String, dynamic>))
-                .toList() ??
-            [],
-        teamStats: MatchTeamStats.fromJson(
-            j['team_stats'] as Map<String, dynamic>? ?? {}),
-        opponentStats: MatchTeamStats.fromJson(
-            j['opponent_stats'] as Map<String, dynamic>? ?? {}),
-        headToHead: H2HStats.fromJson(
-            j['head_to_head'] as Map<String, dynamic>? ?? {}),
-      );
+  factory MatchPreviewResponse.fromJson(Map<String, dynamic> j) {
+    List<MatchPreviewPlayer> parsePlayers(String key) =>
+        (j[key] as List<dynamic>?)
+            ?.map((e) => MatchPreviewPlayer.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
+    return MatchPreviewResponse(
+      formation: j['formation'] as String? ?? '4-3-3',
+      opponentName: j['opponent_name'] as String? ?? '',
+      opponentTeamId: (j['opponent_team_id'] as num?)?.toInt(),
+      startingXi: parsePlayers('starting_xi'),
+      bench: parsePlayers('bench'),
+      bestXi: parsePlayers('best_xi'),
+      bestBench: parsePlayers('best_bench'),
+      teamStats: MatchTeamStats.fromJson(
+          j['team_stats'] as Map<String, dynamic>? ?? {}),
+      opponentStats: MatchTeamStats.fromJson(
+          j['opponent_stats'] as Map<String, dynamic>? ?? {}),
+      headToHead: H2HStats.fromJson(
+          j['head_to_head'] as Map<String, dynamic>? ?? {}),
+    );
+  }
 }

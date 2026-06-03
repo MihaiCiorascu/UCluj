@@ -56,6 +56,15 @@ class RecommendedXiFifaPanel extends StatefulWidget {
 
 class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
   MatchPreviewPlayer? _selected;
+  // Which eleven the pitch shows: the predicted-most-likely lineup (default) or
+  // the best-by-rating ('ideal') eleven. The best lists are empty on older
+  // backends, so the toggle is hidden and this stays false.
+  bool _showBest = false;
+
+  List<MatchPreviewPlayer> get _activeXi =>
+      _showBest ? widget.preview.bestXi : widget.preview.startingXi;
+  List<MatchPreviewPlayer> get _activeBench =>
+      _showBest ? widget.preview.bestBench : widget.preview.bench;
 
   @override
   void initState() {
@@ -73,8 +82,16 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
   }
 
   void _pickDefault() {
-    final xi = widget.preview.startingXi;
+    final xi = _activeXi;
     _selected = xi.isNotEmpty ? xi.first : null;
+  }
+
+  void _setShowBest(bool v) {
+    if (_showBest == v) return;
+    setState(() {
+      _showBest = v;
+      _pickDefault();
+    });
   }
 
   @override
@@ -91,13 +108,17 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (p.bestXi.isNotEmpty) ...[
+              _xiToggle(c),
+              const SizedBox(height: SpacingTokens.md),
+            ],
             statsRow,
             const SizedBox(height: SpacingTokens.md),
             AspectRatio(
               aspectRatio: 4 / 5,
               child: FifaRecommendedXiPitch(
                 formation: widget.formation,
-                players: p.startingXi,
+                players: _activeXi,
                 selected: _selected,
                 ratingForDisplay: rf,
                 onSelect: (pl) => setState(() => _selected = pl),
@@ -112,7 +133,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
               ),
             ),
             const SizedBox(height: SpacingTokens.sm),
-            _benchWrap(p.bench, rf, c),
+            _benchWrap(_activeBench, rf, c),
           ],
         );
 
@@ -188,6 +209,70 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
               textAlign: TextAlign.center,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // Segmented toggle: predicted-most-likely XI (default) vs the best-by-rating
+  // 'ideal' XI. Lets the committee contrast selection-likelihood against raw
+  // quality on the same pitch.
+  Widget _xiToggle(AppColorTokens c) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            _xiToggleSeg('PROBABIL XI', !_showBest, () => _setShowBest(false), c),
+            const SizedBox(width: SpacingTokens.xs),
+            _xiToggleSeg('CEL MAI BUN XI', _showBest, () => _setShowBest(true), c),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          _showBest
+              ? 'Cei mai bine cotați 11, pe poziție (calitate brută)'
+              : 'Cei 11 cel mai probabil titulari (model de selecție)',
+          style: TypographyTokens.body.copyWith(
+            fontSize: 9.5,
+            color: c.textMuted,
+            height: 1.2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _xiToggleSeg(
+    String label,
+    bool active,
+    VoidCallback onTap,
+    AppColorTokens c,
+  ) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
+          decoration: BoxDecoration(
+            color: active ? c.surfaceHigh : c.surfaceLow,
+            border: Border(
+              top: BorderSide(
+                  color: active ? c.accent : c.divider, width: active ? 2 : 1),
+              left: BorderSide(color: active ? c.accent : c.divider, width: 1),
+              right: BorderSide(color: active ? c.accent : c.divider, width: 1),
+              bottom: BorderSide(color: active ? c.accent : c.divider, width: 1),
+            ),
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TypographyTokens.sectionLabel.copyWith(
+              fontSize: 11,
+              color: active ? c.textPrimary : c.textMuted,
+              letterSpacing: 1.0,
+            ),
+          ),
         ),
       ),
     );
@@ -308,53 +393,125 @@ class _FifaAttr {
   final double value; // 0–100
 }
 
-// Honest attribute bars. Every value is the player's WITHIN-POSITION league
-// percentile (0-100) for a real Wyscout-derived KPI, computed server-side
-// (statPct), so a striker is ranked among strikers and a left-back among
-// left-backs. Labels name the actual metric, not a fabricated FIFA attribute.
-List<_FifaAttr> _fifaAttrs(MatchPreviewPlayer p) {
+// Two honest lenses, kept separate (a club reads volume and efficiency as
+// different questions, never one blended number). Every value is the player's
+// WITHIN-POSITION league percentile (0-100) of a real Wyscout KPI, computed
+// server-side (statPct), so a striker is ranked among strikers and a centre-back
+// among centre-backs.
+
+// OUTPUT / VOLUME lens (the radar): per-90 raw counts. These are the stats that
+// actually build performance_score, so the radar explains WHY a player earns
+// their rating. Exactly six axes (the radar is a hexagon).
+List<_FifaAttr> _outputAttrs(MatchPreviewPlayer p) {
   double pct(String key) => (p.statPct[key] ?? 50.0).clamp(0, 100).toDouble();
 
   if (p.roleGroup == 'GK') {
     return [
       _FifaAttr('Saves', pct('per90_gkSaves')),
-      _FifaAttr('Clean Sheets', pct('per90_gkCleanSheets')),
-      _FifaAttr('Aerial', pct('aerial_win_rate')),
-      _FifaAttr('Distribution', pct('pass_accuracy')),
+      _FifaAttr('Clean Sht', pct('per90_gkCleanSheets')),
+      _FifaAttr('Sweeping', pct('per90_gkSuccessfulExits')),
+      _FifaAttr('Aerial', pct('per90_gkAerialDuelsWon')),
+      _FifaAttr('Passing', pct('per90_successfulPasses')),
       _FifaAttr('Form', pct('recent_form_score')),
-      _FifaAttr('Rating', pct('performance_score')),
     ];
   }
 
   switch (p.roleGroup) {
     case 'DEF':
       return [
-        _FifaAttr('Duels', pct('duel_win_rate')),
-        _FifaAttr('Interceptions', pct('per90_interceptions')),
-        _FifaAttr('Def Actions', pct('def_action_success')),
-        _FifaAttr('Aerial', pct('aerial_win_rate')),
-        _FifaAttr('Passing', pct('pass_accuracy')),
-        _FifaAttr('Form', pct('recent_form_score')),
+        _FifaAttr('Passing', pct('per90_successfulPasses')),
+        _FifaAttr('Duels', pct('per90_defensiveDuelsWon')),
+        _FifaAttr('Aerial', pct('per90_aerialDuelsWon')),
+        _FifaAttr('Clears', pct('per90_clearances')),
+        _FifaAttr('Intercept', pct('per90_interceptions')),
+        _FifaAttr('Blocks', pct('per90_shotsBlocked')),
       ];
     case 'MID':
       return [
-        _FifaAttr('Passing', pct('pass_accuracy')),
-        _FifaAttr('Key Passes', pct('per90_keyPasses')),
-        _FifaAttr('Dribbling', pct('dribble_success')),
-        _FifaAttr('Duels', pct('duel_win_rate')),
-        _FifaAttr('Assists', pct('per90_assists')),
-        _FifaAttr('Form', pct('recent_form_score')),
+        _FifaAttr('Passing', pct('per90_successfulPasses')),
+        _FifaAttr('Progress', pct('per90_progressivePasses')),
+        _FifaAttr('Key Pass', pct('per90_keyPasses')),
+        _FifaAttr('Recover', pct('per90_recoveries')),
+        _FifaAttr('Duels', pct('per90_defensiveDuelsWon')),
+        _FifaAttr('Dribbles', pct('per90_successfulDribbles')),
       ];
     default: // FWD
       return [
         _FifaAttr('Goals', pct('per90_goals')),
         _FifaAttr('Shots', pct('per90_shots')),
-        _FifaAttr('Shot Acc', pct('shot_accuracy')),
-        _FifaAttr('Dribbling', pct('dribble_success')),
-        _FifaAttr('Key Passes', pct('per90_keyPasses')),
+        _FifaAttr('Dribbles', pct('per90_successfulDribbles')),
+        _FifaAttr('Key Pass', pct('per90_keyPasses')),
+        _FifaAttr('Crosses', pct('per90_successfulCrosses')),
+        _FifaAttr('Box Tch', pct('per90_touchInBox')),
+      ];
+  }
+}
+
+// EFFICIENCY lens (the bars): success rates, the quality-per-action view. A
+// high-volume player with low rates (busy but beaten) reads honestly here.
+List<_FifaAttr> _efficiencyAttrs(MatchPreviewPlayer p) {
+  double pct(String key) => (p.statPct[key] ?? 50.0).clamp(0, 100).toDouble();
+
+  if (p.roleGroup == 'GK') {
+    return [
+      _FifaAttr('Pass %', pct('pass_accuracy')),
+      _FifaAttr('Aerial %', pct('aerial_win_rate')),
+      _FifaAttr('Form', pct('recent_form_score')),
+    ];
+  }
+
+  switch (p.roleGroup) {
+    case 'DEF':
+      return [
+        _FifaAttr('Duels %', pct('duel_win_rate')),
+        _FifaAttr('Aerial %', pct('aerial_win_rate')),
+        _FifaAttr('Def %', pct('def_action_success')),
+        _FifaAttr('Pass %', pct('pass_accuracy')),
+        _FifaAttr('Form', pct('recent_form_score')),
+      ];
+    case 'MID':
+      return [
+        _FifaAttr('Pass %', pct('pass_accuracy')),
+        _FifaAttr('Dribble %', pct('dribble_success')),
+        _FifaAttr('Duels %', pct('duel_win_rate')),
+        _FifaAttr('Def %', pct('def_action_success')),
+        _FifaAttr('Form', pct('recent_form_score')),
+      ];
+    default: // FWD
+      return [
+        _FifaAttr('Shot %', pct('shot_accuracy')),
+        _FifaAttr('Dribble %', pct('dribble_success')),
+        _FifaAttr('Duels %', pct('duel_win_rate')),
+        _FifaAttr('Pass %', pct('pass_accuracy')),
         _FifaAttr('Form', pct('recent_form_score')),
       ];
   }
+}
+
+/// Two-line section caption (Romanian header + percentile sublabel), used to
+/// title the VOLUM and EFICIENTA blocks on the player card.
+Widget _sectionCaption(String title, String sub, AppColorTokens c) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        title,
+        style: TypographyTokens.sectionLabel.copyWith(
+          fontSize: 9,
+          color: c.accent,
+          letterSpacing: 1.5,
+        ),
+      ),
+      Text(
+        sub,
+        style: TypographyTokens.sectionLabel.copyWith(
+          fontSize: 8,
+          color: c.textMuted,
+          letterSpacing: 1.0,
+        ),
+      ),
+    ],
+  );
 }
 
 /// The comparison group the attribute percentiles were computed against: the
@@ -397,7 +554,7 @@ class _PlayerDetailColumn extends StatelessWidget {
       );
     }
     final rating = ratingForDisplay(p).clamp(0, 100).toInt();
-    final attrs  = _fifaAttrs(p);
+    final effAttrs = _efficiencyAttrs(p);
     // Prefer the official slot label, then the fine group, then the coarse
     // role; colour by the corresponding coarse group.
     final detailLabel = p.officialPosition.isNotEmpty
@@ -512,8 +669,15 @@ class _PlayerDetailColumn extends StatelessWidget {
 
           const SizedBox(height: SpacingTokens.lg),
 
-          // Radar: larger and role-coloured so the silhouette reads as an
-          // attacker / defender shape at a glance, on a tonal tray.
+          // ── Output / volume lens (radar) ────────────────────────────────
+          // The per-90 work-rate stats that BUILD the rating, so the headline
+          // number is explained. Role-coloured silhouette on a tonal tray.
+          _sectionCaption(
+            'VOLUM DE JOC',
+            'percentilă în liga · ${_attrCompareLabel(p)}',
+            c,
+          ),
+          const SizedBox(height: SpacingTokens.sm),
           Container(
             color: c.surfaceLow,
             padding: const EdgeInsets.symmetric(vertical: SpacingTokens.md),
@@ -529,32 +693,17 @@ class _PlayerDetailColumn extends StatelessWidget {
 
           const SizedBox(height: SpacingTokens.lg),
 
-          // ── Attribute bars ──────────────────────────────────────────────
-          // Section title in Romanian so it stops being the only English
-          // string on a screen that otherwise reads "FACTORI CHEIE AI",
-          // "RISCURI", "DIAGNOSTIC - PLAN TACTIC". Localisation through
-          // L10n.t is deferred to the cross-cutting polish PR.
-          Text(
-            'ATRIBUTE JUCATOR',
-            style: TypographyTokens.sectionLabel.copyWith(
-              fontSize: 9,
-              color: c.accent,
-              letterSpacing: 1.5,
-            ),
-          ),
-          // Each bar is a within-position league percentile, so name the
-          // comparison group honestly (the fine position when it was used,
-          // else the coarse group).
-          Text(
+          // ── Efficiency lens (bars) ──────────────────────────────────────
+          // Success rates: quality per action, kept separate from the raw
+          // volume above so a busy-but-beaten profile reads true. Romanian
+          // header to match "FACTORI CHEIE", "RISCURI", "DIAGNOSTIC".
+          _sectionCaption(
+            'EFICIENTA',
             'percentilă în liga · ${_attrCompareLabel(p)}',
-            style: TypographyTokens.sectionLabel.copyWith(
-              fontSize: 8,
-              color: c.textMuted,
-              letterSpacing: 1.0,
-            ),
+            c,
           ),
           const SizedBox(height: SpacingTokens.sm),
-          for (final a in attrs) _fifaAttrRow(a, c),
+          for (final a in effAttrs) _fifaAttrRow(a, c),
         ],
       ),
     );
@@ -1068,7 +1217,7 @@ class FifaPlayerRadar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final attrs = _fifaAttrs(player);
+    final attrs = _outputAttrs(player);
     final values = attrs.map((a) => (a.value / 100).clamp(0.0, 1.0)).toList();
     final labels = attrs.map((a) => a.label.toUpperCase()).toList();
     return CustomPaint(
@@ -1098,9 +1247,10 @@ class FifaRadarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (values.isEmpty) return;
     final c = Offset(size.width / 2, size.height / 2 + 8);
     final r = math.min(size.width, size.height) * 0.38;
-    const n = 6;
+    final n = values.length;
     final points = <Offset>[];
 
     for (var i = 0; i < n; i++) {

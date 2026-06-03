@@ -306,7 +306,14 @@ def _format_output(result: Dict, my_team_id: int, opponent_team_id: Optional[int
                 "pass_accuracy", "duel_win_rate",
                 "shot_accuracy", "dribble_success", "def_action_success", "aerial_win_rate",
                 "per90_goals", "per90_assists", "per90_keyPasses", "per90_shots",
-                "per90_interceptions", "per90_gkSaves", "per90_gkCleanSheets"]
+                "per90_interceptions", "per90_gkSaves", "per90_gkCleanSheets",
+                # Output / volume drivers of the rating (per-90 raw counts).
+                "per90_defensiveDuelsWon", "per90_aerialDuelsWon", "per90_clearances",
+                "per90_recoveries", "per90_shotsBlocked", "per90_successfulPasses",
+                "per90_progressivePasses", "per90_successfulCrosses",
+                "per90_successfulDribbles", "per90_passesToFinalThird",
+                "per90_touchInBox", "per90_shotsOnTarget",
+                "per90_gkSuccessfulExits", "per90_gkAerialDuelsWon"]
         cols = [c for c in cols if c in df.columns]
         return df[cols].fillna(0).to_dict(orient="records")
 
