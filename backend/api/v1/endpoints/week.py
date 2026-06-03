@@ -57,13 +57,6 @@ def _to_ucluj_win_prob(home_win_prob: float, home_team: str, away_team: str) -> 
     return 1.0 - home_win_prob
 
 
-def _dampen_probability(prob: float, weight: float = 0.55) -> float:
-    """Reduce overconfident extremes toward 50% for UI trust/readability."""
-    p = max(0.0, min(1.0, float(prob)))
-    damped = 0.5 + (p - 0.5) * weight
-    return max(0.10, min(0.90, damped))
-
-
 def _fixture_service(request: Request) -> FixtureService:
     return FixtureService(request.app.state.df, request.app.state.stadium_map)
 
@@ -207,21 +200,30 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
                     )
                     raw_home_prob = float(model_svc.predict_proba(feat))
                     ucl_prob = _to_ucluj_win_prob(raw_home_prob, f["home_team"], f["away_team"])
-                    ui_prob = _dampen_probability(ucl_prob)
                     ucl_is_home = _ucluj_is_home(f["home_team"], f["away_team"])
-
-                    expl = expl_svc.explain(feat, ui_prob, ucl_is_home=ucl_is_home)
 
                     is_completed = f.get("home_score") is not None and f.get("away_score") is not None
                     if not is_completed:
                         presc = presc_svc.prescribe(feat, ucl_is_home=ucl_is_home)
-                        narrative = presc["text"] if presc["text"] else expl["narrative"]
                         prescription = presc.get("structured")
+                        # The headline win chance must equal the diagnostic
+                        # baseline shown in the same card. The prescription
+                        # computes that baseline from the identical model and
+                        # feature vector, so reuse it verbatim; previously the
+                        # headline was dampened toward 50% while the baseline
+                        # stayed raw, so the two numbers disagreed.
+                        if prescription and prescription.get("baseline_prob") is not None:
+                            ucl_prob = float(prescription["baseline_prob"])
                     else:
-                        narrative = ""
+                        presc = None
                         prescription = None
 
-                    item["home_win_probability"] = round(ui_prob, 4)
+                    expl = expl_svc.explain(feat, ucl_prob, ucl_is_home=ucl_is_home)
+                    narrative = ""
+                    if not is_completed:
+                        narrative = presc["text"] if presc and presc["text"] else expl["narrative"]
+
+                    item["home_win_probability"] = round(ucl_prob, 4)
                     item["key_drivers"] = expl["top_drivers"][:3]
                     item["top_risks"] = expl["top_risks"][:2]
                     item["narrative"] = narrative
