@@ -495,6 +495,103 @@ def compute_availability_features(
     }
 
 
+def compute_load_features(
+    blocks: List[Dict],
+    chrono_before_ids: set,
+    fixture_date=None,
+    birth_date: Optional[str] = None,
+) -> Dict:
+    """Point-in-time load / fatigue / age / role features for one player.
+
+    Measured strictly from the player's appearances in team matches BEFORE the
+    fixture (``chrono_before_ids``), as of ``fixture_date``. Calendar windows
+    (rest days, 7/14/28-day load, the acute:chronic workload ratio) read each
+    match's date from the date bridge (``block['match_date']``); when a date is
+    missing they fall back to neutral values so the pipeline never breaks. The
+    acute:chronic workload ratio follows the sports-science load-monitoring
+    literature (Gabbett 2016): an acute load far above the chronic baseline
+    flags elevated fatigue / injury risk.
+
+    Keys returned: age_at_fixture, season_start_rate, rest_days,
+    minutes_last_14d, matches_last_10d, acute_load, chronic_load, acwr,
+    minutes_trend, cumulative_minutes_before_fixture, cumulative_appearances.
+    """
+    from datetime import date as _date, datetime as _dt
+
+    def _pd(x):
+        if isinstance(x, _date):
+            return x
+        if not x:
+            return None
+        try:
+            return _dt.strptime(str(x)[:10], "%Y-%m-%d").date()
+        except Exception:
+            return None
+
+    fx = _pd(fixture_date) or _date.today()
+    ids = chrono_before_ids or set()
+
+    cum_minutes = 0.0
+    cum_apps = 0
+    cum_starts = 0
+    seq = []  # (date_or_None, minutes) per appearance, before the fixture
+    for blk in blocks or []:
+        try:
+            if int(blk.get("matchId")) not in ids:
+                continue
+        except (TypeError, ValueError):
+            continue
+        tot = blk.get("total", blk) or {}
+        mins = float(tot.get("minutesOnField", 0) or 0)
+        if mins <= 0:
+            continue
+        cum_minutes += mins
+        cum_apps += 1
+        if float(tot.get("matchesInStart", 0) or 0) > 0:
+            cum_starts += 1
+        seq.append((_pd(blk.get("match_date")), mins))
+
+    n_before = len(ids)
+    season_start_rate = round(cum_starts / n_before, 4) if n_before > 0 else 0.0
+
+    bd = _pd(birth_date)
+    age_at_fixture = round((fx - bd).days / 365.25, 1) if bd else 0.0
+
+    dated = sorted([(d, m) for d, m in seq if d is not None], key=lambda t: t[0])
+    if dated:
+        last_d = dated[-1][0]
+        rest_days = float(max(0, (fx - last_d).days))
+        min7 = sum(m for d, m in dated if 0 <= (fx - d).days <= 7)
+        min14 = sum(m for d, m in dated if 0 <= (fx - d).days <= 14)
+        min28 = sum(m for d, m in dated if 0 <= (fx - d).days <= 28)
+        matches10 = float(sum(1 for d, m in dated if 0 <= (fx - d).days <= 10))
+        acute = float(min7)
+        chronic = round(min28 / 4.0, 1)  # average weekly minutes over four weeks
+        acwr = round(acute / chronic, 3) if chronic > 0 else 0.0
+    else:
+        rest_days, min14, matches10, acute, chronic, acwr = 7.0, 0.0, 0.0, 0.0, 0.0, 0.0
+
+    # Minutes trend: mean of the last three appearances minus the prior three
+    # (chronological order; negative means the player is being eased out).
+    ordered = [m for d, m in sorted(seq, key=lambda t: (t[0] is None, t[0]))]
+    last3, prior3 = ordered[-3:], ordered[-6:-3]
+    trend = (sum(last3) / len(last3) if last3 else 0.0) - (sum(prior3) / len(prior3) if prior3 else 0.0)
+
+    return {
+        "age_at_fixture": age_at_fixture,
+        "season_start_rate": season_start_rate,
+        "rest_days": rest_days,
+        "minutes_last_14d": float(min14),
+        "matches_last_10d": matches10,
+        "acute_load": acute,
+        "chronic_load": float(chronic),
+        "acwr": float(acwr),
+        "minutes_trend": round(trend, 1),
+        "cumulative_minutes_before_fixture": float(cum_minutes),
+        "cumulative_appearances": float(cum_apps),
+    }
+
+
 # ─── Methodological helpers ───────────────────────────────────────────────────
 
 def exponential_time_decay_weight(days_ago: float, half_life_days: float = 30.0) -> float:
@@ -609,6 +706,7 @@ def build_player_feature_vector(
     match_stats_list: List[Dict],  # list of per-match stat blocks for this player
     opponent_team_id: Optional[int] = None,
     team_chronology: Optional[List[int]] = None,
+    as_of_date=None,
 ) -> Optional[Dict]:
     """
     Merge player profile + aggregated match stats into a flat feature dict.
@@ -744,6 +842,29 @@ def build_player_feature_vector(
     # that did not opt in still receive a consistent column schema.
     availability = compute_availability_features(match_stats_list, team_chronology)
 
+    # Point-in-time load / fatigue / age / role features. At inference every
+    # team match is "before" the upcoming fixture, so the whole chronology is
+    # the pre-fixture window and ``as_of_date`` is the date we predict for (the
+    # demo / current clock, passed by the caller; defaults to today).
+    _chrono_ids = set()
+    for _m in (team_chronology or []):
+        try:
+            _chrono_ids.add(int(_m))
+        except (TypeError, ValueError):
+            pass
+    load = compute_load_features(
+        match_stats_list, _chrono_ids, as_of_date, player_profile.get("birthDate", "")
+    )
+    # Do NOT surface cumulative_minutes_before_fixture / cumulative_appearances
+    # at inference: the deployed model lists them in feature_cols but has always
+    # been served zeros for them, so emitting them now would silently shift the
+    # predicted XI. The load-aware retrain re-enables them and re-validates. The
+    # rotation advisor uses the remaining load fields (acwr, rest_days, etc.).
+    _load_emit = {
+        k: v for k, v in load.items()
+        if k not in ("cumulative_minutes_before_fixture", "cumulative_appearances")
+    }
+
     feature = {
         "playerId": player_profile.get("wyId"),
         "shortName": player_profile.get("shortName", ""),
@@ -752,6 +873,7 @@ def build_player_feature_vector(
         "position_group_fine": position_group_fine,
         "position_side": position_side,
         "age": round(age, 1),
+        "birth_date": player_profile.get("birthDate", ""),
         "matches_played": count,
         "total_minutes": minutes_total,
         "performance_score": perf_score,
@@ -759,6 +881,7 @@ def build_player_feature_vector(
         **{f"per90_{k}": v for k, v in per90.items()},
         **efficiency,
         **availability,
+        **_load_emit,
         "positions_played": ",".join(sorted(all_positions)),
     }
     return feature
@@ -776,6 +899,7 @@ def build_dataset_from_files(
     player_profiles: Dict[int, Dict],  # playerId -> profile dict
     opponent_team_id: Optional[int] = None,
     availability_team_substring: Optional[str] = None,
+    as_of_date=None,
 ) -> pd.DataFrame:
     """
     Given multiple match stat files and a player profile lookup,
@@ -860,6 +984,7 @@ def build_dataset_from_files(
         row = build_player_feature_vector(
             profile, stats_list, opponent_team_id,
             team_chronology=chrono_for_player,
+            as_of_date=as_of_date,
         )
         if row:
             rows.append(row)

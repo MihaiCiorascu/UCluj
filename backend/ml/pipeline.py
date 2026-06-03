@@ -313,7 +313,11 @@ def _format_output(result: Dict, my_team_id: int, opponent_team_id: Optional[int
                 "per90_progressivePasses", "per90_successfulCrosses",
                 "per90_successfulDribbles", "per90_passesToFinalThird",
                 "per90_touchInBox", "per90_shotsOnTarget",
-                "per90_gkSuccessfulExits", "per90_gkAerialDuelsWon"]
+                "per90_gkSuccessfulExits", "per90_gkAerialDuelsWon",
+                "age_at_fixture", "season_start_rate", "rest_days",
+                "minutes_last_14d", "matches_last_10d", "acute_load",
+                "chronic_load", "acwr", "minutes_trend",
+                "cumulative_minutes_before_fixture", "cumulative_appearances"]
         cols = [c for c in cols if c in df.columns]
         return df[cols].fillna(0).to_dict(orient="records")
 

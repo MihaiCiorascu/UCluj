@@ -27,7 +27,10 @@ import pandas as pd
 
 from ml.feature_engineering import get_team_squad_from_matches
 from ml.pipeline import _format_output, build_dataset_from_files, load_player_profiles
+from ml.match_dates import load_match_dates, parse_date
 from ml.xi_predictor import StartingXIPredictor
+from app.config import effective_now
+from services.load_service import assess_player
 from services.player_photo_service import PlayerPhotoService
 from sportradar.team_registry import (
     SUPERLIGA_TEAMS,
@@ -115,6 +118,11 @@ _PLAYER_COLS = [
     "per90_progressivePasses", "per90_successfulCrosses", "per90_successfulDribbles",
     "per90_passesToFinalThird", "per90_touchInBox", "per90_shotsOnTarget",
     "per90_gkSuccessfulExits", "per90_gkAerialDuelsWon",
+    # Load / fatigue / age / role (point-in-time), for the rotation advisor + UI.
+    "age_at_fixture", "season_start_rate", "rest_days",
+    "minutes_last_14d", "matches_last_10d", "acute_load", "chronic_load",
+    "acwr", "minutes_trend",
+    "cumulative_minutes_before_fixture", "cumulative_appearances",
 ]
 
 
@@ -204,6 +212,22 @@ class XiService:
 
     # ── Feature-DataFrame builder (cached per home team) ─────────────────────
 
+    @staticmethod
+    def _asof_date():
+        """Reference 'next fixture' date for the load / fatigue windows.
+
+        Anchored just after the most recent match present in the data, capped at
+        the effective clock. The player data can end before the demo's pinned
+        'today', so anchoring to the data (rather than the raw demo date) keeps
+        the rolling 7/14/28-day windows populated and the fatigue signal
+        meaningful instead of reading everyone as long-rested.
+        """
+        from datetime import timedelta
+        dates = [d for d in (parse_date(v) for v in load_match_dates().values()) if d]
+        if not dates:
+            return effective_now().date()
+        return min(effective_now().date(), max(dates) + timedelta(days=4))
+
     def _get_feature_df(self, home_team: TeamRef) -> pd.DataFrame:
         cache_key = home_team.wy_substr
         if cache_key in self._df_by_team:
@@ -223,6 +247,7 @@ class XiService:
             match_files,
             self._profiles,
             availability_team_substring=home_team.wy_substr,
+            as_of_date=self._asof_date(),
         )
 
         squad_ids = get_team_squad_from_matches(match_files, home_team.wy_substr)
@@ -366,6 +391,7 @@ class XiService:
         records = frame[cols].fillna(0).to_dict(orient="records")
         for rec in records:
             self._normalise_player(rec)
+            rec.update(assess_player(rec))
         return records
 
     def _best_xi_by_rating(
@@ -459,6 +485,7 @@ class XiService:
         for grp in ("startingXI", "bench"):
             for rec in out.get(grp, []):
                 self._normalise_player(rec)
+                rec.update(assess_player(rec))
         # The 'ideal' eleven by pure within-position rating, alongside the
         # predicted lineup, for the "best XI" toggle.
         best = self._best_xi_by_rating(my_team_df, formation)
