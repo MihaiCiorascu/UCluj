@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/strings.dart';
+import '../../../core/primitives/haptics.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/shape_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/theme_mode_notifier.dart';
 import '../../../core/theme/typography_tokens.dart';
@@ -92,6 +94,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.logout,
                       isDestructive: true,
                       onTap: () async {
+                        AppHaptics.medium();
+                        final confirmed = await _confirmLogout(context);
+                        if (!confirmed) return;
                         await widget.authState.logout();
                         if (context.mounted) {
                           Navigator.of(context).popUntil((route) => route.isFirst);
@@ -118,6 +123,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future<bool> _confirmLogout(BuildContext context) async {
+    final ro = L10n.instance.isRomanian;
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (ctx) {
+        final c = ctx.colors;
+        return AlertDialog(
+          backgroundColor: c.surfaceHigh,
+          shape: RoundedRectangleBorder(borderRadius: ShapeTokens.control),
+          title: Text(ro ? 'Deconectare' : 'Log out',
+              style: TypographyTokens.title.copyWith(color: c.textPrimary)),
+          content: Text(
+              ro
+                  ? 'Sigur vrei să închizi sesiunea?'
+                  : 'Are you sure you want to sign out?',
+              style: TypographyTokens.body.copyWith(color: c.textSecondary)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(ro ? 'Anulează' : 'Cancel',
+                  style: TypographyTokens.buttonLabel
+                      .copyWith(color: c.textMuted)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(ro ? 'Deconectează-te' : 'Sign out',
+                  style: TypographyTokens.buttonLabel
+                      .copyWith(color: c.negative)),
+            ),
+          ],
+        );
+      },
+    );
+    return result ?? false;
   }
 }
 
@@ -269,7 +310,7 @@ class _ActionButton extends StatelessWidget {
       child: TextButton(
         style: TextButton.styleFrom(
           backgroundColor: Colors.transparent,
-          shape: const RoundedRectangleBorder(),
+          shape: const RoundedRectangleBorder(borderRadius: ShapeTokens.control),
           side: BorderSide(color: color.withValues(alpha: isDestructive ? 1.0 : 0.3)),
         ),
         onPressed: onTap,
