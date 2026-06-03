@@ -1,4 +1,4 @@
-"""Startup cache pre-warm for the Sportradar-backed endpoints.
+"""Startup pre-warm for the Sportradar-backed endpoints and the local ML paths.
 
 App Runner instances are ephemeral, so the on-disk response caches used by the
 week-fixtures and standings endpoints start COLD on every cold start (a new
@@ -80,19 +80,69 @@ async def _warm_standings(df, stadium_map: dict) -> None:
     logger.info("Pre-warm: cached standings (regular=%d)", len(regular))
 
 
-async def prewarm_caches(df, stadium_map: dict) -> None:
-    """Warm the Sportradar fixture and standings caches once at boot.
+async def _warm_model(df, bundle) -> None:
+    """Exercise the CatBoost win-probability path once (feature build + predict).
+
+    This is what ``/week-fixtures`` runs per fixture; warming it loads the native
+    CatBoost predictor and the feature pipeline so the first request is cheap.
+    """
+    if bundle is None:
+        return
+    from services.model_service import ModelService
+    from services.feature_service import FeatureService
+
+    model_svc = ModelService(bundle)
+    if not model_svc.is_ready:
+        return
+    feat = FeatureService(df).build_feature_vector(
+        "U Cluj", "FCSB", model_svc.feature_cols
+    )
+    await asyncio.to_thread(model_svc.predict_proba, feat)
+    logger.info("Pre-warm: CatBoost win-probability path ready")
+
+
+async def _warm_xi(xi_service) -> None:
+    """Exercise the XI match-preview path once (the heaviest cold cost).
+
+    The first ``match_preview`` lazily builds the Wyscout feature dataset
+    (``build_dataset_from_files`` over the whole drive_cache) and caches it on
+    the service, then runs the supervised lineup model + Hungarian assignment.
+    Running it once at boot moves that one-time build off the first user's
+    request clock. The opponent is arbitrary; the expensive home-squad feature
+    build runs regardless. It is sync + CPU-bound, so run it in a worker thread.
+    """
+    if xi_service is None:
+        return
+    await asyncio.to_thread(xi_service.match_preview, "FCSB", "4-3-3")
+    logger.info("Pre-warm: XI match-preview path ready")
+
+
+async def prewarm_caches(df, stadium_map: dict, xi_service=None, bundle=None) -> None:
+    """Warm the Sportradar caches and the local ML inference paths once at boot.
 
     Best-effort and self-contained: a failure in one warm does not stop the
-    other, and neither can propagate out of this coroutine.
+    others, and none can propagate out of this coroutine.
     """
-    if not settings.sportradar_api_key:
-        return  # nothing to warm without a key
+    # 1. Sportradar-backed caches (dashboard + standings): the first-screen
+    #    429 -> 408 burst. Needs the trial key; skipped when it is absent.
+    if settings.sportradar_api_key:
+        try:
+            await _warm_fixtures()
+        except Exception as exc:  # noqa: BLE001 - never let pre-warm break boot
+            logger.warning("Pre-warm fixtures failed (non-fatal): %s", exc)
+        try:
+            await _warm_standings(df, stadium_map)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Pre-warm standings failed (non-fatal): %s", exc)
+
+    # 2. Local ML inference paths (no Sportradar dependency): the CatBoost
+    #    win-probability path and, most importantly, the XI match-preview path,
+    #    whose first call builds the Wyscout feature dataset.
     try:
-        await _warm_fixtures()
-    except Exception as exc:  # noqa: BLE001 - never let pre-warm break boot
-        logger.warning("Pre-warm fixtures failed (non-fatal): %s", exc)
-    try:
-        await _warm_standings(df, stadium_map)
+        await _warm_model(df, bundle)
     except Exception as exc:  # noqa: BLE001
-        logger.warning("Pre-warm standings failed (non-fatal): %s", exc)
+        logger.warning("Pre-warm model failed (non-fatal): %s", exc)
+    try:
+        await _warm_xi(xi_service)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Pre-warm XI failed (non-fatal): %s", exc)
