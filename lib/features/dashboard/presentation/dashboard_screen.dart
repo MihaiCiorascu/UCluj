@@ -332,8 +332,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (withRound == null) return null;
     final ro = L10n.instance.isRomanian;
     final etapa = ro ? 'Etapa ${withRound.round}' : 'Round ${withRound.round}';
-    final phase = _phaseLabel(withRound.phase, ro);
+    var phase = _phaseLabel(withRound.phase, ro);
+    // Demo fixtures are real regular-season matches shifted into the spring
+    // calendar, so Sportradar's stage.phase still reads "regular". Correct the
+    // label from the date: ~Mar 8 through May is the Romanian Superliga
+    // play-off / play-out period, which splits the league into both groups.
+    final regularLabel = ro ? 'Sezon regulat' : 'Regular season';
+    if ((phase == null || phase == regularLabel) &&
+        _isPlayoffWindow(withRound.matchDate)) {
+      phase = 'Play-off / Play-out';
+    }
     return phase != null ? '$etapa  ·  $phase' : etapa;
+  }
+
+  /// True when the date sits in the Romanian Superliga play-off / play-out
+  /// window (roughly March 8 through the end of May). Used to correct demo
+  /// fixtures whose Sportradar phase still reads "regular".
+  bool _isPlayoffWindow(String matchDate) {
+    final d = DateTime.tryParse(matchDate);
+    if (d == null) return false;
+    return (d.month == 3 && d.day >= 8) || d.month == 4 || d.month == 5;
   }
 
   String? _phaseLabel(String? phase, bool ro) {
