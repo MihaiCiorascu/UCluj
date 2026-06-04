@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
-import 'team_accent_scope.dart';
 
-/// Iteration N — circular avatar / profile badge that picks up the
-/// per-team accent overlay.
-///
-/// The ring around the icon is painted with the user's team primary
-/// colour; if no team is in scope the ring falls back to ``chrome``.
+/// Circular profile button in the app bar. Deliberately quiet: a flat
+/// surface-toned disc with a hairline border and a muted glyph, so it reads
+/// as chrome on the dark header instead of a coloured, glowing token.
 class UserBadge extends StatelessWidget {
   const UserBadge({
     this.icon = Icons.person_outline,
@@ -23,26 +20,17 @@ class UserBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final team = TeamAccentScope.of(context);
-    final ring = team?.primaryColor ?? c.chrome;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: size,
         height: size,
         decoration: BoxDecoration(
-          gradient: c.surfaceElevatedGradient,
+          color: c.surfaceHigh,
           shape: BoxShape.circle,
-          border: Border.all(color: ring, width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: ring.withValues(alpha: 0.35),
-              blurRadius: 6,
-              offset: const Offset(0, 1),
-            ),
-          ],
+          border: Border.all(color: c.divider),
         ),
-        child: Icon(icon, size: size * 0.5, color: c.primaryDeep),
+        child: Icon(icon, size: size * 0.5, color: c.textSecondary),
       ),
     );
   }

@@ -12,7 +12,7 @@ class L10n extends ChangeNotifier {
   static const _prefsKey = 'app_locale';
   static const _supported = ['ro', 'en'];
 
-  String _locale = 'ro';
+  String _locale = 'en';
   String get locale => _locale;
   bool get isRomanian => _locale == 'ro';
   bool get isEnglish => _locale == 'en';
@@ -26,7 +26,7 @@ class L10n extends ChangeNotifier {
         _locale = saved;
       }
     } catch (_) {
-      // ignore — fall back to default 'ro'
+      // ignore — fall back to default 'en'
     }
   }
 

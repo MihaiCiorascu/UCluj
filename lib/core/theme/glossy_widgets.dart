@@ -260,15 +260,8 @@ class GlossyAppBar extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [c.primary, c.primaryDeep],
-            ),
-            border: Border(
-              top: BorderSide(color: c.primaryGloss, width: 1),
-              bottom: BorderSide(color: c.chromeDeep, width: 0.5),
-            ),
+            color: c.surfaceBaseTop,
+            border: Border(bottom: BorderSide(color: c.divider)),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
@@ -280,7 +273,15 @@ class GlossyAppBar extends StatelessWidget {
         ),
         if (accentColors != null && accentColors!.isNotEmpty)
           TeamAccentStrip(colors: accentColors!),
-        ChromeDivider(),
+        // Thin brand accent rule under the header (fades to transparent).
+        Container(
+          height: 2,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [c.primary, c.primary.withValues(alpha: 0.0)],
+            ),
+          ),
+        ),
       ],
     );
   }

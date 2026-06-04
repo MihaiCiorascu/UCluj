@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/l10n/strings.dart';
 import '../../../core/primitives/haptics.dart';
+import '../../../core/primitives/segmented_toggle.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/theme/app_colors.dart';
@@ -51,8 +52,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return email.isNotEmpty ? email : 'COACH';
   }
 
-  String get _language => L10n.instance.isRomanian ? 'Română' : 'English';
-
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
@@ -83,10 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _InfoRow(label: L10n.t('profile.email'), value: _email),
                     _InfoRow(label: L10n.t('profile.role'), value: _userRole),
                     _InfoRow(label: L10n.t('profile.club'), value: _team),
-                    _InfoRow(label: L10n.t('profile.language'), value: _language),
-                    _InfoRow(
-                        label: L10n.t('profile.security'),
-                        value: L10n.t('profile.securityValue')),
+                    _buildLanguageRow(),
 
                     const SizedBox(height: SpacingTokens.xxl),
                     _ActionButton(
@@ -121,6 +117,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Language row rendered as a compact EN/RO segmented toggle. English is the
+  /// default; switching persists via L10n and rebuilds this screen.
+  Widget _buildLanguageRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(L10n.t('profile.language'),
+              style: TypographyTokens.sectionLabel),
+          SizedBox(
+            width: 128,
+            child: SegmentedToggle<String>(
+              height: 38,
+              value: L10n.instance.locale,
+              onChanged: (v) async {
+                await L10n.instance.setLocale(v);
+                if (mounted) setState(() {});
+              },
+              segments: const [
+                SegmentOption(value: 'en', label: 'EN'),
+                SegmentOption(value: 'ro', label: 'RO'),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
