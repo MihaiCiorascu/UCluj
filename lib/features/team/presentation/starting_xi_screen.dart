@@ -240,14 +240,14 @@ class _StartingXiScreenState extends State<StartingXiScreen> {
           const SizedBox(height: SpacingTokens.xs),
           Text(
             _showBest
-                ? 'Cei mai bine cotați 11, pe poziție (calitate brută)'
-                : 'Cei 11 cel mai probabil titulari (model de selecție)',
+                ? L10n.t('team.explainBestXi')
+                : L10n.t('team.explainLikelyXi'),
             style: TypographyTokens.body.copyWith(color: c.textMuted, fontSize: 10),
           ),
           const SizedBox(height: SpacingTokens.md),
         ],
         Text(
-          _showBest ? 'CEL MAI BUN XI' : 'PROBABIL XI',
+          _showBest ? L10n.t('team.segBestXi') : L10n.t('team.segLikelyXi'),
           style: TypographyTokens.sectionLabel.copyWith(color: c.accent),
         ),
         const SizedBox(height: SpacingTokens.sm),

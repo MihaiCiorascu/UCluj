@@ -16,18 +16,18 @@ _AWAY_STATS = [
 ]
 
 _LABELS = {
-    "Home_Poss_5":     "posesia",
-    "Home_Shots_5":    "suturi",
-    "Home_SoT_5":      "suturi pe cadru",
-    "Home_Corners_5":  "cornere",
-    "Home_Goals_5":    "goluri marcate",
-    "Home_Conceded_5": "goluri primite",
-    "Away_Poss_5":     "posesia",
-    "Away_Shots_5":    "suturi",
-    "Away_SoT_5":      "suturi pe cadru",
-    "Away_Corners_5":  "cornere",
-    "Away_Goals_5":    "goluri marcate",
-    "Away_Conceded_5": "goluri primite",
+    "Home_Poss_5":     "possession",
+    "Home_Shots_5":    "shots",
+    "Home_SoT_5":      "shots on target",
+    "Home_Corners_5":  "corners",
+    "Home_Goals_5":    "goals scored",
+    "Home_Conceded_5": "goals conceded",
+    "Away_Poss_5":     "possession",
+    "Away_Shots_5":    "shots",
+    "Away_SoT_5":      "shots on target",
+    "Away_Corners_5":  "corners",
+    "Away_Goals_5":    "goals scored",
+    "Away_Conceded_5": "goals conceded",
 }
 
 _UNITS = {
@@ -49,7 +49,7 @@ class PrescriptionService:
         """Run the constrained Monte Carlo optimizer from the notebook (Cell 38).
 
         Returns baseline_prob, best_prob, improvement, and a human-readable
-        prescription string in Romanian. When ``num_simulations`` or
+        prescription string in English. When ``num_simulations`` or
         ``random_state`` are not given they default to the thesis production
         values from ``settings`` (N = 25,000, seed = 42), so the sample count
         is configured in exactly one place. The loop builds every candidate
@@ -194,18 +194,18 @@ class PrescriptionService:
 
 
 _READABLE_LABELS = {
-    "Home_Poss_5":     "Posesie",
-    "Home_Shots_5":    "Suturi",
-    "Home_SoT_5":      "Suturi pe cadru",
-    "Home_Corners_5":  "Cornere",
-    "Home_Goals_5":    "Goluri marcate",
-    "Home_Conceded_5": "Goluri primite",
-    "Away_Poss_5":     "Posesie",
-    "Away_Shots_5":    "Suturi",
-    "Away_SoT_5":      "Suturi pe cadru",
-    "Away_Corners_5":  "Cornere",
-    "Away_Goals_5":    "Goluri marcate",
-    "Away_Conceded_5": "Goluri primite",
+    "Home_Poss_5":     "Possession",
+    "Home_Shots_5":    "Shots",
+    "Home_SoT_5":      "Shots on Target",
+    "Home_Corners_5":  "Corners",
+    "Home_Goals_5":    "Goals Scored",
+    "Home_Conceded_5": "Goals Conceded",
+    "Away_Poss_5":     "Possession",
+    "Away_Shots_5":    "Shots",
+    "Away_SoT_5":      "Shots on Target",
+    "Away_Corners_5":  "Corners",
+    "Away_Goals_5":    "Goals Scored",
+    "Away_Conceded_5": "Goals Conceded",
 }
 
 
@@ -247,12 +247,12 @@ def _build_structured(
 def _no_improvement_text(prob: float) -> str:
     if prob >= 0.65:
         return (
-            f"Profilul tactic actual este optim pentru această confruntare. "
-            f"Menține abordarea ofensivă și controlul mingii."
+            "The current tactical profile is already optimal for this fixture. "
+            "Maintain the attacking approach and ball control."
         )
     return (
-        "Optimizatorul tactic nu a identificat un plan de joc semnificativ superior "
-        "față de abordarea actuală. Concentrează-te pe disciplina defensivă."
+        "The tactical optimizer did not identify a game plan meaningfully better "
+        "than the current approach. Focus on defensive discipline."
     )
 
 
@@ -299,7 +299,7 @@ def _build_prescription_text(
         return _no_improvement_text(baseline_prob)
 
     header = (
-        f"PLAN TACTIC OPTIM — probabilitate proiectată {best_prob:.0%} "
-        f"(+{improvement:.0%} față de baseline {baseline_prob:.0%}):"
+        f"OPTIMAL TACTICAL PLAN — projected probability {best_prob:.0%} "
+        f"(+{improvement:.0%} vs baseline {baseline_prob:.0%}):"
     )
     return header + "\n" + "  |  ".join(lines)

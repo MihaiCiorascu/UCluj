@@ -233,7 +233,7 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
                     item["key_drivers"] = []
                     item["top_risks"] = []
                     item["narrative"] = (
-                        "Modelul predictiv este temporar indisponibil."
+                        "The predictive model is temporarily unavailable."
                     )
                     item["prescription"] = None
             except Exception:
