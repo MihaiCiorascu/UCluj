@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/formation_slots.dart';
+import '../../../core/l10n/strings.dart';
 import '../../../core/primitives/app_sheet.dart';
 import '../../../core/primitives/haptics.dart';
 import '../../../core/primitives/segmented_toggle.dart';
@@ -140,7 +141,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
             ),
             const SizedBox(height: SpacingTokens.md),
             Text(
-              'Rezerve',
+              L10n.t('sheet.subs'),
               style:
                   TypographyTokens.sectionLabel.copyWith(color: c.textMuted),
             ),
@@ -202,32 +203,32 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
             child: StatTile(
               value: s.avgRecentForm.toStringAsFixed(1),
               icon: Icons.show_chart,
-              caption: 'Formă',
-              tooltip: 'Forma medie recentă a titularilor',
+              caption: L10n.t('team.statForm'),
+              tooltip: L10n.t('team.statFormTip'),
             ),
           ),
           Expanded(
             child: StatTile(
               value: s.avgPerformanceScore.toStringAsFixed(1),
               icon: Icons.speed,
-              caption: 'Performanță',
-              tooltip: 'Scor mediu de performanță',
+              caption: L10n.t('team.statPerformance'),
+              tooltip: L10n.t('team.statPerformanceTip'),
             ),
           ),
           Expanded(
             child: StatTile(
               value: '${s.avgPassAccuracy.toStringAsFixed(0)}%',
               icon: Icons.alt_route,
-              caption: 'Pase',
-              tooltip: 'Acuratețea paselor',
+              caption: L10n.t('team.statPasses'),
+              tooltip: L10n.t('team.statPassesTip'),
             ),
           ),
           Expanded(
             child: StatTile(
               value: '${s.avgDuelWinRate.toStringAsFixed(0)}%',
               icon: Icons.sports_kabaddi,
-              caption: 'Dueluri',
-              tooltip: 'Dueluri câștigate',
+              caption: L10n.t('team.statDuels'),
+              tooltip: L10n.t('team.statDuelsTip'),
             ),
           ),
         ],
@@ -244,16 +245,16 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         SegmentedToggle<bool>(
           value: _showBest,
           onChanged: _setShowBest,
-          segments: const [
-            SegmentOption(value: false, label: 'Probabil XI'),
-            SegmentOption(value: true, label: 'Cel mai bun XI'),
+          segments: [
+            SegmentOption(value: false, label: L10n.t('team.segLikelyXi')),
+            SegmentOption(value: true, label: L10n.t('team.segBestXi')),
           ],
         ),
         const SizedBox(height: 6),
         Text(
           _showBest
-              ? 'Cei mai bine cotați 11, pe poziție (calitate brută)'
-              : 'Cei 11 cel mai probabil titulari (model de selecție)',
+              ? L10n.t('team.explainBestXi')
+              : L10n.t('team.explainLikelyXi'),
           style: TypographyTokens.bodySmall.copyWith(
             color: c.textMuted,
             height: 1.2,
@@ -471,8 +472,8 @@ List<_FifaAttr> _efficiencyAttrs(MatchPreviewPlayer p) {
   }
 }
 
-/// Two-line section caption (Romanian header + percentile sublabel), used to
-/// title the VOLUM and EFICIENTA blocks on the player card.
+/// Two-line section caption (header + percentile sublabel), used to title the
+/// game-volume and efficiency blocks on the player card.
 Widget _sectionCaption(String title, String sub, AppColorTokens c) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -657,8 +658,8 @@ class _PlayerDetailColumn extends StatelessWidget {
           // The per-90 work-rate stats that BUILD the rating, so the headline
           // number is explained. Role-coloured silhouette on a tonal tray.
           _sectionCaption(
-            'VOLUM DE JOC',
-            'percentilă în liga · ${_attrCompareLabel(p)}',
+            L10n.t('team.playerVolume'),
+            '${L10n.t('team.percentileInLeague')} · ${_attrCompareLabel(p)}',
             c,
           ),
           const SizedBox(height: SpacingTokens.sm),
@@ -679,11 +680,10 @@ class _PlayerDetailColumn extends StatelessWidget {
 
           // ── Efficiency lens (bars) ──────────────────────────────────────
           // Success rates: quality per action, kept separate from the raw
-          // volume above so a busy-but-beaten profile reads true. Romanian
-          // header to match "FACTORI CHEIE", "RISCURI", "DIAGNOSTIC".
+          // volume above so a busy-but-beaten profile reads true.
           _sectionCaption(
-            'EFICIENTA',
-            'percentilă în liga · ${_attrCompareLabel(p)}',
+            L10n.t('team.playerEfficiency'),
+            '${L10n.t('team.percentileInLeague')} · ${_attrCompareLabel(p)}',
             c,
           ),
           const SizedBox(height: SpacingTokens.sm),
@@ -696,12 +696,12 @@ class _PlayerDetailColumn extends StatelessWidget {
           // model: a high freshness bar, a status pill, and a "rested, ready"
           // tag for a rested regular.
           _sectionCaption(
-            'STARE FIZICA',
-            'ACWR ${p.acwr.toStringAsFixed(2)} · ${p.restDays.toStringAsFixed(0)} zile odihna',
+            L10n.t('team.playerFitness'),
+            'ACWR ${p.acwr.toStringAsFixed(2)} · ${p.restDays.toStringAsFixed(0)} ${L10n.t('team.daysRest')}',
             c,
           ),
           const SizedBox(height: SpacingTokens.sm),
-          _fifaAttrRow(_FifaAttr('Prospetime', p.freshness), c),
+          _fifaAttrRow(_FifaAttr(L10n.t('team.freshness'), p.freshness), c),
           const SizedBox(height: SpacingTokens.xs),
           _loadStatusRow(p, c),
         ],

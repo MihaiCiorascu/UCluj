@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/l10n/strings.dart';
 import '../../../core/services/api_client.dart';
 import '../../../core/state/meta_state.dart';
 import '../../../core/theme/app_colors.dart';
@@ -360,10 +361,10 @@ class _StandingsScreenState extends State<StandingsScreen>
                 unselectedLabelStyle: TypographyTokens.buttonLabel,
                 padding: const EdgeInsets.symmetric(
                     horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
-                tabs: const [
-                  Tab(text: 'Principal'),
-                  Tab(text: 'Campionat'),
-                  Tab(text: 'Retrogradare'),
+                tabs: [
+                  Tab(text: L10n.t('standings.tabRegular')),
+                  Tab(text: L10n.t('standings.tabChampionship')),
+                  Tab(text: L10n.t('standings.tabRelegation')),
                 ],
               ),
               surfaceColor: c.surface,
@@ -382,13 +383,13 @@ class _StandingsScreenState extends State<StandingsScreen>
               rows: _championship,
               trackedTeam: _team,
               tracked: _findTracked(_championship),
-              emptyLabel: 'Grupă Campionat nedisponibilă',
+              emptyLabel: L10n.t('standings.emptyChampionship'),
             ),
             _StandingsTabView(
               rows: _relegation,
               trackedTeam: _team,
               tracked: _findTracked(_relegation),
-              emptyLabel: 'Grupă Retrogradare nedisponibilă',
+              emptyLabel: L10n.t('standings.emptyRelegation'),
             ),
           ],
         ),
@@ -436,8 +437,8 @@ class _StandingsTabView extends StatelessWidget {
             child: _HeroClubCard(team: tracked!),
           ),
         const SizedBox(height: SpacingTokens.lg),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: SpacingTokens.md),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
           child: _TableHeader(),
         ),
         ...rows.map((t) => Padding(
@@ -573,7 +574,7 @@ class _HeroClubCard extends StatelessWidget {
             const SizedBox(width: SpacingTokens.xl),
             _metric('${team.gd > 0 ? "+" : ""}${team.gd}', 'GD', c),
             const SizedBox(width: SpacingTokens.xl),
-            _metric('${team.wins}-${team.draws}-${team.losses}', 'V-E-Î', c),
+            _metric('${team.wins}-${team.draws}-${team.losses}', L10n.t('standings.recordAbbr'), c),
           ]),
         ],
       ),
@@ -611,12 +612,12 @@ class _TableHeader extends StatelessWidget {
         SizedBox(width: 28, child: Text('#', style: s, textAlign: TextAlign.center)),
         const SizedBox(width: 22),
         Expanded(child: Text('CLUB', style: s)),
-        SizedBox(width: 26, child: Text('MJ', style: s, textAlign: TextAlign.center)),
-        SizedBox(width: 26, child: Text('V', style: s, textAlign: TextAlign.center)),
-        SizedBox(width: 26, child: Text('E', style: s, textAlign: TextAlign.center)),
-        SizedBox(width: 26, child: Text('Î', style: s, textAlign: TextAlign.center)),
-        SizedBox(width: 34, child: Text('DG', style: s, textAlign: TextAlign.center)),
-        SizedBox(width: 34, child: Text('PCT', style: s, textAlign: TextAlign.end)),
+        SizedBox(width: 26, child: Text(L10n.t('standings.colPlayed'), style: s, textAlign: TextAlign.center)),
+        SizedBox(width: 26, child: Text(L10n.t('standings.colWins'), style: s, textAlign: TextAlign.center)),
+        SizedBox(width: 26, child: Text(L10n.t('standings.colDraws'), style: s, textAlign: TextAlign.center)),
+        SizedBox(width: 26, child: Text(L10n.t('standings.colLosses'), style: s, textAlign: TextAlign.center)),
+        SizedBox(width: 34, child: Text(L10n.t('standings.colGD'), style: s, textAlign: TextAlign.center)),
+        SizedBox(width: 34, child: Text(L10n.t('standings.colPts'), style: s, textAlign: TextAlign.end)),
       ]),
     );
   }
