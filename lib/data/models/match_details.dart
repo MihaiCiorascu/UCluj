@@ -60,6 +60,9 @@ class MatchPlayer {
   final int redCards;
   final int shotsOnTarget;
   final int? minutesPlayed;
+  // Self-hosted headshot URL resolved server-side by name; '' when unmatched
+  // (the avatar then renders initials).
+  final String photoUrl;
 
   MatchPlayer({
     required this.name,
@@ -74,6 +77,7 @@ class MatchPlayer {
     required this.redCards,
     required this.shotsOnTarget,
     this.minutesPlayed,
+    this.photoUrl = '',
   });
 
   bool get isStarter => type == 'starter';
@@ -91,6 +95,7 @@ class MatchPlayer {
         redCards: (j['red_cards'] as num?)?.toInt() ?? 0,
         shotsOnTarget: (j['shots_on_target'] as num?)?.toInt() ?? 0,
         minutesPlayed: (j['minutes_played'] as num?)?.toInt(),
+        photoUrl: j['photo_url'] as String? ?? '',
       );
 }
 

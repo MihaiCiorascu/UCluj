@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, Query
 from clients.sportradar_client import SportradarClient
 from core.security import get_current_user
 from ml.xi_predictor import FORMATIONS, StartingXIPredictor
+from services.player_photo_service import PlayerPhotoService
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +65,26 @@ _COARSE_FROM_SHORT = {"G": "GK", "D": "DEF", "M": "MID", "F": "FWD"}
 
 # A single unfitted assigner instance; _assign_xi needs no fitted state.
 _XI_ASSIGNER = StartingXIPredictor()
+
+# Player headshots, resolved by display name (Sportradar gives no Wyscout id).
+# Reads the same committed mapping the recommended-XI flow uses; missing/empty
+# means every lookup returns None and the client renders initials.
+_PHOTOS = PlayerPhotoService(
+    str(Path(__file__).resolve().parents[3] / "ml" / "data" / "wyscout_to_sofascore.json")
+)
+
+
+def _attach_photos(details: dict) -> None:
+    """Fill ``photo_url`` for every lineup player (idempotent).
+
+    Runs on freshly built details and on cache hits, so a pre-photo cache
+    backfills photos without a refetch. Name-based lookup; misses stay empty
+    and the client renders initials.
+    """
+    for side in ("home_lineup", "away_lineup"):
+        for p in details.get(side) or []:
+            if not p.get("photo_url"):
+                p["photo_url"] = _PHOTOS.url_for_name(p.get("name", "")) or ""
 
 
 def _fine_from_sr_position(pos_raw: str) -> str:
@@ -170,6 +191,7 @@ async def match_details(
     """Return official lineups + team statistics for a completed match."""
     cached = _load_cache(match_id)
     if cached:
+        _attach_photos(cached)
         return cached
 
     client = SportradarClient()
@@ -189,6 +211,7 @@ async def match_details(
         lineups = None
 
     result = _build_details(match_id, summary, lineups)
+    _attach_photos(result)
 
     if result.get("home_stats") or result.get("home_lineup"):
         _save_cache(match_id, result)
