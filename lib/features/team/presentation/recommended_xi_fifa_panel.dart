@@ -1198,48 +1198,59 @@ class FifaPitchPlayerChip extends StatelessWidget {
       (coarseGroup != null && coarseGroup!.isNotEmpty) ? coarseGroup! : player.roleGroup,
       c,
     );
+    // FIFA-style token: a clean rounded headshot with the rating + position in
+    // a solid role-coloured corner badge (no heavy ring, no surface box). The
+    // selection state lifts the avatar ring to the accent colour.
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: c.surfaceHigh,
-          border: Border.all(
-            color: selected ? c.accent : c.divider,
-            width: selected ? 2 : 1,
-          ),
-        ),
-        padding: EdgeInsets.all(chipSize * 0.06),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      child: SizedBox(
+        width: chipSize,
+        height: chipSize,
+        child: Stack(
           children: [
-            // Face-forward FIFA card: the headshot is the chip, ringed in the
-            // role colour (the ring replaces the old left-edge rule). The
-            // avatar degrades to initials when no photo is available.
-            PlayerPhotoAvatar(
-              photoUrl: player.photoUrl,
-              name: player.shortName,
-              ringColor: roleColor,
-              size: chipSize * 0.62,
-            ),
-            const SizedBox(height: 2),
-            // League-relative rating stays prominent beneath the face.
-            Text(
-              rating.toStringAsFixed(0),
-              style: TypographyTokens.headline.copyWith(
-                color: c.textPrimary,
-                fontSize: chipSize * 0.24,
-                fontWeight: FontWeight.w900,
-                height: 1.0,
-                letterSpacing: -0.5,
+            Positioned.fill(
+              child: PlayerPhotoAvatar(
+                photoUrl: player.photoUrl,
+                name: player.shortName,
+                ringColor: selected ? c.accent : roleColor,
+                size: chipSize,
               ),
             ),
-            // Official position label (RB, RCB, DM, RW, ST, ...).
-            Text(
-              label,
-              style: TypographyTokens.sectionLabel.copyWith(
-                fontSize: chipSize * 0.11,
-                color: c.textMuted,
-                letterSpacing: 1.0,
+            Positioned(
+              top: chipSize * 0.05,
+              left: chipSize * 0.05,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: chipSize * 0.07,
+                  vertical: chipSize * 0.02,
+                ),
+                decoration: BoxDecoration(
+                  color: roleColor,
+                  borderRadius: BorderRadius.circular(chipSize * 0.1),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      rating.toStringAsFixed(0),
+                      style: TypographyTokens.statValue.copyWith(
+                        color: Colors.white,
+                        fontSize: chipSize * 0.22,
+                        height: 1.0,
+                      ),
+                    ),
+                    Text(
+                      label,
+                      style: TypographyTokens.sectionLabel.copyWith(
+                        color: Colors.white.withValues(alpha: 0.92),
+                        fontSize: chipSize * 0.1,
+                        height: 1.15,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
