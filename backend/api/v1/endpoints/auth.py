@@ -3,6 +3,7 @@ import shutil
 import uuid
 
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile, status
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -97,6 +98,34 @@ async def register_with_cognito(
 
 @router.get("/me", response_model=UserResponse)
 async def me(user: User = Depends(get_current_user)):
+    return UserResponse(
+        id=user.id,
+        email=user.email,
+        full_name=user.full_name,
+        role=user.role,
+        team_name=user.team_name,
+        is_active=user.is_active,
+        avatar_url=user.avatar_url,
+    )
+
+
+class UpdateMeRequest(BaseModel):
+    full_name: str
+
+
+@router.post("/me", response_model=UserResponse)
+async def update_me(
+    body: UpdateMeRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(_get_db),
+):
+    """Update the signed-in user's display name."""
+    name = (body.full_name or "").strip()
+    result = await db.execute(select(User).where(User.id == current_user.id))
+    user = result.scalar_one()
+    if name:
+        user.full_name = name
+        await db.commit()
     return UserResponse(
         id=user.id,
         email=user.email,

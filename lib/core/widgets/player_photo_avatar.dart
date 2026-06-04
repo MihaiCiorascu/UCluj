@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/typography_tokens.dart';
 
-/// Square player headshot with a role-coloured ring, in the Stoic Analyst
-/// language (sharp edges, no radius). Loads a self-hosted photo via
-/// [CachedNetworkImage] and degrades to the player's initials on a tonal
-/// surface whenever the URL is empty or the image fails to load, so the pitch
-/// never shows a broken image or a gap.
+/// Rounded player headshot with a thin role-coloured ring. Loads a self-hosted
+/// photo via [CachedNetworkImage] and degrades to the player's initials on a
+/// tonal surface whenever the URL is empty or the image fails to load, so the
+/// pitch never shows a broken image or a gap. The ring is deliberately subtle
+/// (a hairline, not a heavy frame); callers overlay rating/position themselves.
 class PlayerPhotoAvatar extends StatelessWidget {
   const PlayerPhotoAvatar({
     required this.photoUrl,
@@ -68,11 +68,16 @@ class PlayerPhotoAvatar extends StatelessWidget {
     return Container(
       width: size,
       height: size,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: c.surfaceHigh,
-        border: Border.all(color: ringColor, width: (size * 0.07).clamp(2.0, 3.5)),
+        borderRadius: BorderRadius.circular(size * 0.18),
+        border: Border.all(
+          color: ringColor.withValues(alpha: 0.55),
+          width: 1.2,
+        ),
       ),
-      child: ClipRect(child: inner),
+      child: inner,
     );
   }
 }

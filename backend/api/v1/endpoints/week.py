@@ -310,6 +310,8 @@ async def _fetch_all_sr_fixtures() -> list[dict]:
             "home_score": home_score,
             "away_score": away_score,
             "venue": (se.get("venue", {}) or {}).get("name", ""),
+            "round": (ctx.get("round", {}) or {}).get("number"),
+            "phase": (ctx.get("stage", {}) or {}).get("phase"),
         })
 
     fixtures.sort(key=lambda f: f.get("match_date", ""))

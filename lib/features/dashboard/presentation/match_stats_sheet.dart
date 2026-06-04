@@ -4,6 +4,7 @@ import '../../../core/constants/formation_slots.dart';
 import '../../../core/constants/supported_formations.dart';
 import '../../../core/l10n/strings.dart';
 import '../../../core/widgets/team_crest.dart';
+import '../../../core/widgets/player_photo_avatar.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
@@ -848,18 +849,12 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               ),
             ),
           ),
-          // Position badge
-          Container(
-            width: 20,
-            height: 16,
-            color: posColor.withValues(alpha: 0.15),
-            child: Center(
-              child: Text(
-                p.position.isNotEmpty ? p.position[0] : '?',
-                style: TypographyTokens.sectionLabel.copyWith(
-                    fontSize: 8, color: posColor),
-              ),
-            ),
+          // Headshot (initials when unmatched), ringed in the role colour.
+          PlayerPhotoAvatar(
+            photoUrl: p.photoUrl,
+            name: p.name,
+            ringColor: posColor,
+            size: 28,
           ),
           const SizedBox(width: SpacingTokens.xs),
           // Name
@@ -1283,32 +1278,40 @@ class _ActualPlayerChip extends StatelessWidget {
         color: c.surface,
         border: Border.all(color: posColor.withValues(alpha: 0.7), width: 1.5),
       ),
-      padding: EdgeInsets.all(chipSize * 0.06),
+      padding: EdgeInsets.all(chipSize * 0.05),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Official position badge (RB, RCB, DM, ...), falling back to the
-          // player's official position, then the coarse one-letter code.
-          Text(
-            (positionLabel != null && positionLabel!.isNotEmpty)
-                ? positionLabel!
-                : (player.officialPosition.isNotEmpty
-                    ? player.officialPosition
-                    : (player.position.isNotEmpty ? player.position : '?')),
-            style: TypographyTokens.body.copyWith(
-              fontSize: chipSize * 0.12,
-              color: posColor,
-            ),
+          // Headshot ringed in the role colour, with the shirt number badged
+          // on its corner. Falls back to initials when no photo matched.
+          Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.bottomRight,
+            children: [
+              PlayerPhotoAvatar(
+                photoUrl: player.photoUrl,
+                name: _lastName,
+                ringColor: posColor,
+                size: chipSize * 0.48,
+              ),
+              if (player.jerseyNumber != null)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                  color: posColor,
+                  child: Text(
+                    '${player.jerseyNumber}',
+                    style: TypographyTokens.sectionLabel.copyWith(
+                      fontSize: chipSize * 0.12,
+                      color: c.onPrimary,
+                      height: 1.0,
+                    ),
+                  ),
+                ),
+            ],
           ),
-          // Jersey number (prominent)
-          Text(
-            player.jerseyNumber != null ? '${player.jerseyNumber}' : '—',
-            style: TypographyTokens.headline.copyWith(
-              fontSize: chipSize * 0.22,
-              color: posColor,
-            ),
-          ),
-          // Last name
+          SizedBox(height: chipSize * 0.04),
           Text(
             _lastName,
             maxLines: 1,
@@ -1319,15 +1322,13 @@ class _ActualPlayerChip extends StatelessWidget {
               color: c.textPrimary,
             ),
           ),
-          // Event indicators
           if (hasGoal || hasYellow || hasRed)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (hasGoal)
-                  Text('⚽',
-                      style: TextStyle(fontSize: chipSize * 0.13)),
+                  Text('⚽', style: TextStyle(fontSize: chipSize * 0.13)),
                 if (hasYellow)
                   Container(
                     width: chipSize * 0.1,
@@ -1339,7 +1340,7 @@ class _ActualPlayerChip extends StatelessWidget {
                   Container(
                     width: chipSize * 0.1,
                     height: chipSize * 0.14,
-                    color: context.colors.negative,
+                    color: c.negative,
                     margin: const EdgeInsets.symmetric(horizontal: 1),
                   ),
               ],

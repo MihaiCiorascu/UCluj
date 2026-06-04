@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/strings.dart';
+import '../../../core/primitives/app_snackbar.dart';
 import '../../../core/primitives/haptics.dart';
+import '../../../core/primitives/segmented_toggle.dart';
 import '../../../core/state/auth_state.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/theme/app_colors.dart';
@@ -51,8 +53,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return email.isNotEmpty ? email : 'COACH';
   }
 
-  String get _language => L10n.instance.isRomanian ? 'Română' : 'English';
-
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
@@ -74,7 +74,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SpacingTokens.xl, 40,
                   ),
                   children: [
-                    _ProfileHero(name: _name, role: _userRole, team: _team),
+                    _ProfileHero(
+                      name: _name,
+                      role: _userRole,
+                      team: _team,
+                      onEditName: _editName,
+                    ),
                     const SizedBox(height: SpacingTokens.xl),
 
                     Text(L10n.t('profile.tabAccount'),
@@ -83,10 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _InfoRow(label: L10n.t('profile.email'), value: _email),
                     _InfoRow(label: L10n.t('profile.role'), value: _userRole),
                     _InfoRow(label: L10n.t('profile.club'), value: _team),
-                    _InfoRow(label: L10n.t('profile.language'), value: _language),
-                    _InfoRow(
-                        label: L10n.t('profile.security'),
-                        value: L10n.t('profile.securityValue')),
+                    _buildLanguageRow(),
 
                     const SizedBox(height: SpacingTokens.xxl),
                     _ActionButton(
@@ -121,6 +123,88 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Tap the hero name to edit it: a small dialog, then persist via the
+  /// backend and refresh the local user.
+  Future<void> _editName() async {
+    final ro = L10n.instance.isRomanian;
+    final ctrl = TextEditingController(text: _user?.fullName ?? _name);
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) {
+        final c = ctx.colors;
+        return AlertDialog(
+          backgroundColor: c.surfaceHigh,
+          shape: RoundedRectangleBorder(borderRadius: ShapeTokens.control),
+          title: Text(ro ? 'Schimbă numele' : 'Edit name',
+              style: TypographyTokens.title.copyWith(color: c.textPrimary)),
+          content: TextField(
+            controller: ctrl,
+            autofocus: true,
+            textCapitalization: TextCapitalization.words,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (v) => Navigator.pop(ctx, v),
+            style: TypographyTokens.body.copyWith(color: c.textPrimary),
+            cursorColor: c.primary,
+            decoration: InputDecoration(
+              hintText: ro ? 'Numele tău' : 'Your name',
+              hintStyle: TypographyTokens.body.copyWith(color: c.textMuted),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(ro ? 'Anulează' : 'Cancel',
+                  style: TypographyTokens.buttonLabel.copyWith(color: c.textMuted)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, ctrl.text),
+              child: Text(ro ? 'Salvează' : 'Save',
+                  style: TypographyTokens.buttonLabel.copyWith(color: c.primary)),
+            ),
+          ],
+        );
+      },
+    );
+    if (result == null || result.trim().isEmpty) return;
+    final ok = await widget.authState.updateName(result.trim());
+    if (!mounted) return;
+    setState(() {});
+    if (!ok) {
+      AppSnackbar.error(
+          context, ro ? 'Nu s-a putut salva numele' : 'Could not save name');
+    }
+  }
+
+  /// Language row rendered as a compact EN/RO segmented toggle. English is the
+  /// default; switching persists via L10n and rebuilds this screen.
+  Widget _buildLanguageRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(L10n.t('profile.language'),
+              style: TypographyTokens.sectionLabel),
+          SizedBox(
+            width: 128,
+            child: SegmentedToggle<String>(
+              height: 38,
+              value: L10n.instance.locale,
+              onChanged: (v) async {
+                await L10n.instance.setLocale(v);
+                if (mounted) setState(() {});
+              },
+              segments: const [
+                SegmentOption(value: 'en', label: 'EN'),
+                SegmentOption(value: 'ro', label: 'RO'),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -217,10 +301,16 @@ class _ProfileHeader extends StatelessWidget {
 }
 
 class _ProfileHero extends StatelessWidget {
-  const _ProfileHero({required this.name, required this.role, required this.team});
+  const _ProfileHero({
+    required this.name,
+    required this.role,
+    required this.team,
+    this.onEditName,
+  });
   final String name;
   final String role;
   final String team;
+  final VoidCallback? onEditName;
 
   @override
   Widget build(BuildContext context) {
@@ -238,10 +328,27 @@ class _ProfileHero extends StatelessWidget {
           child: Image.asset('assets/branding/logo_icon.png', fit: BoxFit.contain),
         ),
         const SizedBox(height: SpacingTokens.md),
-        Text(
-          name.toUpperCase(),
-          style: TypographyTokens.headline.copyWith(fontSize: 22),
-          textAlign: TextAlign.center,
+        GestureDetector(
+          onTap: onEditName,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  name.toUpperCase(),
+                  style: TypographyTokens.headline.copyWith(fontSize: 22),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (onEditName != null) ...[
+                const SizedBox(width: 8),
+                Icon(Icons.edit_outlined, size: 16, color: c.textMuted),
+              ],
+            ],
+          ),
         ),
         const SizedBox(height: SpacingTokens.xxs),
         Text(role, style: TypographyTokens.sectionLabel),

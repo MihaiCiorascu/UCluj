@@ -49,12 +49,9 @@ class AppScaffold extends StatelessWidget {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.10),
+                        color: c.surfaceLow,
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.25),
-                          width: 0.8,
-                        ),
+                        border: Border.all(color: c.divider, width: 0.8),
                       ),
                       padding: const EdgeInsets.all(4),
                       child: Image.asset(
@@ -70,7 +67,7 @@ class AppScaffold extends StatelessWidget {
                         Text(
                           BrandingConfig.appName.toUpperCase(),
                           style: TextStyle(
-                            color: c.onPrimary,
+                            color: c.textPrimary,
                             fontWeight: FontWeight.w900,
                             fontSize: 18,
                             height: 1.0,
@@ -80,7 +77,7 @@ class AppScaffold extends StatelessWidget {
                         Text(
                           BrandingConfig.tagline.toUpperCase(),
                           style: TextStyle(
-                            color: c.onPrimary.withValues(alpha: 0.75),
+                            color: c.primary,
                             fontWeight: FontWeight.w600,
                             fontSize: 8,
                             height: 1.2,

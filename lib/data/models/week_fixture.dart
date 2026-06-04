@@ -76,6 +76,8 @@ class WeekFixture {
   final int? homeScore;
   final int? awayScore;
   final String? venue;
+  final int? round;
+  final String? phase;
   final double? homeWinProbability;
   final List<WeekFixtureDriver> keyDrivers;
   final List<WeekFixtureDriver> topRisks;
@@ -91,6 +93,8 @@ class WeekFixture {
     this.homeScore,
     this.awayScore,
     this.venue,
+    this.round,
+    this.phase,
     this.homeWinProbability,
     required this.keyDrivers,
     required this.topRisks,
@@ -126,6 +130,8 @@ class WeekFixture {
         homeScore: (j['home_score'] as num?)?.toInt(),
         awayScore: (j['away_score'] as num?)?.toInt(),
         venue: j['venue'] as String?,
+        round: (j['round'] as num?)?.toInt(),
+        phase: j['phase'] as String?,
         homeWinProbability:
             (j['home_win_probability'] as num?)?.toDouble(),
         keyDrivers: (j['key_drivers'] as List<dynamic>?)
