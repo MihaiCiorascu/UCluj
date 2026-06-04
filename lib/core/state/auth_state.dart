@@ -111,6 +111,22 @@ class AuthState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Update the signed-in user's display name via the backend, then refresh
+  /// the local user. Returns false on empty input or a failed request.
+  Future<bool> updateName(String name) async {
+    final n = name.trim();
+    if (_user == null || n.isEmpty) return false;
+    try {
+      final data = await api.post('/auth/me', body: {'full_name': n});
+      _user = AuthUser.fromJson(data);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      AppLog.e('updateName error', e);
+      return false;
+    }
+  }
+
   Future<void> logout() async {
     try {
       await _session.signOut();

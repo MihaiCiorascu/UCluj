@@ -274,6 +274,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildWeekHeader(AppColorTokens c) {
     final canBack = _weekOffset > _cachedOffsets.first;
     final canFwd = _weekOffset < _cachedOffsets.last;
+    final mp = _matchdayPhaseLabel();
     return Container(
       decoration: BoxDecoration(
         color: c.surfaceLow,
@@ -291,9 +292,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     style: TypographyTokens.meta.copyWith(
                         color: c.textPrimary, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 1),
-                Text(_relativeWeekLabel(),
-                    style: TypographyTokens.sectionLabel
-                        .copyWith(color: c.textMuted, fontSize: 9)),
+                Text(mp ?? _relativeWeekLabel(),
+                    style: TypographyTokens.sectionLabel.copyWith(
+                        color: mp != null ? c.primary : c.textMuted,
+                        fontSize: 9)),
               ],
             ),
           ),
@@ -315,6 +317,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onPressed: enabled ? onTap : null,
       ),
     );
+  }
+
+  /// "Etapa N · Phase" for the displayed week, from the first fixture carrying
+  /// a Sportradar round; null when no round is available (e.g. CSV fallback).
+  String? _matchdayPhaseLabel() {
+    WeekFixture? withRound;
+    for (final f in _thisWeekFixtures) {
+      if (f.round != null) {
+        withRound = f;
+        break;
+      }
+    }
+    if (withRound == null) return null;
+    final ro = L10n.instance.isRomanian;
+    final etapa = ro ? 'Etapa ${withRound.round}' : 'Round ${withRound.round}';
+    final phase = _phaseLabel(withRound.phase, ro);
+    return phase != null ? '$etapa  ·  $phase' : etapa;
+  }
+
+  String? _phaseLabel(String? phase, bool ro) {
+    if (phase == null || phase.trim().isEmpty) return null;
+    final p = phase.toLowerCase();
+    if (p.contains('regular')) return ro ? 'Sezon regulat' : 'Regular season';
+    if (p.contains('champion') ||
+        p.contains('play-off') ||
+        p.contains('playoff')) {
+      return 'Play-off';
+    }
+    if (p.contains('relegation') ||
+        p.contains('play-out') ||
+        p.contains('playout')) {
+      return 'Play-out';
+    }
+    return phase[0].toUpperCase() + phase.substring(1);
   }
 
   String _relativeWeekLabel() {
