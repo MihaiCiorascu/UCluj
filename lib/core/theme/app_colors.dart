@@ -158,19 +158,19 @@ class AppColorTokens {
 
   // ── Light palette (Iteration N — cobalt blue + chrome + pale-blue base) ─
   static const AppColorTokens light = AppColorTokens(
-    surface:              Color(0xFFEBF3FF),
-    surfaceLow:           Color(0xFFF4F8FE),
-    surfaceHigh:          Color(0xFFE6EFFB),
-    surfaceBaseTop:       Color(0xFFEBF3FF),
-    surfaceBaseBottom:    Color(0xFFC7DDF5),
+    surface:              Color(0xFFDFE9F6),
+    surfaceLow:           Color(0xFFEFF4FC),
+    surfaceHigh:          Color(0xFFD6E4F6),
+    surfaceBaseTop:       Color(0xFFDFE9F6),
+    surfaceBaseBottom:    Color(0xFFBED7F2),
     surfaceElevatedTop:   Color(0xFFFFFFFF),
     surfaceElevatedBottom:Color(0xFFDCE8F8),
-    primary:              Color(0xFF0047AB),
-    primaryDeep:          Color(0xFF003D99),
+    primary:              Color(0xFF0E50C9),
+    primaryDeep:          Color(0xFF0A3FA0),
     primaryGloss:         Color(0x66FFFFFF),
     onPrimary:            Color(0xFFFFFFFF),
-    accent:               Color(0xFF0047AB),
-    accentStrong:         Color(0xFF003D99),
+    accent:               Color(0xFF0E50C9),
+    accentStrong:         Color(0xFF0A3FA0),
     onAccent:             Color(0xFFFFFFFF),
     // accentBlue is now a distinct steel-blue so the legacy aliases stop
     // colliding with `accent`. Most call sites that wanted "the DEF role
@@ -199,7 +199,7 @@ class AppColorTokens {
     pitchSurface:         Color(0xFF0A1929),
     pitchLine:            Color(0xB3FFFFFF),
     pitchHalo:            Color(0x141E88E5),
-    cardGlow:             Color(0x080047AB),
+    cardGlow:             Color(0x140E50C9),
     brightness:           Brightness.light,
   );
 
