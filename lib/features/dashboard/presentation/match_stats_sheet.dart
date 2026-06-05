@@ -337,9 +337,15 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     ],
                   ],
                 ] else ...[
-                  // ML prediction — only for upcoming
+                  // ML prediction — only for upcoming. For U Cluj fixtures the
+                  // single U-Cluj-framed arc gauge is correct; for every other
+                  // fixture the home/away framing is what matters, so we show a
+                  // neutral two-sided per-team split instead.
                   if (uclProb != null) ...[
-                    _buildMLBlock(f, uclProb),
+                    if (f.involvesUCluj)
+                      _buildMLBlock(f, uclProb)
+                    else
+                      _buildTwoSidedWinProbability(f, uclProb),
                     const SizedBox(height: SpacingTokens.xl),
                   ],
 
@@ -971,7 +977,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           WinProbabilityArc(
             probability: uclProb,
             color: col,
-            label: L10n.t('sheet.winChanceUcluj'),
+            label: L10n.t('sheet.winChance'),
             size: 184,
           ),
           const SizedBox(height: SpacingTokens.md),
@@ -984,6 +990,98 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             ),
             child: Text(L10n.t(verdictKey),
                 style: TypographyTokens.buttonLabel.copyWith(color: col)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Two-sided win probability (upcoming, non-U-Cluj) ─────────────────────
+  //
+  // For neutral fixtures the U-Cluj arc framing is wrong: neither side is the
+  // tracked team, so the model's home-win probability is shown as an explicit
+  // home-vs-away split. `homeWinProbability` is a 0..1 value (same scale the
+  // arc consumes); the away share is its complement. The two percentages sit
+  // on a single flat split bar whose proportions track the split, with the
+  // favoured (higher) side carried in the positive green token and the other
+  // in the muted track tone. No "U CLUJ" text appears anywhere here.
+
+  Widget _buildTwoSidedWinProbability(WeekFixture f, double homeProb) {
+    final c = context.colors;
+    final home = homeProb.clamp(0.0, 1.0);
+    final away = 1.0 - home;
+    final homePct = (home * 100).round();
+    final awayPct = (away * 100).round();
+    final homeFavoured = home >= away;
+
+    final homeName = f.homeTeam.replaceAll('Universitatea Cluj', 'U Cluj');
+    final awayName = f.awayTeam.replaceAll('Universitatea Cluj', 'U Cluj');
+
+    final homeColor = homeFavoured ? c.positive : c.textMuted;
+    final awayColor = homeFavoured ? c.textMuted : c.positive;
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: c.surfaceLow,
+        borderRadius: ShapeTokens.card,
+        border: Border.all(color: c.divider),
+      ),
+      padding: const EdgeInsets.symmetric(
+          horizontal: SpacingTokens.md, vertical: SpacingTokens.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Center(
+            child: Text(L10n.t('sheet.matchWinProbability'),
+                style: TypographyTokens.sectionLabel
+                    .copyWith(color: c.textMuted)),
+          ),
+          const SizedBox(height: SpacingTokens.md),
+
+          // ── Team names + percentages, favoured side emphasised ───────────
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: _TwoSidedSide(
+                  name: homeName,
+                  pct: homePct,
+                  color: homeColor,
+                  favoured: homeFavoured,
+                  alignEnd: false,
+                ),
+              ),
+              const SizedBox(width: SpacingTokens.md),
+              Expanded(
+                child: _TwoSidedSide(
+                  name: awayName,
+                  pct: awayPct,
+                  color: awayColor,
+                  favoured: !homeFavoured,
+                  alignEnd: true,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: SpacingTokens.sm),
+
+          // ── Flat split bar, proportional to the two probabilities ────────
+          SizedBox(
+            height: 6,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: (home * 1000).round().clamp(1, 1000),
+                  child: Container(color: homeColor),
+                ),
+                const SizedBox(width: 2),
+                Expanded(
+                  flex: (away * 1000).round().clamp(1, 1000),
+                  child: Container(color: awayColor),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -1380,6 +1478,60 @@ class _ProbColumn extends StatelessWidget {
         Text(value,
             style: TypographyTokens.statLarge
                 .copyWith(color: valueColor, fontSize: 34)),
+      ],
+    );
+  }
+}
+
+/// One side of the neutral two-sided win-probability split (non-U-Cluj
+/// fixtures). Renders a team name above its win percentage, with the favoured
+/// side carried in the supplied positive tone and a heavier weight so the eye
+/// anchors on the more likely winner. `alignEnd` mirrors the layout for the
+/// away side so the two halves read symmetrically toward the centre split.
+class _TwoSidedSide extends StatelessWidget {
+  const _TwoSidedSide({
+    required this.name,
+    required this.pct,
+    required this.color,
+    required this.favoured,
+    required this.alignEnd,
+  });
+
+  final String name;
+  final int pct;
+  final Color color;
+  final bool favoured;
+  final bool alignEnd;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final align = alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+    final textAlign = alignEnd ? TextAlign.right : TextAlign.left;
+    return Column(
+      crossAxisAlignment: align,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          name,
+          style: TypographyTokens.sectionLabel.copyWith(
+            color: favoured ? c.textPrimary : c.textMuted,
+            fontSize: 9,
+          ),
+          textAlign: textAlign,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          '$pct%',
+          style: TypographyTokens.statLarge.copyWith(
+            color: color,
+            fontSize: 34,
+            fontWeight: favoured ? FontWeight.w800 : FontWeight.w700,
+          ),
+          textAlign: textAlign,
+        ),
       ],
     );
   }

@@ -105,18 +105,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         }
                       },
                     ),
-
-                    const SizedBox(height: SpacingTokens.xl),
-                    Center(
-                      child: Text(
-                        L10n.t('profile.footer'),
-                        style: TypographyTokens.sectionLabel.copyWith(
-                          color: c.textMuted.withValues(alpha: 0.4),
-                          fontSize: 9,
-                          letterSpacing: 2.0,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
