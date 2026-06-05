@@ -17,9 +17,11 @@ import '../../../core/widgets/app_bottom_nav.dart';
 import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_loading_skeleton.dart';
 import '../../../core/widgets/app_scaffold.dart';
+import '../../../core/config/app_config.dart';
 import '../../../data/models/week_fixture.dart';
 import '../../../data/repositories/match_details_repository.dart';
 import '../../../data/repositories/week_repository.dart';
+import '../../standings/data/standings_repository.dart';
 import 'match_stats_sheet.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -41,6 +43,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   late final WeekRepository _repo;
   late final MatchDetailsRepository _detailsRepo;
+  late final StandingsRepository _standingsRepo;
   bool _loading = true;
   String? _error;
   int _weekOffset = 0;
@@ -50,6 +53,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final Map<int, List<WeekFixture>> _cache = {};
 
   static const String _myTeam = 'Universitatea Cluj';
+
+  // Live Sportradar season ID, mirroring backend
+  // api/v1/endpoints/standings.py::SUPERLIGA_SEASON_ID.
+  static const String _seasonId = 'sr:season:131507';
+
+  // Normalised team-name sets for the two play-off groups, fetched once from
+  // the standings group-phase endpoint. Used to classify "other" matches into
+  // Play-off / Play-out sections during the play-off window. Empty until loaded
+  // (or when the group data is unavailable), in which case classification falls
+  // back to a single undivided "OTHER MATCHES" list.
+  Set<String> _playoffTeams = {};
+  Set<String> _playoutTeams = {};
+  // Which group contains U Cluj: 'playoff', 'playout', or null when unknown.
+  String? _uclujGroup;
 
   // All fixtures returned by the backend for this offset
   List<WeekFixture> get _fixtures => _cache[_weekOffset] ?? [];
@@ -100,6 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     _repo = WeekRepository(apiClient: widget.authState.api);
     _detailsRepo = MatchDetailsRepository(apiClient: widget.authState.api);
+    _standingsRepo = StandingsRepository(apiBaseUrl: AppConfig.apiBaseUrl);
     _loadAll();
   }
 
@@ -120,6 +138,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  /// Fetch the play-off / play-out group membership once, so "other" matches
+  /// can be classified into the two sections during the play-off window. Best
+  /// effort: any failure leaves the sets empty, and the UI falls back to a
+  /// single undivided "OTHER MATCHES" list rather than crashing.
+  Future<void> _loadPlayoffGroups() async {
+    try {
+      final groups = await _standingsRepo.fetchGroupPhase(_seasonId);
+      if (!mounted) return;
+      final playoff = groups.championshipRound.standings
+          .map((r) => _normalizeTeamName(r.teamName))
+          .where((n) => n.isNotEmpty)
+          .toSet();
+      final playout = groups.relegationRound.standings
+          .map((r) => _normalizeTeamName(r.teamName))
+          .where((n) => n.isNotEmpty)
+          .toSet();
+      // Determine U Cluj's own group by which set contains it.
+      String? uclujGroup;
+      if (playoff.any(_isUClujName)) {
+        uclujGroup = 'playoff';
+      } else if (playout.any(_isUClujName)) {
+        uclujGroup = 'playout';
+      }
+      setState(() {
+        _playoffTeams = playoff;
+        _playoutTeams = playout;
+        _uclujGroup = uclujGroup;
+      });
+    } catch (_) {
+      // Group data unavailable: leave sets empty, fall back to one list.
+    }
+  }
+
   /// Fetch all 5 weeks in parallel and populate the cache.
   Future<void> _loadAll({bool forceRefresh = false}) async {
     setState(() { _loading = true; _error = null; });
@@ -134,6 +185,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
         setState(() => _loading = false);
         _prefetchMatchDetails();
+        _loadPlayoffGroups();
       }
     } catch (e) {
       if (mounted) {
@@ -231,7 +283,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildWeekHeader(c),
           const SizedBox(height: SpacingTokens.lg),
 
-          // U Cluj section
+          // U Cluj section (pinned at the top). Hidden gracefully when U Cluj
+          // has no match this week, so no empty card is shown.
           if (uclFixtures.isNotEmpty) ...[
             _buildSectionLabel(
               _weekOffset < 0
@@ -248,13 +301,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: SpacingTokens.xl),
           ],
 
-          // Other Liga 1 matches
-          if (otherFixtures.isNotEmpty) ...[
-            _buildSectionLabel(L10n.t('dashboard.otherMatches'), c.textMuted, c),
-            const SizedBox(height: SpacingTokens.sm),
-            ...otherFixtures.map(
-                (f) => _buildMatchCard(f, highlight: false, c: c, index: index++)),
-          ],
+          // Other matches: split into Play-off / Play-out during the play-off
+          // window when group data is available; otherwise a single list.
+          ..._buildOtherSections(otherFixtures, c, () => index++),
 
           if (weekFixtures.isEmpty)
             AppEmptyState(
@@ -269,12 +318,108 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  /// Builds the "other matches" portion of the list. During the play-off
+  /// window, and when the standings group sets are available, the matches are
+  /// split into "PLAY-OFF" and "PLAY-OUT" sections with U Cluj's own group
+  /// shown first. Otherwise it falls back to a single undivided
+  /// "OTHER MATCHES" list, which also covers regular-season weeks unchanged.
+  List<Widget> _buildOtherSections(
+    List<WeekFixture> otherFixtures,
+    AppColorTokens c,
+    int Function() nextIndex,
+  ) {
+    if (otherFixtures.isEmpty) return const [];
+
+    final hasGroups = _playoffTeams.isNotEmpty && _playoutTeams.isNotEmpty;
+    if (!_weekIsPlayoffWindow() || !hasGroups) {
+      return _buildOtherList(
+        L10n.t('dashboard.otherMatches'),
+        otherFixtures,
+        c,
+        nextIndex,
+      );
+    }
+
+    final playoff = <WeekFixture>[];
+    final playout = <WeekFixture>[];
+    final unclassified = <WeekFixture>[];
+    for (final f in otherFixtures) {
+      switch (_classifyFixture(f)) {
+        case 'playoff':
+          playoff.add(f);
+        case 'playout':
+          playout.add(f);
+        default:
+          unclassified.add(f);
+      }
+    }
+
+    // U Cluj's own group is shown first; default to play-off ordering when
+    // U Cluj's group could not be resolved.
+    final playoutFirst = _uclujGroup == 'playout';
+    final playoffLabel = L10n.t('dashboard.playoff');
+    final playoutLabel = L10n.t('dashboard.playout');
+
+    final widgets = <Widget>[];
+    void addSection(String label, List<WeekFixture> fixtures) {
+      if (fixtures.isEmpty) return;
+      widgets.addAll(_buildOtherList(label, fixtures, c, nextIndex));
+    }
+
+    if (playoutFirst) {
+      addSection(playoutLabel, playout);
+      addSection(playoffLabel, playoff);
+    } else {
+      addSection(playoffLabel, playoff);
+      addSection(playoutLabel, playout);
+    }
+    // Any match that did not fall cleanly into one group (mixed or unknown
+    // teams) is appended under the generic label rather than dropped.
+    addSection(L10n.t('dashboard.otherMatches'), unclassified);
+
+    return widgets;
+  }
+
+  /// One labelled section of other-match cards sharing the staggered index.
+  List<Widget> _buildOtherList(
+    String label,
+    List<WeekFixture> fixtures,
+    AppColorTokens c,
+    int Function() nextIndex,
+  ) {
+    return [
+      _buildSectionLabel(label, c.textMuted, c),
+      const SizedBox(height: SpacingTokens.sm),
+      ...fixtures.map(
+        (f) => _buildMatchCard(f, highlight: false, c: c, index: nextIndex()),
+      ),
+      const SizedBox(height: SpacingTokens.xl),
+    ];
+  }
+
+  /// Classify a non-U-Cluj fixture by the standings groups: 'playoff' when both
+  /// teams are in the championship set, 'playout' when both are in the
+  /// relegation set, otherwise null (mixed or unknown teams).
+  String? _classifyFixture(WeekFixture f) {
+    final home = _normalizeTeamName(f.homeTeam);
+    final away = _normalizeTeamName(f.awayTeam);
+    final homeInPlayoff = _setContainsTeam(_playoffTeams, home);
+    final awayInPlayoff = _setContainsTeam(_playoffTeams, away);
+    if (homeInPlayoff && awayInPlayoff) return 'playoff';
+    final homeInPlayout = _setContainsTeam(_playoutTeams, home);
+    final awayInPlayout = _setContainsTeam(_playoutTeams, away);
+    if (homeInPlayout && awayInPlayout) return 'playout';
+    return null;
+  }
+
   // ── Week control ──────────────────────────────────────────────────────────
 
   Widget _buildWeekHeader(AppColorTokens c) {
     final canBack = _weekOffset > _cachedOffsets.first;
     final canFwd = _weekOffset < _cachedOffsets.last;
-    final mp = _matchdayPhaseLabel();
+    // Nav header shows only the matchday (e.g. "Round 3"); the play-off /
+    // play-out phase now lives in the section headers below.
+    final mp = _matchdayLabel();
     return Container(
       decoration: BoxDecoration(
         color: c.surfaceLow,
@@ -319,30 +464,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  /// "Etapa N · Phase" for the displayed week, from the first fixture carrying
-  /// a Sportradar round; null when no round is available (e.g. CSV fallback).
-  String? _matchdayPhaseLabel() {
-    WeekFixture? withRound;
+  /// The first fixture of the displayed week carrying a Sportradar round, used
+  /// as the canonical source for the matchday label and the week's phase.
+  WeekFixture? _roundFixture() {
     for (final f in _thisWeekFixtures) {
-      if (f.round != null) {
-        withRound = f;
-        break;
-      }
+      if (f.round != null) return f;
     }
+    return null;
+  }
+
+  /// "Etapa N" / "Round N" for the displayed week, from the first fixture
+  /// carrying a Sportradar round; null when no round is available (e.g. CSV
+  /// fallback). The play-off / play-out phase is intentionally omitted here and
+  /// surfaced in the section headers instead.
+  String? _matchdayLabel() {
+    final withRound = _roundFixture();
     if (withRound == null) return null;
     final ro = L10n.instance.isRomanian;
-    final etapa = ro ? 'Etapa ${withRound.round}' : 'Round ${withRound.round}';
-    var phase = _phaseLabel(withRound.phase, ro);
-    // Demo fixtures are real regular-season matches shifted into the spring
-    // calendar, so Sportradar's stage.phase still reads "regular". Correct the
-    // label from the date: ~Mar 8 through May is the Romanian Superliga
-    // play-off / play-out period, which splits the league into both groups.
-    final regularLabel = ro ? 'Sezon regulat' : 'Regular season';
-    if ((phase == null || phase == regularLabel) &&
-        _isPlayoffWindow(withRound.matchDate)) {
-      phase = 'Play-off / Play-out';
+    return ro ? 'Etapa ${withRound.round}' : 'Round ${withRound.round}';
+  }
+
+  /// True when the displayed week sits in the Romanian Superliga play-off /
+  /// play-out window. Uses the round fixture's date when available, otherwise
+  /// the displayed Monday, so the split sections appear for the spring window.
+  bool _weekIsPlayoffWindow() {
+    final withRound = _roundFixture();
+    if (withRound != null && withRound.matchDate.isNotEmpty) {
+      return _isPlayoffWindow(withRound.matchDate);
     }
-    return phase != null ? '$etapa  ·  $phase' : etapa;
+    final monday = _weekMonday();
+    return (monday.month == 3 && monday.day >= 8) ||
+        monday.month == 4 ||
+        monday.month == 5;
   }
 
   /// True when the date sits in the Romanian Superliga play-off / play-out
@@ -352,23 +505,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final d = DateTime.tryParse(matchDate);
     if (d == null) return false;
     return (d.month == 3 && d.day >= 8) || d.month == 4 || d.month == 5;
-  }
-
-  String? _phaseLabel(String? phase, bool ro) {
-    if (phase == null || phase.trim().isEmpty) return null;
-    final p = phase.toLowerCase();
-    if (p.contains('regular')) return ro ? 'Sezon regulat' : 'Regular season';
-    if (p.contains('champion') ||
-        p.contains('play-off') ||
-        p.contains('playoff')) {
-      return 'Play-off';
-    }
-    if (p.contains('relegation') ||
-        p.contains('play-out') ||
-        p.contains('playout')) {
-      return 'Play-out';
-    }
-    return phase[0].toUpperCase() + phase.substring(1);
   }
 
   String _relativeWeekLabel() {
@@ -620,4 +756,58 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (month < 1 || month > 12) return '';
     return ro ? roMonths[month] : en[month];
   }
+
+  // ── Team-name matching ──────────────────────────────────────────────────────
+
+  /// Normalise a team name for matching: lowercase, fold Romanian diacritics,
+  /// and collapse non-alphanumeric runs to single spaces. Mirrors the helper in
+  /// core/data/superliga_teams.dart so dashboard and standings names line up.
+  String _normalizeTeamName(String s) {
+    final lowered = s.toLowerCase();
+    final buf = StringBuffer();
+    for (final ch in lowered.split('')) {
+      switch (ch) {
+        case 'ă':
+        case 'â':
+          buf.write('a');
+        case 'î':
+          buf.write('i');
+        case 'ș':
+        case 'ş':
+          buf.write('s');
+        case 'ț':
+        case 'ţ':
+          buf.write('t');
+        default:
+          if (RegExp(r'[a-z0-9]').hasMatch(ch)) {
+            buf.write(ch);
+          } else {
+            buf.write(' ');
+          }
+      }
+    }
+    return buf.toString().trim().replaceAll(RegExp(r'\s+'), ' ');
+  }
+
+  /// True when a normalised fixture team name matches any normalised name in a
+  /// standings group set. Uses a bidirectional contains (consistent with the
+  /// file's existing `contains` matching) so short and full forms of the same
+  /// club, e.g. "u cluj" and "universitatea cluj", still line up.
+  bool _setContainsTeam(Set<String> set, String normalized) {
+    if (normalized.isEmpty) return false;
+    for (final name in set) {
+      if (name == normalized) return true;
+      if (name.length >= 3 &&
+          normalized.length >= 3 &&
+          (name.contains(normalized) || normalized.contains(name))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// True when a normalised standings team name is U Cluj (and not CFR Cluj),
+  /// mirroring the standings screen's tracked-team detection.
+  bool _isUClujName(String normalized) =>
+      normalized.contains('cluj') && !normalized.contains('cfr');
 }
