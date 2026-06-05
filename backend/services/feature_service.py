@@ -63,6 +63,21 @@ class FeatureService:
 
         return pd.DataFrame([vector], columns=feature_cols)
 
+    def win_prob(self, model, subject_team: str, opponent_team: str) -> float:
+        """Return P(``subject_team`` wins) for the subject-vs-opponent fixture.
+
+        The CatBoost bundle is a BINARY home-win classifier, so it answers
+        "does the home side win?" for whatever fixture the feature vector
+        encodes. To read a specific team's win probability directly, we build
+        the feature vector with that team placed in the HOME slot and the
+        opponent in the AWAY slot, then call ``predict_proba`` (which returns
+        P(home win)). Calling this once per side yields each team's true win
+        probability without ever introducing a forbidden 3-way classifier;
+        each call is an independent binary prediction.
+        """
+        feat = self.build_feature_vector(subject_team, opponent_team, model.feature_cols)
+        return float(model.predict_proba(feat))
+
     def _latest_home_stats(self, team: str) -> dict[str, float]:
         matches = self._df[self._df["home_team"] == team].sort_values("match_date")
         if matches.empty:

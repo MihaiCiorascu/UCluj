@@ -21,6 +21,26 @@ import '../../../data/repositories/match_details_repository.dart';
 import '../../../core/services/api_client.dart';
 import '../../team/presentation/recommended_xi_fifa_panel.dart';
 
+// ── Player-grade helpers ────────────────────────────────────────────────────
+//
+// Completed-match player grades arrive on a 0-10 scale (one decimal). The
+// scale is position-fair, so a typical appearance lands near 6.x. We band the
+// colour the same way the upcoming-XI percentile rating does (strong / neutral
+// / weak), so the completed pitch reads in the same Stoic-Analyst language as
+// the predicted pitch while staying accent-forward for the headline number.
+
+/// Tone for a 0-10 match grade: green for a strong showing, cobalt accent for
+/// a solid-to-average one, red for a weak one. Mirrors the band thresholds the
+/// FIFA rating bars use, scaled to the 0-10 grade range.
+Color gradeColor(double grade, AppColorTokens c) {
+  if (grade >= 7.0) return c.positive;
+  if (grade >= 6.0) return c.accent;
+  return c.negative;
+}
+
+/// One-decimal display string for a grade (e.g. 7.6).
+String gradeLabel(double grade) => grade.toStringAsFixed(1);
+
 // ── Prescription blueprint widget ──────────────────────────────────────────
 
 class _PrescriptionBlueprint extends StatelessWidget {
@@ -338,14 +358,20 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   ],
                 ] else ...[
                   // ML prediction — only for upcoming. For U Cluj fixtures the
-                  // single U-Cluj-framed arc gauge is correct; for every other
-                  // fixture the home/away framing is what matters, so we show a
-                  // neutral two-sided per-team split instead.
-                  if (uclProb != null) ...[
-                    if (f.involvesUCluj)
-                      _buildMLBlock(f, uclProb)
-                    else
-                      _buildTwoSidedWinProbability(f, uclProb),
+                  // single U-Cluj-framed arc gauge reads a correct P(U Cluj win)
+                  // (the backend now runs the binary model with U Cluj as the
+                  // home subject, whether they play home or away). For every
+                  // other fixture the home/away framing is what matters, so we
+                  // show a neutral three-way split (home win / draw / away win)
+                  // from the per-team odds the backend attaches there instead.
+                  if (f.involvesUCluj) ...[
+                    if (uclProb != null) ...[
+                      _buildMLBlock(f, uclProb),
+                      const SizedBox(height: SpacingTokens.xl),
+                    ],
+                  ] else if (f.homeTeamWinProb != null ||
+                      f.awayTeamWinProb != null) ...[
+                    _buildThreeWayWinProbability(f),
                     const SizedBox(height: SpacingTokens.xl),
                   ],
 
@@ -357,29 +383,35 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   // row (▲ green for drivers, ▼ red for risks) reads in a
                   // single glance and frees vertical space for the
                   // tactical-plan pod underneath.
-                  if (f.keyDrivers.isNotEmpty || f.topRisks.isNotEmpty) ...[
-                    _sectionLabel(L10n.t('sheet.keyDrivers')),
-                    const SizedBox(height: SpacingTokens.sm),
-                    _buildDriverStrip(f),
-                    const SizedBox(height: SpacingTokens.md),
-                  ],
+                  // The U-Cluj-centric AI key drivers + tactical diagnostic are
+                  // meaningful only for the tracked team. On non-U-Cluj fixtures
+                  // the backend nulls these (and the new 3-way odds carry the
+                  // story instead), so both blocks are gated behind involvesUCluj.
+                  if (f.involvesUCluj) ...[
+                    if (f.keyDrivers.isNotEmpty || f.topRisks.isNotEmpty) ...[
+                      _sectionLabel(L10n.t('sheet.keyDrivers')),
+                      const SizedBox(height: SpacingTokens.sm),
+                      _buildDriverStrip(f),
+                      const SizedBox(height: SpacingTokens.md),
+                    ],
 
-                  if (f.prescription != null) ...[
-                    _sectionLabel(L10n.t('sheet.diagnosticPlan')),
-                    const SizedBox(height: SpacingTokens.sm),
-                    _PrescriptionBlueprint(prescription: f.prescription!),
-                    const SizedBox(height: SpacingTokens.xl),
-                  ] else if (f.narrative.isNotEmpty) ...[
-                    _sectionLabel(L10n.t('sheet.diagnostic')),
-                    const SizedBox(height: SpacingTokens.sm),
-                    Container(
-                      color: context.colors.surfaceLow,
-                      padding: const EdgeInsets.all(SpacingTokens.md),
-                      child: Text(f.narrative,
-                          style: TypographyTokens.body
-                              .copyWith(color: context.colors.textMuted, fontSize: 13)),
-                    ),
-                    const SizedBox(height: SpacingTokens.xl),
+                    if (f.prescription != null) ...[
+                      _sectionLabel(L10n.t('sheet.diagnosticPlan')),
+                      const SizedBox(height: SpacingTokens.sm),
+                      _PrescriptionBlueprint(prescription: f.prescription!),
+                      const SizedBox(height: SpacingTokens.xl),
+                    ] else if (f.narrative.isNotEmpty) ...[
+                      _sectionLabel(L10n.t('sheet.diagnostic')),
+                      const SizedBox(height: SpacingTokens.sm),
+                      Container(
+                        color: context.colors.surfaceLow,
+                        padding: const EdgeInsets.all(SpacingTokens.md),
+                        child: Text(f.narrative,
+                            style: TypographyTokens.body
+                                .copyWith(color: context.colors.textMuted, fontSize: 13)),
+                      ),
+                      const SizedBox(height: SpacingTokens.xl),
+                    ],
                   ],
 
                   // XI only for upcoming U Cluj matches
@@ -527,33 +559,57 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       padding: const EdgeInsets.all(SpacingTokens.md),
       child: Column(
         children: [
-          // Header row
+          // Header row: crest + team name on each side, the tracked team
+          // carried in the cobalt accent so the eye anchors on U Cluj first.
           Row(
             children: [
               Expanded(
-                child: Text(
-                  f.homeTeam.replaceAll('Universitatea Cluj', 'U CLUJ').toUpperCase(),
-                  style: TypographyTokens.sectionLabel.copyWith(
-                    color: f.isUCLujHome ? context.colors.accent : context.colors.textMuted,
-                    fontSize: 9,
-                  ),
+                child: Row(
+                  children: [
+                    TeamCrest(teamName: f.homeTeam, size: 18),
+                    const SizedBox(width: SpacingTokens.xs),
+                    Flexible(
+                      child: Text(
+                        f.homeTeam
+                            .replaceAll('Universitatea Cluj', 'U CLUJ')
+                            .toUpperCase(),
+                        style: TypographyTokens.sectionLabel.copyWith(
+                          color: f.isUCLujHome
+                              ? context.colors.accent
+                              : context.colors.textPrimary,
+                          fontSize: 10,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              const SizedBox(width: SpacingTokens.sm),
               Expanded(
-                child: Text(
-                  '',
-                  textAlign: TextAlign.center,
-                  style: TypographyTokens.sectionLabel.copyWith(fontSize: 9),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  f.awayTeam.replaceAll('Universitatea Cluj', 'U CLUJ').toUpperCase(),
-                  style: TypographyTokens.sectionLabel.copyWith(
-                    color: !f.isUCLujHome ? context.colors.accent : context.colors.textMuted,
-                    fontSize: 9,
-                  ),
-                  textAlign: TextAlign.right,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        f.awayTeam
+                            .replaceAll('Universitatea Cluj', 'U CLUJ')
+                            .toUpperCase(),
+                        style: TypographyTokens.sectionLabel.copyWith(
+                          color: !f.isUCLujHome
+                              ? context.colors.accent
+                              : context.colors.textPrimary,
+                          fontSize: 10,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                    const SizedBox(width: SpacingTokens.xs),
+                    TeamCrest(teamName: f.awayTeam, size: 18),
+                  ],
                 ),
               ),
             ],
@@ -782,7 +838,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 style: TypographyTokens.sectionLabel
                     .copyWith(fontSize: 8, color: context.colors.textMuted)),
           ),
-          ...subs.map((p) => _buildPlayerRow(p, isUCluj: isUCluj, isSub: true)),
+          ...subs.map((p) => _buildPlayerRow(p, isSub: true)),
         ],
       ],
     );
@@ -832,26 +888,31 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     return '$d-$m-$fw';
   }
 
-  Widget _buildPlayerRow(MatchPlayer p, {required bool isUCluj, bool isSub = false}) {
+  Widget _buildPlayerRow(MatchPlayer p, {bool isSub = false}) {
+    final c = context.colors;
     final posColor = _positionColor(p.position);
-
+    // Modern completed-match row, aligned with the upcoming-XI player rows: a
+    // role-coloured left rule, headshot, name + role code, the stat badges, and
+    // a dominant accent-coloured match grade on the right (the same hierarchy
+    // the predicted-score column uses on the preview screen).
     return Container(
-      margin: const EdgeInsets.only(bottom: 1),
-      color: isSub
-          ? context.colors.surface
-          : context.colors.surfaceLow.withValues(alpha: 0.6),
+      margin: const EdgeInsets.only(bottom: 2),
+      decoration: BoxDecoration(
+        color: isSub ? c.surface : c.surfaceLow.withValues(alpha: 0.6),
+        border: Border(left: BorderSide(color: posColor, width: 3)),
+      ),
       padding: const EdgeInsets.symmetric(
-          horizontal: SpacingTokens.md, vertical: 6),
+          horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
       child: Row(
         children: [
           // Jersey number
           SizedBox(
-            width: 24,
+            width: 22,
             child: Text(
               p.jerseyNumber != null ? '${p.jerseyNumber}' : '—',
               style: TypographyTokens.sectionLabel.copyWith(
                 fontSize: 10,
-                color: context.colors.textMuted,
+                color: c.textMuted,
               ),
             ),
           ),
@@ -860,27 +921,83 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             photoUrl: p.photoUrl,
             name: p.name,
             ringColor: posColor,
-            size: 28,
+            size: 30,
           ),
-          const SizedBox(width: SpacingTokens.xs),
-          // Name
+          const SizedBox(width: SpacingTokens.sm),
+          // Name + role + inline stat badges
           Expanded(
-            child: Text(
-              p.name,
-              style: TypographyTokens.body.copyWith(
-                fontSize: 12,
-                fontWeight: isSub ? FontWeight.w400 : FontWeight.w600,
-                color: isSub ? context.colors.textMuted : context.colors.textPrimary,
-              ),
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  p.name,
+                  style: TypographyTokens.body.copyWith(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                if (_hasPlayerBadges(p)) ...[
+                  const SizedBox(height: 4),
+                  _buildPlayerBadges(p),
+                ],
+              ],
             ),
           ),
-          // Stats badges
-          _buildPlayerBadges(p),
+          const SizedBox(width: SpacingTokens.sm),
+          // Dominant match grade, accent-coloured like the upcoming-XI score.
+          _buildGradeColumn(p),
         ],
       ),
     );
   }
+
+  /// Right-hand grade column for a completed-match player row: a large
+  /// band-coloured grade over a small caption, or a muted dash when the player
+  /// could not be matched to Wyscout stats.
+  Widget _buildGradeColumn(MatchPlayer p) {
+    final c = context.colors;
+    if (p.grade == null) {
+      return SizedBox(
+        width: 38,
+        child: Text(
+          '—',
+          textAlign: TextAlign.right,
+          style: TypographyTokens.statValue
+              .copyWith(color: c.textMuted, fontSize: 18),
+        ),
+      );
+    }
+    final tone = gradeColor(p.grade!, c);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          gradeLabel(p.grade!),
+          style: TypographyTokens.statValue.copyWith(
+            color: tone,
+            fontSize: 20,
+          ),
+        ),
+        Text(
+          L10n.t('sheet.playerGrade'),
+          style: TypographyTokens.sectionLabel
+              .copyWith(color: c.textMuted, fontSize: 7, letterSpacing: 1.2),
+        ),
+      ],
+    );
+  }
+
+  bool _hasPlayerBadges(MatchPlayer p) =>
+      p.goalsScored > 0 ||
+      p.assists > 0 ||
+      p.yellowCards > 0 ||
+      p.redCards > 0 ||
+      (p.minutesPlayed != null && p.minutesPlayed! < 90 && !p.isStarter);
 
   Widget _buildPlayerBadges(MatchPlayer p) {
     final badges = <Widget>[];
@@ -996,29 +1113,40 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     );
   }
 
-  // ── Two-sided win probability (upcoming, non-U-Cluj) ─────────────────────
+  // ── Three-way win probability (upcoming, non-U-Cluj) ─────────────────────
   //
   // For neutral fixtures the U-Cluj arc framing is wrong: neither side is the
-  // tracked team, so the model's home-win probability is shown as an explicit
-  // home-vs-away split. `homeWinProbability` is a 0..1 value (same scale the
-  // arc consumes); the away share is its complement. The two percentages sit
-  // on a single flat split bar whose proportions track the split, with the
-  // favoured (higher) side carried in the positive green token and the other
-  // in the muted track tone. No "U CLUJ" text appears anywhere here.
+  // tracked team. The backend runs the binary model once per team (each as the
+  // home subject) and reports a documented residual draw, so the sheet shows an
+  // explicit home-win / draw / away-win split. Each value is a 0..1 share; the
+  // favoured outcome (the largest of the three) is carried in the positive
+  // green token while the others read in the muted track tone, and a single
+  // flat split bar mirrors the proportions. No "U CLUJ" text appears here.
 
-  Widget _buildTwoSidedWinProbability(WeekFixture f, double homeProb) {
+  Widget _buildThreeWayWinProbability(WeekFixture f) {
     final c = context.colors;
-    final home = homeProb.clamp(0.0, 1.0);
-    final away = 1.0 - home;
+    final home = (f.homeTeamWinProb ?? 0).clamp(0.0, 1.0);
+    final away = (f.awayTeamWinProb ?? 0).clamp(0.0, 1.0);
+    // Trust the backend's documented residual draw when present; otherwise fall
+    // back to the clamped complement so the bar still fills.
+    final draw = (f.drawProb ?? (1.0 - home - away)).clamp(0.0, 1.0);
+
     final homePct = (home * 100).round();
+    final drawPct = (draw * 100).round();
     final awayPct = (away * 100).round();
-    final homeFavoured = home >= away;
 
     final homeName = f.homeTeam.replaceAll('Universitatea Cluj', 'U Cluj');
     final awayName = f.awayTeam.replaceAll('Universitatea Cluj', 'U Cluj');
 
+    // Emphasise the single most likely outcome (home win / draw / away win).
+    final maxShare = [home, draw, away].reduce((a, b) => a > b ? a : b);
+    final homeFavoured = home >= maxShare;
+    final drawFavoured = !homeFavoured && draw >= maxShare;
+    final awayFavoured = !homeFavoured && !drawFavoured;
+
     final homeColor = homeFavoured ? c.positive : c.textMuted;
-    final awayColor = homeFavoured ? c.textMuted : c.positive;
+    final drawColor = drawFavoured ? c.accent : c.textMuted;
+    final awayColor = awayFavoured ? c.positive : c.textMuted;
 
     return Container(
       width: double.infinity,
@@ -1039,34 +1167,44 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           ),
           const SizedBox(height: SpacingTokens.md),
 
-          // ── Team names + percentages, favoured side emphasised ───────────
+          // ── Home win / draw / away win, favoured outcome emphasised ──────
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _TwoSidedSide(
+                child: _ThreeWaySide(
                   name: homeName,
                   pct: homePct,
                   color: homeColor,
                   favoured: homeFavoured,
-                  alignEnd: false,
+                  align: CrossAxisAlignment.start,
                 ),
               ),
-              const SizedBox(width: SpacingTokens.md),
+              const SizedBox(width: SpacingTokens.sm),
               Expanded(
-                child: _TwoSidedSide(
+                child: _ThreeWaySide(
+                  name: L10n.t('sheet.drawShort'),
+                  pct: drawPct,
+                  color: drawColor,
+                  favoured: drawFavoured,
+                  align: CrossAxisAlignment.center,
+                ),
+              ),
+              const SizedBox(width: SpacingTokens.sm),
+              Expanded(
+                child: _ThreeWaySide(
                   name: awayName,
                   pct: awayPct,
                   color: awayColor,
-                  favoured: !homeFavoured,
-                  alignEnd: true,
+                  favoured: awayFavoured,
+                  align: CrossAxisAlignment.end,
                 ),
               ),
             ],
           ),
           const SizedBox(height: SpacingTokens.sm),
 
-          // ── Flat split bar, proportional to the two probabilities ────────
+          // ── Flat split bar, proportional to the three outcomes ───────────
           SizedBox(
             height: 6,
             child: Row(
@@ -1074,6 +1212,11 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 Expanded(
                   flex: (home * 1000).round().clamp(1, 1000),
                   child: Container(color: homeColor),
+                ),
+                const SizedBox(width: 2),
+                Expanded(
+                  flex: (draw * 1000).round().clamp(1, 1000),
+                  child: Container(color: drawColor),
                 ),
                 const SizedBox(width: 2),
                 Expanded(
@@ -1293,6 +1436,11 @@ class _ActualLineupPitchPanel extends StatelessWidget {
               : maxLineCount >= 4
                   ? base - 3
                   : base;
+          // The chip is taller than it is wide (headshot + caption + markers),
+          // so give it a slightly wider box for the surname and centre it on
+          // the slot using an estimated total height.
+          final chipBoxW = chipSize * 1.5;
+          final chipBoxH = chipSize * 1.05;
 
           return Stack(
             fit: StackFit.expand,
@@ -1308,10 +1456,9 @@ class _ActualLineupPitchPanel extends StatelessWidget {
               ),
               for (final p in placements)
                 Positioned(
-                  left: p.offset.dx * c.maxWidth - chipSize / 2,
-                  top: p.offset.dy * c.maxHeight - chipSize / 2,
-                  width: chipSize,
-                  height: chipSize,
+                  left: p.offset.dx * c.maxWidth - chipBoxW / 2,
+                  top: p.offset.dy * c.maxHeight - chipBoxH / 2,
+                  width: chipBoxW,
                   child: _ActualPlayerChip(
                       player: p.player, chipSize: chipSize, positionLabel: p.label),
                 ),
@@ -1370,81 +1517,110 @@ class _ActualPlayerChip extends StatelessWidget {
     final hasGoal = player.goalsScored > 0;
     final hasYellow = player.yellowCards > 0;
     final hasRed = player.redCards > 0;
+    final grade = player.grade;
+    final gradeTone = grade != null ? gradeColor(grade, c) : posColor;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: c.surface,
-        border: Border.all(color: posColor.withValues(alpha: 0.7), width: 1.5),
-      ),
-      padding: EdgeInsets.all(chipSize * 0.05),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Headshot ringed in the role colour, with the shirt number badged
-          // on its corner. Falls back to initials when no photo matched.
-          Stack(
+    // Modern completed-match chip, mirroring the upcoming-XI FIFA chip: a
+    // full-bleed role-ringed headshot, a dominant match grade in a corner badge
+    // (the analogue of the predicted score), the shirt number on the opposite
+    // corner, event markers overlaid, and the surname captioned beneath.
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: chipSize,
+          height: chipSize * 0.66,
+          child: Stack(
             clipBehavior: Clip.none,
-            alignment: Alignment.bottomRight,
             children: [
-              PlayerPhotoAvatar(
-                photoUrl: player.photoUrl,
-                name: _lastName,
-                ringColor: posColor,
-                size: chipSize * 0.48,
+              Positioned.fill(
+                child: PlayerPhotoAvatar(
+                  photoUrl: player.photoUrl,
+                  name: _lastName,
+                  ringColor: posColor,
+                  size: chipSize * 0.66,
+                ),
               ),
-              if (player.jerseyNumber != null)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                  color: posColor,
+              // Match grade badge (top-left), the prominent accent-coloured
+              // number that anchors the chip. Falls back to the role colour
+              // when no grade matched.
+              Positioned(
+                top: chipSize * 0.02,
+                left: chipSize * 0.02,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: chipSize * 0.07,
+                    vertical: chipSize * 0.02,
+                  ),
+                  color: gradeTone,
                   child: Text(
-                    '${player.jerseyNumber}',
-                    style: TypographyTokens.sectionLabel.copyWith(
-                      fontSize: chipSize * 0.12,
-                      color: c.onPrimary,
+                    grade != null ? gradeLabel(grade) : '—',
+                    style: TypographyTokens.statValue.copyWith(
+                      color: Colors.white,
+                      fontSize: chipSize * 0.2,
                       height: 1.0,
+                    ),
+                  ),
+                ),
+              ),
+              // Shirt number badge (bottom-right) in the role colour.
+              if (player.jerseyNumber != null)
+                Positioned(
+                  bottom: chipSize * 0.02,
+                  right: chipSize * 0.02,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
+                    color: posColor,
+                    child: Text(
+                      '${player.jerseyNumber}',
+                      style: TypographyTokens.sectionLabel.copyWith(
+                        fontSize: chipSize * 0.12,
+                        color: c.onPrimary,
+                        height: 1.0,
+                      ),
                     ),
                   ),
                 ),
             ],
           ),
-          SizedBox(height: chipSize * 0.04),
-          Text(
-            _lastName,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TypographyTokens.body.copyWith(
-              fontSize: chipSize * 0.14,
-              fontWeight: FontWeight.w700,
-              color: c.textPrimary,
-            ),
+        ),
+        SizedBox(height: chipSize * 0.05),
+        Text(
+          _lastName,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TypographyTokens.body.copyWith(
+            fontSize: chipSize * 0.14,
+            fontWeight: FontWeight.w700,
+            color: c.textPrimary,
           ),
-          if (hasGoal || hasYellow || hasRed)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (hasGoal)
-                  Text('⚽', style: TextStyle(fontSize: chipSize * 0.13)),
-                if (hasYellow)
-                  Container(
-                    width: chipSize * 0.1,
-                    height: chipSize * 0.14,
-                    color: const Color(0xFFFFD700),
-                    margin: const EdgeInsets.symmetric(horizontal: 1),
-                  ),
-                if (hasRed)
-                  Container(
-                    width: chipSize * 0.1,
-                    height: chipSize * 0.14,
-                    color: c.negative,
-                    margin: const EdgeInsets.symmetric(horizontal: 1),
-                  ),
-              ],
-            ),
-        ],
-      ),
+        ),
+        if (hasGoal || hasYellow || hasRed)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (hasGoal)
+                Text('⚽', style: TextStyle(fontSize: chipSize * 0.13)),
+              if (hasYellow)
+                Container(
+                  width: chipSize * 0.1,
+                  height: chipSize * 0.14,
+                  color: const Color(0xFFFFD700),
+                  margin: const EdgeInsets.symmetric(horizontal: 1),
+                ),
+              if (hasRed)
+                Container(
+                  width: chipSize * 0.1,
+                  height: chipSize * 0.14,
+                  color: c.negative,
+                  margin: const EdgeInsets.symmetric(horizontal: 1),
+                ),
+            ],
+          ),
+      ],
     );
   }
 }
@@ -1483,31 +1659,35 @@ class _ProbColumn extends StatelessWidget {
   }
 }
 
-/// One side of the neutral two-sided win-probability split (non-U-Cluj
-/// fixtures). Renders a team name above its win percentage, with the favoured
-/// side carried in the supplied positive tone and a heavier weight so the eye
-/// anchors on the more likely winner. `alignEnd` mirrors the layout for the
-/// away side so the two halves read symmetrically toward the centre split.
-class _TwoSidedSide extends StatelessWidget {
-  const _TwoSidedSide({
+/// One column of the neutral three-way win-probability split (non-U-Cluj
+/// fixtures): home win, draw, or away win. Renders an outcome label above its
+/// percentage, with the favoured outcome carried in the supplied tone and a
+/// heavier weight so the eye anchors on the most likely result. `align`
+/// positions the home column to the start, the draw to the centre, and the
+/// away column to the end so the three read symmetrically across the split bar.
+class _ThreeWaySide extends StatelessWidget {
+  const _ThreeWaySide({
     required this.name,
     required this.pct,
     required this.color,
     required this.favoured,
-    required this.alignEnd,
+    required this.align,
   });
 
   final String name;
   final int pct;
   final Color color;
   final bool favoured;
-  final bool alignEnd;
+  final CrossAxisAlignment align;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final align = alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start;
-    final textAlign = alignEnd ? TextAlign.right : TextAlign.left;
+    final textAlign = align == CrossAxisAlignment.end
+        ? TextAlign.right
+        : align == CrossAxisAlignment.center
+            ? TextAlign.center
+            : TextAlign.left;
     return Column(
       crossAxisAlignment: align,
       mainAxisSize: MainAxisSize.min,
@@ -1527,7 +1707,7 @@ class _TwoSidedSide extends StatelessWidget {
           '$pct%',
           style: TypographyTokens.statLarge.copyWith(
             color: color,
-            fontSize: 34,
+            fontSize: 30,
             fontWeight: favoured ? FontWeight.w800 : FontWeight.w700,
           ),
           textAlign: textAlign,

@@ -49,7 +49,15 @@ class ModelService:
         return self._medians
 
     def predict_proba(self, features: pd.DataFrame) -> float:
-        """Return P(Home Win) for a single-row feature DataFrame."""
+        """Return P(Home Win) for a single-row feature DataFrame.
+
+        The model is a binary home-win classifier, so the returned value is
+        the probability that whichever team occupies the HOME slot of the
+        feature vector wins. ``FeatureService.win_prob`` exploits this by
+        building the vector with a chosen subject team in the home slot, which
+        turns a single binary call into a direct P(subject wins). Two such
+        calls (one per team) give a per-team split without a 3-way classifier.
+        """
         if not self._ready:
             raise RuntimeError("Model bundle not loaded")
 
