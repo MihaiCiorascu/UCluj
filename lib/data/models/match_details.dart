@@ -63,6 +63,11 @@ class MatchPlayer {
   // Self-hosted headshot URL resolved server-side by name; '' when unmatched
   // (the avatar then renders initials).
   final String photoUrl;
+  // Per-match performance grade on a 0-10 scale (one decimal), derived
+  // server-side from this match's Wyscout per-player stats via the thesis
+  // performance-score composite. Null when the player could not be matched to
+  // Wyscout stats (or for cached payloads built before grades shipped).
+  final double? grade;
 
   MatchPlayer({
     required this.name,
@@ -78,6 +83,7 @@ class MatchPlayer {
     required this.shotsOnTarget,
     this.minutesPlayed,
     this.photoUrl = '',
+    this.grade,
   });
 
   bool get isStarter => type == 'starter';
@@ -96,6 +102,7 @@ class MatchPlayer {
         shotsOnTarget: (j['shots_on_target'] as num?)?.toInt() ?? 0,
         minutesPlayed: (j['minutes_played'] as num?)?.toInt(),
         photoUrl: j['photo_url'] as String? ?? '',
+        grade: (j['grade'] as num?)?.toDouble(),
       );
 }
 

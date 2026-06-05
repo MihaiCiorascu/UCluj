@@ -79,6 +79,13 @@ class WeekFixture {
   final int? round;
   final String? phase;
   final double? homeWinProbability;
+  // Three-way odds present ONLY on non-U-Cluj fixtures (the backend runs the
+  // binary model once per team as the home subject and reports a documented
+  // residual draw). On U-Cluj fixtures these are null and homeWinProbability
+  // carries a correct P(U Cluj win) instead.
+  final double? homeTeamWinProb;
+  final double? awayTeamWinProb;
+  final double? drawProb;
   final List<WeekFixtureDriver> keyDrivers;
   final List<WeekFixtureDriver> topRisks;
   final String narrative;
@@ -96,6 +103,9 @@ class WeekFixture {
     this.round,
     this.phase,
     this.homeWinProbability,
+    this.homeTeamWinProb,
+    this.awayTeamWinProb,
+    this.drawProb,
     required this.keyDrivers,
     required this.topRisks,
     required this.narrative,
@@ -134,6 +144,9 @@ class WeekFixture {
         phase: j['phase'] as String?,
         homeWinProbability:
             (j['home_win_probability'] as num?)?.toDouble(),
+        homeTeamWinProb: (j['home_team_win_prob'] as num?)?.toDouble(),
+        awayTeamWinProb: (j['away_team_win_prob'] as num?)?.toDouble(),
+        drawProb: (j['draw_prob'] as num?)?.toDouble(),
         keyDrivers: (j['key_drivers'] as List<dynamic>?)
                 ?.map((e) =>
                     WeekFixtureDriver.fromJson(e as Map<String, dynamic>))

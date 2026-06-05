@@ -50,13 +50,6 @@ def _ucluj_is_home(home_team: str, away_team: str) -> bool:
     return ("u cluj" in home) or ("universitatea cluj" in home)
 
 
-def _to_ucluj_win_prob(home_win_prob: float, home_team: str, away_team: str) -> float:
-    """Convert P(Home Win) to P(U Cluj Win) for this fixture."""
-    if _ucluj_is_home(home_team, away_team):
-        return home_win_prob
-    return 1.0 - home_win_prob
-
-
 def _fixture_service(request: Request) -> FixtureService:
     return FixtureService(request.app.state.df, request.app.state.stadium_map)
 
@@ -195,39 +188,86 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
             item = dict(f)
             try:
                 if model_svc.is_ready:
-                    feat = feature_svc.build_feature_vector(
-                        f["home_team"], f["away_team"], model_svc.feature_cols
+                    home_team = f["home_team"]
+                    away_team = f["away_team"]
+                    involves_ucluj = _ucluj_is_home(home_team, away_team) or _ucluj_is_home(
+                        away_team, home_team
                     )
-                    raw_home_prob = float(model_svc.predict_proba(feat))
-                    ucl_prob = _to_ucluj_win_prob(raw_home_prob, f["home_team"], f["away_team"])
-                    ucl_is_home = _ucluj_is_home(f["home_team"], f["away_team"])
 
-                    is_completed = f.get("home_score") is not None and f.get("away_score") is not None
-                    if not is_completed:
-                        presc = presc_svc.prescribe(feat, ucl_is_home=ucl_is_home)
-                        prescription = presc.get("structured")
-                        # The headline win chance must equal the diagnostic
-                        # baseline shown in the same card. The prescription
-                        # computes that baseline from the identical model and
-                        # feature vector, so reuse it verbatim; previously the
-                        # headline was dampened toward 50% while the baseline
-                        # stayed raw, so the two numbers disagreed.
-                        if prescription and prescription.get("baseline_prob") is not None:
-                            ucl_prob = float(prescription["baseline_prob"])
+                    if involves_ucluj:
+                        # ── U Cluj fixture: U-Cluj-centric diagnostic + blueprint ──
+                        ucl_is_home = _ucluj_is_home(home_team, away_team)
+                        # P(U Cluj win) computed DIRECTLY by placing U Cluj in the
+                        # home slot of the feature vector, whether they actually
+                        # play home or away. This replaces the old
+                        # `1 - P(home win)` complement, which for U-Cluj-away
+                        # folded draws into U Cluj's win share (the binary model's
+                        # complement is P(U Cluj win OR draw)) and overstated them.
+                        if ucl_is_home:
+                            subject, opponent = home_team, away_team
+                        else:
+                            subject, opponent = away_team, home_team
+                        ucl_prob = feature_svc.win_prob(model_svc, subject, opponent)
+
+                        # The diagnostic / blueprint is still built from the real
+                        # home-vs-away vector so its directional drivers read
+                        # correctly for the fixture as played.
+                        feat = feature_svc.build_feature_vector(
+                            home_team, away_team, model_svc.feature_cols
+                        )
+
+                        is_completed = (
+                            f.get("home_score") is not None
+                            and f.get("away_score") is not None
+                        )
+                        if not is_completed:
+                            presc = presc_svc.prescribe(feat, ucl_is_home=ucl_is_home)
+                            prescription = presc.get("structured")
+                            # The headline win chance must equal the diagnostic
+                            # baseline shown in the same card. The prescription
+                            # computes that baseline from the identical model and
+                            # feature vector, so reuse it verbatim; previously the
+                            # headline was dampened toward 50% while the baseline
+                            # stayed raw, so the two numbers disagreed.
+                            if prescription and prescription.get("baseline_prob") is not None:
+                                ucl_prob = float(prescription["baseline_prob"])
+                        else:
+                            presc = None
+                            prescription = None
+
+                        expl = expl_svc.explain(feat, ucl_prob, ucl_is_home=ucl_is_home)
+                        narrative = ""
+                        if not is_completed:
+                            narrative = (
+                                presc["text"] if presc and presc["text"] else expl["narrative"]
+                            )
+
+                        item["home_win_probability"] = round(ucl_prob, 4)
+                        item["key_drivers"] = expl["top_drivers"][:3]
+                        item["top_risks"] = expl["top_risks"][:2]
+                        item["narrative"] = narrative
+                        item["prescription"] = prescription
                     else:
-                        presc = None
-                        prescription = None
+                        # ── Non-U-Cluj fixture: neutral 3-way odds, no diagnostic ──
+                        # Two independent BINARY calls (each team placed in the
+                        # home slot) give P(home win) and P(away win) directly;
+                        # the draw is the documented residual mass. This is NOT a
+                        # 3-way classifier — it is two binary predictions plus a
+                        # leftover. We do NOT apply the U-Cluj complement here.
+                        home_win = feature_svc.win_prob(model_svc, home_team, away_team)
+                        away_win = feature_svc.win_prob(model_svc, away_team, home_team)
+                        draw = max(0.0, 1.0 - home_win - away_win)
 
-                    expl = expl_svc.explain(feat, ucl_prob, ucl_is_home=ucl_is_home)
-                    narrative = ""
-                    if not is_completed:
-                        narrative = presc["text"] if presc and presc["text"] else expl["narrative"]
-
-                    item["home_win_probability"] = round(ucl_prob, 4)
-                    item["key_drivers"] = expl["top_drivers"][:3]
-                    item["top_risks"] = expl["top_risks"][:2]
-                    item["narrative"] = narrative
-                    item["prescription"] = prescription
+                        item["home_team_win_prob"] = round(home_win, 4)
+                        item["away_team_win_prob"] = round(away_win, 4)
+                        item["draw_prob"] = round(draw, 4)
+                        # No U-Cluj-centric headline / prescription / drivers for
+                        # other matches; the client hides that section here.
+                        item["home_win_probability"] = None
+                        item["key_drivers"] = []
+                        item["top_risks"] = []
+                        item["narrative"] = ""
+                        item["prescription"] = None
                 else:
                     item["home_win_probability"] = None
                     item["key_drivers"] = []

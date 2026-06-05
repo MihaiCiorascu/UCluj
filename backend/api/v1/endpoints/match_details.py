@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, Query
 from clients.sportradar_client import SportradarClient
 from core.security import get_current_user
 from ml.xi_predictor import FORMATIONS, StartingXIPredictor
+from services.grade_service import GradeService
 from services.player_photo_service import PlayerPhotoService
 
 logger = logging.getLogger(__name__)
@@ -69,8 +70,16 @@ _XI_ASSIGNER = StartingXIPredictor()
 # Player headshots, resolved by display name (Sportradar gives no Wyscout id).
 # Reads the same committed mapping the recommended-XI flow uses; missing/empty
 # means every lookup returns None and the client renders initials.
-_PHOTOS = PlayerPhotoService(
-    str(Path(__file__).resolve().parents[3] / "ml" / "data" / "wyscout_to_sofascore.json")
+_DATA_DIR = Path(__file__).resolve().parents[3] / "ml" / "data"
+_PHOTOS = PlayerPhotoService(str(_DATA_DIR / "wyscout_to_sofascore.json"))
+
+# Per-player MATCH grades, derived by applying the thesis composite player score
+# to the completed match's own Wyscout per-match stats (drive_cache). Resolved
+# to lineup players by the same diacritic-insensitive name match the photo
+# resolver uses; an unmatched player gets grade=None.
+_GRADES = GradeService(
+    str(_DATA_DIR / "drive_cache"),
+    str(_DATA_DIR / "wyscout_to_sofascore.json"),
 )
 
 
@@ -233,6 +242,21 @@ def _build_details(match_id: str, summary: dict | None, lineups: dict | None) ->
     home_player_stats: dict[str, dict] = {}
     away_player_stats: dict[str, dict] = {}
 
+    # Per-player MATCH grades, keyed by Wyscout id, joined from the completed
+    # match's drive-cache stats. Resolved once here (off the summary's team
+    # names + final score) and applied per lineup player below. Empty when the
+    # fixture can not be located in the drive cache.
+    home_team_name, away_team_name, home_score, away_score = _teams_and_score(summary)
+    grades_by_wy: dict[int, float] = {}
+    if home_team_name and away_team_name:
+        try:
+            grades_by_wy = _GRADES.grades_for_match(
+                home_team_name, away_team_name, home_score, away_score
+            )
+        except Exception:
+            logger.warning("Grade computation failed for %s", match_id, exc_info=True)
+            grades_by_wy = {}
+
     if summary:
         totals = (summary.get("statistics") or {}).get("totals", {})
         for comp in totals.get("competitors") or []:
@@ -275,6 +299,7 @@ def _build_details(match_id: str, summary: dict | None, lineups: dict | None) ->
         for comp in lineup_block.get("competitors") or []:
             qual = comp.get("qualifier", "")
             player_stats_map = home_player_stats if qual == "home" else away_player_stats
+            side_team = home_team_name if qual == "home" else away_team_name
             players = []
             for p in comp.get("players") or []:
                 pid = p.get("id", "")
@@ -283,6 +308,13 @@ def _build_details(match_id: str, summary: dict | None, lineups: dict | None) ->
                 pos_raw = p.get("position", p.get("type", ""))
                 pos = _short_position(pos_raw)
                 is_starter = p.get("starter", False) or pstat.get("starter", False)
+                # Match grade: resolve this Sportradar name to its Wyscout
+                # composite score for the displayed match; None when unmatched.
+                grade = None
+                if grades_by_wy:
+                    grade = _GRADES.grade_for_player_name(
+                        p.get("name", ""), grades_by_wy, team=side_team
+                    )
                 players.append({
                     "name": p.get("name", ""),
                     "jersey_number": p.get("jersey_number"),
@@ -296,6 +328,7 @@ def _build_details(match_id: str, summary: dict | None, lineups: dict | None) ->
                     "red_cards": pstat.get("red_cards", 0),
                     "shots_on_target": pstat.get("shots_on_target", 0),
                     "minutes_played": None,
+                    "grade": grade,
                     "_pos_raw": pos_raw,
                 })
             # Sort: starters first
@@ -324,6 +357,37 @@ def _build_details(match_id: str, summary: dict | None, lineups: dict | None) ->
         "home_formation": home_formation,
         "away_formation": away_formation,
     }
+
+
+def _teams_and_score(
+    summary: dict | None,
+) -> tuple[str, str, int | None, int | None]:
+    """Pull (home_team, away_team, home_score, away_score) from a SR summary.
+
+    Mirrors the schedule parsing in ``week.py``: the home/away competitors come
+    from ``sport_event.competitors`` (by qualifier) and the final score from
+    ``sport_event_status``. Used to join the completed match to its Wyscout
+    drive-cache file for grading. Returns empty strings / ``None`` when the
+    summary is missing the fields, in which case grading is skipped.
+    """
+    if not summary:
+        return "", "", None, None
+    se = summary.get("sport_event") or {}
+    status = summary.get("sport_event_status") or {}
+    home_name = away_name = ""
+    for c in se.get("competitors") or []:
+        if c.get("qualifier") == "home":
+            home_name = c.get("name", "") or ""
+        elif c.get("qualifier") == "away":
+            away_name = c.get("name", "") or ""
+    home_score = status.get("home_score")
+    away_score = status.get("away_score")
+    try:
+        home_score = int(home_score) if home_score is not None else None
+        away_score = int(away_score) if away_score is not None else None
+    except (TypeError, ValueError):
+        home_score = away_score = None
+    return home_name, away_name, home_score, away_score
 
 
 def _short_position(pos: str) -> str:
