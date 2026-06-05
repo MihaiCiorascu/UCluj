@@ -1,1 +1,4 @@
-{"apiBaseUrl": "https://b7fukv3pxv.eu-central-1.awsapprunner.com/api/v1"}
+{
+  "apiBaseUrl": "https://b7fukv3pxv.eu-central-1.awsapprunner.com/api/v1",
+  "wsConnectUrl": "wss://REPLACE_WS_API_ID.execute-api.eu-central-1.amazonaws.com/prod"
+}

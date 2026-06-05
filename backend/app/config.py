@@ -22,6 +22,24 @@ class Settings(BaseSettings):
     cognito_app_client_id: str = ""
     cognito_region: str = "eu-central-1"
 
+    # --- Avatars (Part B): S3 presigned-upload storage ---
+    # Provisioned by infra/template.yaml. Env vars (App Runner): AVATARS_S3_BUCKET,
+    # AVATARS_S3_REGION. The backend signs a presigned PUT against this bucket for
+    # key avatars/<user_id>.jpg and builds the public URL
+    # https://<bucket>.s3.<region>.amazonaws.com/avatars/<user_id>.jpg.
+    avatars_s3_bucket: str = "ucluj-user-avatars"
+    avatars_s3_region: str = "eu-central-1"
+
+    # --- Instant chat (Part C): API Gateway WebSocket fan-out ---
+    # Provisioned by infra/template.yaml. Env vars (App Runner):
+    # WS_API_MANAGEMENT_ENDPOINT, WS_CONNECTIONS_TABLE. FastAPI persists a message
+    # to RDS, then Queries the DynamoDB channel-index for live connectionIds and
+    # fans the message out via the API Gateway Management API post_to_connection.
+    # When ws_api_management_endpoint is empty, fan-out is skipped (history-only),
+    # so local development without the infra still works.
+    ws_api_management_endpoint: str = ""
+    ws_connections_table: str = "umbraro-ws-connections"
+
     # Demo mode for the committee presentation.
     # The Romanian Superliga 2024-2025 season is over and Sportradar trial
     # returns no current fixtures, so the live dashboard would be empty. When

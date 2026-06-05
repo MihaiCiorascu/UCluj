@@ -74,6 +74,27 @@ class ApiClient {
     }
   }
 
+  Future<Map<String, dynamic>> put(
+    String path, {
+    Map<String, dynamic>? body,
+  }) async {
+    try {
+      final response = await http
+          .put(
+            Uri.parse('$_baseUrl$path'),
+            headers: _headers,
+            body: body != null ? jsonEncode(body) : null,
+          )
+          .timeout(_requestTimeout);
+      return _handleMap(response);
+    } on TimeoutException {
+      throw ApiException(408, 'Request timed out. Check backend connection.');
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException(0, 'Network error: $e');
+    }
+  }
+
   Future<Map<String, dynamic>> uploadMultipart(
     String path, {
     required List<int> fileBytes,

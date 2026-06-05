@@ -1,8 +1,4 @@
-import os
-import shutil
-import uuid
-
-from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,6 +14,7 @@ from core.models import (
 from core.security import get_current_user
 from db.engine import async_session as session_factory
 from db.models import User
+from services import avatar_service
 from services.auth_service import AuthService
 from services.reference_service import get_supported_teams
 
@@ -137,30 +134,60 @@ async def update_me(
     )
 
 
-_UPLOAD_DIR = "uploads"
-os.makedirs(_UPLOAD_DIR, exist_ok=True)
+class AvatarUploadUrlResponse(BaseModel):
+    uploadUrl: str
+    avatarUrl: str
 
 
-@router.put("/me/avatar")
+@router.post("/me/avatar-upload-url", response_model=AvatarUploadUrlResponse)
+async def avatar_upload_url(current_user: User = Depends(get_current_user)):
+    """Hand the client a presigned S3 PUT URL for its own avatar object.
+
+    The browser PUTs the raw JPEG bytes straight to ``uploadUrl`` (Content-Type
+    image/jpeg), then calls PUT /auth/me/avatar with ``avatarUrl`` to persist it.
+    The S3 key is stable (avatars/<user_id>.jpg, overwrite-in-place); ``avatarUrl``
+    carries a ?v=<ts> cache-buster so clients refetch the new image.
+    """
+    return AvatarUploadUrlResponse(
+        uploadUrl=avatar_service.generate_presigned_put_url(current_user.id),
+        avatarUrl=avatar_service.public_avatar_url(current_user.id),
+    )
+
+
+class UpdateAvatarRequest(BaseModel):
+    avatar_url: str
+
+
+@router.put("/me/avatar", response_model=UserResponse)
 async def update_avatar(
-    file: UploadFile = File(...),
+    body: UpdateAvatarRequest,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(_get_db),
 ):
-    file_id = str(uuid.uuid4())
-    ext = os.path.splitext(file.filename or "")[1]
-    filename = f"{file_id}{ext}"
-    file_path = os.path.join(_UPLOAD_DIR, filename)
+    """Persist an already-uploaded avatar URL.
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    No file is written: the bytes already live in S3 (uploaded directly by the
+    browser via the presigned PUT URL). This only records the public URL on the
+    user row so it is returned by GET /auth/me and shown in chat.
+    """
+    url = (body.avatar_url or "").strip()
+    if not url:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="avatar_url is required")
 
     result = await db.execute(select(User).where(User.id == current_user.id))
     user = result.scalar_one()
-    user.avatar_url = f"/uploads/{filename}"
+    user.avatar_url = url
     await db.commit()
 
-    return {"avatar_url": f"/uploads/{filename}"}
+    return UserResponse(
+        id=user.id,
+        email=user.email,
+        full_name=user.full_name,
+        role=user.role,
+        team_name=user.team_name,
+        is_active=user.is_active,
+        avatar_url=user.avatar_url,
+    )
 
 
 @router.get("/teams", response_model=list[str])

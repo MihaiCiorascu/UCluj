@@ -1,0 +1,9 @@
+# Dependency for the $connect WebSocket authorizer Lambda.
+#
+# PyJWT validates the same HS256 token that the FastAPI backend signs with
+# python-jose. The two libraries are wire-compatible for HS256, so the Lambda
+# stays small (boto3 is already in the Lambda runtime and is not pinned here).
+#
+# When packaging with `sam build` or `pip install -t`, this is the only thing
+# that needs to be vendored into the deployment artifact.
+PyJWT==2.9.0
