@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/l10n/strings.dart';
@@ -11,6 +12,7 @@ import '../../../core/theme/shape_tokens.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/theme_mode_notifier.dart';
 import '../../../core/theme/typography_tokens.dart';
+import '../../../core/widgets/player_photo_avatar.dart';
 
 // =============================================================================
 // PROFILE SCREEN
@@ -39,9 +41,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool _uploadingAvatar = false;
+
   AuthUser? get _user => widget.authState.user;
   String get _team => (_user?.teamName?.isNotEmpty ?? false) ? _user!.teamName! : '—';
   String get _email => _user?.email ?? '—';
+  String get _avatarUrl => _user?.avatarUrl ?? '';
   String get _userRole =>
       (_user?.role.isNotEmpty ?? false) ? _user!.role.toUpperCase() : 'COACH';
 
@@ -78,7 +83,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       name: _name,
                       role: _userRole,
                       team: _team,
+                      avatarUrl: _avatarUrl,
+                      uploadingAvatar: _uploadingAvatar,
                       onEditName: _editName,
+                      onPickAvatar: _pickAvatar,
                     ),
                     const SizedBox(height: SpacingTokens.xl),
 
@@ -164,6 +172,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (!ok) {
       AppSnackbar.error(
           context, ro ? 'Nu s-a putut salva numele' : 'Could not save name');
+    }
+  }
+
+  /// Pick an image from the device and upload it as the profile picture via the
+  /// S3 presigned-URL flow in [AuthState.uploadAvatar]. The avatar key is stable
+  /// (overwrite-in-place), so the backend returns a cache-busted URL that swaps
+  /// the picture in immediately.
+  Future<void> _pickAvatar() async {
+    if (_uploadingAvatar) return;
+    final ro = L10n.instance.isRomanian;
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      withData: true,
+    );
+    if (result == null || result.files.isEmpty) return;
+    final bytes = result.files.first.bytes;
+    if (bytes == null || bytes.isEmpty) return;
+
+    AppHaptics.light();
+    setState(() => _uploadingAvatar = true);
+    final ok = await widget.authState.uploadAvatar(bytes);
+    if (!mounted) return;
+    setState(() => _uploadingAvatar = false);
+    if (ok) {
+      AppSnackbar.success(
+          context, ro ? 'Poza de profil actualizată' : 'Profile picture updated');
+    } else {
+      AppSnackbar.error(
+          context, ro ? 'Încărcare eșuată' : 'Upload failed');
     }
   }
 
@@ -293,27 +330,78 @@ class _ProfileHero extends StatelessWidget {
     required this.name,
     required this.role,
     required this.team,
+    required this.avatarUrl,
+    required this.uploadingAvatar,
     this.onEditName,
+    this.onPickAvatar,
   });
   final String name;
   final String role;
   final String team;
+  final String avatarUrl;
+  final bool uploadingAvatar;
   final VoidCallback? onEditName;
+  final VoidCallback? onPickAvatar;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
     return Column(
       children: [
-        Container(
-          width: 88,
-          height: 88,
-          decoration: BoxDecoration(
-            color: c.surfaceHigh,
-            border: Border.all(color: c.accent, width: 2),
+        GestureDetector(
+          onTap: uploadingAvatar ? null : onPickAvatar,
+          behavior: HitTestBehavior.opaque,
+          child: SizedBox(
+            width: 88,
+            height: 88,
+            child: Stack(
+              children: [
+                // Reuses the shared PlayerPhotoAvatar (cached network image with
+                // an initials fallback) so the profile picture renders the same
+                // way it does beside chat bubbles. Falls back to initials when
+                // the user has no avatar set.
+                PlayerPhotoAvatar(
+                  photoUrl: avatarUrl,
+                  name: name,
+                  ringColor: c.accent,
+                  size: 88,
+                ),
+                if (uploadingAvatar)
+                  Positioned.fill(
+                    child: Container(
+                      color: c.surfaceHigh.withValues(alpha: 0.7),
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: c.accent,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  // Flat camera affordance pinned to the corner — no shadow, no
+                  // glow, square edges, in keeping with the Stoic-Analyst rules.
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 26,
+                      height: 26,
+                      color: c.accent,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.photo_camera_outlined,
+                        size: 15,
+                        color: c.onAccent,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
-          padding: const EdgeInsets.all(10),
-          child: Image.asset('assets/branding/logo_icon.png', fit: BoxFit.contain),
         ),
         const SizedBox(height: SpacingTokens.md),
         GestureDetector(

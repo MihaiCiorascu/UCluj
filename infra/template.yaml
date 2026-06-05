@@ -1,0 +1,443 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  UmbraRo infrastructure: user-avatar S3 storage (Part B) and instant chat over
+  an API Gateway WebSocket with a DynamoDB connection registry and two Python
+  Lambdas (Part C). App Runner cannot serve WebSockets, so this stack provides
+  the real-time push transport that FastAPI on App Runner fans out to.
+
+  Deploy region: eu-central-1. Account: 302432776212. App Runner service:
+  ucluj-backend. See infra/README.md for exact provisioning steps and the
+  config contract the backend and frontend consume.
+
+# ---------------------------------------------------------------------------
+# Parameters
+# ---------------------------------------------------------------------------
+Parameters:
+
+  JwtSecret:
+    Type: String
+    NoEcho: true
+    Description: >
+      The HS256 secret the FastAPI backend signs its LOCAL access tokens with
+      (the JWT_SECRET env var on the App Runner ucluj-backend service). The
+      $connect authorizer Lambda validates the chat WebSocket token with this
+      exact secret. It MUST match the backend byte-for-byte or no chat client
+      will ever connect.
+
+  AvatarsBucketName:
+    Type: String
+    Default: ucluj-user-avatars
+    Description: >
+      Name of the S3 bucket that stores user avatars under the avatars/ prefix.
+      Default is a NEW dedicated bucket (ucluj-user-avatars). To instead reuse
+      the existing player-photos bucket, set this to ucluj-player-photos AND set
+      CreateAvatarsBucket to "false" so the stack only attaches CORS + policy to
+      the already-existing bucket. See infra/README.md "Avatars bucket choice".
+
+  CreateAvatarsBucket:
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+    Description: >
+      "true"  -> this stack creates the avatars bucket (use with a NEW bucket
+                 name such as ucluj-user-avatars).
+      "false" -> the bucket already exists (e.g. ucluj-player-photos); the stack
+                 will NOT create it and will skip the bucket-level CORS/policy
+                 resources, since CloudFormation cannot mutate a bucket it does
+                 not own. In that case apply CORS + the avatars/* public-read
+                 policy manually (commands in infra/README.md).
+
+  AmplifyOrigin:
+    Type: String
+    Default: https://umbraro.d2j9yfctr6ipf6.amplifyapp.com
+    Description: >
+      The Amplify Hosting origin allowed to PUT avatars directly to S3 from the
+      browser (Flutter web cross-origin presigned PUT).
+
+  WebSocketStageName:
+    Type: String
+    Default: prod
+    Description: API Gateway WebSocket stage name. The frontend WSS URL and the
+      FastAPI management endpoint both embed this stage.
+
+  ConnectionsTableName:
+    Type: String
+    Default: umbraro-ws-connections
+    Description: DynamoDB table holding live WebSocket connections.
+
+# ---------------------------------------------------------------------------
+# Conditions
+# ---------------------------------------------------------------------------
+Conditions:
+  ShouldCreateAvatarsBucket: !Equals [!Ref CreateAvatarsBucket, "true"]
+
+# ---------------------------------------------------------------------------
+# Globals (applied to all AWS::Serverless::Function resources)
+# ---------------------------------------------------------------------------
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 10
+    MemorySize: 128
+    Architectures: [x86_64]
+
+Resources:
+
+  # =========================================================================
+  # PART B — AVATARS: S3 bucket, CORS, and public-read on avatars/*
+  # =========================================================================
+
+  AvatarsBucket:
+    Type: AWS::S3::Bucket
+    Condition: ShouldCreateAvatarsBucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Ref AvatarsBucketName
+      # Public-read on avatars/* is delivered by the bucket policy below, so we
+      # must NOT block public policies. We still block public ACLs (we never use
+      # ACLs; access is granted purely through the bucket policy).
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      CorsConfiguration:
+        CorsRules:
+          # Allow the Flutter web app to PUT bytes straight to the presigned URL
+          # the backend signs, and to GET for display. HEAD covers preflight.
+          - AllowedOrigins:
+              - !Ref AmplifyOrigin
+            AllowedMethods: [PUT, GET, HEAD]
+            AllowedHeaders: ["*"]
+            ExposedHeaders: [ETag]
+            MaxAgeSeconds: 3000
+
+  # Public-read for display of avatars/* only. Nothing else in the bucket is
+  # exposed. Only created when this stack owns the bucket.
+  AvatarsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: ShouldCreateAvatarsBucket
+    Properties:
+      Bucket: !Ref AvatarsBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: PublicReadAvatars
+            Effect: Allow
+            Principal: "*"
+            Action: s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${AvatarsBucketName}/avatars/*"
+
+  # =========================================================================
+  # PART C — CHAT: DynamoDB connection registry
+  # =========================================================================
+
+  ConnectionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref ConnectionsTableName
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: connectionId
+          AttributeType: S
+        - AttributeName: channel
+          AttributeType: S
+      KeySchema:
+        - AttributeName: connectionId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        # FastAPI queries this index ("which sockets are on channel X?") to
+        # fan a new message out via post_to_connection.
+        - IndexName: channel-index
+          KeySchema:
+            - AttributeName: channel
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+
+  # =========================================================================
+  # PART C — CHAT: Lambda execution role (DynamoDB RW + CloudWatch Logs)
+  # =========================================================================
+
+  WsLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: umbraro-ws-lambda-exec
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: umbraro-ws-connections-rw
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:GetItem
+                Resource: !GetAtt ConnectionsTable.Arn
+
+  # =========================================================================
+  # PART C — CHAT: the two WebSocket Lambdas
+  # =========================================================================
+
+  WsConnectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: umbraro-ws-connect
+      CodeUri: lambdas/ws_connect/
+      Handler: handler.handler
+      Role: !GetAtt WsLambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          JWT_SECRET: !Ref JwtSecret
+          CONNECTIONS_TABLE: !Ref ConnectionsTableName
+
+  WsDisconnectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: umbraro-ws-disconnect
+      CodeUri: lambdas/ws_disconnect/
+      Handler: handler.handler
+      Role: !GetAtt WsLambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          CONNECTIONS_TABLE: !Ref ConnectionsTableName
+
+  # No-op handler for stray client frames. The socket is receive-only, so this
+  # just returns 200 to keep the connection open. It needs no DynamoDB access,
+  # but it reuses the same exec role for simplicity (the role grants only
+  # connections-table RW + logs, which this function never exercises).
+  WsDefaultFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: umbraro-ws-default
+      CodeUri: lambdas/ws_default/
+      Handler: handler.handler
+      Role: !GetAtt WsLambdaExecutionRole.Arn
+
+  # =========================================================================
+  # PART C — CHAT: API Gateway WebSocket API, routes, integrations, stage
+  # =========================================================================
+
+  WebSocketApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: umbraro-chat-ws
+      ProtocolType: WEBSOCKET
+      # API Gateway uses this expression to pick the route for an inbound frame.
+      # Client-to-server frames are not expected (the socket is receive-only),
+      # so anything unmatched falls through to $default.
+      RouteSelectionExpression: "$request.body.action"
+
+  # ---- $connect -----------------------------------------------------------
+  ConnectIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref WebSocketApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub >-
+        arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WsConnectFunction.Arn}/invocations
+
+  ConnectRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: $connect
+      # Authorization is performed inside the Lambda (HS256 local-JWT check),
+      # so the route itself uses no API Gateway authorizer.
+      AuthorizationType: NONE
+      Target: !Sub "integrations/${ConnectIntegration}"
+
+  ConnectInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref WsConnectFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebSocketApi}/*/$connect"
+
+  # ---- $disconnect --------------------------------------------------------
+  DisconnectIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref WebSocketApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub >-
+        arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WsDisconnectFunction.Arn}/invocations
+
+  DisconnectRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: $disconnect
+      AuthorizationType: NONE
+      Target: !Sub "integrations/${DisconnectIntegration}"
+
+  DisconnectInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref WsDisconnectFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebSocketApi}/*/$disconnect"
+
+  # ---- $default -----------------------------------------------------------
+  # Receive-only socket: $default just 200s any stray client frame so the
+  # connection stays open. It never re-registers or deletes connection rows.
+  DefaultIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref WebSocketApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub >-
+        arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WsDefaultFunction.Arn}/invocations
+
+  DefaultRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketApi
+      RouteKey: $default
+      AuthorizationType: NONE
+      Target: !Sub "integrations/${DefaultIntegration}"
+
+  DefaultInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref WsDefaultFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebSocketApi}/*/$default"
+
+  # ---- Deployment + stage -------------------------------------------------
+  WebSocketDeployment:
+    Type: AWS::ApiGatewayV2::Deployment
+    DependsOn:
+      - ConnectRoute
+      - DisconnectRoute
+      - DefaultRoute
+    Properties:
+      ApiId: !Ref WebSocketApi
+
+  WebSocketStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref WebSocketApi
+      DeploymentId: !Ref WebSocketDeployment
+      StageName: !Ref WebSocketStageName
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 50
+        ThrottlingRateLimit: 50
+
+  # =========================================================================
+  # IAM — managed policies for the App Runner INSTANCE ROLE
+  # =========================================================================
+  # These policies are created here but must be ATTACHED to the App Runner
+  # instance role out-of-band (App Runner's instance role is not managed by this
+  # stack). The stack outputs their ARNs; attach them with the AWS CLI command
+  # documented in infra/README.md. They grant FastAPI on App Runner exactly the
+  # permissions it needs and nothing more.
+
+  # S3: sign + read avatar objects (so the presigned PUT it issues actually
+  # works, and GET for any server-side validation).
+  AppRunnerAvatarsS3Policy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: umbraro-apprunner-avatars-s3
+      Description: App Runner FastAPI -> put/get avatar objects under avatars/*.
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${AvatarsBucketName}/avatars/*"
+
+  # DynamoDB Query (table + GSI) + manage WebSocket connections, so FastAPI can
+  # look up who is on a channel and post_to_connection to fan a message out.
+  AppRunnerChatPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: umbraro-apprunner-chat
+      Description: >
+        App Runner FastAPI -> query the connections table/GSI and post messages
+        to live WebSocket connections via the API Gateway Management API.
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: QueryConnections
+            Effect: Allow
+            Action:
+              - dynamodb:Query
+            Resource:
+              - !GetAtt ConnectionsTable.Arn
+              - !Sub "${ConnectionsTable.Arn}/index/channel-index"
+          - Sid: ManageWebSocketConnections
+            Effect: Allow
+            Action:
+              - execute-api:ManageConnections
+            Resource: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebSocketApi}/${WebSocketStageName}/POST/@connections/*"
+
+# ---------------------------------------------------------------------------
+# Outputs — the values the app consumes (mirror these into config; see README)
+# ---------------------------------------------------------------------------
+Outputs:
+
+  AvatarsBucket:
+    Description: >
+      Avatars S3 bucket name. Backend env: AVATARS_S3_BUCKET.
+    Value: !Ref AvatarsBucketName
+
+  AvatarsPublicBaseUrl:
+    Description: >
+      Public base URL for displaying avatars. Objects live at
+      <base>/avatars/<user_id>.jpg.
+    Value: !Sub "https://${AvatarsBucketName}.s3.${AWS::Region}.amazonaws.com"
+
+  WebSocketConnectUrl:
+    Description: >
+      Frontend WSS connect URL. Frontend config key: wsConnectUrl. The client
+      appends ?channel={channelId}&token={localAccessJwt}.
+    Value: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${WebSocketStageName}"
+
+  WebSocketManagementEndpoint:
+    Description: >
+      API Gateway Management API endpoint for FastAPI post_to_connection.
+      Backend env: WS_API_MANAGEMENT_ENDPOINT.
+    Value: !Sub "https://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${WebSocketStageName}"
+
+  ConnectionsTableName:
+    Description: >
+      DynamoDB connections table name. Backend env: WS_CONNECTIONS_TABLE.
+    Value: !Ref ConnectionsTableName
+
+  AppRunnerAvatarsS3PolicyArn:
+    Description: >
+      Attach this managed policy to the App Runner INSTANCE ROLE (S3 avatars).
+    Value: !Ref AppRunnerAvatarsS3Policy
+
+  AppRunnerChatPolicyArn:
+    Description: >
+      Attach this managed policy to the App Runner INSTANCE ROLE (DynamoDB Query
+      + execute-api:ManageConnections).
+    Value: !Ref AppRunnerChatPolicy
+
+  WebSocketApiId:
+    Description: The API Gateway WebSocket API id (apiId) used to build URLs.
+    Value: !Ref WebSocketApi
