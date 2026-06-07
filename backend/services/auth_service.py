@@ -14,7 +14,7 @@ from core.security import (
     create_refresh_token,
     decode_token,
 )
-from services.reference_service import get_supported_teams
+from sportradar.team_registry import team_by_short
 
 
 class AuthService:
@@ -27,10 +27,10 @@ class AuthService:
         if result.scalar_one_or_none() is not None:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
 
-        clean_team_name = (team_name or "Universitatea Cluj").strip()
-        supported_teams = get_supported_teams()
-        if supported_teams and clean_team_name not in supported_teams and clean_team_name != "Universitatea Cluj":
+        team_ref = team_by_short((team_name or "U Cluj").strip())
+        if team_ref is None:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid team selection")
+        clean_team_name = team_ref.short
 
         user = User(
             email=email,
@@ -143,10 +143,10 @@ class AuthService:
         if r.scalar_one_or_none() is not None:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
 
-        clean_team_name = (team_name or "Universitatea Cluj").strip()
-        supported_teams = get_supported_teams()
-        if supported_teams and clean_team_name not in supported_teams and clean_team_name != "Universitatea Cluj":
+        team_ref = team_by_short((team_name or "U Cluj").strip())
+        if team_ref is None:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid team selection")
+        clean_team_name = team_ref.short
 
         user = User(
             email=email,
