@@ -77,7 +77,7 @@ Conditions:
 # ---------------------------------------------------------------------------
 Globals:
   Function:
-    Runtime: python3.11
+    Runtime: python3.13
     Timeout: 10
     MemorySize: 128
     Architectures: [x86_64]
@@ -115,7 +115,7 @@ Resources:
             AllowedMethods: [PUT, GET, HEAD]
             AllowedHeaders: ["*"]
             ExposedHeaders: [ETag]
-            MaxAgeSeconds: 3000
+            MaxAge: 3000
 
   # Public-read for display of avatars/* only. Nothing else in the bucket is
   # exposed. Only created when this stack owns the bucket.
@@ -375,7 +375,7 @@ Resources:
     Type: AWS::IAM::ManagedPolicy
     Properties:
       ManagedPolicyName: umbraro-apprunner-chat
-      Description: >
+      Description: >-
         App Runner FastAPI -> query the connections table/GSI and post messages
         to live WebSocket connections via the API Gateway Management API.
       PolicyDocument:
