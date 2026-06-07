@@ -383,6 +383,95 @@ class XiService:
         ) / 100.0
         return int(max(40, min(95, round(55 + 40 * perf_pct))))
 
+    def _squad_stats(self, xi_df: Optional[pd.DataFrame]) -> Dict:
+        """Aggregate the four match-preview squad metrics over an XI DataFrame.
+
+        Operates on the eleven starters only (``xi_df``), not the whole pool, so
+        the row under "the 11 most likely starters" actually reflects them. The
+        four cells all read on a 0-100 scale:
+
+        * ``avg_performance_score`` / ``avg_recent_form`` — the mean over the XI
+          of each player's within-position league percentile (0-100) for
+          ``performance_score`` / ``recent_form_score``, using the same
+          fine-or-coarse position-group basis as :meth:`_normalise_player` and
+          the radar. A percentile index, not the raw composite, so it sits on
+          the same scale as the true pass/duel percentages.
+        * ``avg_pass_accuracy`` / ``avg_duel_win_rate`` — pooled (volume-weighted)
+          team rates, ``100 * sum(successfulPasses)/sum(passes)`` and
+          ``100 * sum(duelsWon)/sum(duels)`` over the XI, so a 2-duel sub no
+          longer counts the same as a 400-duel centre-back. Falls back to the
+          old mean-of-ratios when the raw count columns are absent (older data)
+          or the denominator is zero, so the row never breaks.
+
+        Returns zeros for an empty XI.
+        """
+        zeros = {
+            "avg_performance_score": 0.0,
+            "avg_recent_form": 0.0,
+            "avg_pass_accuracy": 0.0,
+            "avg_duel_win_rate": 0.0,
+        }
+        if xi_df is None or xi_df.empty:
+            return dict(zeros)
+
+        self._ensure_percentile_tables()
+
+        # ── Form / Performance → within-position percentile (mirror of
+        #    _normalise_player's fine-or-coarse group selection) ───────────────
+        perf_pcts: List[float] = []
+        form_pcts: List[float] = []
+        for _, row in xi_df.iterrows():
+            fine = str(row.get("position_group_fine", "") or "").upper()
+            coarse = str(row.get("role_group", "MID") or "MID").upper()
+            fine_arrs = (self._pct_fine or {}).get(fine, {})
+            perf_fine = fine_arrs.get("performance_score")
+            use_fine = perf_fine is not None and perf_fine.size >= _MIN_FINE_GROUP
+            table = self._pct_fine if use_fine else self._pct_coarse
+            key = fine if use_fine else coarse
+            group_arrs = (table or {}).get(key, {})
+            perf_pcts.append(
+                self._pct_of(
+                    float(row.get("performance_score", 0) or 0),
+                    group_arrs.get("performance_score"),
+                )
+            )
+            form_pcts.append(
+                self._pct_of(
+                    float(row.get("recent_form_score", 0) or 0),
+                    group_arrs.get("recent_form_score"),
+                )
+            )
+
+        avg_perf = round(float(np.mean(perf_pcts)), 1) if perf_pcts else 0.0
+        avg_form = round(float(np.mean(form_pcts)), 1) if form_pcts else 0.0
+
+        # ── Passing / Duels → pooled volume-weighted team rate, with a
+        #    mean-of-ratios fallback when the raw counts are unavailable ───────
+        def _pooled_rate(num_col: str, den_col: str, ratio_col: str) -> float:
+            if num_col in xi_df.columns and den_col in xi_df.columns:
+                den = float(
+                    pd.to_numeric(xi_df[den_col], errors="coerce").fillna(0).sum()
+                )
+                if den > 0:
+                    num = float(
+                        pd.to_numeric(xi_df[num_col], errors="coerce").fillna(0).sum()
+                    )
+                    return round(100.0 * num / den, 1)
+            # Fallback: old behaviour (flat mean of the per-player ratio).
+            if ratio_col in xi_df.columns:
+                return round(
+                    float(pd.to_numeric(xi_df[ratio_col], errors="coerce").fillna(0).mean()),
+                    1,
+                )
+            return 0.0
+
+        return {
+            "avg_performance_score": avg_perf,
+            "avg_recent_form": avg_form,
+            "avg_pass_accuracy": _pooled_rate("successfulPasses", "passes", "pass_accuracy"),
+            "avg_duel_win_rate": _pooled_rate("duelsWon", "duels", "duel_win_rate"),
+        }
+
     def _format_records(self, frame: Optional[pd.DataFrame]) -> List[Dict]:
         """Select the player columns and attach percentiles + rating in place."""
         if frame is None or frame.empty:
@@ -538,53 +627,47 @@ class XiService:
         # for the "Cel mai bun XI" view shown alongside the predicted lineup.
         best = self._best_xi_by_rating(my_team_df, formation)
 
-        # Team aggregate stats
+        # Team aggregate stats — scoped to the predicted XI (the eleven shown),
+        # volume-weighted for pass/duel and 0-100 percentile-normalised for
+        # form/performance (see :meth:`_squad_stats`). The top scorer / creator
+        # remain whole-squad highlights (separate fields), unchanged.
         all_df = result.get("all_scored", pd.DataFrame())
-        team_stats: Dict = {}
+        team_xi = result.get("xi", pd.DataFrame())
+        team_stats: Dict = self._squad_stats(team_xi)
         if not all_df.empty:
-            def _mean(col: str) -> float:
-                return round(float(all_df[col].mean()), 2) if col in all_df.columns else 0.0
-
-            team_stats = {
-                "avg_performance_score": _mean("performance_score"),
-                "avg_recent_form": _mean("recent_form_score"),
-                "avg_pass_accuracy": round(_mean("pass_accuracy"), 1),
-                "avg_duel_win_rate": round(_mean("duel_win_rate"), 1),
-            }
             for stat, key in [("per90_goals", "top_scorer"), ("per90_keyPasses", "top_creator")]:
-                if stat in all_df.columns and not all_df.empty:
+                if stat in all_df.columns:
                     row = all_df.nlargest(1, stat).iloc[0]
                     team_stats[key] = str(row.get("shortName", ""))
                     team_stats[f"{key}_stat"] = round(float(row.get(stat, 0)), 2)
 
-        # Opponent aggregate stats
-        opponent_stats: Dict = {}
+        # Opponent aggregate stats — same XI-scoped basis. The opponent has no
+        # XI in ``result`` (only used for opponent adjustments above), so derive
+        # its predicted eleven on the same Hungarian path before aggregating.
+        opponent_stats: Dict = self._squad_stats(None)
         if opp_team_df is not None and not opp_team_df.empty:
-            def _opp_mean(col: str) -> float:
-                return round(float(opp_team_df[col].mean()), 2) if col in opp_team_df.columns else 0.0
-
-            opponent_stats = {
-                "avg_performance_score": _opp_mean("performance_score"),
-                "avg_recent_form": _opp_mean("recent_form_score"),
-                "avg_pass_accuracy": round(_opp_mean("pass_accuracy"), 1),
-                "avg_duel_win_rate": round(_opp_mean("duel_win_rate"), 1),
-            }
+            try:
+                opp_result = self.predictor.predict_xi(
+                    df=opp_team_df,
+                    formation=formation,
+                    your_team_id=opp_id,
+                )
+                opponent_xi = opp_result.get("xi", pd.DataFrame())
+            except Exception:
+                opponent_xi = pd.DataFrame()
+            opponent_stats = self._squad_stats(opponent_xi)
             for stat, key in [("per90_goals", "top_scorer"), ("per90_keyPasses", "top_creator")]:
-                if stat in opp_team_df.columns and not opp_team_df.empty:
+                if stat in opp_team_df.columns:
                     row = opp_team_df.nlargest(1, stat).iloc[0]
                     opponent_stats[key] = str(row.get("shortName", ""))
                     opponent_stats[f"{key}_stat"] = round(float(row.get(stat, 0)), 2)
         else:
-            opponent_stats = {
-                "avg_performance_score": 0.0,
-                "avg_recent_form": 0.0,
-                "avg_pass_accuracy": 0.0,
-                "avg_duel_win_rate": 0.0,
+            opponent_stats.update({
                 "top_scorer": "",
                 "top_scorer_stat": 0.0,
                 "top_creator": "",
                 "top_creator_stat": 0.0,
-            }
+            })
 
         # Head-to-head from main fixtures CSV (uses the resolved home short label)
         h2h: Dict = {"total": 0, "our_wins": 0, "draws": 0, "their_wins": 0,
