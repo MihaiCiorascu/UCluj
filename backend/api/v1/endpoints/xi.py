@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional
 
 from core.dependencies import get_xi_service, get_feature_service
@@ -8,9 +8,36 @@ from services.feature_service import FeatureService
 
 router = APIRouter()
 
+
+def _coerce_locked(locked: Optional[Dict[str, int]]) -> Optional[Dict[int, int]]:
+    """Coerce a JSON ``locked`` object to ``{slot_index(int) -> playerId(int)}``.
+
+    JSON object keys are always strings, so the wire form is
+    ``{"3": 123456, "0": 7788}`` (key = slot index, value = playerId). Entries
+    whose key or value cannot be parsed as integers are dropped silently; the
+    predictor performs the deeper validation (range, membership, duplicates).
+    """
+    if not locked:
+        return None
+    out: Dict[int, int] = {}
+    for k, v in locked.items():
+        try:
+            out[int(k)] = int(v)
+        except (TypeError, ValueError):
+            continue
+    return out or None
+
+
 class XiRequest(BaseModel):
     opponent_team_id: Optional[int] = None
-    formation: str = "4-3-3"
+    formation: str = "auto"
+
+
+class MatchPreviewRequest(BaseModel):
+    opponent_name: str
+    formation: str = "auto"
+    # JSON object keyed by stringified slot index -> playerId.
+    locked: Dict[str, int] = Field(default_factory=dict)
 
 
 class OpponentTeam(BaseModel):
@@ -42,15 +69,41 @@ def list_opponents(
 @router.get("/match-preview", response_model=Dict[str, Any])
 def match_preview(
     opponent_name: str = Query(..., description="Opponent team name as it appears in fixtures"),
-    formation: str = Query("4-3-3"),
+    formation: str = Query("auto", description="A curated formation key, or 'auto' to auto-pick the best shape"),
     xi_svc: XiService = Depends(get_xi_service),
     feature_svc: FeatureService = Depends(get_feature_service),
 ):
+    """Simple match preview (no slot locks). ``formation`` defaults to 'auto'."""
     try:
         return xi_svc.match_preview(
             opponent_name=opponent_name,
             formation=formation,
             main_df=feature_svc._df,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/match-preview", response_model=Dict[str, Any])
+def match_preview_post(
+    body: MatchPreviewRequest,
+    xi_svc: XiService = Depends(get_xi_service),
+    feature_svc: FeatureService = Depends(get_feature_service),
+):
+    """Match preview with optional slot locks and lock-aware re-optimisation.
+
+    Body: ``{opponent_name, formation="auto", locked={slot_index_str: playerId}}``.
+    Locked players are pinned to their slot and the rest of the XI re-optimises
+    around them. With ``formation="auto"`` the best curated shape is chosen with
+    those locks applied. Returns the same shape as the GET endpoint, with the
+    resolved ``formation`` and the re-optimised ``starting_xi`` / ``bench``.
+    """
+    try:
+        return xi_svc.match_preview(
+            opponent_name=body.opponent_name,
+            formation=body.formation,
+            main_df=feature_svc._df,
+            locked=_coerce_locked(body.locked),
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

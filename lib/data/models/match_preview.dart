@@ -214,9 +214,23 @@ class H2HStats {
 }
 
 class MatchPreviewResponse {
+  // The RESOLVED formation: the concrete curated key actually used by the
+  // optimiser (never "auto"). The pitch must render from THIS value, not from
+  // what the client requested, because formation="auto" lets the backend pick
+  // the highest-objective shape.
   final String formation;
+  // Total assignment objective per evaluated shape (formation key -> score).
+  // For an "auto" request this holds all nine curated shapes; for an explicit
+  // request it holds just the one. Used to show the optimiser's "why this
+  // shape" ranking next to the resolved-formation badge. Empty on older
+  // backends, in which case the ranking strip is hidden.
+  final Map<String, double> formationScores;
   final String opponentName;
   final int? opponentTeamId;
+  // The tracked (home) team's short label and Sportradar id, echoed back by the
+  // backend. Optional so older payloads still parse.
+  final String homeTeamShort;
+  final String homeTeamSrId;
   final List<MatchPreviewPlayer> startingXi;
   final List<MatchPreviewPlayer> bench;
   // The 'ideal' eleven by pure within-position rating (opponent-agnostic),
@@ -230,8 +244,11 @@ class MatchPreviewResponse {
 
   MatchPreviewResponse({
     required this.formation,
+    this.formationScores = const {},
     required this.opponentName,
     this.opponentTeamId,
+    this.homeTeamShort = '',
+    this.homeTeamSrId = '',
     required this.startingXi,
     required this.bench,
     this.bestXi = const [],
@@ -249,8 +266,15 @@ class MatchPreviewResponse {
         [];
     return MatchPreviewResponse(
       formation: j['formation'] as String? ?? '4-3-3',
+      formationScores: {
+        for (final e
+            in (j['formation_scores'] as Map<String, dynamic>? ?? {}).entries)
+          e.key: (e.value as num?)?.toDouble() ?? 0,
+      },
       opponentName: j['opponent_name'] as String? ?? '',
       opponentTeamId: (j['opponent_team_id'] as num?)?.toInt(),
+      homeTeamShort: j['home_team_short'] as String? ?? '',
+      homeTeamSrId: j['home_team_sr_id'] as String? ?? '',
       startingXi: parsePlayers('starting_xi'),
       bench: parsePlayers('bench'),
       bestXi: parsePlayers('best_xi'),

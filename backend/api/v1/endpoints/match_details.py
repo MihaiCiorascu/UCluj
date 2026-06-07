@@ -144,7 +144,9 @@ def _assign_official_positions(players: list[dict], sr_formation: str | None) ->
         })
 
     try:
-        assigned = _XI_ASSIGNER._assign_xi(pd.DataFrame(rows), formation_key)
+        # ``_assign_xi`` now returns ``(xi_df, total_score)``; only the assigned
+        # frame is needed to label the actual lineup's official positions.
+        assigned, _total = _XI_ASSIGNER._assign_xi(pd.DataFrame(rows), formation_key)
     except Exception:
         logger.warning("Official-position assignment failed for the actual lineup", exc_info=True)
         return None

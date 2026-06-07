@@ -28,7 +28,7 @@ import pandas as pd
 from ml.feature_engineering import get_team_squad_from_matches
 from ml.pipeline import _format_output, build_dataset_from_files, load_player_profiles
 from ml.match_dates import load_match_dates, parse_date
-from ml.xi_predictor import MAX_BENCH, StartingXIPredictor
+from ml.xi_predictor import CURATED_FORMATIONS, MAX_BENCH, StartingXIPredictor
 from app.config import effective_now
 from services.load_service import assess_player
 from services.player_photo_service import PlayerPhotoService
@@ -124,6 +124,21 @@ _PLAYER_COLS = [
     "acwr", "minutes_trend",
     "cumulative_minutes_before_fixture", "cumulative_appearances",
 ]
+
+
+def _normalise_formation(formation: Optional[str]) -> str:
+    """Coerce a requested formation to ``"auto"`` or a curated key.
+
+    The only formations offered to (and evaluated for) the coach are the curated
+    nine in :data:`CURATED_FORMATIONS`. ``"auto"`` (case-insensitive), an empty
+    value, or any formation outside the curated set all collapse to ``"auto"`` so
+    the predictor searches the curated shapes and returns the best one. A curated
+    key passes through unchanged.
+    """
+    f = (formation or "").strip()
+    if not f or f.lower() == "auto":
+        return "auto"
+    return f if f in CURATED_FORMATIONS else "auto"
 
 
 class XiService:
@@ -516,7 +531,15 @@ class XiService:
         # Overwrite predicted_score on this private copy only (the predicted XI
         # uses its own scored pool, so the selected eleven there do not change).
         pool["predicted_score"] = rating / 100.0
-        xi_df = self.predictor._assign_xi(pool, formation)
+        # ``_assign_xi`` now returns ``(xi_df, total_score)``; the best-by-rating
+        # view only needs the XI frame. When ``formation`` is ``"auto"`` resolve
+        # it to a concrete curated shape so the rating-based eleven matches the
+        # predicted XI's shape (the caller passes the resolved formation in).
+        resolved = formation
+        if str(formation).lower() == "auto":
+            resolved, xi_df, _total, _scores = self.predictor._best_formation(pool)
+        else:
+            xi_df, _total = self.predictor._assign_xi(pool, formation)
         used = set(xi_df["playerId"].tolist()) if not xi_df.empty else set()
         bench_df = (
             pool[~pool["playerId"].isin(used)]
@@ -529,14 +552,17 @@ class XiService:
 
     def predict_xi(
         self,
-        formation: str,
-        opponent_team_id: Optional[int],
+        formation: str = "auto",
+        opponent_team_id: Optional[int] = None,
         home_team_substring: Optional[str] = None,
         home_team_sr_id: Optional[str] = None,
         home_team_short: Optional[str] = None,
+        locked: Optional[Dict[int, int]] = None,
     ) -> Dict:
         if not self.predictor:
             raise RuntimeError("XI Model not loaded")
+
+        formation = _normalise_formation(formation)
 
         home = self._resolve_home_team(
             home_team_substring=home_team_substring,
@@ -561,6 +587,7 @@ class XiService:
             formation=formation,
             your_team_id=opponent_team_id,
             opponent_df=opp_team_df,
+            locked=locked,
         )
 
         # Surface the resolved home team in the response payload so the
@@ -568,6 +595,8 @@ class XiService:
         out = _format_output(result, FIXTURE_NAME_TO_ID.get(home.short), opponent_team_id)
         out["home_team_short"] = home.short
         out["home_team_sr_id"] = home.sr_id
+        # Why-this-shape explainer: formation -> total assignment objective.
+        out["formation_scores"] = result.get("formation_scores", {})
         # Attach the honest within-position rating + stat percentiles so the
         # standalone XI screen matches the Match Intelligence card.
         self._ensure_percentile_tables()
@@ -576,8 +605,9 @@ class XiService:
                 self._normalise_player(rec)
                 rec.update(assess_player(rec))
         # The 'ideal' eleven by pure within-position rating, alongside the
-        # predicted lineup, for the "best XI" toggle.
-        best = self._best_xi_by_rating(my_team_df, formation)
+        # predicted lineup, for the "best XI" toggle. It is built on the RESOLVED
+        # formation so the two elevens share a shape.
+        best = self._best_xi_by_rating(my_team_df, result["formation"])
         out["bestXI"] = self._format_records(best["xi"])
         out["bestBench"] = self._format_records(best["bench"])
         return out
@@ -585,15 +615,18 @@ class XiService:
     def match_preview(
         self,
         opponent_name: str,
-        formation: str,
+        formation: str = "auto",
         main_df: Optional[pd.DataFrame] = None,
         home_team_substring: Optional[str] = None,
         home_team_sr_id: Optional[str] = None,
         home_team_short: Optional[str] = None,
+        locked: Optional[Dict[int, int]] = None,
     ) -> Dict:
         """Return starting XI + team stats + H2H record for an upcoming match."""
         if not self.predictor:
             raise RuntimeError("XI model not loaded")
+
+        formation = _normalise_formation(formation)
 
         home = self._resolve_home_team(
             home_team_substring=home_team_substring,
@@ -648,14 +681,19 @@ class XiService:
             formation=formation,
             your_team_id=FIXTURE_NAME_TO_ID.get(home.short),
             opponent_df=opp_team_df,
+            locked=locked,
         )
+        # The resolved shape ("auto" picks one of the curated nine; an explicit
+        # key passes through). Every shape-coupled view below uses this so the
+        # predicted XI, best XI, and opponent XI all share one formation.
+        resolved_formation = result["formation"]
 
         # Build the within-position league percentile tables once for this call.
         self._ensure_percentile_tables()
 
         # The 'ideal' eleven by pure within-position rating (opponent-agnostic),
         # for the "Cel mai bun XI" view shown alongside the predicted lineup.
-        best = self._best_xi_by_rating(my_team_df, formation)
+        best = self._best_xi_by_rating(my_team_df, resolved_formation)
 
         # Team aggregate stats — scoped to the predicted XI (the eleven shown),
         # volume-weighted for pass/duel and 0-100 percentile-normalised for
@@ -677,9 +715,11 @@ class XiService:
         opponent_stats: Dict = self._squad_stats(None)
         if opp_team_df is not None and not opp_team_df.empty:
             try:
+                # Opponent XI uses the resolved home formation (never "auto" and
+                # never the home team's locks, which are slot pins for our squad).
                 opp_result = self.predictor.predict_xi(
                     df=opp_team_df,
-                    formation=formation,
+                    formation=resolved_formation,
                     your_team_id=opp_team_id,
                 )
                 opponent_xi = opp_result.get("xi", pd.DataFrame())
@@ -737,7 +777,8 @@ class XiService:
                 pass
 
         return {
-            "formation": formation,
+            "formation": resolved_formation,
+            "formation_scores": result.get("formation_scores", {}),
             "home_team_short": home.short,
             "home_team_sr_id": home.sr_id,
             "opponent_name": opponent_name,

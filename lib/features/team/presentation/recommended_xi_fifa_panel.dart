@@ -14,6 +14,7 @@ import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/widgets/player_photo_avatar.dart';
 import '../../../data/models/match_preview.dart';
+import '../../../data/repositories/xi_repository.dart';
 
 /// Map an XI role group to its colour. Reads from the role family in
 /// ``AppColorTokens`` so the Match Preview pitch and the Match Stats pitch
@@ -34,16 +35,38 @@ Color recommendedXiRoleColor(String g, AppColorTokens c) {
 }
 
 /// FIFA-style pitch + bench + player detail (dashboard sheet & match preview).
+///
+/// When [opponentName] is supplied the pitch becomes interactive: tapping a
+/// player opens an action menu (Lock to slot, Replace…, Unlock, Details) and
+/// any lock/replace/unlock re-requests the preview through the POST contract
+/// (current resolved formation + the locked map) and re-renders the returned
+/// XI/bench. Without [opponentName] the panel stays read-only (older callers).
 class RecommendedXiFifaPanel extends StatefulWidget {
   const RecommendedXiFifaPanel({
     super.key,
     required this.preview,
     required this.formation,
+    this.opponentName,
+    this.xiRepository,
+    this.onPreviewChanged,
     this.ratingForDisplay = _defaultRatingForDisplay,
   });
 
   final MatchPreviewResponse preview;
   final String formation;
+
+  /// Opponent short label used to re-request the preview when the staff edit
+  /// the XI. When null the panel is read-only (no action menu, no locks).
+  final String? opponentName;
+
+  /// Repository used for the flexible-XI POST round-trips. Defaults to a fresh
+  /// [XiRepository] when interactivity is enabled and none is injected.
+  final XiRepository? xiRepository;
+
+  /// Notifies the parent when an edit produced a new preview, so a host screen
+  /// can keep its own copy (e.g. a formation badge) in sync.
+  final ValueChanged<MatchPreviewResponse>? onPreviewChanged;
+
   final double Function(MatchPreviewPlayer p) ratingForDisplay;
 
   static double _defaultRatingForDisplay(MatchPreviewPlayer p) =>
@@ -67,22 +90,55 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
   // backends, so the toggle is hidden and this stays false.
   bool _showBest = false;
 
+  // The live preview the pitch renders. It starts as the widget's preview and
+  // is swapped for the POST result after every edit, so the panel re-renders
+  // the re-optimised XI/bench without waiting on the parent.
+  late MatchPreviewResponse _preview;
+
+  // Current pins: 0-based slot index -> playerId. Sent on every edit and shown
+  // as a small lock badge on the pinned chip.
+  final Map<int, int> _locked = {};
+
+  // True while a POST round-trip is in flight; the pitch dims and ignores taps.
+  bool _busy = false;
+
+  XiRepository? _repo;
+
+  bool get _interactive => widget.opponentName != null;
+
+  XiRepository get _repository =>
+      widget.xiRepository ?? (_repo ??= XiRepository());
+
+  // The resolved formation always comes from the live preview (never the
+  // requested value), because AUTO and skipped-lock shapes can differ.
+  String get _resolvedFormation =>
+      _preview.formation.isNotEmpty ? _preview.formation : widget.formation;
+
   List<MatchPreviewPlayer> get _activeXi =>
-      _showBest ? widget.preview.bestXi : widget.preview.startingXi;
+      _showBest ? _preview.bestXi : _preview.startingXi;
   List<MatchPreviewPlayer> get _activeBench =>
-      _showBest ? widget.preview.bestBench : widget.preview.bench;
+      _showBest ? _preview.bestBench : _preview.bench;
 
   @override
   void initState() {
     super.initState();
+    _preview = widget.preview;
     _pickDefault();
   }
 
   @override
   void didUpdateWidget(covariant RecommendedXiFifaPanel oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.preview != widget.preview ||
-        oldWidget.formation != widget.formation) {
+    if (oldWidget.preview != widget.preview &&
+        !identical(widget.preview, _preview)) {
+      // A genuinely fresh preview from the parent (e.g. opponent or formation
+      // change) supersedes any local edits and clears the locks. We skip the
+      // case where the parent is simply echoing back the same object our own
+      // edit produced (via onPreviewChanged), which must NOT drop the locks.
+      _preview = widget.preview;
+      _locked.clear();
+      _pickDefault();
+    } else if (oldWidget.formation != widget.formation) {
       _pickDefault();
     }
   }
@@ -100,10 +156,87 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
     });
   }
 
+  // ── Flexible-XI editing ──────────────────────────────────────────────────
+
+  /// Re-request the preview through the POST contract with the current resolved
+  /// formation and locked map, then swap in the returned XI/bench. The lock map
+  /// is sent as-is; the backend silently drops invalid locks and may even drop
+  /// all of them (still returning an XI), so we trust whatever comes back.
+  Future<void> _applyEdits() async {
+    if (!_interactive) return;
+    setState(() => _busy = true);
+    try {
+      final updated = await _repository.postMatchPreview(
+        opponentName: widget.opponentName!,
+        formation: _resolvedFormation,
+        locked: Map<int, int>.from(_locked),
+      );
+      if (!mounted) return;
+      setState(() {
+        _preview = updated;
+        _busy = false;
+        // Keep the selection on the same player when it survived the
+        // re-optimisation; otherwise fall back to the first starter.
+        final keepId = _selected?.playerId;
+        final all = [...updated.startingXi, ...updated.bench];
+        _selected = all.cast<MatchPreviewPlayer?>().firstWhere(
+              (p) => p?.playerId == keepId,
+              orElse: () => updated.startingXi.isNotEmpty
+                  ? updated.startingXi.first
+                  : null,
+            );
+      });
+      widget.onPreviewChanged?.call(updated);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _busy = false);
+      AppHaptics.error();
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+        SnackBar(content: Text('${L10n.t('sheet.xiUnavailable')}: $e')),
+      );
+    }
+  }
+
+  Future<void> _lockToSlot(MatchPreviewPlayer p) async {
+    if (p.slotIndex < 0) return;
+    AppHaptics.medium();
+    // A player can hold only one slot, and a slot only one player: clear any
+    // prior pin for either before adding the new one.
+    _locked.removeWhere((slot, id) => id == p.playerId);
+    _locked[p.slotIndex] = p.playerId;
+    await _applyEdits();
+  }
+
+  Future<void> _unlock(MatchPreviewPlayer p) async {
+    AppHaptics.selection();
+    _locked.removeWhere((slot, id) => id == p.playerId);
+    await _applyEdits();
+  }
+
+  /// Pin [replacement] to [target]'s current slot, swapping the incumbent out.
+  Future<void> _replaceInSlot(
+      MatchPreviewPlayer target, MatchPreviewPlayer replacement) async {
+    if (target.slotIndex < 0) return;
+    AppHaptics.medium();
+    // The replacement takes the target's slot; drop any other pin it held and
+    // any pin of the player it displaces.
+    _locked.removeWhere((slot, id) =>
+        id == replacement.playerId || id == target.playerId);
+    _locked[target.slotIndex] = replacement.playerId;
+    await _applyEdits();
+  }
+
+  Future<void> _resetLocks() async {
+    if (_locked.isEmpty) return;
+    AppHaptics.selection();
+    _locked.clear();
+    await _applyEdits();
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final p = widget.preview;
+    final p = _preview;
     final rf = widget.ratingForDisplay;
 
     return LayoutBuilder(
@@ -111,18 +244,55 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         // Wide layouts keep the inline side panel; on phones, tapping a player
         // opens the detail in a bottom sheet so the pitch stays the focus.
         final wide = constraints.maxWidth >= 640;
+        // When interactive, a tap opens the action menu (lock / replace /
+        // unlock / details); otherwise it falls back to the read-only detail.
         void onSelect(MatchPreviewPlayer pl) {
-          if (wide) {
+          if (_busy) return;
+          if (_interactive) {
+            _openActionMenu(pl);
+          } else if (wide) {
             setState(() => _selected = pl);
           } else {
             _openPlayerSheet(pl);
           }
         }
 
+        final pitch = Stack(
+          children: [
+            FifaRecommendedXiPitch(
+              formation: _resolvedFormation,
+              players: _activeXi,
+              selected: wide ? _selected : null,
+              ratingForDisplay: rf,
+              onSelect: onSelect,
+              lockedSlots: _interactive && !_showBest
+                  ? _locked.keys.toSet()
+                  : const {},
+            ),
+            if (_busy)
+              Positioned.fill(
+                child: ColoredBox(
+                  color: c.scrim.withValues(alpha: 0.35),
+                  child: const Center(
+                    child: SizedBox(
+                      width: 28,
+                      height: 28,
+                      child: CircularProgressIndicator(strokeWidth: 2.5),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        );
+
         final left = Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (_interactive) ...[
+              _editBar(c),
+              const SizedBox(height: SpacingTokens.sm),
+            ],
             if (p.bestXi.isNotEmpty) ...[
               _xiToggle(c),
               const SizedBox(height: SpacingTokens.md),
@@ -131,13 +301,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
             const SizedBox(height: SpacingTokens.md),
             AspectRatio(
               aspectRatio: 4 / 5,
-              child: FifaRecommendedXiPitch(
-                formation: widget.formation,
-                players: _activeXi,
-                selected: wide ? _selected : null,
-                ratingForDisplay: rf,
-                onSelect: onSelect,
-              ),
+              child: pitch,
             ),
             const SizedBox(height: SpacingTokens.md),
             Text(
@@ -176,6 +340,52 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
     );
   }
 
+  // Edit affordance row: the resolved-shape badge, a locked-count tag, and a
+  // Reset that clears every pin and returns to the pure best XI. Editing the
+  // best-by-rating view is disabled (it is the opponent-agnostic ideal XI and
+  // is not produced from the lock map), so the toggle is what governs it.
+  Widget _editBar(AppColorTokens c) {
+    final lockCount = _locked.length;
+    return Row(
+      children: [
+        Container(
+          padding:
+              const EdgeInsets.symmetric(horizontal: SpacingTokens.sm, vertical: 3),
+          color: c.accent.withValues(alpha: 0.14),
+          child: Text(
+            _resolvedFormation,
+            style: TypographyTokens.sectionLabel
+                .copyWith(color: c.accent, letterSpacing: 1.2),
+          ),
+        ),
+        if (lockCount > 0) ...[
+          const SizedBox(width: SpacingTokens.xs),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.lock, size: 12, color: c.textMuted),
+              const SizedBox(width: 3),
+              Text(
+                '$lockCount ${L10n.t('team.locked')}',
+                style: TypographyTokens.sectionLabel
+                    .copyWith(color: c.textMuted, fontSize: 9, letterSpacing: 1.0),
+              ),
+            ],
+          ),
+        ],
+        const Spacer(),
+        TextButton.icon(
+          onPressed: (_busy || lockCount == 0) ? null : _resetLocks,
+          icon: Icon(Icons.restart_alt, size: 16, color: c.accent),
+          label: Text(
+            L10n.t('team.resetLocks'),
+            style: TypographyTokens.sectionLabel.copyWith(color: c.accent),
+          ),
+        ),
+      ],
+    );
+  }
+
   void _openPlayerSheet(MatchPreviewPlayer pl) {
     AppHaptics.light();
     showAppSheet<void>(
@@ -185,6 +395,215 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         player: pl,
         ratingForDisplay: widget.ratingForDisplay,
         scrollable: false,
+      ),
+    );
+  }
+
+  // ── Action menu (lock / replace / unlock / details) ──────────────────────
+
+  void _openActionMenu(MatchPreviewPlayer pl) {
+    AppHaptics.light();
+    final c = context.colors;
+    final isStarter =
+        _preview.startingXi.any((s) => s.playerId == pl.playerId);
+    final isLocked = _locked.values.contains(pl.playerId);
+    showAppSheet<void>(
+      context,
+      title: pl.shortName,
+      builder: (ctx) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Lock to slot — only meaningful for an assigned starter.
+            if (isStarter && !isLocked)
+              _actionTile(
+                ctx,
+                icon: Icons.lock_outline,
+                label: L10n.t('team.lockToSlot'),
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  _lockToSlot(pl);
+                },
+              ),
+            if (isLocked)
+              _actionTile(
+                ctx,
+                icon: Icons.lock_open,
+                label: L10n.t('team.unlock'),
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  _unlock(pl);
+                },
+              ),
+            if (isStarter)
+              _actionTile(
+                ctx,
+                icon: Icons.swap_horiz,
+                label: L10n.t('team.replacePlayer'),
+                onTap: () {
+                  Navigator.of(ctx).pop();
+                  _openReplacePicker(pl);
+                },
+              ),
+            _actionTile(
+              ctx,
+              icon: Icons.bar_chart,
+              label: L10n.t('team.details'),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                _openPlayerSheet(pl);
+              },
+            ),
+            const SizedBox(height: SpacingTokens.sm),
+            Divider(height: 1, color: c.divider),
+            const SizedBox(height: SpacingTokens.sm),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _actionTile(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final c = context.colors;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            vertical: SpacingTokens.sm, horizontal: SpacingTokens.xs),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: c.accent),
+            const SizedBox(width: SpacingTokens.md),
+            Text(
+              label,
+              style: TypographyTokens.body.copyWith(
+                color: c.textPrimary,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Replace picker: every other player whose coarse group matches the target
+  // slot's coarse group (so a CB slot offers defenders, an AM slot offers
+  // midfielders, ...), drawn from both the current bench and the rest of the
+  // starting XI. The pick is pinned to the target's slot.
+  void _openReplacePicker(MatchPreviewPlayer target) {
+    final slots = kFormationSlots[_resolvedFormation];
+    final targetCoarse = (slots != null &&
+            target.slotIndex >= 0 &&
+            target.slotIndex < slots.length)
+        ? slots[target.slotIndex].coarse
+        : (target.positionGroupFine.isNotEmpty
+            ? coarseForFineGroup(target.positionGroupFine)
+            : target.roleGroup);
+
+    String coarseOf(MatchPreviewPlayer p) => p.positionGroupFine.isNotEmpty
+        ? coarseForFineGroup(p.positionGroupFine)
+        : p.roleGroup;
+
+    final pool = <MatchPreviewPlayer>[
+      ..._preview.bench,
+      ..._preview.startingXi,
+    ].where((p) =>
+        p.playerId != target.playerId && coarseOf(p) == targetCoarse).toList()
+      ..sort((a, b) =>
+          widget.ratingForDisplay(b).compareTo(widget.ratingForDisplay(a)));
+
+    AppHaptics.light();
+    showAppSheet<void>(
+      context,
+      title: L10n.t('team.choosePlayer'),
+      builder: (ctx) {
+        final c = ctx.colors;
+        if (pool.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: SpacingTokens.lg),
+            child: Text(
+              L10n.t('team.noCompatiblePlayers'),
+              style: TypographyTokens.body.copyWith(color: c.textMuted),
+            ),
+          );
+        }
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (final cand in pool)
+              _replaceCandidateTile(ctx, cand, () {
+                Navigator.of(ctx).pop();
+                _replaceInSlot(target, cand);
+              }),
+            const SizedBox(height: SpacingTokens.sm),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _replaceCandidateTile(
+      BuildContext context, MatchPreviewPlayer p, VoidCallback onTap) {
+    final c = context.colors;
+    final coarse = p.positionGroupFine.isNotEmpty
+        ? coarseForFineGroup(p.positionGroupFine)
+        : p.roleGroup;
+    final roleColor =
+        recommendedXiRoleColor(coarse.isNotEmpty ? coarse : p.roleGroup, c);
+    final label =
+        p.positionGroupFine.isNotEmpty ? p.positionGroupFine : p.roleGroup;
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 2),
+        color: c.surfaceLow,
+        padding: const EdgeInsets.symmetric(
+            horizontal: SpacingTokens.sm, vertical: SpacingTokens.sm),
+        child: Row(
+          children: [
+            PlayerPhotoAvatar(
+              photoUrl: p.photoUrl,
+              name: p.shortName,
+              ringColor: roleColor,
+              size: 38,
+            ),
+            const SizedBox(width: SpacingTokens.sm),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    p.shortName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TypographyTokens.body
+                        .copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  Text(
+                    label.toUpperCase(),
+                    style: TypographyTokens.sectionLabel.copyWith(
+                        color: c.textMuted, fontSize: 9, letterSpacing: 1.2),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              widget.ratingForDisplay(p).toStringAsFixed(0),
+              style: TypographyTokens.statValue
+                  .copyWith(color: c.textPrimary, fontSize: 18),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -818,6 +1237,7 @@ class FifaRecommendedXiPitch extends StatelessWidget {
     required this.selected,
     required this.onSelect,
     required this.ratingForDisplay,
+    this.lockedSlots = const {},
   });
 
   final String formation;
@@ -825,6 +1245,10 @@ class FifaRecommendedXiPitch extends StatelessWidget {
   final MatchPreviewPlayer? selected;
   final ValueChanged<MatchPreviewPlayer> onSelect;
   final double Function(MatchPreviewPlayer p) ratingForDisplay;
+
+  /// Slot indices currently pinned by the staff; the chip in each pinned slot
+  /// shows a small lock badge. Empty in read-only mode.
+  final Set<int> lockedSlots;
 
   List<_PitchPlacement> _placements() {
     // Preferred path: the backend assigns every starter an official slot via
@@ -1013,6 +1437,7 @@ class FifaRecommendedXiPitch extends StatelessWidget {
                   onTap: () => onSelect(p.player),
                   positionLabel: p.label,
                   coarseGroup: p.coarse,
+                  locked: lockedSlots.contains(p.player.slotIndex),
                 ),
               ),
           ],
@@ -1171,6 +1596,7 @@ class FifaPitchPlayerChip extends StatelessWidget {
     required this.onTap,
     this.positionLabel,
     this.coarseGroup,
+    this.locked = false,
   });
 
   final MatchPreviewPlayer player;
@@ -1187,6 +1613,10 @@ class FifaPitchPlayerChip extends StatelessWidget {
   /// group. On the pitch this is the SLOT's coarse group so the colour reads
   /// positionally even when a player covers an adjacent role.
   final String? coarseGroup;
+
+  /// Whether this player is pinned to its slot. When true a small lock badge is
+  /// drawn in the chip's top-right corner.
+  final bool locked;
 
   @override
   Widget build(BuildContext context) {
@@ -1253,6 +1683,23 @@ class FifaPitchPlayerChip extends StatelessWidget {
                 ),
               ),
             ),
+            if (locked)
+              Positioned(
+                top: chipSize * 0.04,
+                right: chipSize * 0.04,
+                child: Container(
+                  padding: EdgeInsets.all(chipSize * 0.04),
+                  decoration: BoxDecoration(
+                    color: c.accent,
+                    borderRadius: BorderRadius.circular(chipSize * 0.1),
+                  ),
+                  child: Icon(
+                    Icons.lock,
+                    size: chipSize * 0.20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

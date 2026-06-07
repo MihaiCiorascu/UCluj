@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/formation_slots.dart';
-import '../../../core/constants/supported_formations.dart';
 import '../../../core/l10n/strings.dart';
 import '../../../core/widgets/team_crest.dart';
 import '../../../core/widgets/player_photo_avatar.dart';
@@ -235,7 +234,15 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   bool _loadingXi = false;
   MatchPreviewResponse? _preview;
   String? _xiError;
-  String _formation = '4-3-3';
+  // The REQUESTED formation: the "auto" sentinel (default) lets the optimiser
+  // score the nine curated shapes once and pick the highest-objective one;
+  // otherwise one curated key forces that shape. The pitch and the sheet's own
+  // label always read from the RESOLVED formation the backend reports, never
+  // from this requested value.
+  String _formation = kFormationAuto;
+  // The opponent short label for the loaded preview, kept so the interactive
+  // pitch can re-request the flexible-XI POST when staff edit the lineup.
+  String? _xiOpponent;
 
   // Lineup team selector (completed matches): 0=home, 1=away
   int _lineupTeamIndex = 0;
@@ -245,7 +252,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   bool _loadingDetails = false;
   MatchDetails? _matchDetails;
 
-  static const _formations = kSupportedFormations;
+  // Selector entries: AUTO first, then the nine curated shapes (the only keys
+  // the optimiser resolves to; the backend coerces anything else to "auto").
+  static const _formations = [kFormationAuto, ...kCuratedFormations];
 
   @override
   void initState() {
@@ -276,11 +285,21 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     try {
       final f = widget.fixture;
       final opponent = f.isUCLujHome ? f.awayTeam : f.homeTeam;
-      final preview = await _xiRepo.fetchMatchPreview(
+      // Use the flexible-XI POST so "auto" (the default) lets the optimiser
+      // score the nine curated shapes and return the best one; an explicit
+      // curated key forces that shape instead. The panel renders from the
+      // RESOLVED formation the response carries, never from [_formation].
+      final preview = await _xiRepo.postMatchPreview(
         opponentName: opponent,
         formation: _formation,
       );
-      if (mounted) setState(() { _preview = preview; _loadingXi = false; });
+      if (mounted) {
+        setState(() {
+          _preview = preview;
+          _xiOpponent = opponent;
+          _loadingXi = false;
+        });
+      }
     } catch (e) {
       if (mounted) setState(() { _xiError = e.toString(); _loadingXi = false; });
     }
@@ -1450,22 +1469,86 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 onChanged: (v) {
                   if (v != null && v != _formation) {
                     AppHaptics.selection();
+                    // A formation change invalidates any slot pins: the new
+                    // preview the POST returns is a genuinely fresh object, so
+                    // the interactive panel clears its locks in didUpdateWidget
+                    // when the parent passes it down.
                     setState(() => _formation = v);
                     _loadXi();
                   }
                 },
                 items: _formations
-                    .map((f) => DropdownMenuItem(value: f, child: Text(f)))
+                    .map((f) => DropdownMenuItem(
+                          value: f,
+                          child: Text(f == kFormationAuto
+                              ? L10n.t('team.formationAuto')
+                              : f),
+                        ))
                     .toList(),
               ),
             ),
           ],
         ),
+        // Surface the RESOLVED shape next to the selector (with an AUTO tag when
+        // AUTO was requested), so staff see which shape the optimiser chose.
+        if (_preview!.formation.isNotEmpty) ...[
+          const SizedBox(height: SpacingTokens.xs),
+          _buildResolvedFormation(_preview!),
+        ],
         const SizedBox(height: SpacingTokens.sm),
         RecommendedXiFifaPanel(
           preview: _preview!,
-          formation: _formation,
+          formation: _preview!.formation.isNotEmpty
+              ? _preview!.formation
+              : _formation,
+          opponentName: _xiOpponent,
+          xiRepository: _xiRepo,
+          onPreviewChanged: (updated) {
+            // Keep the sheet's copy in sync so a formation switch after an edit
+            // re-fetches from the latest resolved shape, not a stale one.
+            if (mounted) setState(() => _preview = updated);
+          },
         ),
+      ],
+    );
+  }
+
+  // When AUTO is requested the optimiser picks the shape, so we surface the
+  // RESOLVED formation (from the response) next to an AUTO tag, so staff see
+  // which shape was chosen. When an explicit shape was requested we still echo
+  // the resolved key for confirmation but drop the AUTO tag.
+  Widget _buildResolvedFormation(MatchPreviewResponse p) {
+    final c = context.colors;
+    final isAuto = _formation == kFormationAuto;
+    return Row(
+      children: [
+        Text(
+          isAuto ? L10n.t('team.formationChosen') : L10n.t('team.formation'),
+          style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted),
+        ),
+        const SizedBox(width: SpacingTokens.sm),
+        Container(
+          padding: const EdgeInsets.symmetric(
+              horizontal: SpacingTokens.sm, vertical: 3),
+          color: c.accent.withValues(alpha: 0.14),
+          child: Text(
+            p.formation,
+            style: TypographyTokens.sectionLabel
+                .copyWith(color: c.accent, letterSpacing: 1.2),
+          ),
+        ),
+        if (isAuto) ...[
+          const SizedBox(width: SpacingTokens.xs),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+            color: c.surfaceHigh,
+            child: Text(
+              L10n.t('team.formationAutoTag'),
+              style: TypographyTokens.sectionLabel.copyWith(
+                  color: c.textMuted, fontSize: 9, letterSpacing: 1.4),
+            ),
+          ),
+        ],
       ],
     );
   }
