@@ -876,6 +876,13 @@ def build_player_feature_vector(
         "total_minutes": minutes_total,
         "performance_score": perf_score,
         "recent_form_score": round(recent_score, 4),
+        # Raw aggregated volume counts (XI-pooled rates in the match-preview
+        # squad row need numerators/denominators, not just the per-player
+        # ratios). Additive only — the per90_*/efficiency fields are unchanged.
+        "passes": agg.get("passes", 0),
+        "successfulPasses": agg.get("successfulPasses", 0),
+        "duels": agg.get("duels", 0),
+        "duelsWon": agg.get("duelsWon", 0),
         **{f"per90_{k}": v for k, v in per90.items()},
         **efficiency,
         **availability,
