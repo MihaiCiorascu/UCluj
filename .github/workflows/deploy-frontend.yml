@@ -14,6 +14,8 @@ on:
       - 'web/**'
       - 'assets/**'
       - 'pubspec.yaml'
+      - 'customHttp.yml'
+      - 'amplify.yml'
       - '.github/workflows/deploy-frontend.yml'
   workflow_dispatch: {}
 

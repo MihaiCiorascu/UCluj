@@ -1,0 +1,105 @@
+customHeaders:
+  # ---------------------------------------------------------------------------
+  # NO-CACHE entry points.
+  #
+  # None of these files are content-hashed by `flutter build web`, so their URL
+  # never changes between deploys. If a browser (or Amplify's edge) caches them,
+  # it keeps serving the previous bundle forever. They must revalidate on every
+  # load so a new deploy's serviceWorkerVersion and main.dart.js are picked up.
+  #
+  # Listed before the broad asset rules below so an entry point can never be
+  # swallowed by a recursive glob.
+  # ---------------------------------------------------------------------------
+  - pattern: '/index.html'
+    headers:
+      - key: 'Cache-Control'
+        value: 'no-store, no-cache, must-revalidate'
+      - key: 'Pragma'
+        value: 'no-cache'
+  - pattern: '/flutter_bootstrap.js'
+    headers:
+      - key: 'Cache-Control'
+        value: 'no-store, no-cache, must-revalidate'
+      - key: 'Pragma'
+        value: 'no-cache'
+  - pattern: '/flutter_service_worker.js'
+    headers:
+      - key: 'Cache-Control'
+        value: 'no-store, no-cache, must-revalidate'
+      - key: 'Pragma'
+        value: 'no-cache'
+  - pattern: '/flutter.js'
+    headers:
+      - key: 'Cache-Control'
+        value: 'no-store, no-cache, must-revalidate'
+      - key: 'Pragma'
+        value: 'no-cache'
+  - pattern: '/main.dart.js'
+    headers:
+      - key: 'Cache-Control'
+        value: 'no-store, no-cache, must-revalidate'
+      - key: 'Pragma'
+        value: 'no-cache'
+  # Runtime config: read by AppConfig.load() on every web start. Must be
+  # no-cache so apiBaseUrl / wsConnectUrl changes apply without a rebuild.
+  - pattern: '/config.json'
+    headers:
+      - key: 'Cache-Control'
+        value: 'no-store, no-cache, must-revalidate'
+      - key: 'Pragma'
+        value: 'no-cache'
+  # PWA metadata, not fingerprinted. Allow a cached copy but force revalidation.
+  - pattern: '/manifest.json'
+    headers:
+      - key: 'Cache-Control'
+        value: 'no-cache'
+  - pattern: '/version.json'
+    headers:
+      - key: 'Cache-Control'
+        value: 'no-cache'
+
+  # ---------------------------------------------------------------------------
+  # LONG IMMUTABLE CACHE for fingerprinted / static assets.
+  #
+  # Files under assets/** and canvaskit/** are content-addressed (their content
+  # is referenced through AssetManifest / the SW manifest, and CanvasKit is
+  # version-pinned), and the media/font files below change name or essentially
+  # never change. Caching them for a year keeps the app fast and lets the SW
+  # only re-fetch what actually changed on a new deploy.
+  # ---------------------------------------------------------------------------
+  - pattern: '/assets/**'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '/canvaskit/**'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '/icons/**'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '**/*.png'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '**/*.woff2'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '**/*.woff'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '**/*.ttf'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '**/*.otf'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '**/*.wasm'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
