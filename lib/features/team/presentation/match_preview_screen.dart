@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
+import '../../../core/l10n/strings.dart';
 import '../../../core/widgets/app_loading_skeleton.dart';
 import '../../../core/widgets/team_crest.dart';
 import '../../../data/models/match_preview.dart';
@@ -29,11 +30,15 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
   String? _error;
   MatchPreviewResponse? _preview;
 
-  String _formation = '4-3-3';
+  // The REQUESTED formation: the "auto" sentinel (default) lets the optimiser
+  // score the pool once and pick the highest-objective curated shape; otherwise
+  // one of the nine curated keys forces that shape. The pitch always renders
+  // from the RESOLVED formation the backend reports, not from this value.
+  String _formation = kFormationAuto;
 
-  static const _formations = [
-    '4-3-3', '4-4-2', '4-2-3-1', '3-5-2', '3-4-3', '5-3-2', '5-4-1',
-  ];
+  // Selector entries: AUTO first, then the nine curated shapes (the only keys
+  // the optimiser resolves to; the backend coerces anything else to "auto").
+  static const _formations = [kFormationAuto, ...kCuratedFormations];
 
   @override
   void initState() {
@@ -47,7 +52,7 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
       _error = null;
     });
     try {
-      final preview = await _repo.fetchMatchPreview(
+      final preview = await _repo.postMatchPreview(
         opponentName: widget.opponentName,
         formation: _formation,
       );
@@ -97,7 +102,12 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
                   }
                 },
                 items: _formations
-                    .map((f) => DropdownMenuItem(value: f, child: Text(f)))
+                    .map((f) => DropdownMenuItem(
+                          value: f,
+                          child: Text(f == kFormationAuto
+                              ? L10n.t('team.formationAuto')
+                              : f),
+                        ))
                     .toList(),
               ),
             ),
@@ -153,6 +163,8 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
       padding: const EdgeInsets.all(SpacingTokens.md),
       children: [
         _buildCrestHeader(context),
+        const SizedBox(height: SpacingTokens.sm),
+        _buildResolvedFormation(context, p),
         const SizedBox(height: SpacingTokens.lg),
         _buildStatsRow(context, p),
         const SizedBox(height: SpacingTokens.xl),
@@ -201,6 +213,46 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
               style: TypographyTokens.sectionLabel.copyWith(color: c.accent)),
         ),
         side(opp),
+      ],
+    );
+  }
+
+  // When AUTO is requested the algorithm picks the shape, so we surface the
+  // RESOLVED formation (from the response) next to an AUTO tag, so staff see
+  // which shape was chosen. When an explicit shape was requested we still echo
+  // the resolved key for confirmation but drop the AUTO tag.
+  Widget _buildResolvedFormation(BuildContext context, MatchPreviewResponse p) {
+    final c = context.colors;
+    final isAuto = _formation == kFormationAuto;
+    return Row(
+      children: [
+        Text(
+          isAuto ? L10n.t('team.formationChosen') : L10n.t('team.formation'),
+          style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted),
+        ),
+        const SizedBox(width: SpacingTokens.sm),
+        Container(
+          padding: const EdgeInsets.symmetric(
+              horizontal: SpacingTokens.sm, vertical: 3),
+          color: c.accent.withValues(alpha: 0.14),
+          child: Text(
+            p.formation,
+            style: TypographyTokens.sectionLabel
+                .copyWith(color: c.accent, letterSpacing: 1.2),
+          ),
+        ),
+        if (isAuto) ...[
+          const SizedBox(width: SpacingTokens.xs),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+            color: c.surfaceHigh,
+            child: Text(
+              L10n.t('team.formationAutoTag'),
+              style: TypographyTokens.sectionLabel
+                  .copyWith(color: c.textMuted, fontSize: 9, letterSpacing: 1.4),
+            ),
+          ),
+        ],
       ],
     );
   }

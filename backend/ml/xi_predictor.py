@@ -161,6 +161,24 @@ FORMATION_SLOTS: Dict[str, List[tuple[str, str]]] = {
     ],
 }
 
+# Curated set of formations actually offered to (and evaluated for) the coach.
+# The full :data:`FORMATION_SLOTS` library above is intentionally kept whole so
+# that concluded matches can still render their real Sportradar shapes (a shape
+# the opponent actually lined up in may be one of the four templates outside
+# this curated nine). Only these nine are presented as pickable options and only
+# these nine are searched by the auto-best-formation routine.
+CURATED_FORMATIONS: List[str] = [
+    "4-3-3",
+    "4-4-2",
+    "4-2-3-1",
+    "4-1-4-1",
+    "4-5-1",
+    "3-5-2",
+    "3-4-3",
+    "5-3-2",
+    "5-4-1",
+]
+
 # Which fine-position groups (the ten-group Wyscout taxonomy: GK, CB, FB, WB,
 # DM, CM, AM, W, WF, ST) may legitimately fill a slot family. A slot family is
 # the official label stripped of its left/right/centre prefix (see
@@ -509,10 +527,11 @@ class StartingXIPredictor:
     def predict_xi(
         self,
         df: pd.DataFrame,
-        formation: str = "4-3-3",
+        formation: str = "auto",
         your_team_id: Optional[int] = None,
         opponent_df: Optional[pd.DataFrame] = None,
         method: str = "auto",
+        locked: Optional[Dict[int, int]] = None,
     ) -> Dict[str, Any]:
         """Return the optimal starting eleven and bench under a formation.
 
@@ -522,9 +541,17 @@ class StartingXIPredictor:
             Per-player feature dataframe for the home team. Must contain a
             ``role_group`` column with values in ``{"GK", "DEF", "MID", "FWD"}``
             and the columns named in ``self.feature_cols``.
-        formation : str, default ``"4-3-3"``
-            Either a key of :data:`FORMATIONS` or a dash-separated outfield
-            string such as ``"4-3-3"`` or ``"4-2-3-1"``.
+        formation : str, default ``"auto"``
+            Either ``"auto"`` (search :data:`CURATED_FORMATIONS` and pick the
+            shape with the highest total assignment objective), a key of
+            :data:`FORMATIONS` (use exactly that shape), or a dash-separated
+            outfield string such as ``"4-3-3"`` or ``"4-2-3-1"``. The chosen
+            shape is reported back in the response's ``formation`` field.
+        locked : dict[int, int], optional
+            Mapping of ``slot_index -> playerId`` pinned before assignment (see
+            :meth:`_assign_xi`). With ``formation="auto"`` the best shape is
+            chosen with these locks applied per formation; a formation whose slot
+            count cannot host a locked slot index is skipped.
         your_team_id : int, optional
             Carried through into the response payload for traceability; not
             used in scoring.
@@ -601,8 +628,21 @@ class StartingXIPredictor:
                         pool["role_group"].astype(str).str.upper() == "MID", "predicted_score"
                     ] *= adj.get("mid_weight", 1.0)
 
-        slots = self._resolve_formation(formation)
-        xi_df = self._assign_xi(pool, formation)
+        # Resolve the requested formation. ``"auto"`` searches the curated set
+        # for the shape with the highest total assignment objective on the
+        # already-scored pool (nine tiny Hungarian solves, the predicted scores
+        # are NOT recomputed). An explicit formation is used as given.
+        formation_scores: Dict[str, float] = {}
+        if str(formation).lower() == "auto":
+            resolved_formation, xi_df, total_score, formation_scores = (
+                self._best_formation(pool, locked=locked)
+            )
+        else:
+            resolved_formation = formation
+            xi_df, total_score = self._assign_xi(pool, formation, locked=locked)
+            formation_scores = {resolved_formation: total_score}
+
+        slots = self._resolve_formation(resolved_formation)
         used_ids: set = set(xi_df["playerId"].tolist()) if not xi_df.empty else set()
         bench_df = (
             pool[~pool["playerId"].isin(used_ids)]
@@ -611,13 +651,77 @@ class StartingXIPredictor:
         )
 
         return {
-            "formation": formation,
+            "formation": resolved_formation,
             "formation_slots": slots,
+            "formation_scores": formation_scores,
             "your_team_id": your_team_id,
             "xi": xi_df,
             "bench": bench_df,
             "all_scored": pool.sort_values("predicted_score", ascending=False),
         }
+
+    # ── Auto-best-formation search (Part A) ───────────────────────────────────
+    def _best_formation(
+        self,
+        pool: pd.DataFrame,
+        locked: Optional[Dict[int, int]] = None,
+    ) -> tuple[str, pd.DataFrame, float, Dict[str, float]]:
+        """Pick the curated formation that maximises the assignment objective.
+
+        The pool is assumed to already carry ``predicted_score`` (scored once by
+        the caller). Each :data:`CURATED_FORMATIONS` shape is solved with
+        :meth:`_assign_xi` and the one with the highest ``total_score`` wins.
+        Predicted scores are never recomputed: this is just nine tiny solves over
+        the same scored pool.
+
+        With ``locked`` set, a formation is skipped when any locked
+        ``slot_index`` falls outside that formation's eleven slots (the lock
+        cannot be honoured there). If every formation is skipped (a lock points
+        past every shape) the search falls back to ignoring the locks so an XI is
+        still produced.
+
+        Returns ``(formation, xi_df, total_score, formation_scores)`` where
+        ``formation_scores`` maps every evaluated formation to its objective for
+        a why-this-shape explainer.
+        """
+        best_name: Optional[str] = None
+        best_xi: pd.DataFrame = pd.DataFrame()
+        best_total = float("-inf")
+        scores: Dict[str, float] = {}
+
+        max_locked_slot = max(locked.keys()) if locked else -1
+
+        for name in CURATED_FORMATIONS:
+            n_slots = len(self._formation_slot_specs(name))
+            use_locked = locked
+            if locked and max_locked_slot >= n_slots:
+                # A locked slot index does not exist in this shape — skip it.
+                continue
+            xi_df, total = self._assign_xi(pool, name, locked=use_locked)
+            scores[name] = float(total)
+            if total > best_total:
+                best_total = float(total)
+                best_name = name
+                best_xi = xi_df
+
+        if best_name is None:
+            # Every curated shape was skipped because of an out-of-range lock.
+            # Retry the full search with the locks dropped so an XI still comes
+            # back rather than an empty assignment.
+            for name in CURATED_FORMATIONS:
+                xi_df, total = self._assign_xi(pool, name, locked=None)
+                scores[name] = float(total)
+                if total > best_total:
+                    best_total = float(total)
+                    best_name = name
+                    best_xi = xi_df
+
+        if best_name is None:
+            best_name = CURATED_FORMATIONS[0]
+            best_xi, best_total = self._assign_xi(pool, best_name, locked=None)
+            best_total = float(best_total)
+
+        return best_name, best_xi, best_total, scores
 
     # Backward-compatible alias for the older method name.
     def predict_optimal_xi(self, *args, **kwargs) -> Dict[str, Any]:
@@ -684,7 +788,8 @@ class StartingXIPredictor:
         self,
         pool: pd.DataFrame,
         formation: str,
-    ) -> pd.DataFrame:
+        locked: Optional[Dict[int, int]] = None,
+    ) -> tuple[pd.DataFrame, float]:
         """Assign eleven players to the formation's official position slots.
 
         The cost matrix has one row per candidate and one column per ordered
@@ -698,28 +803,81 @@ class StartingXIPredictor:
         globally optimal one-to-one assignment, which maximises the summed
         score under the official-position constraint.
 
-        The returned DataFrame carries ``official_position`` and ``slot_index``
-        (the position on the pitch) plus a coarse ``slot`` for back-compat, and
-        is ordered by ``slot_index``. When SciPy is unavailable, or the squad
-        cannot fill every slot even under the soft fallback, a greedy fill that
-        guarantees eleven players is used instead.
+        Parameters
+        ----------
+        pool : pd.DataFrame
+            The scored player pool (carrying ``predicted_score``).
+        formation : str
+            A :data:`FORMATION_SLOTS` key (or a parseable dash string).
+        locked : dict[int, int], optional
+            Mapping of ``slot_index -> playerId``. Each valid entry pins that
+            player to that slot before the Hungarian solve: the player and the
+            slot are removed from the open matrix, the remainder is solved
+            optimally, and the two are merged so locked players keep their slot
+            while everyone else re-optimises around them. Invalid locks are
+            ignored: a ``playerId`` not present in ``pool``, a ``slot_index`` out
+            of range for this formation, and duplicate slots (each slot may be
+            pinned once; a player pinned to two slots keeps only the first).
+
+        Returns
+        -------
+        tuple[pd.DataFrame, float]
+            ``(xi_df, total_score)``. ``xi_df`` carries ``official_position``
+            and ``slot_index`` (the position on the pitch) plus a coarse
+            ``slot`` for back-compat, and is ordered by ``slot_index``.
+            ``total_score`` is the summed objective of the assignment: the sum
+            over the eleven assigned (player, slot) pairs of the pair's value
+            (the player's ``predicted_score`` minus the NEAR / SOFT / SIDE
+            position-fit penalty applied in the cost matrix). It is the quantity
+            the auto-best-formation routine maximises across formations. When
+            SciPy is unavailable, or the squad cannot fill every slot even under
+            the soft fallback, a greedy fill that guarantees eleven players is
+            used instead; its ``total_score`` is the summed raw predicted score
+            of the eleven (no penalty bookkeeping), which is sufficient because
+            the greedy path is a degenerate fallback, not part of the normal
+            best-formation comparison.
         """
         if pool.empty:
-            return pd.DataFrame()
+            return pd.DataFrame(), 0.0
 
         slot_specs = self._formation_slot_specs(formation)
         n_slots = len(slot_specs)
-        n_players = len(pool)
-        if n_players < n_slots or linear_sum_assignment is None:
-            return self._greedy_assign_fine(pool, slot_specs)
+
+        # ── Normalise the lock map: keep only valid (slot_index, playerId)
+        #    pairs. A lock is valid when the slot index is in range and the
+        #    player id is present in the pool. Each slot is pinned at most once
+        #    (the dict already guarantees unique slot keys); a player pinned to
+        #    more than one slot keeps the first slot seen and the rest of that
+        #    player's pins are dropped so a player is never double-assigned.
+        valid_locks: Dict[int, int] = {}
+        if locked:
+            pool_pids = set(int(p) for p in pool.get("playerId", pd.Series(dtype=int)).tolist())
+            seen_pids: set = set()
+            for slot_idx, pid in locked.items():
+                try:
+                    slot_idx = int(slot_idx)
+                    pid = int(pid)
+                except (TypeError, ValueError):
+                    continue
+                if slot_idx < 0 or slot_idx >= n_slots:
+                    continue
+                if pid not in pool_pids or pid in seen_pids:
+                    continue
+                valid_locks[slot_idx] = pid
+                seen_pids.add(pid)
 
         pool_indexed = pool.reset_index(drop=True)
+        n_players = len(pool_indexed)
+        if n_players < n_slots or linear_sum_assignment is None:
+            return self._greedy_assign_fine(pool_indexed, slot_specs, valid_locks)
+
         fine_arr = (
             pool_indexed.get("position_group_fine", pd.Series("", index=pool_indexed.index))
             .astype(str).str.upper().to_numpy()
         )
         coarse_arr = pool_indexed["role_group"].astype(str).str.upper().to_numpy()
         scores = pool_indexed["predicted_score"].astype(float).to_numpy()
+        pid_arr = pool_indexed["playerId"].astype(int).to_numpy()
         # Preferred pitch side per player (L/R/C). Defaults to central when the
         # column is absent, so an older feature frame behaves exactly as before.
         side_arr = (
@@ -762,24 +920,61 @@ class StartingXIPredictor:
                 )
                 cost[wrong_side, j] += SIDE
 
-        try:
-            row_ind, col_ind = linear_sum_assignment(cost)
-        except ValueError:
-            return self._greedy_assign_fine(pool, slot_specs)
+        # ── Pre-pin the locked pairs and solve the open remainder. The locked
+        #    players and locked slots are dropped from the Hungarian matrix; the
+        #    remaining players are assigned to the remaining slots optimally,
+        #    then the two sets of pairs are merged. A lock costs whatever its
+        #    cell costs in the full matrix (so an out-of-position locked player
+        #    still contributes the right penalty to ``total_score``), unless the
+        #    cell is forbidden (>= BIG/2), in which case the lock contributes the
+        #    bare ``-predicted_score`` (the coach's explicit choice overrides the
+        #    position-eligibility rule).
+        pid_to_row = {int(p): i for i, p in enumerate(pid_arr)}
+        locked_rows = {pid_to_row[pid] for pid in valid_locks.values()}
+        locked_slots = set(valid_locks.keys())
 
-        pairs = [(int(r), int(c)) for r, c in zip(row_ind, col_ind) if cost[r, c] < BIG / 2]
+        locked_pairs: List[tuple[int, int]] = []
+        locked_total = 0.0
+        for slot_idx, pid in valid_locks.items():
+            r = pid_to_row[pid]
+            cell = cost[r, slot_idx]
+            value = -scores[r] if cell >= BIG / 2 else cell
+            locked_total += -value  # value is a (possibly penalised) negative score
+            locked_pairs.append((r, slot_idx))
+
+        open_rows = [i for i in range(n_players) if i not in locked_rows]
+        open_cols = [j for j in range(n_slots) if j not in locked_slots]
+
+        open_pairs: List[tuple[int, int]] = []
+        open_total = 0.0
+        if open_cols:
+            sub = cost[np.ix_(open_rows, open_cols)]
+            try:
+                sub_r, sub_c = linear_sum_assignment(sub)
+            except ValueError:
+                return self._greedy_assign_fine(pool_indexed, slot_specs, valid_locks)
+            for sr, sc in zip(sub_r, sub_c):
+                if sub[sr, sc] >= BIG / 2:
+                    continue
+                r = open_rows[int(sr)]
+                c = open_cols[int(sc)]
+                open_pairs.append((r, c))
+                open_total += -sub[sr, sc]
+
+        pairs = locked_pairs + open_pairs
         if len(pairs) < n_slots:
             # Some slot could not be filled even under the soft fallback (the
             # squad is short in a coarse line); guarantee eleven via greedy.
-            return self._greedy_assign_fine(pool, slot_specs)
+            return self._greedy_assign_fine(pool_indexed, slot_specs, valid_locks)
 
+        total_score = locked_total + open_total
         pairs.sort(key=lambda rc: rc[1])  # order by slot index
         rows = [r for r, _ in pairs]
         xi_df = pool_indexed.iloc[rows].copy()
         xi_df["slot_index"] = [c for _, c in pairs]
         xi_df["official_position"] = [slot_specs[c][0] for _, c in pairs]
         xi_df["slot"] = [slot_specs[c][1] for _, c in pairs]
-        return xi_df.reset_index(drop=True)
+        return xi_df.reset_index(drop=True), float(total_score)
 
     @staticmethod
     def _slot_family(label: str) -> str:
@@ -846,16 +1041,25 @@ class StartingXIPredictor:
         return specs
 
     @staticmethod
-    def _greedy_assign_fine(pool: pd.DataFrame, slot_specs: List[tuple[str, str]]) -> pd.DataFrame:
+    def _greedy_assign_fine(
+        pool: pd.DataFrame,
+        slot_specs: List[tuple[str, str]],
+        locked: Optional[Dict[int, int]] = None,
+    ) -> tuple[pd.DataFrame, float]:
         """SciPy-free fallback that still fills official slots and guarantees 11.
 
         Each slot is filled, best-score first, by the highest unused player who
         is fine-admissible, then by any unused player of the slot's coarse
         group, and finally (a last backfill pass) by the best unused player of
-        any position, so the eleven are always returned in slot order.
+        any position, so the eleven are always returned in slot order. Any valid
+        locks (``slot_index -> playerId``) are pinned first and excluded from the
+        open fill, so locked players keep their slot. Returns ``(xi_df,
+        total_score)`` where ``total_score`` is the summed raw predicted score of
+        the eleven (the greedy path does not carry the Hungarian penalty
+        bookkeeping).
         """
         if pool.empty:
-            return pd.DataFrame()
+            return pd.DataFrame(), 0.0
 
         p = pool.reset_index(drop=True)
         scores = p["predicted_score"].astype(float)
@@ -866,6 +1070,23 @@ class StartingXIPredictor:
         side = (
             p.get("position_side", pd.Series("C", index=p.index)).astype(str).str.upper()
         )
+
+        n_slots = len(slot_specs)
+        # Validate the locks against this (already index-reset) pool.
+        valid_locks: Dict[int, int] = {}
+        if locked:
+            pid_to_idx = {int(pid): i for i, pid in enumerate(p["playerId"].astype(int).tolist())}
+            seen: set = set()
+            for slot_idx, pid in locked.items():
+                try:
+                    slot_idx = int(slot_idx)
+                    pid = int(pid)
+                except (TypeError, ValueError):
+                    continue
+                if slot_idx < 0 or slot_idx >= n_slots or pid not in pid_to_idx or pid in seen:
+                    continue
+                valid_locks[slot_idx] = pid
+                seen.add(pid)
 
         def _side_ok(i: int, slot_sd: str) -> bool:
             # A central slot, or a central / two-footed player, fits either flank.
@@ -878,7 +1099,18 @@ class StartingXIPredictor:
         used: set = set()
         result: List[tuple[int, int, str, str]] = []  # (player_idx, slot_idx, label, coarse)
 
+        # Pin the locked players first.
+        pid_to_idx = {int(pid): i for i, pid in enumerate(p["playerId"].astype(int).tolist())}
+        for slot_idx, pid in valid_locks.items():
+            i = pid_to_idx[pid]
+            used.add(i)
+            label, cg = slot_specs[slot_idx]
+            result.append((i, slot_idx, label, cg))
+
+        locked_slots = set(valid_locks.keys())
         for j, (label, cg) in enumerate(slot_specs):
+            if j in locked_slots:
+                continue
             family = StartingXIPredictor._slot_family(label)
             admissible = SLOT_ADMISSIBLE_FINE.get(family, set())
             slot_sd = StartingXIPredictor._slot_side(label)
@@ -908,14 +1140,15 @@ class StartingXIPredictor:
                 result.append((pick, j, label, cg))
 
         if not result:
-            return pd.DataFrame()
+            return pd.DataFrame(), 0.0
         result.sort(key=lambda t: t[1])
         rows = [t[0] for t in result]
         xi = p.iloc[rows].copy()
         xi["slot_index"] = [t[1] for t in result]
         xi["official_position"] = [t[2] for t in result]
         xi["slot"] = [t[3] for t in result]
-        return xi.reset_index(drop=True)
+        total_score = float(scores.iloc[rows].sum())
+        return xi.reset_index(drop=True), total_score
 
     # ── Helpers ──────────────────────────────────────────────────────────────
 
