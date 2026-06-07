@@ -127,6 +127,41 @@ async def send_message(
     return payload
 
 
+@router.post("/{channel_id}/typing")
+async def signal_typing(
+    channel_id: str,
+    current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(_get_db),
+):
+    """Broadcast an ephemeral "typing" signal to the rest of the channel.
+
+    Unlike ``/send``, this persists nothing: it only fans a transient marker out
+    over the same API Gateway WebSocket path so other participants can show a
+    "<name> is typing" hint. The ``type: "typing"`` field distinguishes it from
+    real messages (which carry no ``type``); the receiving client drops typing
+    frames from the message list and ignores its own. Author derivation mirrors
+    ``/send`` (full name when present, else the email local-part).
+    """
+    await _assert_channel_access(session, current_user, channel_id)
+
+    author_name = (
+        (current_user.full_name.strip() if current_user.full_name and current_user.full_name.strip() else None)
+        or current_user.email.split("@")[0]
+    )
+
+    await push_to_channel(
+        channel_id,
+        {
+            "type": "typing",
+            "author_id": current_user.id,
+            "author_name": author_name,
+            "channel_id": channel_id,
+        },
+    )
+
+    return {"ok": True}
+
+
 @router.get("/{channel_id}/messages")
 async def get_channel_messages(
     channel_id: str,
