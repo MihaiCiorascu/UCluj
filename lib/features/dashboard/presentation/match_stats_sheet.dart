@@ -9,6 +9,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/spacing_tokens.dart';
 import '../../../core/theme/typography_tokens.dart';
 import '../../../core/theme/shape_tokens.dart';
+import '../../../core/theme/motion_tokens.dart';
 import '../../../core/primitives/haptics.dart';
 import '../../../core/primitives/signed_bar.dart';
 import '../../../core/primitives/win_probability_arc.dart';
@@ -432,52 +433,33 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   }
 
   Widget _buildHeader(WeekFixture f) {
-    final c = context.colors;
     final homeDisplay = f.homeTeam.replaceAll('Universitatea Cluj', 'U Cluj');
     final awayDisplay = f.awayTeam.replaceAll('Universitatea Cluj', 'U Cluj');
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(SpacingTokens.md, SpacingTokens.xs,
+      padding: const EdgeInsets.fromLTRB(SpacingTokens.md, SpacingTokens.sm,
           SpacingTokens.md, SpacingTokens.md),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TeamCrest(teamName: f.homeTeam, size: 26),
-                const SizedBox(width: SpacingTokens.xs),
-                Flexible(
-                  child: Text(homeDisplay,
-                      style: TypographyTokens.cardTitle
-                          .copyWith(color: c.textPrimary),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ],
+            child: _headerTeam(
+              teamName: f.homeTeam,
+              display: homeDisplay,
+              isUCluj: f.isUCLujHome,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.sm),
+            padding: const EdgeInsets.only(top: 12),
             child: Text('vs',
-                style: TypographyTokens.meta.copyWith(color: c.textMuted)),
+                style: TypographyTokens.meta
+                    .copyWith(color: context.colors.textMuted)),
           ),
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Text(awayDisplay,
-                      style: TypographyTokens.cardTitle
-                          .copyWith(color: c.textPrimary),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
-                ),
-                const SizedBox(width: SpacingTokens.xs),
-                TeamCrest(teamName: f.awayTeam, size: 26),
-              ],
+            child: _headerTeam(
+              teamName: f.awayTeam,
+              display: awayDisplay,
+              isUCluj: !f.isUCLujHome && f.involvesUCluj,
             ),
           ),
         ],
@@ -485,16 +467,59 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     );
   }
 
+  /// One side of the editorial header: a larger crest stacked over the team
+  /// name (cardTitle). The tracked team's name is carried in the cobalt accent
+  /// so the eye anchors on U Cluj first.
+  Widget _headerTeam({
+    required String teamName,
+    required String display,
+    required bool isUCluj,
+  }) {
+    final c = context.colors;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TeamCrest(teamName: teamName, size: 40),
+        const SizedBox(height: SpacingTokens.xs),
+        Text(
+          display,
+          style: TypographyTokens.cardTitle.copyWith(
+            color: isUCluj ? c.accent : c.textPrimary,
+            fontWeight: isUCluj ? FontWeight.w700 : FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+
   Widget _buildMatchStatus(WeekFixture f) {
+    final c = context.colors;
     if (f.isCompleted) {
       final isHome = f.isUCLujHome;
       final myScore = isHome ? f.homeScore! : f.awayScore!;
       final theirScore = isHome ? f.awayScore! : f.homeScore!;
       String result;
       Color col;
-      if (myScore > theirScore) { result = L10n.t('sheet.win'); col = context.colors.positive; }
-      else if (myScore < theirScore) { result = L10n.t('sheet.loss'); col = context.colors.negative; }
-      else { result = L10n.t('sheet.draw'); col = context.colors.accent; }
+      if (myScore > theirScore) {
+        result = L10n.t('sheet.win');
+        col = c.positive;
+      } else if (myScore < theirScore) {
+        result = L10n.t('sheet.loss');
+        col = c.negative;
+      } else {
+        result = L10n.t('sheet.draw');
+        col = c.accent;
+      }
+
+      // From the U-Cluj perspective each scoreline glyph is tinted by whether
+      // it belongs to the tracked team: the tracked side keeps the strong
+      // primary tone, the opponent drops to the muted tone, so the result
+      // reads even before the pill below it.
+      final homeIsUCluj = f.isUCLujHome;
+      final neutral = !f.involvesUCluj;
 
       return Column(
         children: [
@@ -502,29 +527,55 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('${f.homeScore}',
-                  style: TypographyTokens.statLarge.copyWith(
-                      fontSize: 60, color: context.colors.textPrimary)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
-                child: Text('-',
-                    style: TypographyTokens.statLarge.copyWith(
-                        fontSize: 30, color: context.colors.textMuted)),
+              Text(
+                '${f.homeScore}',
+                style: TypographyTokens.displayHero.copyWith(
+                  fontSize: 64,
+                  color: neutral || homeIsUCluj
+                      ? c.textPrimary
+                      : c.textMuted,
+                ),
               ),
-              Text('${f.awayScore}',
-                  style: TypographyTokens.statLarge.copyWith(
-                      fontSize: 60, color: context.colors.textPrimary)),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
+                child: Text(
+                  '–',
+                  style: TypographyTokens.statLarge
+                      .copyWith(fontSize: 28, color: c.textMuted),
+                ),
+              ),
+              Text(
+                '${f.awayScore}',
+                style: TypographyTokens.displayHero.copyWith(
+                  fontSize: 64,
+                  color: neutral || !homeIsUCluj
+                      ? c.textPrimary
+                      : c.textMuted,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: SpacingTokens.xs),
-          if (f.involvesUCluj)
+          if (f.involvesUCluj) ...[
+            const SizedBox(height: SpacingTokens.sm),
             Container(
               color: col.withValues(alpha: 0.15),
               padding: const EdgeInsets.symmetric(
-                  horizontal: SpacingTokens.md, vertical: SpacingTokens.xs),
-              child: Text(result,
-                  style: TypographyTokens.sectionLabel.copyWith(color: col)),
+                  horizontal: SpacingTokens.md, vertical: 6),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(width: 6, height: 6, color: col),
+                  const SizedBox(width: SpacingTokens.xs),
+                  Text(
+                    result,
+                    style: TypographyTokens.sectionLabel
+                        .copyWith(color: col, letterSpacing: 1.6),
+                  ),
+                ],
+              ),
             ),
+          ],
         ],
       );
     }
@@ -574,7 +625,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                             .replaceAll('Universitatea Cluj', 'U CLUJ')
                             .toUpperCase(),
                         style: TypographyTokens.sectionLabel.copyWith(
-                          color: f.isUCLujHome
+                          color: f.involvesUCluj && f.isUCLujHome
                               ? context.colors.accent
                               : context.colors.textPrimary,
                           fontSize: 10,
@@ -597,7 +648,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                             .replaceAll('Universitatea Cluj', 'U CLUJ')
                             .toUpperCase(),
                         style: TypographyTokens.sectionLabel.copyWith(
-                          color: !f.isUCLujHome
+                          color: f.involvesUCluj && !f.isUCLujHome
                               ? context.colors.accent
                               : context.colors.textPrimary,
                           fontSize: 10,
@@ -673,75 +724,89 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     required bool higherIsBetter,
     required bool isUCLujHome,
   }) {
+    final c = context.colors;
     final total = homeVal + awayVal;
-    final homeRatio = total > 0 ? homeVal / total : 0.5;
+    final homeRatio = total > 0 ? (homeVal / total).clamp(0.0, 1.0) : 0.5;
 
-    final uclVal = isUCLujHome ? homeVal : awayVal;
-    final oppVal = isUCLujHome ? awayVal : homeVal;
-    final uclColor = higherIsBetter
-        ? (uclVal >= oppVal ? context.colors.positive : context.colors.negative)
-        : (uclVal <= oppVal ? context.colors.positive : context.colors.negative);
+    // Which side leads this stat (respecting whether higher or lower is the
+    // better outcome). The leading side keeps its team tone; the trailing side
+    // reads in the muted track tone so the comparison resolves at a glance.
+    final homeLeads = higherIsBetter ? homeVal >= awayVal : homeVal <= awayVal;
+    final awayLeads = higherIsBetter ? awayVal >= homeVal : awayVal <= homeVal;
+    final tie = homeVal == awayVal;
+
+    // Team tones: the tracked side carries cobalt, the opponent steel, so the
+    // bar speaks the same role language as the rest of the sheet.
+    final homeTone = isUCLujHome ? c.accent : c.roleDefender;
+    final awayTone = !isUCLujHome ? c.accent : c.roleDefender;
+    final muted = c.textMuted.withValues(alpha: 0.35);
+
+    final homeBar = tie ? muted : (homeLeads ? homeTone : muted);
+    final awayBar = tie ? muted : (awayLeads ? awayTone : muted);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
       child: Column(
         children: [
+          // home value (left) | centred label | away value (right)
           Row(
             children: [
               SizedBox(
-                width: 48,
-                // Iteration N polish: when neither team is U Cluj, the home
-                // value keeps the strong primary tone and the away value
-                // drops to 65% alpha. Same hue, different weight, so the eye
-                // anchors on the home side first instead of seeing twins.
-                child: Text(homeStr,
-                    style: TypographyTokens.body.copyWith(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: isUCLujHome ? uclColor : context.colors.textPrimary,
-                    )),
+                width: 44,
+                child: Text(
+                  homeStr,
+                  style: TypographyTokens.statValue.copyWith(
+                    fontSize: 15,
+                    color: tie || homeLeads ? c.textPrimary : c.textMuted,
+                  ),
+                ),
               ),
               Expanded(
                 child: Center(
-                  child: Text(label,
-                      style: TypographyTokens.sectionLabel
-                          .copyWith(fontSize: 8, color: context.colors.textMuted)),
+                  child: Text(
+                    label,
+                    style: TypographyTokens.sectionLabel.copyWith(
+                        fontSize: 9, color: c.textMuted, letterSpacing: 1.2),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
               SizedBox(
-                width: 48,
-                child: Text(awayStr,
-                    style: TypographyTokens.body.copyWith(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: !isUCLujHome
-                          ? uclColor
-                          : context.colors.textPrimary.withValues(alpha: 0.65),
-                    ),
-                    textAlign: TextAlign.right),
+                width: 44,
+                child: Text(
+                  awayStr,
+                  style: TypographyTokens.statValue.copyWith(
+                    fontSize: 15,
+                    color: tie || awayLeads ? c.textPrimary : c.textMuted,
+                  ),
+                  textAlign: TextAlign.right,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 3),
-          ClipRRect(
+          const SizedBox(height: SpacingTokens.xs),
+          // One center-split comparison bar on a tonal track: the home segment
+          // fills from the left and the away segment from the right, meeting at
+          // the proportional split point. The leading side carries its team
+          // tone, the trailing side stays muted.
+          SizedBox(
+            height: 8,
             child: Row(
               children: [
                 Expanded(
-                  flex: (homeRatio * 100).round(),
+                  flex: (homeRatio * 1000).round().clamp(1, 1000),
                   child: Container(
-                    height: 4,
-                    color: isUCLujHome
-                        ? uclColor
-                        : context.colors.textMuted.withValues(alpha: 0.5),
+                    color: homeBar,
+                    margin: const EdgeInsets.only(right: 1),
                   ),
                 ),
                 Expanded(
-                  flex: ((1 - homeRatio) * 100).round(),
+                  flex: ((1 - homeRatio) * 1000).round().clamp(1, 1000),
                   child: Container(
-                    height: 4,
-                    color: !isUCLujHome
-                        ? uclColor
-                        : context.colors.textMuted.withValues(alpha: 0.5),
+                    color: awayBar,
+                    margin: const EdgeInsets.only(left: 1),
                   ),
                 ),
               ],
@@ -775,7 +840,14 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
     final isShowingHome = _lineupTeamIndex == 0;
     final players = isShowingHome ? d.homeLineup : d.awayLineup;
-    final isUCluj = isShowingHome ? f.isUCLujHome : !f.isUCLujHome;
+
+    // Which side is the tracked team. Each side is U Cluj only when the fixture
+    // actually involves U Cluj AND that side is the U-Cluj side — so on a
+    // neutral fixture neither tab nor the formation label takes the accent, and
+    // the away tab correctly takes it when U Cluj plays away.
+    final homeIsUCluj = f.involvesUCluj && f.isUCLujHome;
+    final awayIsUCluj = f.involvesUCluj && !f.isUCLujHome;
+    final isUCluj = isShowingHome ? homeIsUCluj : awayIsUCluj;
 
     final starters = players.where((p) => p.isStarter).toList();
     final subs = players.where((p) => !p.isStarter).toList();
@@ -791,25 +863,44 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
         // ── Team selector tabs ───────────────────────────────────────────
         Row(
           children: [
-            _teamTab(homeDisplay, f.isUCLujHome, _lineupTeamIndex == 0,
+            _teamTab(homeDisplay, homeIsUCluj, _lineupTeamIndex == 0,
                 () => setState(() => _lineupTeamIndex = 0)),
-            Container(width: 1, color: context.colors.divider),
-            _teamTab(awayDisplay, !f.isUCLujHome, _lineupTeamIndex == 1,
+            _teamTab(awayDisplay, awayIsUCluj, _lineupTeamIndex == 1,
                 () => setState(() => _lineupTeamIndex = 1)),
           ],
         ),
 
         // ── Formation label ──────────────────────────────────────────────
+        // Accent for whichever side is the TRACKED team (U Cluj), regardless of
+        // home/away; primary tone otherwise; never accent on a neutral fixture.
         if (formation.isNotEmpty)
           Padding(
             padding: const EdgeInsets.fromLTRB(
-                SpacingTokens.md, SpacingTokens.xs, SpacingTokens.md, 0),
-            child: Text(
-              formation,
-              style: TypographyTokens.sectionLabel.copyWith(
-                color: isUCluj ? context.colors.accent : context.colors.textMuted,
-                fontSize: 10,
-              ),
+                SpacingTokens.md, SpacingTokens.sm, SpacingTokens.md, 0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: SpacingTokens.xs, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: (isUCluj
+                            ? context.colors.accent
+                            : context.colors.textMuted)
+                        .withValues(alpha: 0.14),
+                    borderRadius: ShapeTokens.chip,
+                  ),
+                  child: Text(
+                    formation,
+                    style: TypographyTokens.sectionLabel.copyWith(
+                      color: isUCluj
+                          ? context.colors.accent
+                          : context.colors.textPrimary,
+                      fontSize: 11,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
 
@@ -829,15 +920,24 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
         // ── Substitutes ──────────────────────────────────────────────────
         if (subs.isNotEmpty) ...[
-          const SizedBox(height: SpacingTokens.xs),
+          const SizedBox(height: SpacingTokens.sm),
           Container(
             color: context.colors.surfaceLow,
             padding: const EdgeInsets.symmetric(
-                horizontal: SpacingTokens.md, vertical: 4),
-            child: Text(L10n.t('sheet.subs'),
-                style: TypographyTokens.sectionLabel
-                    .copyWith(fontSize: 8, color: context.colors.textMuted)),
+                horizontal: SpacingTokens.md, vertical: 6),
+            child: Row(
+              children: [
+                Container(width: 2, height: 11, color: context.colors.textMuted),
+                const SizedBox(width: SpacingTokens.xs),
+                Text(L10n.t('sheet.subs'),
+                    style: TypographyTokens.sectionLabel.copyWith(
+                        fontSize: 9,
+                        color: context.colors.textMuted,
+                        letterSpacing: 1.4)),
+              ],
+            ),
           ),
+          const SizedBox(height: SpacingTokens.xxs),
           ...subs.map((p) => _buildPlayerRow(p, isSub: true)),
         ],
       ],
@@ -846,28 +946,47 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
   Widget _teamTab(
       String name, bool isUCluj, bool selected, VoidCallback onTap) {
+    final c = context.colors;
+    // The selected tab reads clearly distinct: a tonal fill plus a 2 px accent
+    // underline (cobalt for the tracked team, primary text tone otherwise).
+    // Unselected tabs stay flat and muted with a hairline rule beneath.
+    final underline = isUCluj ? c.accent : c.textPrimary;
+    final selectedText = isUCluj ? c.accent : c.textPrimary;
     return Expanded(
       child: GestureDetector(
-        onTap: onTap,
-        child: Container(
+        onTap: () {
+          AppHaptics.selection();
+          onTap();
+        },
+        child: AnimatedContainer(
+          duration: MotionTokens.timed(context, MotionTokens.micro),
+          curve: MotionTokens.standardCurve,
           padding: const EdgeInsets.symmetric(
               vertical: SpacingTokens.sm, horizontal: SpacingTokens.xs),
-          color: selected ? context.colors.surfaceLow : context.colors.surfaceHigh,
+          decoration: BoxDecoration(
+            color: selected ? c.surfaceLow : c.surfaceHigh,
+            border: Border(
+              bottom: BorderSide(
+                color: selected ? underline : c.divider,
+                width: selected ? 2 : 1,
+              ),
+            ),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (isUCluj) ...[
-                Icon(Icons.shield, color: context.colors.accent, size: 10),
+                Icon(Icons.shield,
+                    color: selected ? c.accent : c.textMuted, size: 11),
                 const SizedBox(width: 4),
               ],
               Flexible(
                 child: Text(
                   name,
                   style: TypographyTokens.sectionLabel.copyWith(
-                    fontSize: 9,
-                    color: selected
-                        ? (isUCluj ? context.colors.accent : context.colors.textPrimary)
-                        : context.colors.textMuted,
+                    fontSize: 9.5,
+                    color: selected ? selectedText : c.textMuted,
+                    letterSpacing: 1.2,
                   ),
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -896,7 +1015,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     // a dominant accent-coloured match grade on the right (the same hierarchy
     // the predicted-score column uses on the preview screen).
     return Container(
-      margin: const EdgeInsets.only(bottom: 2),
+      margin: const EdgeInsets.only(bottom: 5),
       decoration: BoxDecoration(
         color: isSub ? c.surface : c.surfaceLow.withValues(alpha: 0.6),
         border: Border(left: BorderSide(color: posColor, width: 3)),
@@ -957,12 +1076,13 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
   /// Right-hand grade column for a completed-match player row: a large
   /// band-coloured grade over a small caption, or a muted dash when the player
-  /// could not be matched to Wyscout stats.
+  /// could not be matched to Wyscout stats. The column is fixed at 48 px wide so
+  /// a two-digit "10.0" and the GRADE caption never clip or shift the row.
   Widget _buildGradeColumn(MatchPlayer p) {
     final c = context.colors;
     if (p.grade == null) {
       return SizedBox(
-        width: 38,
+        width: 48,
         child: Text(
           '—',
           textAlign: TextAlign.right,
@@ -972,23 +1092,28 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       );
     }
     final tone = gradeColor(p.grade!, c);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(
-          gradeLabel(p.grade!),
-          style: TypographyTokens.statValue.copyWith(
-            color: tone,
-            fontSize: 20,
+    return SizedBox(
+      width: 48,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            gradeLabel(p.grade!),
+            textAlign: TextAlign.right,
+            style: TypographyTokens.statValue.copyWith(
+              color: tone,
+              fontSize: 20,
+            ),
           ),
-        ),
-        Text(
-          L10n.t('sheet.playerGrade'),
-          style: TypographyTokens.sectionLabel
-              .copyWith(color: c.textMuted, fontSize: 7, letterSpacing: 1.2),
-        ),
-      ],
+          Text(
+            L10n.t('sheet.playerGrade'),
+            textAlign: TextAlign.right,
+            style: TypographyTokens.sectionLabel
+                .copyWith(color: c.textMuted, fontSize: 7, letterSpacing: 1.2),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1415,32 +1540,55 @@ class _ActualLineupPitchPanel extends StatelessWidget {
     return result;
   }
 
+  /// How many chips share the densest pitch line, derived from the ACTUAL
+  /// placements (slot geometry or coarse fallback) rather than the coarse
+  /// D/M/F counts, so a 5-wide back line or a wide double-pivot is measured
+  /// correctly and the chips can be sized to never overlap.
+  int _densestLine(
+      List<({MatchPlayer player, Offset offset, String? label})> placements) {
+    final byRow = <int, int>{};
+    for (final p in placements) {
+      // Quantise the y offset into ~5% bands so players nominally on the same
+      // line group together even when their y differs by a hair.
+      final band = (p.offset.dy * 20).round();
+      byRow[band] = (byRow[band] ?? 0) + 1;
+    }
+    return byRow.values.fold(1, (a, b) => a > b ? a : b);
+  }
+
   @override
   Widget build(BuildContext context) {
     final placements = _placements();
     final tokens = context.colors;
+    final maxLineCount = _densestLine(placements);
 
     return AspectRatio(
       aspectRatio: 4 / 5,
       child: LayoutBuilder(
         builder: (context, c) {
-          final maxLineCount = [
-            starters.where((p) => p.position == 'D').length,
-            starters.where((p) => p.position == 'M').length,
-            starters.where((p) => p.position == 'F').length,
-          ].fold(1, (a, b) => a > b ? a : b);
+          // The slot xs run from 0.18 to 0.82, so the densest line spreads its
+          // chips across ~0.64 of the width over (maxLineCount - 1) gaps. The
+          // true horizontal spacing between two adjacent chip CENTRES on that
+          // line is therefore 0.64 * width / (n - 1); sizing each chip cell to
+          // that spacing (minus an inter-chip pad) is what guarantees 4-5-wide
+          // lines never bleed into each other. For a single-chip line we just
+          // allow the full pitch width.
+          const interChipPad = 6.0;
+          const lineSpan = 0.82 - 0.18; // matches _distributedXs / slot geometry
+          final adjacentSpacing = maxLineCount <= 1
+              ? c.maxWidth * 0.92
+              : (lineSpan * c.maxWidth) / (maxLineCount - 1);
+          final boxFromCell = adjacentSpacing - interChipPad;
 
-          final base = c.maxWidth < 430 ? 44.0 : 50.0;
-          final chipSize = maxLineCount >= 5
-              ? base - 6
-              : maxLineCount >= 4
-                  ? base - 3
-                  : base;
-          // The chip is taller than it is wide (headshot + caption + markers),
-          // so give it a slightly wider box for the surname and centre it on
-          // the slot using an estimated total height.
-          final chipBoxW = chipSize * 1.5;
-          final chipBoxH = chipSize * 1.05;
+          // Keep the chip within a sane visual range and shrink it to whatever
+          // the densest line can afford.
+          final base = c.maxWidth < 430 ? 46.0 : 52.0;
+          final chipBoxW = boxFromCell.clamp(34.0, base * 1.5).toDouble();
+          // The avatar itself is narrower than its caption box.
+          final chipSize = (chipBoxW / 1.5).clamp(28.0, base).toDouble();
+          // Box height covers the square avatar plus the surname and the event
+          // markers beneath it, so the chip is vertically centred on its slot.
+          final chipBoxH = chipSize * 1.55;
 
           return Stack(
             fit: StackFit.expand,
@@ -1456,11 +1604,16 @@ class _ActualLineupPitchPanel extends StatelessWidget {
               ),
               for (final p in placements)
                 Positioned(
-                  left: p.offset.dx * c.maxWidth - chipBoxW / 2,
+                  left: (p.offset.dx * c.maxWidth - chipBoxW / 2)
+                      .clamp(2.0, (c.maxWidth - chipBoxW - 2.0).clamp(2.0, double.infinity))
+                      .toDouble(),
                   top: p.offset.dy * c.maxHeight - chipBoxH / 2,
                   width: chipBoxW,
                   child: _ActualPlayerChip(
-                      player: p.player, chipSize: chipSize, positionLabel: p.label),
+                      player: p.player,
+                      chipSize: chipSize,
+                      cellWidth: chipBoxW,
+                      positionLabel: p.label),
                 ),
             ],
           );
@@ -1474,10 +1627,16 @@ class _ActualPlayerChip extends StatelessWidget {
   const _ActualPlayerChip({
     required this.player,
     required this.chipSize,
+    required this.cellWidth,
     this.positionLabel,
   });
   final MatchPlayer player;
   final double chipSize;
+
+  /// The full horizontal cell this chip owns on the pitch. The surname caption
+  /// and the event-marker row are constrained to this width so a dense 4-5-wide
+  /// line never lets one chip's text bleed into its neighbour.
+  final double cellWidth;
 
   /// Official slot label (RB, RCB, DM, ...) when placed by slot index; falls
   /// back to the player's official position then the coarse code.
@@ -1501,6 +1660,14 @@ class _ActualPlayerChip extends StatelessWidget {
     }
   }
 
+  /// Short slot/position caption for the badge (RB, DM, ST, ...), falling back
+  /// to the coarse one-letter code.
+  String get _posLabel {
+    if (positionLabel != null && positionLabel!.isNotEmpty) return positionLabel!;
+    if (player.officialPosition.isNotEmpty) return player.officialPosition;
+    return player.position.toUpperCase();
+  }
+
   String get _lastName {
     final name = player.name.trim();
     // Data arrives as "Surname, Firstname" — take the part before the comma
@@ -1519,18 +1686,20 @@ class _ActualPlayerChip extends StatelessWidget {
     final hasRed = player.redCards > 0;
     final grade = player.grade;
     final gradeTone = grade != null ? gradeColor(grade, c) : posColor;
+    final r = chipSize * 0.1; // rounded-badge radius, mirrors the predictor chip
 
-    // Modern completed-match chip, mirroring the upcoming-XI FIFA chip: a
-    // full-bleed role-ringed headshot, a dominant match grade in a corner badge
-    // (the analogue of the predicted score), the shirt number on the opposite
-    // corner, event markers overlaid, and the surname captioned beneath.
+    // Modern completed-match chip, mirroring the upcoming-XI FifaPitchPlayerChip:
+    // a role-ringed headshot, a rounded role-coloured corner badge carrying the
+    // dominant match grade over the position label, the shirt number on the
+    // opposite corner, event markers below, and the surname captioned beneath.
+    // Everything is constrained to [cellWidth] so dense lines never overlap.
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
           width: chipSize,
-          height: chipSize * 0.66,
+          height: chipSize,
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -1539,44 +1708,66 @@ class _ActualPlayerChip extends StatelessWidget {
                   photoUrl: player.photoUrl,
                   name: _lastName,
                   ringColor: posColor,
-                  size: chipSize * 0.66,
+                  size: chipSize,
                 ),
               ),
-              // Match grade badge (top-left), the prominent accent-coloured
-              // number that anchors the chip. Falls back to the role colour
-              // when no grade matched.
+              // Grade + position badge (top-left), the prominent corner glyph
+              // that anchors the chip — grade tone by band, position beneath.
               Positioned(
-                top: chipSize * 0.02,
-                left: chipSize * 0.02,
+                top: chipSize * 0.04,
+                left: chipSize * 0.04,
                 child: Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: chipSize * 0.07,
                     vertical: chipSize * 0.02,
                   ),
-                  color: gradeTone,
-                  child: Text(
-                    grade != null ? gradeLabel(grade) : '—',
-                    style: TypographyTokens.statValue.copyWith(
-                      color: Colors.white,
-                      fontSize: chipSize * 0.2,
-                      height: 1.0,
-                    ),
+                  decoration: BoxDecoration(
+                    color: gradeTone,
+                    borderRadius: BorderRadius.circular(r),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        grade != null ? gradeLabel(grade) : '—',
+                        style: TypographyTokens.statValue.copyWith(
+                          color: Colors.white,
+                          fontSize: chipSize * 0.22,
+                          height: 1.0,
+                        ),
+                      ),
+                      Text(
+                        _posLabel,
+                        maxLines: 1,
+                        overflow: TextOverflow.clip,
+                        style: TypographyTokens.sectionLabel.copyWith(
+                          color: Colors.white.withValues(alpha: 0.92),
+                          fontSize: chipSize * 0.1,
+                          height: 1.15,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               // Shirt number badge (bottom-right) in the role colour.
               if (player.jerseyNumber != null)
                 Positioned(
-                  bottom: chipSize * 0.02,
-                  right: chipSize * 0.02,
+                  bottom: chipSize * 0.04,
+                  right: chipSize * 0.04,
                   child: Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                    color: posColor,
+                    decoration: BoxDecoration(
+                      color: posColor,
+                      borderRadius: BorderRadius.circular(r * 0.6),
+                    ),
                     child: Text(
                       '${player.jerseyNumber}',
                       style: TypographyTokens.sectionLabel.copyWith(
-                        fontSize: chipSize * 0.12,
+                        fontSize: chipSize * 0.13,
                         color: c.onPrimary,
                         height: 1.0,
                       ),
@@ -1586,39 +1777,62 @@ class _ActualPlayerChip extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: chipSize * 0.05),
-        Text(
-          _lastName,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TypographyTokens.body.copyWith(
-            fontSize: chipSize * 0.14,
-            fontWeight: FontWeight.w700,
-            color: c.textPrimary,
+        SizedBox(height: chipSize * 0.06),
+        SizedBox(
+          width: cellWidth,
+          child: Text(
+            _lastName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TypographyTokens.body.copyWith(
+              fontSize: chipSize * 0.2,
+              fontWeight: FontWeight.w700,
+              color: c.textPrimary,
+              height: 1.05,
+            ),
           ),
         ),
         if (hasGoal || hasYellow || hasRed)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (hasGoal)
-                Text('⚽', style: TextStyle(fontSize: chipSize * 0.13)),
-              if (hasYellow)
-                Container(
-                  width: chipSize * 0.1,
-                  height: chipSize * 0.14,
-                  color: const Color(0xFFFFD700),
-                  margin: const EdgeInsets.symmetric(horizontal: 1),
-                ),
-              if (hasRed)
-                Container(
-                  width: chipSize * 0.1,
-                  height: chipSize * 0.14,
-                  color: c.negative,
-                  margin: const EdgeInsets.symmetric(horizontal: 1),
-                ),
-            ],
+          SizedBox(
+            width: cellWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                if (hasGoal) ...[
+                  Text('⚽', style: TextStyle(fontSize: chipSize * 0.18)),
+                  if (player.goalsScored > 1)
+                    Text(
+                      '×${player.goalsScored}',
+                      style: TypographyTokens.mono.copyWith(
+                        fontSize: chipSize * 0.16,
+                        color: c.textPrimary,
+                      ),
+                    ),
+                ],
+                if (hasYellow)
+                  Container(
+                    width: chipSize * 0.12,
+                    height: chipSize * 0.17,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFD700),
+                      borderRadius: BorderRadius.circular(1),
+                    ),
+                    margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                  ),
+                if (hasRed)
+                  Container(
+                    width: chipSize * 0.12,
+                    height: chipSize * 0.17,
+                    decoration: BoxDecoration(
+                      color: c.negative,
+                      borderRadius: BorderRadius.circular(1),
+                    ),
+                    margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                  ),
+              ],
+            ),
           ),
       ],
     );

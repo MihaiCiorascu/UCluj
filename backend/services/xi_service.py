@@ -28,7 +28,7 @@ import pandas as pd
 from ml.feature_engineering import get_team_squad_from_matches
 from ml.pipeline import _format_output, build_dataset_from_files, load_player_profiles
 from ml.match_dates import load_match_dates, parse_date
-from ml.xi_predictor import StartingXIPredictor
+from ml.xi_predictor import MAX_BENCH, StartingXIPredictor
 from app.config import effective_now
 from services.load_service import assess_player
 from services.player_photo_service import PlayerPhotoService
@@ -521,7 +521,7 @@ class XiService:
         bench_df = (
             pool[~pool["playerId"].isin(used)]
             .sort_values("predicted_score", ascending=False)
-            .head(7)
+            .head(MAX_BENCH)
         )
         return {"xi": xi_df, "bench": bench_df}
 

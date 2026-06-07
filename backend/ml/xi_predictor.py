@@ -44,6 +44,10 @@ except Exception:  # pragma: no cover - scipy is an optional dependency
     linear_sum_assignment = None  # type: ignore
 
 
+# Maximum number of players placed on the bench, sized to a realistic matchday squad.
+MAX_BENCH = 12
+
+
 # ── Formation library ─────────────────────────────────────────────────────────
 # Each entry maps a positional group to the number of slots it must fill. The
 # thirteen formations here mirror the Flutter ``kSupportedFormations`` list so
@@ -603,7 +607,7 @@ class StartingXIPredictor:
         bench_df = (
             pool[~pool["playerId"].isin(used_ids)]
             .sort_values("predicted_score", ascending=False)
-            .head(7)
+            .head(MAX_BENCH)
         )
 
         return {
