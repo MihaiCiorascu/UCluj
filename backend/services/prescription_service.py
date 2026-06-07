@@ -4,7 +4,10 @@ import numpy as np
 import pandas as pd
 
 from app.config import settings
+from ml.feature_config import OPTIMIZABLE_FEATURES
 from services.model_service import ModelService
+from services.tactical_bounds import get_ratio_bounds
+from services.tactical_sampling import sample_feasible
 
 _HOME_STATS = [
     "Home_Poss_5", "Home_Shots_5", "Home_SoT_5",
@@ -88,85 +91,68 @@ class PrescriptionService:
         # Convert to P(U Cluj win) perspective for display
         baseline_prob = raw_baseline if ucl_is_home else 1.0 - raw_baseline
 
-        # Resolve bounds — fall back to Home_* bounds for Away_* stats
+        # Resolve marginal bounds for the four controllable levers, keyed by the
+        # Home_* names the shared sampler expects. The bundle only ships Home_*
+        # bounds, so an Away_* subject reuses the Home_* band (the marginal
+        # distribution of, e.g., shots-in-5 is team-agnostic). Goals/Conceded
+        # are no longer sampled here: they stay frozen at baseline in the
+        # candidate vector and still feed the win-probability.
+        canon = {  # target-stat column -> canonical Home_* key
+            target_stats[i]: OPTIMIZABLE_FEATURES[i]
+            for i in range(len(OPTIMIZABLE_FEATURES))
+        }
+
         def _bounds(stat: str):
             b = bounds.get(stat) or bounds.get(stat.replace("Away_", "Home_"))
             if b is None:
-                return (None, None)
-            return (b["low"], b["high"])
+                return None
+            return {"low": b["low"], "high": b["high"]}
 
-        poss_lo, poss_hi   = _bounds(target_stats[0])
-        shot_lo, shot_hi   = _bounds(target_stats[1])
-        sot_lo,  sot_hi    = _bounds(target_stats[2])
-        corn_lo, corn_hi   = _bounds(target_stats[3])
-        goal_lo, goal_hi   = _bounds(target_stats[4])
-        conc_lo, conc_hi   = _bounds(target_stats[5])
-
-        if any(v is None for v in [poss_lo, shot_lo, sot_lo, corn_lo, goal_lo, conc_lo]):
-            return {"text": "", "improvement": 0.0}
+        marginal_bounds: dict[str, dict] = {}
+        base_row: dict[str, float] = {}
+        for i, home_key in enumerate(OPTIMIZABLE_FEATURES):
+            stat = target_stats[i]
+            mb = _bounds(stat)
+            if mb is None:
+                return {"text": "", "improvement": 0.0}
+            marginal_bounds[home_key] = mb
+            base_row[home_key] = float(baseline_vec[feat_idx[stat]])
 
         rng = np.random.default_rng(random_state)
 
-        # Build all valid simulation vectors first, then batch-predict once.
-        sim_vecs: list[np.ndarray] = []
-        sim_tactics: list[dict] = []
+        # Shared conditional sampler: every draw already satisfies the empirical
+        # SoT/Shots and Corners/Shots bands and the trust region, so there is no
+        # rejection loop and no wasted samples.
+        levers = sample_feasible(
+            base_row=base_row,
+            marginal_bounds=marginal_bounds,
+            ratio_bounds=get_ratio_bounds(),
+            trust_frac=float(settings.optimizer_trust_region_frac),
+            n=num_simulations,
+            rng=rng,
+        )
 
-        for _ in range(num_simulations):
-            poss  = rng.uniform(poss_lo, poss_hi)
-            shots = rng.uniform(shot_lo, shot_hi)
-
-            sot_lo2 = max(sot_lo, 0.2 * shots)
-            sot_hi2 = min(sot_hi, 0.7 * shots)
-            if sot_hi2 <= sot_lo2:
-                continue
-            sot = rng.uniform(sot_lo2, sot_hi2)
-
-            corn_lo2 = max(corn_lo, 0.15 * shots)
-            corn_hi2 = min(corn_hi, 0.80 * shots)
-            if corn_hi2 <= corn_lo2:
-                continue
-            corners = rng.uniform(corn_lo2, corn_hi2)
-
-            goal_lo2 = max(goal_lo, 0.05 * shots)
-            goal_hi2 = min(goal_hi, 0.60 * sot)
-            if goal_hi2 <= goal_lo2:
-                continue
-            goals = rng.uniform(goal_lo2, goal_hi2)
-
-            max_conc = min(goals - 0.2, conc_hi)
-            if max_conc <= conc_lo:
-                continue
-            conceded = rng.uniform(conc_lo, max_conc)
-
-            vec = baseline_vec.copy()
-            vec[feat_idx[target_stats[0]]] = poss
-            vec[feat_idx[target_stats[1]]] = shots
-            vec[feat_idx[target_stats[2]]] = sot
-            vec[feat_idx[target_stats[3]]] = corners
-            vec[feat_idx[target_stats[4]]] = goals
-            vec[feat_idx[target_stats[5]]] = conceded
-            sim_vecs.append(vec)
-            sim_tactics.append({
-                target_stats[0]: round(float(poss), 1),
-                target_stats[1]: round(float(shots), 1),
-                target_stats[2]: round(float(sot), 1),
-                target_stats[3]: round(float(corners), 1),
-                target_stats[4]: round(float(goals), 1),
-                target_stats[5]: round(float(conceded), 1),
-            })
-
-        # Single batch prediction for all simulations — far faster than 800 serial calls.
+        # Build the candidate matrix: clone the baseline vector for every draw,
+        # then overwrite only the four controllable levers (Goals/Conceded stay
+        # frozen at baseline).
+        n_drawn = int(len(levers))
         best_tactic: dict | None = None
         best_raw = raw_baseline
-        if sim_vecs:
-            batch = pd.DataFrame(sim_vecs, columns=feature_cols)
+        if n_drawn > 0:
+            batch_arr = np.tile(baseline_vec, (n_drawn, 1))
+            for i, home_key in enumerate(OPTIMIZABLE_FEATURES):
+                batch_arr[:, feat_idx[target_stats[i]]] = levers[home_key].to_numpy(dtype=float)
+            batch = pd.DataFrame(batch_arr, columns=feature_cols)
             probs = self._model._model.predict_proba(batch)[:, 1]
             best_idx = int(np.argmax(probs) if ucl_is_home else np.argmin(probs))
             candidate_raw = float(probs[best_idx])
             improved = (candidate_raw > best_raw) if ucl_is_home else (candidate_raw < best_raw)
             if improved:
                 best_raw = candidate_raw
-                best_tactic = sim_tactics[best_idx]
+                best_tactic = {
+                    target_stats[i]: round(float(levers[home_key].iloc[best_idx]), 1)
+                    for i, home_key in enumerate(OPTIMIZABLE_FEATURES)
+                }
 
         best_prob = best_raw if ucl_is_home else 1.0 - best_raw
         improvement = best_prob - baseline_prob
@@ -178,13 +164,16 @@ class PrescriptionService:
                 "structured": None,
             }
 
+        # Only the controllable levers are recommendable; Goals/Conceded are
+        # frozen at baseline and never appear as a recommendation.
+        lever_stats = target_stats[: len(OPTIMIZABLE_FEATURES)]
         text = _build_prescription_text(
             baseline_prob, best_prob, improvement,
-            baseline_vec, feat_idx, best_tactic, target_stats,
+            baseline_vec, feat_idx, best_tactic, lever_stats,
         )
         structured = _build_structured(
             baseline_prob, best_prob, improvement,
-            baseline_vec, feat_idx, best_tactic, target_stats,
+            baseline_vec, feat_idx, best_tactic, lever_stats,
         )
         return {
             "text": text,
