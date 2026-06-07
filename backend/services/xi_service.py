@@ -611,7 +611,37 @@ class XiService:
                 f"(empirical squad set is empty for wy_substr={home.wy_substr!r})."
             )
 
-        opp_team_df = df[df["teamId"] == opp_id].copy() if opp_id else None
+        # Resolve the opponent squad EMPIRICALLY, mirroring the home path, so a
+        # stale per-player ``currentTeamId`` snapshot can never zero the
+        # opponent row / XI. ``team_by_short`` matches the registry short label
+        # that arrives in ``opponent_name`` (diacritic-insensitive), and
+        # ``get_team_squad_from_matches`` then identifies the squad by
+        # appearance frequency in the opponent's own match files (matched via
+        # ``wy_substr``), independent of ``currentTeamId``. Falls back to the
+        # legacy ``currentTeamId`` filter only when the registry lookup fails or
+        # the empirical squad comes back empty, so nothing currently working
+        # breaks.
+        opp_ref = team_by_short(opponent_name)
+        opp_team_df = None
+        opp_team_id = opp_id  # your_team_id passed into the opponent predict_xi
+        if opp_ref is not None:
+            match_files = sorted(glob.glob(os.path.join(self.data_dir, "*.json")))
+            opp_squad_ids = get_team_squad_from_matches(match_files, opp_ref.wy_substr)
+            if opp_squad_ids:
+                opp_team_df = df[df["playerId"].isin(opp_squad_ids)].copy()
+                # ``predict_xi`` does not filter by team id (the home path proves
+                # this); ``your_team_id`` is carried into the payload only. When
+                # the legacy fixture map misses the opponent, fall back to the
+                # squad's modal ``teamId`` so the field stays populated.
+                if opp_team_id is None and "teamId" in opp_team_df.columns:
+                    modal = opp_team_df["teamId"].dropna()
+                    if not modal.empty:
+                        opp_team_id = modal.mode().iloc[0]
+        if opp_team_df is None:
+            # Legacy fallback: stale ``currentTeamId`` filter (kept so the
+            # previous behaviour is preserved when the empirical path cannot
+            # resolve a squad).
+            opp_team_df = df[df["teamId"] == opp_id].copy() if opp_id else None
 
         result = self.predictor.predict_xi(
             df=my_team_df,
@@ -650,7 +680,7 @@ class XiService:
                 opp_result = self.predictor.predict_xi(
                     df=opp_team_df,
                     formation=formation,
-                    your_team_id=opp_id,
+                    your_team_id=opp_team_id,
                 )
                 opponent_xi = opp_result.get("xi", pd.DataFrame())
             except Exception:
