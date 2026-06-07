@@ -129,8 +129,19 @@ class _ChatScreenState extends State<ChatScreen> {
   final _ctrl = TextEditingController();
   final _scroll = ScrollController();
   final _msgs = <_Msg>[];
-  bool _typing = false;
   bool _uploading = false;
+
+  // ── Remote typing indicator ────────────────────────────────────────────────
+  // Name of another participant currently typing (null when nobody is). Set from
+  // inbound "typing" fan-out frames and auto-cleared ~3s after the last signal,
+  // so a typer who stops or disconnects doesn't leave a stuck hint.
+  String? _remoteTypingName;
+  Timer? _remoteTypingTimer;
+  // Throttle for outbound typing signals: we POST at most once per ~2s while the
+  // local user is actively editing, mirroring how /send reaches other clients.
+  DateTime? _lastTypingSent;
+  static const Duration _typingThrottle = Duration(seconds: 2);
+  static const Duration _remoteTypingTtl = Duration(seconds: 3);
 
   // ── Live transport (API Gateway WebSocket — receive-only) ──────────────────
   WebSocketChannel? _channel;
@@ -286,6 +297,13 @@ class _ChatScreenState extends State<ChatScreen> {
           if (gen != _connGen || !mounted) return;
           try {
             final data = jsonDecode(message as String) as Map<String, dynamic>;
+            // Typing frames are ephemeral and carry a "type" field; real messages
+            // never do. Show the remote typer's hint (ignoring our own echo) and
+            // never add them to the message list.
+            if (data['type'] == 'typing') {
+              _handleRemoteTyping(data);
+              return;
+            }
             setState(() => _mergeMessage(_Msg.fromJson(data)));
             _scrollToBottom();
           } catch (e) {
@@ -375,15 +393,53 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  /// While the local user is editing, signal "typing" to the rest of the channel
+  /// over the same REST path /send uses. Throttled to at most one POST per
+  /// [_typingThrottle] so a burst of keystrokes produces a single fan-out; this
+  /// is fire-and-forget (no optimistic UI, no self-display).
   void _onTextChange() {
-    final t = _ctrl.text.isNotEmpty;
-    if (t != _typing) setState(() => _typing = t);
+    if (_ctrl.text.isEmpty) return;
+    final now = DateTime.now();
+    if (_lastTypingSent != null &&
+        now.difference(_lastTypingSent!) < _typingThrottle) {
+      return;
+    }
+    _lastTypingSent = now;
+    _sendTypingSignal();
+  }
+
+  Future<void> _sendTypingSignal() async {
+    final api = widget.authState?.api;
+    if (api == null) return;
+    try {
+      await api.post('/chat/$_currentChannelId/typing');
+    } catch (e) {
+      // Typing is best-effort; a failed signal must never disrupt the user.
+      debugPrint('Typing signal error: $e');
+    }
+  }
+
+  /// Handle an inbound "typing" fan-out frame. Ignores our own echo (matched on
+  /// the same id used for the `isMe` bubble check), then shows the remote typer's
+  /// name and (re)arms a TTL timer so the hint clears shortly after they stop.
+  void _handleRemoteTyping(Map<String, dynamic> data) {
+    final myId = widget.authState?.user?.id ?? '';
+    final authorId = data['author_id'] as String? ?? '';
+    if (authorId.isEmpty || authorId == myId) return;
+    final name = _Msg._formatSender(data['author_name'] as String? ?? '');
+    setState(() => _remoteTypingName = name);
+    _remoteTypingTimer?.cancel();
+    _remoteTypingTimer = Timer(_remoteTypingTtl, () {
+      if (!mounted) return;
+      setState(() => _remoteTypingName = null);
+    });
   }
 
   @override
   void dispose() {
     _connGen++;
     _reconnectTimer?.cancel();
+    _remoteTypingTimer?.cancel();
     _teardownSocket();
     _ctrl
       ..removeListener(_onTextChange)
@@ -526,7 +582,7 @@ class _ChatScreenState extends State<ChatScreen> {
           _buildChannelsList(),
           const SizedBox(height: SpacingTokens.md),
           Expanded(child: _buildList()),
-          if (_typing) _buildTypingHint(),
+          if (_remoteTypingName != null) _buildTypingHint(),
           _buildInput(),
         ],
       ),
@@ -737,7 +793,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Container(width: 2, height: 14, color: context.colors.accent),
           const SizedBox(width: SpacingTokens.xs),
           Text(
-            '$_senderName ${L10n.t('chat.typing')}',
+            '${_remoteTypingName ?? ''} ${L10n.t('chat.typing')}',
             style: TypographyTokens.sectionLabel
                 .copyWith(color: context.colors.accent),
           ),
