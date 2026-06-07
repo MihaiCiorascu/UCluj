@@ -17,13 +17,17 @@ OPTIONAL_FEATURES = [
     "Home_H2H_Pts_3", "Away_H2H_Pts_3",
 ]
 
+# Controllables-only decision set. Goals and Conceded are deliberately
+# excluded: they are near-tautological predictors of a win-probability model,
+# so optimising over them collapses to "score more, concede less", which is
+# not an actionable tactical lever. They remain frozen baseline model inputs
+# (the prediction still reflects the team's real scoring/defensive form), but
+# the optimiser only dials the four levers a coach can genuinely influence.
 OPTIMIZABLE_FEATURES = [
     "Home_Poss_5",
     "Home_Shots_5",
     "Home_SoT_5",
     "Home_Corners_5",
-    "Home_Goals_5",
-    "Home_Conceded_5",
 ]
 
 OPTIMIZABLE_LABELS = {
@@ -31,8 +35,6 @@ OPTIMIZABLE_LABELS = {
     "Home_Shots_5": "Shots",
     "Home_SoT_5": "Shots on Target",
     "Home_Corners_5": "Corners",
-    "Home_Goals_5": "Goals",
-    "Home_Conceded_5": "Conceded",
 }
 
 TARGET_COL = "Target_Binary"

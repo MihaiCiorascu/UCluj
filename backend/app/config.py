@@ -64,6 +64,13 @@ class Settings(BaseSettings):
     optimizer_method: str = "mc"
     optimizer_seed: int = 42
     optimizer_num_simulations: int = 25000
+    # Trust-region cap on how far any single lever may move from the team's
+    # current rolling-5 form. Each lever is sampled inside the intersection of
+    # its data-driven percentile band and [base*(1-frac), base*(1+frac)], so a
+    # recommendation never asks a coach to swing more than +/-frac off baseline.
+    # Keeps the prescription actionable and stops the surrogate being queried at
+    # implausible extremes. Env var: OPTIMIZER_TRUST_REGION_FRAC.
+    optimizer_trust_region_frac: float = 0.25
 
     @property
     def cors_origin_list(self) -> list[str]:
