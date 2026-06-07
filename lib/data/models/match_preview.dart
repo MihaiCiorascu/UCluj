@@ -11,6 +11,10 @@ class MatchPreviewPlayer {
   final String officialPosition;
   final int slotIndex;
   final String positionGroupFine;
+  // Preferred pitch side derived from the player's match positions: 'L', 'R' or
+  // 'C' (central / two-footed / no side penalty). Used to reveal the L/R flank
+  // on bench cards whose fine group (FB, WB, W) does not itself encode a side.
+  final String positionSide;
   // Honest display rating (0-99) = within-position league percentile of the
   // player's performance score. positionNorm is FINE or COARSE depending on
   // which group the percentiles were taken against (small groups fall back to
@@ -55,6 +59,7 @@ class MatchPreviewPlayer {
     this.officialPosition = '',
     this.slotIndex = -1,
     this.positionGroupFine = '',
+    this.positionSide = '',
     this.rating = 0,
     this.positionNorm = 'COARSE',
     this.statPct = const {},
@@ -92,6 +97,7 @@ class MatchPreviewPlayer {
         officialPosition: j['official_position'] as String? ?? '',
         slotIndex: (j['slot_index'] as num?)?.toInt() ?? -1,
         positionGroupFine: j['position_group_fine'] as String? ?? '',
+        positionSide: j['position_side'] as String? ?? '',
         rating: (j['rating'] as num?)?.toInt() ?? 0,
         positionNorm: j['position_norm'] as String? ?? 'COARSE',
         statPct: {
@@ -123,6 +129,32 @@ class MatchPreviewPlayer {
         ageAtFixture: (j['age_at_fixture'] as num?)?.toDouble() ?? 0,
         acwr: (j['acwr'] as num?)?.toDouble() ?? 0,
       );
+
+  /// The optimiser's selection signal as a 0-100 value: round(predicted_score
+  /// * 100). This is the quantity the Monte Carlo / lineup model actually
+  /// selects the XI on, so it explains why a high-`rating` player can still be
+  /// benched (a low selection score). Distinct from `rating`, which is the
+  /// within-position quality percentile.
+  int get selectionScore => (predictedScore * 100).clamp(0, 100).round();
+
+  /// Short left/right flank tag ('L' or 'R') when the player has a clear
+  /// preferred side AND that side is meaningful for their group (full-backs,
+  /// wing-backs, wingers). Empty for central / two-footed players and for
+  /// groups where a flank is not a defining trait (CB, DM, CM, ST, GK), so the
+  /// marker only appears where it adds information.
+  String get sideTag {
+    final s = positionSide.toUpperCase();
+    if (s != 'L' && s != 'R') return '';
+    switch (positionGroupFine.toUpperCase()) {
+      case 'FB':
+      case 'WB':
+      case 'W':
+      case 'WF':
+        return s;
+      default:
+        return '';
+    }
+  }
 
   // Returns the most relevant per-90 stat label + value for this player's position
   String get keyStatLabel {

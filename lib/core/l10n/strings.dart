@@ -212,6 +212,8 @@ class L10n extends ChangeNotifier {
     'team.choosePlayer': 'ALEGE UN JUCĂTOR',
     'team.noCompatiblePlayers': 'Niciun jucător compatibil disponibil',
     'team.applyingLineup': 'Se reoptimizează echipa…',
+    'team.selTag': 'SEL',
+    'team.selExplain': 'scor de selecție (modelul alege pe acest scor)',
 
     // Standings
     'standings.tabRegular': 'PRINCIPAL',
@@ -388,6 +390,8 @@ class L10n extends ChangeNotifier {
     'team.choosePlayer': 'CHOOSE A PLAYER',
     'team.noCompatiblePlayers': 'No compatible players available',
     'team.applyingLineup': 'Re-optimising lineup…',
+    'team.selTag': 'SEL',
+    'team.selExplain': 'selection score (the model picks on this)',
 
     // Standings
     'standings.tabRegular': 'REGULAR',
