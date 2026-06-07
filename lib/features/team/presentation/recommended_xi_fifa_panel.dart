@@ -715,8 +715,13 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
           final benchCoarse = pl.positionGroupFine.isNotEmpty
               ? coarseForFineGroup(pl.positionGroupFine)
               : pl.roleGroup;
-          final benchLabel =
+          final baseLabel =
               pl.positionGroupFine.isNotEmpty ? pl.positionGroupFine : pl.roleGroup;
+          // Reveal the L/R flank on bench cards: their fine group (FB/WB/W) does
+          // not itself encode a side the way a slot label (RB/LB) does, so we
+          // prefix the side tag when the player has a clear preferred flank.
+          final side = pl.sideTag;
+          final benchLabel = side.isNotEmpty ? '$side $baseLabel' : baseLabel;
           final roleColor = recommendedXiRoleColor(
               benchCoarse.isNotEmpty ? benchCoarse : pl.roleGroup, c);
           return GestureDetector(
@@ -749,12 +754,31 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
                     size: 46,
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    rf(pl).toStringAsFixed(0),
-                    style: TypographyTokens.statValue.copyWith(
-                      color: c.textPrimary,
-                      fontSize: 18,
-                    ),
+                  // Quality rating (within-position percentile) and the
+                  // optimiser's SEL selection score side by side, so a coach
+                  // sees why a high-rated sub is still on the bench (low SEL).
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        rf(pl).toStringAsFixed(0),
+                        style: TypographyTokens.statValue.copyWith(
+                          color: c.textPrimary,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'SEL ${pl.selectionScore}',
+                        style: TypographyTokens.sectionLabel.copyWith(
+                          fontSize: 8,
+                          color: c.accent,
+                          letterSpacing: 0.4,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 2),
                   Text(
@@ -963,11 +987,16 @@ class _PlayerDetailColumn extends StatelessWidget {
     }
     final rating = ratingForDisplay(p).clamp(0, 100).toInt();
     final effAttrs = _efficiencyAttrs(p);
-    // Prefer the official slot label, then the fine group, then the coarse
-    // role; colour by the corresponding coarse group.
+    // Prefer the official slot label (which already encodes side, e.g. RB/LB),
+    // then the fine group prefixed with the L/R flank when meaningful, then the
+    // coarse role; colour by the corresponding coarse group.
     final detailLabel = p.officialPosition.isNotEmpty
         ? p.officialPosition
-        : (p.positionGroupFine.isNotEmpty ? p.positionGroupFine : p.roleGroup);
+        : (p.positionGroupFine.isNotEmpty
+            ? (p.sideTag.isNotEmpty
+                ? '${p.sideTag} ${p.positionGroupFine}'
+                : p.positionGroupFine)
+            : p.roleGroup);
     final detailCoarse = p.positionGroupFine.isNotEmpty
         ? coarseForFineGroup(p.positionGroupFine)
         : p.roleGroup;
@@ -1063,6 +1092,23 @@ class _PlayerDetailColumn extends StatelessWidget {
                         fontSize: 8,
                         color: c.textMuted,
                         letterSpacing: 2.0,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    // Selection score: the optimiser's selection signal, kept
+                    // distinct from the quality rating so a coach reads why a
+                    // high-rated player can still be benched (low SEL).
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      color: c.accent.withValues(alpha: 0.16),
+                      child: Text(
+                        '${L10n.t('team.selTag')} ${p.selectionScore}',
+                        style: TypographyTokens.sectionLabel.copyWith(
+                          fontSize: 9,
+                          color: c.accent,
+                          letterSpacing: 1.0,
+                        ),
                       ),
                     ),
                   ],
@@ -1700,8 +1746,65 @@ class FifaPitchPlayerChip extends StatelessWidget {
                   ),
                 ),
               ),
+            // Selection-score tag (bottom-left): the optimiser's selection
+            // signal (round(predicted_score*100)), labelled "SEL" so it reads
+            // distinctly from the role-coloured quality rating in the top-left.
+            // This is why a high-rating player can still be benched.
+            Positioned(
+              bottom: chipSize * 0.04,
+              left: chipSize * 0.04,
+              child: _SelTag(value: player.selectionScore, chipSize: chipSize),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Compact "SEL" tag: a cobalt selection-score chip used on the pitch chip and
+/// the bench card so a coach can read the optimiser's selection signal next to
+/// the within-position quality rating. Sharp edges, tonal, no shadow.
+class _SelTag extends StatelessWidget {
+  const _SelTag({required this.value, required this.chipSize});
+
+  final int value;
+  final double chipSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: chipSize * 0.06,
+        vertical: chipSize * 0.015,
+      ),
+      decoration: BoxDecoration(
+        color: c.scrim.withValues(alpha: 0.82),
+        border: Border(left: BorderSide(color: c.accent, width: 1.5)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            L10n.t('team.selTag'),
+            style: TypographyTokens.sectionLabel.copyWith(
+              color: c.accent,
+              fontSize: chipSize * 0.10,
+              height: 1.0,
+              letterSpacing: 0.4,
+            ),
+          ),
+          SizedBox(width: chipSize * 0.04),
+          Text(
+            '$value',
+            style: TypographyTokens.statValue.copyWith(
+              color: Colors.white,
+              fontSize: chipSize * 0.15,
+              height: 1.0,
+            ),
+          ),
+        ],
       ),
     );
   }
