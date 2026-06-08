@@ -786,29 +786,72 @@ def build_player_feature_vector(
     # If per-match dates are available we apply an exponential time decay with
     # a 30-day half-life (see :func:`exponential_time_decay_weight`); otherwise
     # we fall back to a simple unweighted average of the last three matches.
-    recent = valid_stats[-min(len(valid_stats), 10):]
+    #
+    # Point-in-time correctness: the recency anchor is ``as_of_date`` (the
+    # simulated demo clock the caller predicts for) and falls back to the real
+    # wall clock only when no ``as_of_date`` was supplied (live / non-demo).
+    # Matches dated ON OR AFTER the anchor are excluded entirely: a player's
+    # post-anchor matches must not enter the recent-form window, and must not
+    # leak in as weight-1.0 entries. We therefore filter the candidate pool to
+    # matches strictly before the anchor FIRST, then take the last N, then
+    # apply the exponential decay relative to the anchor.
+    from datetime import date, datetime  # local import to avoid hard dep at module top
+    today = None
+    try:
+        if as_of_date is not None:
+            # ``as_of_date`` is a date (XiService passes effective_now().date());
+            # normalise a datetime defensively to keep date-vs-datetime math safe.
+            today = as_of_date.date() if isinstance(as_of_date, datetime) else as_of_date
+        else:
+            today = date.today()
+    except Exception:
+        today = None
+
+    def _match_date(s):
+        # In the demo path (anchor present) we also consult ``match_date``, the
+        # authoritative date-bridge value that the dataset builder stamps onto
+        # each block, so the anchor can actually exclude/decay by real dates.
+        # In the live path (no anchor) we read only ``date``/``matchDate`` to
+        # preserve the original behaviour byte-for-byte: those keys are never
+        # set on these blocks, so the live recency weighting stays as before.
+        if as_of_date is not None:
+            d = s.get("date") or s.get("matchDate") or s.get("match_date")
+        else:
+            d = s.get("date") or s.get("matchDate")
+        try:
+            if isinstance(d, date) and not isinstance(d, datetime):
+                return d
+            if isinstance(d, datetime):
+                return d.date()
+            if isinstance(d, str):
+                return datetime.strptime(d[:10], "%Y-%m-%d").date()
+            if isinstance(d, (int, float)):
+                return datetime.fromtimestamp(float(d)).date()
+        except Exception:
+            return None
+        return None
+
+    # When a demo anchor is supplied, drop matches dated on or after it so
+    # post-anchor fixtures never enter the window. When ``as_of_date`` is None
+    # (live / non-demo) keep the prior behaviour EXACTLY: the whole valid-stats
+    # list is the candidate pool and no date exclusion is applied, so the live
+    # path is byte-for-byte unchanged.
+    if as_of_date is not None and today is not None:
+        candidate = [s for s in valid_stats
+                     if (_match_date(s) is None) or (_match_date(s) < today)]
+    else:
+        candidate = valid_stats
+    recent = candidate[-min(len(candidate), 10):]
     per_match_scores = [
         compute_performance_score(s, role_group, fine_group=position_group_fine)
         for s in recent
     ]
-    today = None
-    try:
-        from datetime import date, datetime  # local import to avoid hard dep at module top
-        today = date.today()
-    except Exception:
-        today = None
 
     weights: List[float] = []
     if today is not None:
         for s in recent:
-            d = s.get("date") or s.get("matchDate")
+            match_date = _match_date(s)
             try:
-                if isinstance(d, str):
-                    match_date = datetime.strptime(d[:10], "%Y-%m-%d").date()
-                elif isinstance(d, (int, float)):
-                    match_date = datetime.fromtimestamp(float(d)).date()
-                else:
-                    match_date = None
                 days_ago = (today - match_date).days if match_date else None
             except Exception:
                 days_ago = None
@@ -824,13 +867,17 @@ def build_player_feature_vector(
         recent_score = 0.0
 
     # ── Age ──────────────────────────────────────────────────────────────────
+    # Age is measured as of the simulated demo clock (``as_of_date``) so the
+    # snapshot does not leak the real calendar; falls back to the real wall
+    # clock only when no ``as_of_date`` was supplied. ``today`` was already
+    # anchored above (``as_of_date`` when present, else ``date.today()``).
     birth = player_profile.get("birthDate", "")
     age = 0
     if birth:
         try:
-            from datetime import date, datetime
             bd = datetime.strptime(birth, "%Y-%m-%d").date()
-            age = (date.today() - bd).days / 365.25
+            age_anchor = today if today is not None else date.today()
+            age = (age_anchor - bd).days / 365.25
         except Exception:
             pass
 
