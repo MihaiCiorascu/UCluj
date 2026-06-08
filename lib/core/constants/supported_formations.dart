@@ -14,6 +14,7 @@ const List<String> kSupportedFormations = [
   '3-5-2',
   '3-4-3',
   '3-4-2-1',
+  '3-4-1-2',
   '3-6-1',
   '5-3-2',
   '5-4-1',
