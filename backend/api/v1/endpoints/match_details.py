@@ -9,6 +9,10 @@ from pathlib import Path
 import pandas as pd
 from fastapi import APIRouter, Depends, Query
 
+from api.v1.endpoints._drive_cache_match import (
+    build_offline_match_details,
+    has_drive_cache_match,
+)
 from clients.sportradar_client import SportradarClient
 from core.security import get_current_user
 from ml.xi_predictor import FORMATIONS, StartingXIPredictor
@@ -136,8 +140,16 @@ def _assign_official_positions(players: list[dict], sr_formation: str | None) ->
         coarse = _COARSE_FROM_SHORT.get(p.get("position", ""), "MID")
         rows.append({
             "_i": idx,
+            # ``_assign_xi`` requires a unique ``playerId`` column (used for lock
+            # handling); the per-starter index is unique within the eleven and
+            # is mapped back via ``_i`` below, so a synthetic id is sufficient.
+            "playerId": idx,
             "role_group": coarse,
             "position_group_fine": _fine_from_sr_position(p.get("_pos_raw", "")),
+            # Preferred pitch side, when the caller stamped one on the player
+            # (drive_cache path); defaults to central so a sided slot applies no
+            # flank penalty when the side is unknown (Sportradar path).
+            "position_side": str(p.get("_pos_side", "C") or "C"),
             # No real scores for an actual lineup; a stable descending value
             # keeps the assignment deterministic.
             "predicted_score": 1.0 - idx * 0.001,
@@ -196,10 +208,28 @@ def _save_cache(match_id: str, details: dict) -> None:
 
 @router.get("/match-details")
 async def match_details(
-    match_id: str = Query(..., description="Sportradar sport_event ID"),
+    match_id: str = Query(..., description="Wyscout match id (baked fixtures) or Sportradar sport_event ID"),
     _user=Depends(get_current_user),
 ):
-    """Return official lineups + team statistics for a completed match."""
+    """Return official lineups + team statistics for a completed match.
+
+    The 2025-26 dashboard drives this endpoint with the WYSCOUT numeric
+    ``match_id`` from the baked fixtures (``services/baked_fixtures.py``); those
+    are served entirely offline from the committed drive_cache (no Sportradar,
+    whose trial quota is exhausted). A real Sportradar ``sr:`` event id still
+    takes the original live path.
+    """
+    # Offline drive_cache path: numeric Wyscout match id present in the cache.
+    # ``sr:`` ids never enter the index, so they fall through to Sportradar.
+    if not str(match_id).startswith("sr:") and has_drive_cache_match(match_id):
+        try:
+            offline = build_offline_match_details(match_id, _GRADES, _PHOTOS)
+        except Exception:
+            logger.warning("Offline match-details build failed for %s", match_id, exc_info=True)
+            offline = None
+        if offline is not None:
+            return offline
+
     cached = _load_cache(match_id)
     if cached:
         _attach_photos(cached)

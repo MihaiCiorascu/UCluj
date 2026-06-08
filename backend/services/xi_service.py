@@ -265,7 +265,11 @@ class XiService:
             as_of_date=self._asof_date(),
         )
 
-        squad_ids = get_team_squad_from_matches(match_files, home_team.wy_substr)
+        squad_ids = get_team_squad_from_matches(
+            match_files,
+            home_team.wy_substr,
+            as_of_date=self._asof_date(),
+        )
 
         def _resolve_team(pid):
             profile = self._profiles.get(pid, {})
@@ -659,7 +663,11 @@ class XiService:
         opp_team_id = opp_id  # your_team_id passed into the opponent predict_xi
         if opp_ref is not None:
             match_files = sorted(glob.glob(os.path.join(self.data_dir, "*.json")))
-            opp_squad_ids = get_team_squad_from_matches(match_files, opp_ref.wy_substr)
+            opp_squad_ids = get_team_squad_from_matches(
+                match_files,
+                opp_ref.wy_substr,
+                as_of_date=self._asof_date(),
+            )
             if opp_squad_ids:
                 opp_team_df = df[df["playerId"].isin(opp_squad_ids)].copy()
                 # ``predict_xi`` does not filter by team id (the home path proves
