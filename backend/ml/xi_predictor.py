@@ -50,8 +50,8 @@ MAX_BENCH = 12
 
 # ── Formation library ─────────────────────────────────────────────────────────
 # Each entry maps a positional group to the number of slots it must fill. The
-# thirteen formations here mirror the Flutter ``kSupportedFormations`` list so
-# every option the coach can pick has a backend slot layout.
+# formations here mirror the Flutter ``kSupportedFormations`` list so every
+# option the coach can pick has a backend slot layout.
 FORMATIONS: Dict[str, Dict[str, int]] = {
     "4-4-2":   {"GK": 1, "DEF": 4, "MID": 4, "FWD": 2},
     "4-3-3":   {"GK": 1, "DEF": 4, "MID": 3, "FWD": 3},
@@ -60,9 +60,13 @@ FORMATIONS: Dict[str, Dict[str, int]] = {
     "4-1-4-1": {"GK": 1, "DEF": 4, "MID": 5, "FWD": 1},
     "4-3-2-1": {"GK": 1, "DEF": 4, "MID": 5, "FWD": 1},
     "4-2-2-2": {"GK": 1, "DEF": 4, "MID": 4, "FWD": 2},
+    "4-4-1-1": {"GK": 1, "DEF": 4, "MID": 4, "FWD": 2},
+    "4-3-1-2": {"GK": 1, "DEF": 4, "MID": 4, "FWD": 2},
+    "4-1-2-1-2": {"GK": 1, "DEF": 4, "MID": 4, "FWD": 2},
     "3-1-4-2": {"GK": 1, "DEF": 3, "MID": 5, "FWD": 2},
     "3-5-2":   {"GK": 1, "DEF": 3, "MID": 5, "FWD": 2},
     "3-4-3":   {"GK": 1, "DEF": 3, "MID": 4, "FWD": 3},
+    "3-4-2-1": {"GK": 1, "DEF": 3, "MID": 6, "FWD": 1},
     "3-6-1":   {"GK": 1, "DEF": 3, "MID": 6, "FWD": 1},
     "5-3-2":   {"GK": 1, "DEF": 5, "MID": 3, "FWD": 2},
     "5-4-1":   {"GK": 1, "DEF": 5, "MID": 4, "FWD": 1},
@@ -122,6 +126,27 @@ FORMATION_SLOTS: Dict[str, List[tuple[str, str]]] = {
         ("RAM", "MID"), ("LAM", "MID"),
         ("RST", "FWD"), ("LST", "FWD"),
     ],
+    "4-4-1-1": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("RM", "MID"), ("RCM", "MID"), ("LCM", "MID"), ("LM", "MID"),
+        ("SS", "FWD"), ("ST", "FWD"),
+    ],
+    "4-3-1-2": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("RCM", "MID"), ("CM", "MID"), ("LCM", "MID"),
+        ("CAM", "MID"),
+        ("SS", "FWD"), ("ST", "FWD"),
+    ],
+    "4-1-2-1-2": [
+        ("GK", "GK"),
+        ("RB", "DEF"), ("RCB", "DEF"), ("LCB", "DEF"), ("LB", "DEF"),
+        ("DM", "MID"),
+        ("RCM", "MID"), ("LCM", "MID"),
+        ("CAM", "MID"),
+        ("SS", "FWD"), ("ST", "FWD"),
+    ],
     "3-1-4-2": [
         ("GK", "GK"),
         ("RCB", "DEF"), ("CB", "DEF"), ("LCB", "DEF"),
@@ -140,6 +165,13 @@ FORMATION_SLOTS: Dict[str, List[tuple[str, str]]] = {
         ("RCB", "DEF"), ("CB", "DEF"), ("LCB", "DEF"),
         ("RM", "MID"), ("RCM", "MID"), ("LCM", "MID"), ("LM", "MID"),
         ("RW", "FWD"), ("ST", "FWD"), ("LW", "FWD"),
+    ],
+    "3-4-2-1": [
+        ("GK", "GK"),
+        ("RCB", "DEF"), ("CB", "DEF"), ("LCB", "DEF"),
+        ("RWB", "MID"), ("RCM", "MID"), ("LCM", "MID"), ("LWB", "MID"),
+        ("RAM", "MID"), ("LAM", "MID"),
+        ("ST", "FWD"),
     ],
     "3-6-1": [
         ("GK", "GK"),
@@ -164,17 +196,22 @@ FORMATION_SLOTS: Dict[str, List[tuple[str, str]]] = {
 # Curated set of formations actually offered to (and evaluated for) the coach.
 # The full :data:`FORMATION_SLOTS` library above is intentionally kept whole so
 # that concluded matches can still render their real Sportradar shapes (a shape
-# the opponent actually lined up in may be one of the four templates outside
-# this curated nine). Only these nine are presented as pickable options and only
-# these nine are searched by the auto-best-formation routine.
+# the opponent actually lined up in may be one of the templates outside this
+# curated set). Only these are presented as pickable options and only these are
+# searched by the auto-best-formation routine.
 CURATED_FORMATIONS: List[str] = [
     "4-3-3",
     "4-4-2",
     "4-2-3-1",
     "4-1-4-1",
     "4-5-1",
+    "4-4-1-1",
+    "4-3-1-2",
+    "4-2-2-2",
+    "4-1-2-1-2",
     "3-5-2",
     "3-4-3",
+    "3-4-2-1",
     "5-3-2",
     "5-4-1",
 ]
@@ -197,6 +234,11 @@ SLOT_ADMISSIBLE_FINE: Dict[str, set] = {
     "W":  {"W", "WF", "AM"},
     "WF": {"WF", "ST", "W"},
     "ST": {"ST", "WF", "W"},
+    # Second striker / withdrawn forward (SS, the "1-1" front pair's deeper
+    # man, or CF behind a target ST). A true forward, so the natural fit is a
+    # striker, but it is just as often a wide-forward or an advanced playmaker
+    # dropping in, so the AM and WF families are admitted alongside ST.
+    "SS": {"ST", "WF", "AM", "W"},
 }
 
 
@@ -630,8 +672,8 @@ class StartingXIPredictor:
 
         # Resolve the requested formation. ``"auto"`` searches the curated set
         # for the shape with the highest total assignment objective on the
-        # already-scored pool (nine tiny Hungarian solves, the predicted scores
-        # are NOT recomputed). An explicit formation is used as given.
+        # already-scored pool (one tiny Hungarian solve per curated shape, the
+        # predicted scores are NOT recomputed). An explicit formation is used as given.
         formation_scores: Dict[str, float] = {}
         if str(formation).lower() == "auto":
             resolved_formation, xi_df, total_score, formation_scores = (
@@ -671,8 +713,8 @@ class StartingXIPredictor:
         The pool is assumed to already carry ``predicted_score`` (scored once by
         the caller). Each :data:`CURATED_FORMATIONS` shape is solved with
         :meth:`_assign_xi` and the one with the highest ``total_score`` wins.
-        Predicted scores are never recomputed: this is just nine tiny solves over
-        the same scored pool.
+        Predicted scores are never recomputed: this is just one tiny solve per
+        curated shape over the same scored pool.
 
         With ``locked`` set, a formation is skipped when any locked
         ``slot_index`` falls outside that formation's eleven slots (the lock
@@ -982,7 +1024,10 @@ class StartingXIPredictor:
 
         Strips the left / right / centre prefix so RB and LB share the FB
         family, RCB and LCB share CB, RWB and LWB share WB, and so on. Order of
-        the checks matters: the more specific suffixes are tested first.
+        the checks matters: the more specific suffixes are tested first. The
+        second-striker label SS (the withdrawn forward in 4-4-1-1 / 4-3-1-2 /
+        4-1-2-1-2) maps to its own SS family, which admits the ST, WF and AM
+        fine groups; the old-school CF stays in the ST family.
         """
         l = (label or "").upper()
         if l == "GK":
@@ -1001,6 +1046,8 @@ class StartingXIPredictor:
             return "AM"
         if l.endswith("CM"):
             return "CM"
+        if l == "SS":
+            return "SS"
         if l.endswith("ST") or l == "CF":
             return "ST"
         if l.endswith("W"):

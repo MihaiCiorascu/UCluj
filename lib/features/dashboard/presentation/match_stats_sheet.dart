@@ -252,8 +252,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   bool _loadingDetails = false;
   MatchDetails? _matchDetails;
 
-  // Selector entries: AUTO first, then the nine curated shapes (the only keys
-  // the optimiser resolves to; the backend coerces anything else to "auto").
+  // Selector entries: AUTO first, then the curated shapes (the only keys the
+  // optimiser resolves to; the backend coerces anything else to "auto").
   static const _formations = [kFormationAuto, ...kCuratedFormations];
 
   @override
