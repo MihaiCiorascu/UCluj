@@ -14,7 +14,7 @@ from app.config import effective_now, settings
 # regular season ends around the start of March; playoffs begin mid-March.
 _REGULAR_SEASON_CUTOFFS: dict[str, str] = {
     "2024": "2025-03-10",
-    "2025": "2026-03-08",
+    "2025": "2026-03-13",
 }
 
 

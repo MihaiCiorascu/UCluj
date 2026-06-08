@@ -465,12 +465,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   /// True when the date sits in the Romanian Superliga play-off / play-out
-  /// window (roughly March 8 through the end of May). Used to correct demo
-  /// fixtures whose Sportradar phase still reads "regular".
+  /// window (13 March through the end of May). The 2025-26 regular season's last
+  /// round (Round 30) was played 6-9 March 2026 as one table; the Championship
+  /// and Relegation groups began on 13-14 March 2026, so the window opens 13
+  /// March. Kept in lockstep with the backend cutoff
+  /// (``_REGULAR_SEASON_CUTOFFS["2025"] == "2026-03-13"``) so the section split
+  /// only appears from 13 March onward.
   bool _isPlayoffWindow(String matchDate) {
     final d = DateTime.tryParse(matchDate);
     if (d == null) return false;
-    return (d.month == 3 && d.day >= 8) || d.month == 4 || d.month == 5;
+    return (d.month == 3 && d.day >= 13) || d.month == 4 || d.month == 5;
   }
 
   /// Relative round label ("ROUND +1" / "ROUND -1"), used only as the primary

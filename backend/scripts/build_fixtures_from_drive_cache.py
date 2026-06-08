@@ -7,8 +7,10 @@ Run from the backend/ directory:
 
 Emits backend/ml/data/superliga_2025_26_fixtures.json. Rounds are numbered
 1..N chronologically by each roundId's earliest date. Phase is "regular" before
-the 2026-03-08 play-off cutoff, else "playoff_window" (the actual play-off /
-play-out group is resolved at serve time from the standings table).
+the 2026-03-13 play-off cutoff, else "playoff_window" (the actual play-off /
+play-out group is resolved at serve time from the standings table). Round 30
+(the regular season's last round) was played 6-9 March 2026 as one table; the
+Championship and Relegation groups began on 13-14 March 2026.
 """
 from __future__ import annotations
 
@@ -22,7 +24,7 @@ _BACKEND = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _DRIVE = os.path.join(_BACKEND, "ml", "data", "drive_cache")
 _DATES = os.path.join(_BACKEND, "ml", "data", "matchid_to_date.json")
 _OUT = os.path.join(_BACKEND, "ml", "data", "superliga_2025_26_fixtures.json")
-_PLAYOFF_CUTOFF = "2026-03-08"
+_PLAYOFF_CUTOFF = "2026-03-13"
 
 try:
     from sportradar.team_registry import SUPERLIGA_TEAMS, normalise
