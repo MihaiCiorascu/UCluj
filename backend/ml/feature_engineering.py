@@ -267,13 +267,17 @@ def role_to_group(role_name: str) -> str:
 # (the file is named ``"{home} - {away}, ..."`` and the player's club is one of
 # the two), while any given opponent's substring appears only in the single
 # head-to-head fixture. Across a recency window of a player's matches, therefore,
-# the registry team whose ``wy_substr`` is present in the *most* of those files
-# is the player's primary club. Recency is preferred so that a transfer is
+# the registry team whose ``wy_substr`` is present in the most-recent of those
+# files is the player's primary club. Recency is preferred so that a transfer is
 # followed rather than averaged away: only matches dated strictly before
 # ``as_of_date`` are considered, and the window keeps a player's last
 # ``recent_n`` appearances unioned with everything inside ``window_days`` of
 # ``as_of_date`` (so a thin-but-recent run still resolves, and a dense recent
-# run is not diluted by older clubs).
+# run is not diluted by older clubs). Within the window each appearance votes
+# with a *rank-based* geometric decay (``0.5 ** rank``, rank 0 = most recent),
+# so the last two-to-three matches dominate decisively: a very-recent 2-3 game
+# run at a new club outweighs a denser but older run at the former club, which
+# is what makes a fresh mid-season transfer resolve to the new club.
 
 
 def primary_club_as_of(
@@ -286,8 +290,10 @@ def primary_club_as_of(
 
     Returns ``{playerId: team_short}`` where ``team_short`` is the
     :class:`~sportradar.team_registry.TeamRef` short label of the registry
-    club the player played for in the *most* of their recent matches dated
-    strictly before ``as_of_date``. A player who appears in no in-window,
+    club with the highest rank-decayed recency weight across the player's
+    in-window matches dated strictly before ``as_of_date`` (each match at
+    rank ``i`` most-recent-first contributes ``0.5 ** i``, so the player's
+    last few appearances dominate). A player who appears in no in-window,
     dated match is omitted from the mapping (the caller treats an omission as
     "unknown" and falls back to the legacy all-time behaviour).
 
@@ -314,8 +320,6 @@ def primary_club_as_of(
         ``{playerId: team_short}`` for every player with at least one
         in-window dated appearance.
     """
-    from collections import Counter
-
     from ml.match_dates import date_for, parse_date
     from sportradar.team_registry import SUPERLIGA_TEAMS, normalise as _norm  # type: ignore
 
@@ -354,22 +358,43 @@ def primary_club_as_of(
                 continue
             per_player.setdefault(int(pid), []).append((d, teams_in_file))
 
+    # Rank-based recency decay base. Matches are sorted most-recent-first and
+    # the match at rank ``i`` (0 = most recent) is weighted ``RANK_DECAY ** i``,
+    # so a player's last ~2-3 appearances dominate the vote decisively. With a
+    # base of 0.5 a fresh 2-match run at a new club (ranks 0,1 => 1.0 + 0.5 =
+    # 1.5) outvotes a denser 3-match run at the old club sitting just behind it
+    # (ranks 2,3,4 => 0.25 + 0.125 + 0.0625 = 0.4375), so a very-recent transfer
+    # is *followed* rather than averaged away, while a season-long stayer (every
+    # match the same club) still resolves to that club because it accrues every
+    # rank's weight. This is purely ordinal, so it is robust to schedule gaps:
+    # an injured player's most-recent matches still rank highest regardless of
+    # how many calendar days separate them from ``as_of``.
+    RANK_DECAY = 0.5
+
     result: Dict[int, str] = {}
     for pid, rows in per_player.items():
         rows.sort(key=lambda r: r[0], reverse=True)  # most recent first
         windowed = [r for i, r in enumerate(rows) if i < recent_n or r[0] >= window_start]
         if not windowed:
             continue
-        counts: Counter = Counter()
-        for _d, shorts in windowed:
+        # Recency-weighted vote: the in-window appearance at rank ``i`` (0 = most
+        # recent) adds ``RANK_DECAY ** i`` to *each* club whose normalised
+        # substring is in that match's filename. The player's own club is in
+        # every file, so it accrues weight from every match; an opponent is in
+        # only the single head-to-head file. A transfer is followed because the
+        # new club's most-recent matches sit at the lowest ranks and dominate
+        # the geometric sum even when the old club has more total in-window
+        # appearances, while a player who stayed all window still resolves to
+        # the club every match votes for.
+        weights: Dict[str, float] = {}
+        for i, (_d, shorts) in enumerate(windowed):
+            w = RANK_DECAY ** i
             for s in shorts:
-                counts[s] += 1
-        # Most-frequent club wins; ties broken by who appeared most recently
-        # (the player's own club is present in *every* file, so a tie only
-        # arises in degenerate single-match windows, where recency is the
-        # right tiebreak for a transfer).
+                weights[s] = weights.get(s, 0.0) + w
+        # Club with the maximum summed weight wins; ties broken by who appeared
+        # most recently (degenerate single-match windows only).
         best = max(
-            counts.items(),
+            weights.items(),
             key=lambda kv: (kv[1], _most_recent_index_weight(kv[0], windowed)),
         )
         result[pid] = best[0]
@@ -439,16 +464,20 @@ def get_team_squad_from_matches(
         Date-awareness switch for mid-season transfers. When ``None`` (the
         default) the behaviour is exactly the all-time appearance count
         documented above, byte-for-byte. When a ``datetime.date`` (or ISO
-        ``YYYY-MM-DD`` string) is supplied, two extra filters apply: (a) an
-        appearance is only counted if its match is dated strictly *before*
-        ``as_of_date`` (so a future move does not leak backwards and an
-        already-departed player's stale fixtures are still counted toward
-        the *frequency*, but see (b)); and (b) a player is retained only if
-        ``team_name_substring``'s registry club is the player's *primary*
-        club as of that date per :func:`primary_club_as_of`. Filter (b) is
-        what drops a transferred player from their former club: M. Thiam's
-        six stale U Cluj appearances (Jul–Aug 2025) no longer keep him in
-        the U Cluj squad once his primary recent club has become FCSB.
+        ``YYYY-MM-DD`` string) is supplied, the membership rule changes: a
+        player is in this team's squad iff (b) ``team_name_substring``'s
+        registry club is the player's *primary* club as of that date per
+        :func:`primary_club_as_of`, AND their TOTAL appearances across ALL
+        clubs (minutesOnField > 0, dated strictly *before* ``as_of_date``)
+        meet ``min_appearances``. Only matches dated strictly before
+        ``as_of_date`` count anywhere, so a future move does not leak
+        backwards. Filter (b) is what drops a transferred player from their
+        former club: M. Thiam's six stale U Cluj appearances (Jul–Aug 2025)
+        no longer keep him in the U Cluj squad once his primary recent club
+        has become FCSB. Applying the floor to the player's *total* games
+        rather than their games at *this* team is what keeps a freshly
+        transferred but established player in their new squad even with only
+        2-3 games there (e.g. Purece -> Metaloglobus, Braun -> CFR Cluj).
 
     Returns
     -------
@@ -475,6 +504,7 @@ def get_team_squad_from_matches(
     # ``None`` and every legacy code path below is untouched.
     primary_by_player: Optional[Dict[int, str]] = None
     this_team_short: Optional[str] = None
+    total_appearances: Optional[Counter] = None
     cutoff = None
     if as_of_date is not None:
         from ml.match_dates import date_for, parse_date
@@ -487,6 +517,35 @@ def get_team_squad_from_matches(
             )
             ref = team_by_alias(team_name_substring)
             this_team_short = ref.short if ref is not None else None
+
+            # Iteration N: count each player's TOTAL appearances across ALL
+            # clubs (minutesOnField > 0, dated strictly before ``as_of_date``).
+            # The squad floor is applied to this total rather than to the
+            # player's games at *this* team, so an established player who has
+            # just transferred in is not dropped for having only 2-3 games at
+            # the new club. Opponent regulars (who have plenty of total games)
+            # are still excluded by the primary-club filter (b), not the floor.
+            total_appearances = Counter()
+            for fp in match_stat_files:
+                try:
+                    with open(fp, encoding="utf-8") as f:
+                        tdata = json.load(f)
+                    tplayers = tdata.get("players", [])
+                    if not tplayers:
+                        continue
+                    tmid = tplayers[0].get("matchId")
+                    td = parse_date(date_for(tmid))
+                    if td is None or not (td < cutoff):
+                        continue
+                    for tentry in tplayers:
+                        tpid = tentry.get("playerId")
+                        if tpid is None:
+                            continue
+                        tmins = (tentry.get("total", {}) or {}).get("minutesOnField", 0) or 0
+                        if tmins > 0:
+                            total_appearances[tpid] += 1
+                except Exception:
+                    continue
 
     needle = _norm(team_name_substring)
     team_files = [fp for fp in match_stat_files if needle in _norm(fp)]
@@ -520,19 +579,29 @@ def get_team_squad_from_matches(
         except Exception:
             continue
 
-    squad = {pid for pid, count in appearances.items() if count >= min_appearances}
-
-    # Filter (b): in the date-aware path, keep a player only if this team IS
-    # their primary recent club. A player whose primary club resolved to a
-    # different registry team (a mover) is dropped; a player who could not be
-    # resolved at all (no in-window dated match) is kept, so the all-time
-    # recall is never reduced by missing date metadata.
     if primary_by_player is not None and this_team_short is not None:
+        # Date-aware path. A player is in this team's squad iff (b) this team
+        # IS their primary recent club AND the squad floor on their *total*
+        # games is met. A player whose primary club resolved to a different
+        # registry team (a mover) is dropped; a player who could not be resolved
+        # at all (no in-window dated match) is kept, so date metadata gaps never
+        # reduce recall. Crucially the ``min_appearances`` floor is applied to
+        # ``total_appearances`` (games across ALL clubs before ``as_of_date``),
+        # not to the player's games at *this* team, so a recently-transferred
+        # but established player is retained even with only 2-3 games at the new
+        # club (e.g. Purece -> Metaloglobus, Braun -> CFR Cluj with 4 apps).
+        # Opponent regulars are still excluded by the primary-club test, not the
+        # floor.
+        floor = total_appearances if total_appearances is not None else appearances
         squad = {
             pid
-            for pid in squad
+            for pid in appearances
             if primary_by_player.get(pid, this_team_short) == this_team_short
+            and floor.get(pid, 0) >= min_appearances
         }
+    else:
+        # All-time path (``as_of_date is None``): unchanged byte-for-byte.
+        squad = {pid for pid, count in appearances.items() if count >= min_appearances}
 
     return squad
 
