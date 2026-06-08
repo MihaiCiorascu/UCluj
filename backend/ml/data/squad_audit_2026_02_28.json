@@ -1,0 +1,2655 @@
+{
+  "as_of_date": "2026-02-28",
+  "params": {
+    "recent_n": 15,
+    "window_days": 150,
+    "min_appearances": 5
+  },
+  "total_players_assigned": 393,
+  "unique_players_assigned": 393,
+  "team_sizes": {
+    "U Cluj": 26,
+    "CFR Cluj": 26,
+    "FCSB": 24,
+    "Dinamo Bucureşti": 21,
+    "Rapid Bucureşti": 23,
+    "Botoşani": 25,
+    "Oţelul Galaţi": 23,
+    "Hermannstadt": 27,
+    "Petrolul Ploieşti": 26,
+    "UTA Arad": 23,
+    "Csikszereda": 26,
+    "FC Argeş": 21,
+    "U Craiova": 25,
+    "Farul Constanţa": 23,
+    "Unirea Slobozia": 27,
+    "Metaloglobus": 27
+  },
+  "size_flags": {},
+  "double_assignments": {},
+  "mover_verdicts": [
+    {
+      "name": "D. Alibec",
+      "stated_club": "Farul Constanţa",
+      "candidate_pids": [
+        38598
+      ],
+      "playerId": 38598,
+      "profile_currentTeamId": 61242,
+      "resolver_assigned": "Farul Constanţa",
+      "primary_club_as_of": "Farul Constanţa",
+      "last3_ground_truth": "Farul Constanţa",
+      "last5": [
+        {
+          "date": "2026-02-22",
+          "clubs": [
+            "FC Argeş",
+            "Farul Constanţa"
+          ],
+          "file": "Argeș - Farul Constanţa, 1-0_players_stats.json"
+        },
+        {
+          "date": "2026-02-15",
+          "clubs": [
+            "Rapid Bucureşti",
+            "Farul Constanţa"
+          ],
+          "file": "Farul Constanţa - Rapid Bucureşti, 3-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-07",
+          "clubs": [
+            "Farul Constanţa",
+            "Unirea Slobozia"
+          ],
+          "file": "Unirea Slobozia - Farul Constanţa, 2-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-04",
+          "clubs": [
+            "Dinamo Bucureşti",
+            "Farul Constanţa"
+          ],
+          "file": "Farul Constanţa - Dinamo Bucureşti, 2-3_players_stats.json"
+        },
+        {
+          "date": "2026-02-01",
+          "clubs": [
+            "U Craiova",
+            "Farul Constanţa"
+          ],
+          "file": "Farul Constanţa - Universitatea Craiova, 4-1_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "D. Politic",
+      "stated_club": "Hermannstadt",
+      "candidate_pids": [
+        481134
+      ],
+      "playerId": 481134,
+      "profile_currentTeamId": 55427,
+      "resolver_assigned": "Hermannstadt",
+      "primary_club_as_of": "Hermannstadt",
+      "last3_ground_truth": "Hermannstadt",
+      "last5": [
+        {
+          "date": "2026-02-27",
+          "clubs": [
+            "Botoşani",
+            "Hermannstadt"
+          ],
+          "file": "Hermannstadt - Botoşani, 3-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-23",
+          "clubs": [
+            "Hermannstadt",
+            "Csikszereda"
+          ],
+          "file": "Csikszereda Miercurea Ciuc - Hermannstadt, 2-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-16",
+          "clubs": [
+            "CFR Cluj",
+            "Hermannstadt"
+          ],
+          "file": "Hermannstadt - CFR Cluj, 0-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-06",
+          "clubs": [
+            "Hermannstadt",
+            "FC Argeş"
+          ],
+          "file": "Argeș - Hermannstadt, 3-1_players_stats.json"
+        },
+        {
+          "date": "2025-11-22",
+          "clubs": [
+            "FCSB",
+            "Petrolul Ploieşti"
+          ],
+          "file": "FCS Bucureşti - Petrolul 52, 1-1_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "Esteban Orozco",
+      "stated_club": "Unirea Slobozia",
+      "candidate_pids": [
+        519484
+      ],
+      "playerId": 519484,
+      "profile_currentTeamId": 11663,
+      "resolver_assigned": "Unirea Slobozia",
+      "primary_club_as_of": "Unirea Slobozia",
+      "last3_ground_truth": "Unirea Slobozia",
+      "last5": [
+        {
+          "date": "2026-02-22",
+          "clubs": [
+            "U Craiova",
+            "Unirea Slobozia"
+          ],
+          "file": "Unirea Slobozia - Universitatea Craiova, 0-3_players_stats.json"
+        },
+        {
+          "date": "2026-02-16",
+          "clubs": [
+            "Dinamo Bucureşti",
+            "Unirea Slobozia"
+          ],
+          "file": "Dinamo Bucureşti - Unirea Slobozia, 1-0_players_stats.json"
+        },
+        {
+          "date": "2026-02-07",
+          "clubs": [
+            "Farul Constanţa",
+            "Unirea Slobozia"
+          ],
+          "file": "Unirea Slobozia - Farul Constanţa, 2-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-03",
+          "clubs": [
+            "Petrolul Ploieşti",
+            "Unirea Slobozia"
+          ],
+          "file": "Petrolul 52 - Unirea Slobozia, 1-0_players_stats.json"
+        },
+        {
+          "date": "2026-01-31",
+          "clubs": [
+            "Hermannstadt",
+            "Unirea Slobozia"
+          ],
+          "file": "Unirea Slobozia - Hermannstadt, 2-3_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "C. Afalna",
+      "stated_club": "Hermannstadt",
+      "candidate_pids": [
+        731172
+      ],
+      "playerId": 731172,
+      "profile_currentTeamId": 55427,
+      "resolver_assigned": "Hermannstadt",
+      "primary_club_as_of": "Hermannstadt",
+      "last3_ground_truth": "Hermannstadt",
+      "last5": [
+        {
+          "date": "2026-02-27",
+          "clubs": [
+            "Botoşani",
+            "Hermannstadt"
+          ],
+          "file": "Hermannstadt - Botoşani, 3-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-23",
+          "clubs": [
+            "Hermannstadt",
+            "Csikszereda"
+          ],
+          "file": "Csikszereda Miercurea Ciuc - Hermannstadt, 2-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-16",
+          "clubs": [
+            "CFR Cluj",
+            "Hermannstadt"
+          ],
+          "file": "Hermannstadt - CFR Cluj, 0-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-06",
+          "clubs": [
+            "Hermannstadt",
+            "FC Argeş"
+          ],
+          "file": "Argeș - Hermannstadt, 3-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-03",
+          "clubs": [
+            "Rapid Bucureşti",
+            "Hermannstadt"
+          ],
+          "file": "Hermannstadt - Rapid Bucureşti, 0-3_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "L. Gojkovic",
+      "stated_club": "UTA Arad",
+      "candidate_pids": [
+        495815
+      ],
+      "playerId": 495815,
+      "profile_currentTeamId": 30817,
+      "resolver_assigned": "UTA Arad",
+      "primary_club_as_of": "UTA Arad",
+      "last3_ground_truth": "UTA Arad",
+      "last5": [
+        {
+          "date": "2026-02-15",
+          "clubs": [
+            "Botoşani",
+            "UTA Arad"
+          ],
+          "file": "UTA Arad - Botoşani, 2-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-07",
+          "clubs": [
+            "UTA Arad",
+            "Csikszereda"
+          ],
+          "file": "Csikszereda Miercurea Ciuc - UTA Arad, 2-0_players_stats.json"
+        },
+        {
+          "date": "2026-02-04",
+          "clubs": [
+            "CFR Cluj",
+            "UTA Arad"
+          ],
+          "file": "UTA Arad - CFR Cluj, 0-1_players_stats.json"
+        },
+        {
+          "date": "2026-01-31",
+          "clubs": [
+            "UTA Arad",
+            "FC Argeş"
+          ],
+          "file": "Argeș - UTA Arad, 0-1_players_stats.json"
+        },
+        {
+          "date": "2026-01-17",
+          "clubs": [
+            "UTA Arad",
+            "Unirea Slobozia"
+          ],
+          "file": "Unirea Slobozia - UTA Arad, 1-3_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "D. Lazar",
+      "stated_club": "Hermannstadt",
+      "candidate_pids": [
+        83820
+      ],
+      "playerId": 83820,
+      "profile_currentTeamId": 55427,
+      "resolver_assigned": "Hermannstadt",
+      "primary_club_as_of": "Hermannstadt",
+      "last3_ground_truth": "Hermannstadt",
+      "last5": [
+        {
+          "date": "2026-02-27",
+          "clubs": [
+            "Botoşani",
+            "Hermannstadt"
+          ],
+          "file": "Hermannstadt - Botoşani, 3-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-23",
+          "clubs": [
+            "Hermannstadt",
+            "Csikszereda"
+          ],
+          "file": "Csikszereda Miercurea Ciuc - Hermannstadt, 2-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-16",
+          "clubs": [
+            "CFR Cluj",
+            "Hermannstadt"
+          ],
+          "file": "Hermannstadt - CFR Cluj, 0-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-03",
+          "clubs": [
+            "U Cluj",
+            "FC Argeş"
+          ],
+          "file": "Universitatea Cluj - Argeș, 3-1_players_stats.json"
+        },
+        {
+          "date": "2026-01-31",
+          "clubs": [
+            "UTA Arad",
+            "FC Argeş"
+          ],
+          "file": "Argeș - UTA Arad, 0-1_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "F. Purece",
+      "stated_club": "Metaloglobus",
+      "candidate_pids": [
+        84220
+      ],
+      "playerId": 84220,
+      "profile_currentTeamId": 11943,
+      "resolver_assigned": "Metaloglobus",
+      "primary_club_as_of": "Metaloglobus",
+      "last3_ground_truth": "Metaloglobus",
+      "last5": [
+        {
+          "date": "2026-01-30",
+          "clubs": [
+            "CFR Cluj",
+            "Metaloglobus"
+          ],
+          "file": "CFR Cluj - Metaloglobus, 4-2_players_stats.json"
+        },
+        {
+          "date": "2026-01-23",
+          "clubs": [
+            "FC Argeş",
+            "Metaloglobus"
+          ],
+          "file": "Metaloglobus - Argeș, 0-2_players_stats.json"
+        },
+        {
+          "date": "2026-01-17",
+          "clubs": [
+            "Rapid Bucureşti",
+            "Metaloglobus"
+          ],
+          "file": "Rapid Bucureşti - Metaloglobus, 1-0_players_stats.json"
+        },
+        {
+          "date": "2025-12-05",
+          "clubs": [
+            "Oţelul Galaţi",
+            "Unirea Slobozia"
+          ],
+          "file": "Oţelul - Unirea Slobozia, 3-0_players_stats.json"
+        },
+        {
+          "date": "2025-11-30",
+          "clubs": [
+            "Botoşani",
+            "Unirea Slobozia"
+          ],
+          "file": "Unirea Slobozia - Botoşani, 0-1_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "Joao Paulo",
+      "stated_club": "FCSB",
+      "candidate_pids": [
+        583627
+      ],
+      "playerId": 583627,
+      "profile_currentTeamId": 11565,
+      "resolver_assigned": "FCSB",
+      "primary_club_as_of": "FCSB",
+      "last3_ground_truth": "FCSB",
+      "last5": [
+        {
+          "date": "2026-02-23",
+          "clubs": [
+            "FCSB",
+            "Metaloglobus"
+          ],
+          "file": "FCS Bucureşti - Metaloglobus, 4-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-08",
+          "clubs": [
+            "FCSB",
+            "Oţelul Galaţi"
+          ],
+          "file": "Oţelul - FCS Bucureşti, 1-4_players_stats.json"
+        },
+        {
+          "date": "2026-02-05",
+          "clubs": [
+            "FCSB",
+            "Botoşani"
+          ],
+          "file": "FCS Bucureşti - Botoşani, 2-1_players_stats.json"
+        },
+        {
+          "date": "2026-01-26",
+          "clubs": [
+            "Oţelul Galaţi",
+            "Csikszereda"
+          ],
+          "file": "Oţelul - Csikszereda Miercurea Ciuc, 3-0_players_stats.json"
+        },
+        {
+          "date": "2026-01-18",
+          "clubs": [
+            "CFR Cluj",
+            "Oţelul Galaţi"
+          ],
+          "file": "CFR Cluj - Oţelul, 1-0_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "C. Braun",
+      "stated_club": "CFR Cluj",
+      "candidate_pids": [
+        19445
+      ],
+      "playerId": 19445,
+      "profile_currentTeamId": 11611,
+      "resolver_assigned": "CFR Cluj",
+      "primary_club_as_of": "CFR Cluj",
+      "last3_ground_truth": "CFR Cluj",
+      "last5": [
+        {
+          "date": "2026-02-04",
+          "clubs": [
+            "CFR Cluj",
+            "UTA Arad"
+          ],
+          "file": "UTA Arad - CFR Cluj, 0-1_players_stats.json"
+        },
+        {
+          "date": "2026-01-30",
+          "clubs": [
+            "CFR Cluj",
+            "Metaloglobus"
+          ],
+          "file": "CFR Cluj - Metaloglobus, 4-2_players_stats.json"
+        },
+        {
+          "date": "2026-01-18",
+          "clubs": [
+            "CFR Cluj",
+            "Oţelul Galaţi"
+          ],
+          "file": "CFR Cluj - Oţelul, 1-0_players_stats.json"
+        },
+        {
+          "date": "2025-12-21",
+          "clubs": [
+            "FCSB",
+            "Rapid Bucureşti"
+          ],
+          "file": "FCS Bucureşti - Rapid Bucureşti, 2-1_players_stats.json"
+        },
+        {
+          "date": "2025-11-28",
+          "clubs": [
+            "Rapid Bucureşti",
+            "Csikszereda"
+          ],
+          "file": "Rapid Bucureşti - Csikszereda Miercurea Ciuc, 4-1_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "C. Cabuz",
+      "stated_club": "FC Argeş",
+      "candidate_pids": [
+        236811
+      ],
+      "playerId": 236811,
+      "profile_currentTeamId": 23334,
+      "resolver_assigned": "FC Argeş",
+      "primary_club_as_of": "FC Argeş",
+      "last3_ground_truth": "FC Argeş",
+      "last5": [
+        {
+          "date": "2026-02-22",
+          "clubs": [
+            "FC Argeş",
+            "Farul Constanţa"
+          ],
+          "file": "Argeș - Farul Constanţa, 1-0_players_stats.json"
+        },
+        {
+          "date": "2026-02-13",
+          "clubs": [
+            "Petrolul Ploieşti",
+            "FC Argeş"
+          ],
+          "file": "Petrolul 52 - Argeș, 2-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-03",
+          "clubs": [
+            "Rapid Bucureşti",
+            "Hermannstadt"
+          ],
+          "file": "Hermannstadt - Rapid Bucureşti, 0-3_players_stats.json"
+        },
+        {
+          "date": "2026-01-31",
+          "clubs": [
+            "Hermannstadt",
+            "Unirea Slobozia"
+          ],
+          "file": "Unirea Slobozia - Hermannstadt, 2-3_players_stats.json"
+        },
+        {
+          "date": "2026-01-23",
+          "clubs": [
+            "Dinamo Bucureşti",
+            "Hermannstadt"
+          ],
+          "file": "Hermannstadt - Dinamo Bucureşti, 1-2_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    },
+    {
+      "name": "M. Thiam",
+      "stated_club": "FCSB",
+      "candidate_pids": [
+        278515
+      ],
+      "playerId": 278515,
+      "profile_currentTeamId": 11565,
+      "resolver_assigned": "FCSB",
+      "primary_club_as_of": "FCSB",
+      "last3_ground_truth": "FCSB",
+      "last5": [
+        {
+          "date": "2026-02-23",
+          "clubs": [
+            "FCSB",
+            "Metaloglobus"
+          ],
+          "file": "FCS Bucureşti - Metaloglobus, 4-1_players_stats.json"
+        },
+        {
+          "date": "2026-02-08",
+          "clubs": [
+            "FCSB",
+            "Oţelul Galaţi"
+          ],
+          "file": "Oţelul - FCS Bucureşti, 1-4_players_stats.json"
+        },
+        {
+          "date": "2026-02-05",
+          "clubs": [
+            "FCSB",
+            "Botoşani"
+          ],
+          "file": "FCS Bucureşti - Botoşani, 2-1_players_stats.json"
+        },
+        {
+          "date": "2026-01-25",
+          "clubs": [
+            "CFR Cluj",
+            "FCSB"
+          ],
+          "file": "FCS Bucureşti - CFR Cluj, 1-4_players_stats.json"
+        },
+        {
+          "date": "2026-01-16",
+          "clubs": [
+            "FCSB",
+            "FC Argeş"
+          ],
+          "file": "Argeș - FCS Bucureşti, 1-0_players_stats.json"
+        }
+      ],
+      "in_stated_squad": true,
+      "pass": true
+    }
+  ],
+  "still_wrong": [],
+  "squads": {
+    "U Cluj": [
+      {
+        "playerId": 83590,
+        "shortName": "A. Chipciu",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 83838,
+        "shortName": "D. Nistor",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 169037,
+        "shortName": "O. Bic",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 220694,
+        "shortName": "D. Mikanović",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 227952,
+        "shortName": "A. Artean",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 239290,
+        "shortName": "E. Capradossi",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 240507,
+        "shortName": "E. Gertmonas",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 270356,
+        "shortName": "I. Cristea",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 338220,
+        "shortName": "Miguel Silva",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 346908,
+        "shortName": "A. Murgia",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 441683,
+        "shortName": "G. Simion",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 445824,
+        "shortName": "A. Fábry",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 462140,
+        "shortName": "J. Cissé",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 506853,
+        "shortName": "M. Drammeh",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 526387,
+        "shortName": "I. Macalou",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 532568,
+        "shortName": "V. Postolachi",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 541971,
+        "shortName": "J. Stanojev",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 560364,
+        "shortName": "J. Lukić",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 577452,
+        "shortName": "D. Codrea",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 619309,
+        "shortName": "O. Mendy",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 630268,
+        "shortName": "A. Coubis",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 748513,
+        "shortName": "A. Trică",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 759616,
+        "shortName": "O. El Sawy",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 778883,
+        "shortName": "A. Gheorghiță",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 779379,
+        "shortName": "Ş. Lefter",
+        "currentTeamId": 60374
+      },
+      {
+        "playerId": 1047336,
+        "shortName": "A. Chintes",
+        "currentTeamId": 60374
+      }
+    ],
+    "CFR Cluj": [
+      {
+        "playerId": 19445,
+        "shortName": "C. Braun",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 21354,
+        "shortName": "D. Djoković",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 83617,
+        "shortName": "C. Deac",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 83892,
+        "shortName": "Mario Camora",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 119630,
+        "shortName": "I. Slimani",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 137155,
+        "shortName": "A. Păun",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 280007,
+        "shortName": "I. Cernigoi",
+        "currentTeamId": 3434
+      },
+      {
+        "playerId": 295757,
+        "shortName": "T. Keita",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 330387,
+        "shortName": "M. Coco",
+        "currentTeamId": 13273
+      },
+      {
+        "playerId": 331420,
+        "shortName": "M. Popa",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 343732,
+        "shortName": "B. N'Kololo",
+        "currentTeamId": 9130
+      },
+      {
+        "playerId": 361179,
+        "shortName": "A. Aliev",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 376565,
+        "shortName": "A. Abeid",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 387061,
+        "shortName": "K. Muhar",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 412678,
+        "shortName": "M. Korenica",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 431961,
+        "shortName": "S. Sinyan",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 528296,
+        "shortName": "M. Ilie",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 530655,
+        "shortName": "A. Cordea",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 545276,
+        "shortName": "L. Munteanu",
+        "currentTeamId": 7852
+      },
+      {
+        "playerId": 552657,
+        "shortName": "M. Badamosi",
+        "currentTeamId": 33283
+      },
+      {
+        "playerId": 624454,
+        "shortName": "A. Fică",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 635248,
+        "shortName": "L. Biliboc",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 654448,
+        "shortName": "O. Hindrich",
+        "currentTeamId": 13505
+      },
+      {
+        "playerId": 725275,
+        "shortName": "L. Emërllahu",
+        "currentTeamId": 14530
+      },
+      {
+        "playerId": 794309,
+        "shortName": "A. Sfait",
+        "currentTeamId": 11611
+      },
+      {
+        "playerId": 830137,
+        "shortName": "V. Kun",
+        "currentTeamId": 11611
+      }
+    ],
+    "FCSB": [
+      {
+        "playerId": 20650,
+        "shortName": "J. Cisotti",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 83575,
+        "shortName": "V. Chiricheș",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 83616,
+        "shortName": "V. Crețu",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 128732,
+        "shortName": "R. Radunović",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 136045,
+        "shortName": "D. Graovac",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 262984,
+        "shortName": "F. Tănase",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 277597,
+        "shortName": "M. Edjouma",
+        "currentTeamId": 9128
+      },
+      {
+        "playerId": 278515,
+        "shortName": "M. Thiam",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 363609,
+        "shortName": "M. Popescu",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 402409,
+        "shortName": "D. Olaru",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 433693,
+        "shortName": "A. Şut",
+        "currentTeamId": 16926
+      },
+      {
+        "playerId": 444594,
+        "shortName": "S. Ngezana",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 500774,
+        "shortName": "André Duarte",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 511261,
+        "shortName": "D. Bîrligea",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 537093,
+        "shortName": "D. Miculescu",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 551713,
+        "shortName": "S. Târnovanu",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 583627,
+        "shortName": "João Paulo",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 642344,
+        "shortName": "Baba Alhassan",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 681583,
+        "shortName": "A. Pantea",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 682829,
+        "shortName": "O. Popescu",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 753764,
+        "shortName": "M. Lixandru",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 825398,
+        "shortName": "A. Stoian",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 875076,
+        "shortName": "I. Cercel",
+        "currentTeamId": 11565
+      },
+      {
+        "playerId": 885074,
+        "shortName": "M. Toma",
+        "currentTeamId": 11565
+      }
+    ],
+    "Dinamo Bucureşti": [
+      {
+        "playerId": 8109,
+        "shortName": "E. Gnahoré",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 28293,
+        "shortName": "D. Epassy",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 28528,
+        "shortName": "J. Ikoko",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 68126,
+        "shortName": "G. Milanov",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 136564,
+        "shortName": "C. Kyriakou",
+        "currentTeamId": 10697
+      },
+      {
+        "playerId": 234533,
+        "shortName": "S. Perica",
+        "currentTeamId": 17563
+      },
+      {
+        "playerId": 302088,
+        "shortName": "D. Armstrong",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 421354,
+        "shortName": "K. Boateng",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 426771,
+        "shortName": "M. Sivis",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 433613,
+        "shortName": "A. Constantin Pop",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 503199,
+        "shortName": "R. Opruț",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 545792,
+        "shortName": "A. Marginean",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 551419,
+        "shortName": "Alberto Soro",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 563154,
+        "shortName": "M. Karamoko",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 619740,
+        "shortName": "C. Cîrjan",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 696185,
+        "shortName": "A. Caragea",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 696194,
+        "shortName": "A. Mazilu",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 735669,
+        "shortName": "A. Musi",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 747286,
+        "shortName": "C. Mihai",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 807849,
+        "shortName": "N. Stoioanov",
+        "currentTeamId": 11564
+      },
+      {
+        "playerId": 866488,
+        "shortName": "Alexandru Rosca",
+        "currentTeamId": 11564
+      }
+    ],
+    "Rapid Bucureşti": [
+      {
+        "playerId": 136092,
+        "shortName": "D. Iliev",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 283833,
+        "shortName": "J. Hromada",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 286009,
+        "shortName": "C. Manea",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 293344,
+        "shortName": "E. Koljič",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 368012,
+        "shortName": "A. Dobre",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 404829,
+        "shortName": "M. Aioani",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 409007,
+        "shortName": "O. Moruţan",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 424244,
+        "shortName": "D. Ciobotariu",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 436604,
+        "shortName": "Léo Bolgado",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 447420,
+        "shortName": "A. Pașcanu",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 497525,
+        "shortName": "A. Baroan",
+        "currentTeamId": 73523
+      },
+      {
+        "playerId": 499832,
+        "shortName": "T. Christensen",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 522105,
+        "shortName": "R. Onea",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 528176,
+        "shortName": "C. Grameni",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 545144,
+        "shortName": "L. Kramer",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 573194,
+        "shortName": "F. Stolz",
+        "currentTeamId": 8735
+      },
+      {
+        "playerId": 577446,
+        "shortName": "D. Paraschiv",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 591005,
+        "shortName": "C. Petrila",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 595649,
+        "shortName": "C. Vulturar",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 618151,
+        "shortName": "K. Keita",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 633039,
+        "shortName": "T. Jambor",
+        "currentTeamId": 13536
+      },
+      {
+        "playerId": 696173,
+        "shortName": "A. Borza",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 847059,
+        "shortName": "D. Hazrollaj",
+        "currentTeamId": 11566
+      }
+    ],
+    "Botoşani": [
+      {
+        "playerId": 83986,
+        "shortName": "A. Țigănașu",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 85307,
+        "shortName": "M. Bordeianu",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 92988,
+        "shortName": "G. Anestis",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 134514,
+        "shortName": "H. Ongenda",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 227873,
+        "shortName": "E. Papa",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 301999,
+        "shortName": "A. Miron",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 355910,
+        "shortName": "M. Kovtalyuk",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 404846,
+        "shortName": "S. Mailat",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 411139,
+        "shortName": "E. Diaw",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 479610,
+        "shortName": "A. Dumiter",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 518465,
+        "shortName": "Aldaír",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 528185,
+        "shortName": "Ş. Bodişteanu",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 558098,
+        "shortName": "E. López",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 612385,
+        "shortName": "C. Petro",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 614148,
+        "shortName": "G. Cîmpanu",
+        "currentTeamId": 72765
+      },
+      {
+        "playerId": 621237,
+        "shortName": "M. Pavlović",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 622286,
+        "shortName": "Ș. Pănoiu",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 634633,
+        "shortName": "R. Šuta",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 657843,
+        "shortName": "Z. Mitrov",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 809979,
+        "shortName": "G. David",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 825406,
+        "shortName": "N. Ilaș",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 842097,
+        "shortName": "A. Friday",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 845197,
+        "shortName": "A. Dumitru",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 913464,
+        "shortName": "A. Bota",
+        "currentTeamId": 11634
+      },
+      {
+        "playerId": 943700,
+        "shortName": "R. Creţ",
+        "currentTeamId": 11634
+      }
+    ],
+    "Oţelul Galaţi": [
+      {
+        "playerId": 68734,
+        "shortName": "M. Zhelev",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 135847,
+        "shortName": "D. Živulić",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 292613,
+        "shortName": "P. Iacob",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 333626,
+        "shortName": "Pedro Nuno",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 345748,
+        "shortName": "Bruno Paz",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 346541,
+        "shortName": "C. Dur-Bozoancă",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 346549,
+        "shortName": "Andrei Ciobanu",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 399649,
+        "shortName": "João Lameira",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 444454,
+        "shortName": "G. Debeljuh",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 493487,
+        "shortName": "Kazu",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 507596,
+        "shortName": "Conrado",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 509226,
+        "shortName": "Andrezinho",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 510846,
+        "shortName": "Patrick",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 595340,
+        "shortName": "Né Lopes",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 648838,
+        "shortName": "V. Murria",
+        "currentTeamId": 39639
+      },
+      {
+        "playerId": 704331,
+        "shortName": "Paulinho",
+        "currentTeamId": 69049
+      },
+      {
+        "playerId": 756156,
+        "shortName": "C. Chira",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 798255,
+        "shortName": "Ș. Bană",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 837919,
+        "shortName": "A. Rus",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 884773,
+        "shortName": "D. Bordun",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 1047237,
+        "shortName": "M. Frunza",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 1049294,
+        "shortName": "D. Sandu",
+        "currentTeamId": 11571
+      },
+      {
+        "playerId": 1208673,
+        "shortName": "D. Neicu",
+        "currentTeamId": 11571
+      }
+    ],
+    "Hermannstadt": [
+      {
+        "playerId": 83820,
+        "shortName": "D. Lazar",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 84047,
+        "shortName": "S. Buș",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 84321,
+        "shortName": "F. Bejan",
+        "currentTeamId": 78702
+      },
+      {
+        "playerId": 84343,
+        "shortName": "A. Chițu",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 136551,
+        "shortName": "A. Karo",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 227957,
+        "shortName": "I. Stoica",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 236740,
+        "shortName": "C. Biceanu",
+        "currentTeamId": 78702
+      },
+      {
+        "playerId": 236823,
+        "shortName": "S. Balaure",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 270318,
+        "shortName": "A. Ivanov",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 331434,
+        "shortName": "E. Florescu",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 346542,
+        "shortName": "T. Căpușă",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 366563,
+        "shortName": "V. Selimović",
+        "currentTeamId": 26168
+      },
+      {
+        "playerId": 376363,
+        "shortName": "Jair",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 380865,
+        "shortName": "C. Neguţ",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 481134,
+        "shortName": "D. Politic",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 517742,
+        "shortName": "M. Gjorgjievski",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 545275,
+        "shortName": "D. Albu",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 580951,
+        "shortName": "N. Antwi",
+        "currentTeamId": 13276
+      },
+      {
+        "playerId": 581187,
+        "shortName": "S. Issah",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 590121,
+        "shortName": "A. Zargari",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 593080,
+        "shortName": "Diogo Batista",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 607434,
+        "shortName": "A. Oroian",
+        "currentTeamId": 78702
+      },
+      {
+        "playerId": 644450,
+        "shortName": "K. Kujabi",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 731172,
+        "shortName": "C. Afalna",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 849722,
+        "shortName": "P. Patrick Vuc",
+        "currentTeamId": 68616
+      },
+      {
+        "playerId": 875968,
+        "shortName": "K. Ciubotaru",
+        "currentTeamId": 55427
+      },
+      {
+        "playerId": 1085571,
+        "shortName": "L. Stancu",
+        "currentTeamId": 55427
+      }
+    ],
+    "Petrolul Ploieşti": [
+      {
+        "playerId": 64958,
+        "shortName": "S. Krell",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 83699,
+        "shortName": "A. Mateiu",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 83744,
+        "shortName": "P. Papp",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 83959,
+        "shortName": "G. Grozav",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 84880,
+        "shortName": "S. Hanca",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 238584,
+        "shortName": "F. Prce",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 279058,
+        "shortName": "Ricardinho",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 347151,
+        "shortName": "Y. Roche",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 404908,
+        "shortName": "M. Dulca",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 408933,
+        "shortName": "K. Ludewig",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 412695,
+        "shortName": "V. Gheorghe",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 475980,
+        "shortName": "T. Jyry",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 487125,
+        "shortName": "K. Doumtsios",
+        "currentTeamId": 11627
+      },
+      {
+        "playerId": 488953,
+        "shortName": "Guilherme Soares",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 491990,
+        "shortName": "B. Doukansy",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 545262,
+        "shortName": "A. Dumitrescu",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 595660,
+        "shortName": "D. Radu",
+        "currentTeamId": 4560
+      },
+      {
+        "playerId": 682774,
+        "shortName": "A. Boțogan",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 684792,
+        "shortName": "R. Sălceanu",
+        "currentTeamId": 11566
+      },
+      {
+        "playerId": 684806,
+        "shortName": "A. Chica-Rosa",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 756116,
+        "shortName": "R. Balbarau",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 784809,
+        "shortName": "B. Marian",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 821944,
+        "shortName": "I. Tolea",
+        "currentTeamId": 11757
+      },
+      {
+        "playerId": 826080,
+        "shortName": "R. Pop",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 846397,
+        "shortName": "D. Dongmo",
+        "currentTeamId": 60390
+      },
+      {
+        "playerId": 1046094,
+        "shortName": "D. Paraschiv",
+        "currentTeamId": 60390
+      }
+    ],
+    "UTA Arad": [
+      {
+        "playerId": 83665,
+        "shortName": "A. Benga",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 84373,
+        "shortName": "A. Roman",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 106397,
+        "shortName": "D. Pospelov",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 283965,
+        "shortName": "O. Popescu",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 285677,
+        "shortName": "D. Alomerović",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 346550,
+        "shortName": "V. Costache",
+        "currentTeamId": 59788
+      },
+      {
+        "playerId": 366784,
+        "shortName": "H. Abdallah",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 372880,
+        "shortName": "B. Van Durmen",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 393264,
+        "shortName": "F. Poulolo",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 402476,
+        "shortName": "M. Coman",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 443858,
+        "shortName": "A. Padula",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 495815,
+        "shortName": "L. Gojković",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 544331,
+        "shortName": "M. Tzionis",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 587667,
+        "shortName": "S. Mino",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 590216,
+        "shortName": "D. Hrezdac",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 601785,
+        "shortName": "D. Zsóri",
+        "currentTeamId": 10274
+      },
+      {
+        "playerId": 625962,
+        "shortName": "L. Mihai",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 636258,
+        "shortName": "A. Gorcea",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 673678,
+        "shortName": "R. Odada",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 779381,
+        "shortName": "F. Iacob",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 1018334,
+        "shortName": "D. Barbu",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 1046794,
+        "shortName": "D. Taroi",
+        "currentTeamId": 30817
+      },
+      {
+        "playerId": 1086818,
+        "shortName": "M. Țuțu",
+        "currentTeamId": 30817
+      }
+    ],
+    "Csikszereda": [
+      {
+        "playerId": 74982,
+        "shortName": "J. Ferenczi",
+        "currentTeamId": 10234
+      },
+      {
+        "playerId": 75148,
+        "shortName": "M. Eppel",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 104842,
+        "shortName": "J. Dolný",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 104898,
+        "shortName": "P. Gál-Andrezly",
+        "currentTeamId": 11579
+      },
+      {
+        "playerId": 226046,
+        "shortName": "B. Babati",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 236828,
+        "shortName": "E. Pap",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 239276,
+        "shortName": "J. Hegedűs",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 263038,
+        "shortName": "S. Veres",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 287504,
+        "shortName": "L. Pászka",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 352143,
+        "shortName": "B. Szabó",
+        "currentTeamId": 10207
+      },
+      {
+        "playerId": 363588,
+        "shortName": "R. Trif",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 396846,
+        "shortName": "A. Kabashi",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 426372,
+        "shortName": "R. Palmes",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 470748,
+        "shortName": "S. Jebari",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 474747,
+        "shortName": "M. Čelić",
+        "currentTeamId": 22034
+      },
+      {
+        "playerId": 479620,
+        "shortName": "E. Bloj",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 487329,
+        "shortName": "Anderson Ceará",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 586805,
+        "shortName": "S. Szalay",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 602116,
+        "shortName": "Z. Nagy",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 602966,
+        "shortName": "A. Csuros",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 754380,
+        "shortName": "S. Szilágyi",
+        "currentTeamId": 10261
+      },
+      {
+        "playerId": 759643,
+        "shortName": "S. Dusinszki",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 798561,
+        "shortName": "E. Bakoș",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 844699,
+        "shortName": "B. Végh",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 1047125,
+        "shortName": "Z. Bödő",
+        "currentTeamId": 22731
+      },
+      {
+        "playerId": 1223013,
+        "shortName": "D. Bota",
+        "currentTeamId": 68640
+      }
+    ],
+    "FC Argeş": [
+      {
+        "playerId": 95,
+        "shortName": "K. Luckassen",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 47583,
+        "shortName": "Guilherme Garutti",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 80986,
+        "shortName": "V. Raţă",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 83736,
+        "shortName": "C. Straton",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 83983,
+        "shortName": "T. Seto",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 84477,
+        "shortName": "M. Briceag",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 236811,
+        "shortName": "C. Căbuz",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 347148,
+        "shortName": "A. Bettaieb",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 380863,
+        "shortName": "R. Moldoveanu",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 395131,
+        "shortName": "R. Sierra",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 399270,
+        "shortName": "C. Micovschi",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 425861,
+        "shortName": "I. Rădescu",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 514662,
+        "shortName": "D. Oancea",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 532611,
+        "shortName": "Ricardo Matos",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 539343,
+        "shortName": "J. Blagaić",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 542894,
+        "shortName": "L. Sadriu",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 576188,
+        "shortName": "F. Borța",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 696195,
+        "shortName": "M. Tudose",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 825394,
+        "shortName": "C. Pirvu",
+        "currentTeamId": 23334
+      },
+      {
+        "playerId": 900843,
+        "shortName": "Caio Ferreira",
+        "currentTeamId": 33283
+      },
+      {
+        "playerId": 1082698,
+        "shortName": "F. Tchassem",
+        "currentTeamId": 11821
+      }
+    ],
+    "U Craiova": [
+      {
+        "playerId": 83966,
+        "shortName": "S. Lung",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 84397,
+        "shortName": "A. Crețu",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 85276,
+        "shortName": "N. Bancu",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 235454,
+        "shortName": "L. Houri",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 273125,
+        "shortName": "V. Mogoș",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 286015,
+        "shortName": "A. Cicâldău",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 327219,
+        "shortName": "F. Ștefan",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 358660,
+        "shortName": "Samuel Teles",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 380866,
+        "shortName": "T. Băluţă",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 397975,
+        "shortName": "L. Popescu",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 420975,
+        "shortName": "N. Stevanović",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 435748,
+        "shortName": "V. Screciu",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 437020,
+        "shortName": "A. Rus",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 475721,
+        "shortName": "A. Mekvabishvili",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 504570,
+        "shortName": "M. Etim",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 512664,
+        "shortName": "O. Romanchuk",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 525537,
+        "shortName": "S. Nsimba",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 528190,
+        "shortName": "Ş. Baiaram",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 547271,
+        "shortName": "A. Al Hamlawi",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 603977,
+        "shortName": "P. Isenko",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 655465,
+        "shortName": "C. Mora",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 745987,
+        "shortName": "J. Badelj",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 828623,
+        "shortName": "M. Rădulescu",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 892106,
+        "shortName": "L. Băsceanu",
+        "currentTeamId": 26233
+      },
+      {
+        "playerId": 905052,
+        "shortName": "D. Matei",
+        "currentTeamId": 26233
+      }
+    ],
+    "Farul Constanţa": [
+      {
+        "playerId": 22389,
+        "shortName": "J. Vojtuš",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 38598,
+        "shortName": "D. Alibec",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 84318,
+        "shortName": "A. Buzbuchi",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 84325,
+        "shortName": "I. Larie",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 84336,
+        "shortName": "G. Iancu",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 84342,
+        "shortName": "B. Țîru",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 84353,
+        "shortName": "I. Vînă",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 136151,
+        "shortName": "B. Nikolov",
+        "currentTeamId": 10017
+      },
+      {
+        "playerId": 229125,
+        "shortName": "Steeve Furtado",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 252564,
+        "shortName": "C. Ganea",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 486209,
+        "shortName": "J. Marković",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 486564,
+        "shortName": "Diogo Ramalho",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 535038,
+        "shortName": "L. Pellegrini",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 543832,
+        "shortName": "N. Grigoryan",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 565494,
+        "shortName": "D. Sîrbu",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 603499,
+        "shortName": "A. Ișfan",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 618306,
+        "shortName": "V. Dican",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 645614,
+        "shortName": "D. Maftei",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 645620,
+        "shortName": "E. Rădăslăvescu",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 739220,
+        "shortName": "R. Tănasă",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 747238,
+        "shortName": "I. Cojocaru",
+        "currentTeamId": 61242
+      },
+      {
+        "playerId": 754904,
+        "shortName": "André Seruca",
+        "currentTeamId": 15261
+      },
+      {
+        "playerId": 1047256,
+        "shortName": "C. Sima",
+        "currentTeamId": 61242
+      }
+    ],
+    "Unirea Slobozia": [
+      {
+        "playerId": 81100,
+        "shortName": "D. Rusu",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 84779,
+        "shortName": "M. Antoche",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 85338,
+        "shortName": "A. Aganović",
+        "currentTeamId": 30827
+      },
+      {
+        "playerId": 240953,
+        "shortName": "A. Said",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 263024,
+        "shortName": "C. Bărbuţ",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 286014,
+        "shortName": "R. Deaconu",
+        "currentTeamId": 11619
+      },
+      {
+        "playerId": 302018,
+        "shortName": "A. Albu",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 346531,
+        "shortName": "V. Pop",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 404648,
+        "shortName": "G. Dahan",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 476917,
+        "shortName": "I. Gurău",
+        "currentTeamId": 8685
+      },
+      {
+        "playerId": 489204,
+        "shortName": "R. Espinosa",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 492280,
+        "shortName": "J. Jeno",
+        "currentTeamId": 13290
+      },
+      {
+        "playerId": 499666,
+        "shortName": "O. Safronov",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 512592,
+        "shortName": "V. Hamdiu",
+        "currentTeamId": 9246
+      },
+      {
+        "playerId": 514663,
+        "shortName": "D. Şerbănică",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 518067,
+        "shortName": "I. Coadă",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 519484,
+        "shortName": "Esteban Orozco",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 530165,
+        "shortName": "A. Dragu",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 561907,
+        "shortName": "A. Dinu",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 564613,
+        "shortName": "T. Lungu",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 583396,
+        "shortName": "J. Papeau",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 618368,
+        "shortName": "R. Popa",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 682684,
+        "shortName": "R. Negru",
+        "currentTeamId": 8685
+      },
+      {
+        "playerId": 762967,
+        "shortName": "L. Vlasceanu",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 845124,
+        "shortName": "A. Dorobanțu",
+        "currentTeamId": 11663
+      },
+      {
+        "playerId": 880237,
+        "shortName": "R. Rotund",
+        "currentTeamId": 78702
+      },
+      {
+        "playerId": 892108,
+        "shortName": "P. Dulcea",
+        "currentTeamId": 11663
+      }
+    ],
+    "Metaloglobus": [
+      {
+        "playerId": 83964,
+        "shortName": "G. Gavrilaş",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 84220,
+        "shortName": "F. Purece",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 84514,
+        "shortName": "D. Huiban",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 169081,
+        "shortName": "A. Sava",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 223105,
+        "shortName": "D. Ubbink",
+        "currentTeamId": 19
+      },
+      {
+        "playerId": 232421,
+        "shortName": "Ely Fernandes",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 357952,
+        "shortName": "D. Sabater",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 407352,
+        "shortName": "O. Pašagić",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 422535,
+        "shortName": "B. Hadžić",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 422702,
+        "shortName": "Y. Zakir",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 488648,
+        "shortName": "C. Kouadio",
+        "currentTeamId": 17252
+      },
+      {
+        "playerId": 507174,
+        "shortName": "R. Neacşu",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 511014,
+        "shortName": "Bruno Carvalho",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 514666,
+        "shortName": "G. Caramalău",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 530669,
+        "shortName": "S. Visic",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 683516,
+        "shortName": "A. Camara",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 707184,
+        "shortName": "R. Milea",
+        "currentTeamId": 60624
+      },
+      {
+        "playerId": 733083,
+        "shortName": "M. Abbey",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 734173,
+        "shortName": "T. Aggoun",
+        "currentTeamId": 17715
+      },
+      {
+        "playerId": 762964,
+        "shortName": "R. Bădescu",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 805767,
+        "shortName": "M. Lis",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 826254,
+        "shortName": "A. Sîrbu",
+        "currentTeamId": 78701
+      },
+      {
+        "playerId": 830037,
+        "shortName": "G. Ghimfus",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 858732,
+        "shortName": "A. Gheorghe",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 882554,
+        "shortName": "D. Irimia",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 882555,
+        "shortName": "A. Irimia",
+        "currentTeamId": 11943
+      },
+      {
+        "playerId": 1105408,
+        "shortName": "G. Dumitru",
+        "currentTeamId": 11943
+      }
+    ]
+  },
+  "audit_checks": {
+    "allMoversCorrect": true,
+    "noDroppedMovers": true,
+    "noDoubleAssign": true,
+    "sizesPlausible": true,
+    "stillWrong_count": 0
+  }
+}
