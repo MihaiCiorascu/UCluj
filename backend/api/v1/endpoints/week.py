@@ -12,10 +12,11 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, Query, Request
 
-from app.config import effective_now, effective_season_id, settings
+from app.config import effective_now, effective_season, effective_season_id, settings
 from clients.sportradar_client import SportradarClient
 from core.dependencies import get_feature_service
 from core.security import get_current_user
+from services import baked_fixtures
 from services.explanation_service import ExplanationService
 from services.feature_service import FeatureService
 from services.fixture_service import FixtureService
@@ -114,9 +115,15 @@ async def week_fixtures(
     _user=Depends(get_current_user),
     week_offset: int = Query(default=0, ge=-52, le=52),
 ):
-    """Return Liga 1 fixtures for the requested week with U Cluj-centric ML predictions.
+    """Return Liga 1 fixtures with U Cluj-centric ML predictions.
 
-    week_offset=0 is the current week, week_offset=1 the next week, etc.
+    For the baked 2025-26 season the ``week_offset`` is reinterpreted as a ROUND
+    offset: 0 is the current round (resolved from the server's effective clock),
+    -1 the previous round, +1 the next, clamped to [1, 33]. Every fixture of the
+    resolved round is returned, each carrying ``round`` and ``phase``. For
+    historical seasons the offset keeps its Mon-Sun week-window meaning against
+    All_Data.csv. Sportradar is never called.
+
     home_win_probability in each item is P(U Cluj Win), not P(Home Win).
     key_drivers and top_risks are from U Cluj's perspective regardless of home/away.
     """
@@ -132,35 +139,44 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
 
     Extracted from the endpoint so the startup pre-warm can populate the same
     in-process cache (_PRED_CACHE). The expensive step is the per-fixture Monte
-    Carlo prescription; it runs only on a cache miss (a new week or a changed
+    Carlo prescription; it runs only on a cache miss (a new round or a changed
     score). Returns the sanitised, client-ready list.
     """
     now = effective_now()
-    this_monday = (now - timedelta(days=now.weekday())).replace(
-        hour=0, minute=0, second=0, microsecond=0
-    )
-    monday = this_monday + timedelta(weeks=week_offset)
-    sunday = monday + timedelta(days=7)
 
-    # 1-2. Sportradar fixtures: served from the on-disk cache, fetched once
-    # (capped at 20 s) when stale. Caching matters because the trial tier
-    # answers a multi-week dashboard burst with 429s.
-    sr_all: list[dict] | None = _load_cache()
-    if sr_all is None and settings.sportradar_api_key:
-        try:
-            fetched = await asyncio.wait_for(_fetch_all_sr_fixtures(), timeout=20.0)
-            if fetched:
-                sr_all = fetched
-                _save_cache(sr_all)
-        except Exception as exc:
-            logger.warning("Sportradar fetch failed/timed-out; using CSV fallback: %s", exc)
-
-    # 3. Slice to the week; fall back to the in-memory CSV when Sportradar is
-    # unavailable (no network, always instant).
-    if sr_all:
-        fixtures = _slice_fixtures(sr_all, monday, sunday)
+    # 1. Fixture source. The 2025-26 season is served from the committed baked
+    # dataset (no Sportradar, no CSV): the offset is reinterpreted as a ROUND
+    # offset and ALL fixtures of the resolved round are returned, each carrying
+    # round + phase. Historical seasons keep the Mon-Sun CSV window below.
+    if baked_fixtures.is_baked_season(effective_season()):
+        resolved_round = baked_fixtures.round_for_offset(now, week_offset)
+        fixtures = baked_fixtures.fixtures_for_round(resolved_round)
     else:
-        fixtures = _csv_week_fixtures(FixtureService(df, stadium_map), monday, sunday)
+        this_monday = (now - timedelta(days=now.weekday())).replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
+        monday = this_monday + timedelta(weeks=week_offset)
+        sunday = monday + timedelta(days=7)
+
+        # Sportradar fixtures: served from the on-disk cache, fetched once
+        # (capped at 20 s) when stale. Caching matters because the trial tier
+        # answers a multi-week dashboard burst with 429s.
+        sr_all: list[dict] | None = _load_cache()
+        if sr_all is None and settings.sportradar_api_key:
+            try:
+                fetched = await asyncio.wait_for(_fetch_all_sr_fixtures(), timeout=20.0)
+                if fetched:
+                    sr_all = fetched
+                    _save_cache(sr_all)
+            except Exception as exc:
+                logger.warning("Sportradar fetch failed/timed-out; using CSV fallback: %s", exc)
+
+        # Slice to the week; fall back to the in-memory CSV when Sportradar is
+        # unavailable (no network, always instant).
+        if sr_all:
+            fixtures = _slice_fixtures(sr_all, monday, sunday)
+        else:
+            fixtures = _csv_week_fixtures(FixtureService(df, stadium_map), monday, sunday)
 
     # 3b. Demo horizon: treat fixtures dated after the pinned demo "now" as not
     # yet played, so the pre-match flow (win probability + drivers + blueprint)
@@ -190,6 +206,15 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
                 if model_svc.is_ready:
                     home_team = f["home_team"]
                     away_team = f["away_team"]
+                    # The baked dataset stores registry shorts (e.g. "U Cluj",
+                    # "Oţelul Galaţi"); the CatBoost feature lookup is keyed on
+                    # the All_Data.csv canonical names. Normalise to the canonical
+                    # names for every model/feature call, while the response and
+                    # the U-Cluj detection keep the original shorts. For the
+                    # Sportradar/CSV paths these names are already canonical, so
+                    # the map is a no-op there.
+                    home_lookup = baked_fixtures.canonical_team_name(home_team)
+                    away_lookup = baked_fixtures.canonical_team_name(away_team)
                     involves_ucluj = _ucluj_is_home(home_team, away_team) or _ucluj_is_home(
                         away_team, home_team
                     )
@@ -204,16 +229,16 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
                         # folded draws into U Cluj's win share (the binary model's
                         # complement is P(U Cluj win OR draw)) and overstated them.
                         if ucl_is_home:
-                            subject, opponent = home_team, away_team
+                            subject, opponent = home_lookup, away_lookup
                         else:
-                            subject, opponent = away_team, home_team
+                            subject, opponent = away_lookup, home_lookup
                         ucl_prob = feature_svc.win_prob(model_svc, subject, opponent)
 
                         # The diagnostic / blueprint is still built from the real
                         # home-vs-away vector so its directional drivers read
                         # correctly for the fixture as played.
                         feat = feature_svc.build_feature_vector(
-                            home_team, away_team, model_svc.feature_cols
+                            home_lookup, away_lookup, model_svc.feature_cols
                         )
 
                         is_completed = (
@@ -254,8 +279,8 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
                         # the draw is the documented residual mass. This is NOT a
                         # 3-way classifier — it is two binary predictions plus a
                         # leftover. We do NOT apply the U-Cluj complement here.
-                        home_win = feature_svc.win_prob(model_svc, home_team, away_team)
-                        away_win = feature_svc.win_prob(model_svc, away_team, home_team)
+                        home_win = feature_svc.win_prob(model_svc, home_lookup, away_lookup)
+                        away_win = feature_svc.win_prob(model_svc, away_lookup, home_lookup)
                         draw = max(0.0, 1.0 - home_win - away_win)
 
                         item["home_team_win_prob"] = round(home_win, 4)

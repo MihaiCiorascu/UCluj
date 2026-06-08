@@ -410,6 +410,14 @@ async def read_standings(
     if phase == "groups":
         championship = [_row(r) for r in rows if r.group_name == "Championship Round"]
         relegation = [_row(r) for r in rows if r.group_name == "Relegation Round"]
+        # When the Sportradar-synced DB has no group rows (the trial tier never
+        # served the 2025-26 play-off split), compute the groups from the
+        # committed baked fixtures so the dashboard's PLAYOFF / PLAYOUT
+        # classification still works without any live call. The baked rows are
+        # remapped onto the same {rank, team, group, played, w, d, l, gf, ga,
+        # gd, pts, form} shape the synced rows use.
+        if not championship and not relegation:
+            championship, relegation = _baked_groups(season_id)
         return {
             "phase": "groups",
             "championship_round": {"name": "PLAYOFF", "count": len(championship), "standings": championship},
@@ -421,6 +429,49 @@ async def read_standings(
         "count": len(rows),
         "standings": [_row(r) for r in rows],
     }
+
+
+def _baked_groups(season_id: str) -> tuple[list[dict], list[dict]]:
+    """Compute the play-off / play-out groups from the baked 2025-26 fixtures.
+
+    Returns ``(championship_rows, relegation_rows)`` in the synced-row shape, or
+    two empty lists when the requested ``season_id`` is not the live 25/26
+    season the baked dataset covers (so historical season_ids are untouched).
+    """
+    from app.config import _LIVE_SEASON_ID  # local import: avoids cycle at load
+    from services.baked_fixtures import baked_standings_with_groups
+
+    # The frontend pins season_id = "sr:season:131507" (the live 25/26 season);
+    # only that season is backed by the baked dataset.
+    if season_id != _LIVE_SEASON_ID:
+        return [], []
+
+    groups = baked_standings_with_groups()
+
+    def _to_synced(rows: list[dict], group_name: str) -> list[dict]:
+        return [
+            {
+                "rank": r["position"],
+                "team": r["team"],
+                "team_id": None,
+                "group": group_name,
+                "played": r["played"],
+                "w": r["wins"],
+                "d": r["draws"],
+                "l": r["losses"],
+                "gf": r["goals_for"],
+                "ga": r["goals_against"],
+                "gd": r["goal_difference"],
+                "pts": r["points"],
+                "form": None,
+            }
+            for r in rows
+        ]
+
+    return (
+        _to_synced(groups.get("championship", []), "Championship Round"),
+        _to_synced(groups.get("relegation", []), "Relegation Round"),
+    )
 
 
 @router.get("/data/match/{fixture_id}")

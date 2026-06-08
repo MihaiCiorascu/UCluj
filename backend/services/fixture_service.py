@@ -111,7 +111,18 @@ class FixtureService:
         serve historical playoff groups. When no cutoff is configured for the
         requested season the function still returns a populated ``regular``
         and empty playoff buckets, matching the legacy single-table shape.
+
+        For the baked 2025-26 season the table is built from the committed
+        fixtures dataset (``ml/data/superliga_2025_26_fixtures.json``) instead of
+        the CSV, because All_Data.csv carries no 2025-26 rows. This keeps the
+        play-off / play-out split real and Sportradar-free.
         """
+        # Local import: avoids a hard dependency at module load and any cycle.
+        from services.baked_fixtures import baked_standings_with_groups, is_baked_season
+
+        if is_baked_season(season):
+            return baked_standings_with_groups()
+
         cutoff_iso = _REGULAR_SEASON_CUTOFFS.get(str(season)) if season else None
 
         df = self._df.copy()

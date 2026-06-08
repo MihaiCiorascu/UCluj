@@ -5,7 +5,6 @@ import '../../../core/primitives/haptics.dart';
 import '../../../core/primitives/pressable.dart';
 import '../../../core/primitives/reveal.dart';
 import '../../../core/state/auth_state.dart';
-import '../../../core/state/meta_state.dart';
 import '../../../core/widgets/team_crest.dart';
 import '../../../core/services/api_client.dart' show ApiException;
 import '../../../core/theme/app_colors.dart';
@@ -46,9 +45,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   late final StandingsRepository _standingsRepo;
   bool _loading = true;
   String? _error;
-  int _weekOffset = 0;
+  // Round offset relative to the backend's current round: 0 = current round,
+  // -1 = previous, +1 = next. The backend reinterprets this same value as a
+  // round offset (clamped to [1, 33]) and returns that whole round's fixtures.
+  int _roundOffset = 0;
 
-  // Local 5-week cache: offset → fixtures. Populated once on load, cleared on refresh.
+  // Local 5-round cache: offset → that round's fixtures. Populated once on
+  // load, cleared on refresh. Prefetched for offsets -2..2.
   static const List<int> _cachedOffsets = [-2, -1, 0, 1, 2];
   final Map<int, List<WeekFixture>> _cache = {};
 
@@ -68,49 +71,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // Which group contains U Cluj: 'playoff', 'playout', or null when unknown.
   String? _uclujGroup;
 
-  // All fixtures returned by the backend for this offset
-  List<WeekFixture> get _fixtures => _cache[_weekOffset] ?? [];
-
-  /// Server's effective notion of "now" mirrored on the client. When demo
-  /// mode is on (MetaState.demoMode), pivots the dashboard week math around
-  /// the demo date at noon UTC so the displayed Monday-Sunday window matches
-  /// what /api/v1/week-fixtures actually slices server-side. In production
-  /// this falls back to the real wall-clock time and behaves as before.
-  DateTime _effectiveNow() {
-    final meta = MetaState.instance;
-    if (meta.demoMode && meta.demoToday.isNotEmpty) {
-      final parts = meta.demoToday.split('-');
-      if (parts.length == 3) {
-        final y = int.tryParse(parts[0]);
-        final m = int.tryParse(parts[1]);
-        final d = int.tryParse(parts[2]);
-        if (y != null && m != null && d != null) {
-          return DateTime.utc(y, m, d, 12, 0);
-        }
-      }
-    }
-    return DateTime.now().toUtc();
-  }
-
-  // The Monday (UTC midnight) of the currently displayed week
-  DateTime _weekMonday() {
-    final now = _effectiveNow();
-    final today = DateTime.utc(now.year, now.month, now.day);
-    final thisMonday = today.subtract(Duration(days: today.weekday - 1));
-    return thisMonday.add(Duration(days: _weekOffset * 7));
-  }
-
-  // Only fixtures whose match date falls within the displayed Mon–Sun window
-  List<WeekFixture> get _thisWeekFixtures {
-    final monday = _weekMonday();
-    final nextMonday = monday.add(const Duration(days: 7));
-    return _fixtures.where((f) {
-      final dt = DateTime.tryParse(f.matchDate)?.toUtc();
-      if (dt == null) return false;
-      final matchDay = DateTime.utc(dt.year, dt.month, dt.day);
-      return !matchDay.isBefore(monday) && matchDay.isBefore(nextMonday);
-    }).toList();
-  }
+  // Every fixture the backend returned for the selected round offset. The
+  // backend already scopes the response to a single resolved round (all of
+  // that round's mid-week and weekend matches), so these are shown directly
+  // with no client-side week-window filtering.
+  List<WeekFixture> get _fixtures => _cache[_roundOffset] ?? [];
 
   @override
   void initState() {
@@ -171,13 +136,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  /// Fetch all 5 weeks in parallel and populate the cache.
+  /// Fetch all 5 rounds in parallel and populate the cache.
   Future<void> _loadAll({bool forceRefresh = false}) async {
     setState(() { _loading = true; _error = null; });
     if (forceRefresh) _cache.clear();
     try {
       final results = await Future.wait(
-        _cachedOffsets.map((off) => _repo.fetchWeekFixtures(weekOffset: off)),
+        _cachedOffsets.map((off) => _repo.fetchWeekFixtures(roundOffset: off)),
       );
       if (mounted) {
         for (var i = 0; i < _cachedOffsets.length; i++) {
@@ -198,11 +163,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  void _changeWeek(int delta) {
-    final next = _weekOffset + delta;
+  void _changeRound(int delta) {
+    final next = _roundOffset + delta;
     if (!_cachedOffsets.contains(next)) return;
     AppHaptics.selection();
-    setState(() => _weekOffset = next);
+    setState(() => _roundOffset = next);
   }
 
   void _openStats(WeekFixture f) {
@@ -229,8 +194,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity == null) return;
-          if (details.primaryVelocity! < -200) _changeWeek(1);
-          if (details.primaryVelocity! > 200) _changeWeek(-1);
+          if (details.primaryVelocity! < -200) _changeRound(1);
+          if (details.primaryVelocity! > 200) _changeRound(-1);
         },
         child: _loading
             ? const Padding(
@@ -267,9 +232,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildContent(AppColorTokens c) {
-    final weekFixtures = _thisWeekFixtures;
-    final uclFixtures   = weekFixtures.where((f) => f.involvesUCluj).toList();
-    final otherFixtures = weekFixtures.where((f) => !f.involvesUCluj).toList();
+    // The backend already scoped this offset to one round; show its fixtures
+    // directly, U Cluj pinned first, the rest split below.
+    final roundFixtures = _fixtures;
+    final uclFixtures   = roundFixtures.where((f) => f.involvesUCluj).toList();
+    final otherFixtures = roundFixtures.where((f) => !f.involvesUCluj).toList();
 
     // Continuous index so the whole list staggers in as one sequence.
     var index = 0;
@@ -280,16 +247,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       onRefresh: () => _loadAll(forceRefresh: true),
       child: ListView(
         children: [
-          _buildWeekHeader(c),
+          _buildRoundHeader(c),
           const SizedBox(height: SpacingTokens.lg),
 
           // U Cluj section (pinned at the top). Hidden gracefully when U Cluj
-          // has no match this week, so no empty card is shown.
+          // has no match this round, so no empty card is shown.
           if (uclFixtures.isNotEmpty) ...[
             _buildSectionLabel(
-              _weekOffset < 0
+              _roundOffset < 0
                   ? L10n.t('dashboard.uclujResults')
-                  : _weekOffset == 0
+                  : _roundOffset == 0
                       ? L10n.t('dashboard.uclujThisWeek')
                       : L10n.t('dashboard.uclujNextRound'),
               c.primary,
@@ -305,7 +272,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // window when group data is available; otherwise a single list.
           ..._buildOtherSections(otherFixtures, c, () => index++),
 
-          if (weekFixtures.isEmpty)
+          if (roundFixtures.isEmpty)
             AppEmptyState(
               icon: Icons.calendar_today_outlined,
               headline: L10n.t('dashboard.empty'),
@@ -412,13 +379,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return null;
   }
 
-  // ── Week control ──────────────────────────────────────────────────────────
+  // ── Round control ─────────────────────────────────────────────────────────
 
-  Widget _buildWeekHeader(AppColorTokens c) {
-    final canBack = _weekOffset > _cachedOffsets.first;
-    final canFwd = _weekOffset < _cachedOffsets.last;
-    // Nav header shows only the matchday (e.g. "Round 3"); the play-off /
-    // play-out phase now lives in the section headers below.
+  Widget _buildRoundHeader(AppColorTokens c) {
+    // Chevrons are bounded by what the backend prefetched (offsets -2..2); the
+    // backend itself clamps the resolved round to [1, 33].
+    final canBack = _roundOffset > _cachedOffsets.first;
+    final canFwd = _roundOffset < _cachedOffsets.last;
+    // Primary line is the matchday ("Round N"); falls back to a relative round
+    // label only when no fixture carries a round. Secondary line is the round's
+    // date span. The play-off / play-out phase lives in the section headers.
     final mp = _matchdayLabel();
     return Container(
       decoration: BoxDecoration(
@@ -429,22 +399,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       child: Row(
         children: [
-          _chevron(Icons.chevron_left, canBack, () => _changeWeek(-1), c),
+          _chevron(Icons.chevron_left, canBack, () => _changeRound(-1), c),
           Expanded(
             child: Column(
               children: [
-                Text(_visibleRangeLabel(),
-                    style: TypographyTokens.meta.copyWith(
-                        color: c.textPrimary, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 1),
                 Text(mp ?? _relativeWeekLabel(),
+                    style: TypographyTokens.meta.copyWith(
+                        color: mp != null ? c.textPrimary : c.textMuted,
+                        fontWeight: FontWeight.w600)),
+                const SizedBox(height: 1),
+                Text(_roundSpanLabel(),
                     style: TypographyTokens.sectionLabel.copyWith(
-                        color: mp != null ? c.primary : c.textMuted,
-                        fontSize: 9)),
+                        color: c.textMuted, fontSize: 9)),
               ],
             ),
           ),
-          _chevron(Icons.chevron_right, canFwd, () => _changeWeek(1), c),
+          _chevron(Icons.chevron_right, canFwd, () => _changeRound(1), c),
         ],
       ),
     );
@@ -464,17 +434,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  /// The first fixture of the displayed week carrying a Sportradar round, used
-  /// as the canonical source for the matchday label and the week's phase.
+  /// The first fixture of the displayed round carrying a round number, used as
+  /// the canonical source for the matchday label and the round's phase.
   WeekFixture? _roundFixture() {
-    for (final f in _thisWeekFixtures) {
+    for (final f in _fixtures) {
       if (f.round != null) return f;
     }
     return null;
   }
 
-  /// "Etapa N" / "Round N" for the displayed week, from the first fixture
-  /// carrying a Sportradar round; null when no round is available (e.g. CSV
+  /// "Etapa N" / "Round N" for the displayed round, from the first fixture
+  /// carrying a round number; null when no round is available (e.g. CSV
   /// fallback). The play-off / play-out phase is intentionally omitted here and
   /// surfaced in the section headers instead.
   String? _matchdayLabel() {
@@ -484,18 +454,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return ro ? 'Etapa ${withRound.round}' : 'Round ${withRound.round}';
   }
 
-  /// True when the displayed week sits in the Romanian Superliga play-off /
-  /// play-out window. Uses the round fixture's date when available, otherwise
-  /// the displayed Monday, so the split sections appear for the spring window.
+  /// True when the displayed round sits in the Romanian Superliga play-off /
+  /// play-out window, judged from the round's fixture dates (any fixture in the
+  /// window qualifies), so the split sections appear for the spring window.
   bool _weekIsPlayoffWindow() {
-    final withRound = _roundFixture();
-    if (withRound != null && withRound.matchDate.isNotEmpty) {
-      return _isPlayoffWindow(withRound.matchDate);
+    for (final f in _fixtures) {
+      if (f.matchDate.isNotEmpty && _isPlayoffWindow(f.matchDate)) return true;
     }
-    final monday = _weekMonday();
-    return (monday.month == 3 && monday.day >= 8) ||
-        monday.month == 4 ||
-        monday.month == 5;
+    return false;
   }
 
   /// True when the date sits in the Romanian Superliga play-off / play-out
@@ -507,21 +473,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return (d.month == 3 && d.day >= 8) || d.month == 4 || d.month == 5;
   }
 
+  /// Relative round label ("ROUND +1" / "ROUND -1"), used only as the primary
+  /// header line when no fixture carries a round number.
   String _relativeWeekLabel() {
-    final weekWord = L10n.t('dashboard.weekRelative');
-    return _weekOffset == 0
+    final roundWord = L10n.t('dashboard.weekRelative');
+    return _roundOffset == 0
         ? L10n.t('dashboard.weekCurrent')
-        : _weekOffset > 0
-            ? '$weekWord +$_weekOffset'
-            : '$weekWord $_weekOffset';
+        : _roundOffset > 0
+            ? '$roundWord +$_roundOffset'
+            : '$roundWord $_roundOffset';
   }
 
-  String _visibleRangeLabel() {
-    final monday = _weekMonday();
-    final sunday = monday.add(const Duration(days: 6));
+  /// The round's date span: the earliest to the latest match_date of the shown
+  /// fixtures (a round can straddle mid-week and weekend). Collapses to a single
+  /// date when every fixture shares the day, and is empty when no fixture has a
+  /// parseable date.
+  String _roundSpanLabel() {
+    DateTime? min;
+    DateTime? max;
+    for (final f in _fixtures) {
+      final dt = DateTime.tryParse(f.matchDate);
+      if (dt == null) continue;
+      final day = DateTime.utc(dt.year, dt.month, dt.day);
+      if (min == null || day.isBefore(min)) min = day;
+      if (max == null || day.isAfter(max)) max = day;
+    }
+    if (min == null || max == null) return '';
     final ro = L10n.instance.isRomanian;
-    return '${monday.day} ${_monAbbr(monday.month, ro)} - '
-        '${sunday.day} ${_monAbbr(sunday.month, ro)} ${sunday.year}';
+    final start = '${min.day} ${_monAbbr(min.month, ro)}';
+    if (min == max) return '$start ${max.year}';
+    final end = '${max.day} ${_monAbbr(max.month, ro)} ${max.year}';
+    return '$start - $end';
   }
 
   // ── Section label ───────────────────────────────────────────────────────────
