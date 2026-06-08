@@ -16,8 +16,8 @@ class XiOpponentOption {
   final String name;
 }
 
-/// The nine curated formation shapes the optimiser can resolve to, plus the
-/// "auto" sentinel that asks the backend to score the pool once and pick the
+/// The curated formation shapes the optimiser can resolve to, plus the "auto"
+/// sentinel that asks the backend to score the pool once and pick the
 /// highest-objective shape. These mirror ``CURATED_FORMATIONS`` on the backend;
 /// any other value is silently treated as "auto" server-side.
 const String kFormationAuto = 'auto';
@@ -27,8 +27,13 @@ const List<String> kCuratedFormations = [
   '4-2-3-1',
   '4-1-4-1',
   '4-5-1',
+  '4-4-1-1',
+  '4-3-1-2',
+  '4-2-2-2',
+  '4-1-2-1-2',
   '3-5-2',
   '3-4-3',
+  '3-4-2-1',
   '5-3-2',
   '5-4-1',
 ];

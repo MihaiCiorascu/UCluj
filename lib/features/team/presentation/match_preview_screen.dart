@@ -36,8 +36,8 @@ class _MatchPreviewScreenState extends State<MatchPreviewScreen> {
   // from the RESOLVED formation the backend reports, not from this value.
   String _formation = kFormationAuto;
 
-  // Selector entries: AUTO first, then the nine curated shapes (the only keys
-  // the optimiser resolves to; the backend coerces anything else to "auto").
+  // Selector entries: AUTO first, then the curated shapes (the only keys the
+  // optimiser resolves to; the backend coerces anything else to "auto").
   static const _formations = [kFormationAuto, ...kCuratedFormations];
 
   @override
