@@ -2586,7 +2586,7 @@
    "away_score": 0,
    "venue": null,
    "round": 28,
-   "phase": "playoff_window"
+   "phase": "regular"
   },
   {
    "match_id": "5715914",
@@ -2597,7 +2597,7 @@
    "away_score": 2,
    "venue": null,
    "round": 28,
-   "phase": "playoff_window"
+   "phase": "regular"
   },
   {
    "match_id": "5715918",
@@ -2608,7 +2608,7 @@
    "away_score": 1,
    "venue": null,
    "round": 28,
-   "phase": "playoff_window"
+   "phase": "regular"
   },
   {
    "match_id": "5715912",
@@ -2619,7 +2619,7 @@
    "away_score": 0,
    "venue": null,
    "round": 28,
-   "phase": "playoff_window"
+   "phase": "regular"
   },
   {
    "match_id": "5823149",

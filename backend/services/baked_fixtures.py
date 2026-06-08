@@ -269,7 +269,9 @@ def is_baked_season(season: str | None) -> bool:
 # Regular-season cutoff for the 2025-26 SuperLiga. Fixtures dated strictly
 # before this split into the top-6 Championship group and the bottom-10
 # Relegation group, matching ``FixtureService._REGULAR_SEASON_CUTOFFS["2025"]``.
-_REGULAR_SEASON_CUTOFF: date = date(2026, 3, 8)
+# Round 30 (the regular season's last round) was played 6-9 March 2026 as one
+# table; the Championship and Relegation groups began on 13-14 March 2026.
+_REGULAR_SEASON_CUTOFF: date = date(2026, 3, 13)
 
 
 def _build_table(rows: list[dict]) -> list[dict]:
@@ -342,7 +344,7 @@ def baked_standings_with_groups() -> dict:
     """Return the three-bucket standings for the baked 2025-26 season.
 
     ``regular``: the full 16-team table from every completed fixture dated
-    before the regular-season cutoff (2026-03-08). ``championship``: the top six
+    before the regular-season cutoff (2026-03-13). ``championship``: the top six
     of that table, re-ranked from 1. ``relegation``: the bottom ten, re-ranked
     from 1. Shape mirrors ``FixtureService.standings_with_groups`` so it can be
     consumed by the same endpoints. Buckets are computed from the baked
