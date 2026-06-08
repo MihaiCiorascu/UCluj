@@ -10,11 +10,11 @@ Before implementing anything, consult **`/AGENTS.md`** (product bible) and **`/d
 
 ## Architecture
 
-Two-part system:
+Two-part system, fully hosted on AWS:
 
-**Flutter frontend** (`lib/`) — mobile/web app. Feature-first structure under `lib/features/`; shared infrastructure in `lib/core/`. State management: `ChangeNotifier` + Repository pattern (no Riverpod/Bloc). Runtime API URL loaded from `/config.json` on web. Can run in legacy JWT mode or Firebase Auth mode (controlled by `USE_FIREBASE_AUTH` dart-define).
+**Flutter frontend** (`lib/`) — mobile/web app, deployed on **AWS Amplify Hosting** from the `umbraro` branch (live at `umbraro.d2j9yfctr6ipf6.amplifyapp.com`). Feature-first structure under `lib/features/`; shared infrastructure in `lib/core/`. State management: `ChangeNotifier` + Repository pattern (no Riverpod/Bloc). The runtime API URL is loaded from `web/config.json` (read by `lib/core/config/app_config.dart`) so it can change without a Flutter rebuild.
 
-**FastAPI backend** (`backend/`) — async Python 3.11+. Layered: `api/v1/endpoints/` → `services/` → `data/` loaders. ML bundle (`ml/umbraro_catboost_bundle.joblib`) loaded once at startup via lifespan hook. SQLite with aiosqlite for auth/chat data. Supports dual auth: JWT email/password or Firebase ID tokens.
+**FastAPI backend** (`backend/`) — async Python 3.11+, packaged as a Docker image stored in **Amazon ECR** (`302432776212.dkr.ecr.eu-central-1.amazonaws.com/ucluj-backend`) and served by **AWS App Runner** at `https://b7fukv3pxv.eu-central-1.awsapprunner.com`. Layered: `api/v1/endpoints/` → `services/` → `data/` loaders. The ML bundle (`ml/umbraro_catboost_bundle.joblib`) is loaded once at startup via a lifespan hook. Persistent state (users, profiles, chat) lives in **AWS RDS PostgreSQL** through async SQLAlchemy over `asyncpg`; a local `sqlite+aiosqlite` database is the default for development. Client-side authentication goes through **AWS Cognito**, with the backend verifying the Cognito ID token and issuing a short-lived local JWT bound to the Cognito subject. User avatars use presigned **S3** uploads, and instant chat fans out over an **API Gateway WebSocket** with a DynamoDB connections table; both are provisioned by `infra/template.yaml`.
 
 **Data flow:** `All_Data.csv` (~1600 Romanian Superliga matches, 2020–2025) → feature engineering → CatBoost prediction → Monte Carlo optimizer → tactical blueprint with probability uplift.
 
@@ -29,30 +29,25 @@ Two-part system:
 
 ## Commands
 
-### Backend
+### Backend (local development)
 
 ```bash
 cd backend
 python -m venv .venv
 .venv\Scripts\activate          # Windows
 pip install -r requirements.txt
-cp .env.example .env            # Then fill in JWT_SECRET, FIREBASE_PROJECT_ID
+cp .env.example .env            # Then fill in JWT_SECRET, DATABASE_URL, COGNITO_*, SPORTRADAR_API_KEY
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
+
+The committed `.env.example` defaults `DATABASE_URL` to a local `sqlite+aiosqlite` file so the backend runs with no external services; point it at the `postgresql+asyncpg://...` RDS URL to mirror production.
 
 ### Flutter (Web)
 
 ```bash
 flutter pub get
-
-# Legacy auth (no Firebase):
 flutter run -d chrome --web-port 8080 \
-  --dart-define=USE_FIREBASE_AUTH=false \
-  --dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1
-
-# Firebase auth:
-flutter run -d chrome --web-port 8080 \
-  --dart-define=USE_FIREBASE_AUTH=true \
+  --dart-define=APP_ENV=development \
   --dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1
 ```
 
@@ -65,9 +60,14 @@ flutter drive --target=integration_test/app_test.dart          # integration tes
 
 ### Deploy
 
+- **Frontend:** push to the `umbraro` branch; Amplify Hosting auto-builds and serves the Flutter web app.
+- **Backend:** the `deploy-backend.yml` GitHub Actions workflow builds the Docker image, pushes it to ECR, and triggers an App Runner deployment. To do it by hand:
+
 ```bash
-firebase deploy --only hosting           # frontend
-firebase deploy --only firestore:rules   # Firestore rules
+docker build -t ucluj-backend .
+docker tag ucluj-backend:latest 302432776212.dkr.ecr.eu-central-1.amazonaws.com/ucluj-backend:latest
+docker push 302432776212.dkr.ecr.eu-central-1.amazonaws.com/ucluj-backend:latest
+# Then start a deployment on the ucluj-backend App Runner service.
 ```
 
 ## Configuration
@@ -77,14 +77,15 @@ firebase deploy --only firestore:rules   # Firestore rules
 ```
 UMBRARO_ENV=development
 JWT_SECRET=<change-me>
-DATABASE_URL=sqlite+aiosqlite:///./umbraro.db
+DATABASE_URL=postgresql+asyncpg://postgres:<password>@<host>:5432/postgres   # sqlite+aiosqlite:///./umbraro.db for local dev
 CORS_ORIGINS=http://localhost:3000,http://localhost:8080,http://127.0.0.1:8080
-FIREBASE_PROJECT_ID=uhack26-8050e
-FIREBASE_CREDENTIALS_PATH=backend/secrets/service-account.json
+COGNITO_REGION=eu-central-1
+COGNITO_USER_POOL_ID=eu-central-1_REPLACE_ME
+COGNITO_APP_CLIENT_ID=REPLACE_ME
 SPORTRADAR_API_KEY=<optional>
 ```
 
-**Flutter dart-defines:** `USE_FIREBASE_AUTH`, `APP_ENV`, `API_BASE_URL`
+**Flutter dart-defines:** `APP_ENV`, `API_BASE_URL`
 
 ## ML and Supported Features
 
@@ -108,11 +109,13 @@ SPORTRADAR_API_KEY=<optional>
 
 Any UI change that softens the aesthetic, adds decorative elements, or dilutes the premium severity violates product identity.
 
-## Auth Flows
+## Auth Flow
 
-Two parallel auth paths share the same JWT infrastructure:
+Single Cognito-mediated path:
 
-1. **Legacy:** `POST /auth/login` → access + refresh tokens → stored via `TokenStore` (flutter_secure_storage) → auto-refreshed by `AuthSessionRepository`
-2. **Firebase:** Firebase Auth → ID token → `POST /auth/firebase` → same JWT pair issued
+1. The Flutter client signs the user in against the **AWS Cognito** user pool and obtains a Cognito ID token.
+2. The client posts that ID token to the backend (`POST /auth/cognito`, or `POST /auth/register_with_cognito` on first sign-up).
+3. The backend verifies the token against Cognito, looks up or creates a row in the `users` table on RDS, and issues a short-lived local JWT pair (access + refresh) bound to the Cognito subject.
+4. Subsequent API calls present the local JWT; `AuthSessionRepository` refreshes it automatically when needed.
 
 `AuthState` (ChangeNotifier) is the single source of truth for the current user across the Flutter app.
