@@ -4,6 +4,7 @@ Transforms raw player stats + player profile data into ML-ready features.
 """
 
 import json
+import os
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -251,11 +252,147 @@ def role_to_group(role_name: str) -> str:
 # training-load and availability signals are primary indicators of player
 # readiness and should not be discarded by per-90 normalisation.
 
+# ─── Date-aware primary-club resolver (Iteration M: mid-season transfers) ─────
+#
+# ``get_team_squad_from_matches`` counts a player's appearances against a team's
+# match *filenames*, which double-counts mid-season movers: a player who left
+# club A for club B keeps showing up in A's stale fixtures *and* in B's recent
+# ones, so both squads claim them. M. Thiam (playerId 278515) is the canonical
+# case — he moved U Cluj -> FCSB in August 2025, yet the all-time appearance
+# count lists him in both squads.
+#
+# The resolver below assigns each player to exactly one club as of a reference
+# date. The signal it exploits is structural: in every match a player features
+# in, the registry substring of *their own* club is present in the filename
+# (the file is named ``"{home} - {away}, ..."`` and the player's club is one of
+# the two), while any given opponent's substring appears only in the single
+# head-to-head fixture. Across a recency window of a player's matches, therefore,
+# the registry team whose ``wy_substr`` is present in the *most* of those files
+# is the player's primary club. Recency is preferred so that a transfer is
+# followed rather than averaged away: only matches dated strictly before
+# ``as_of_date`` are considered, and the window keeps a player's last
+# ``recent_n`` appearances unioned with everything inside ``window_days`` of
+# ``as_of_date`` (so a thin-but-recent run still resolves, and a dense recent
+# run is not diluted by older clubs).
+
+
+def primary_club_as_of(
+    match_stat_files: List[str],
+    as_of_date,
+    recent_n: int = 15,
+    window_days: int = 150,
+) -> Dict[int, str]:
+    """Resolve each player's single primary club as of ``as_of_date``.
+
+    Returns ``{playerId: team_short}`` where ``team_short`` is the
+    :class:`~sportradar.team_registry.TeamRef` short label of the registry
+    club the player played for in the *most* of their recent matches dated
+    strictly before ``as_of_date``. A player who appears in no in-window,
+    dated match is omitted from the mapping (the caller treats an omission as
+    "unknown" and falls back to the legacy all-time behaviour).
+
+    Parameters
+    ----------
+    match_stat_files
+        Paths to the per-match player-stats JSON files (the drive_cache).
+    as_of_date
+        A ``datetime.date`` (or ISO ``YYYY-MM-DD`` string). Only matches
+        dated strictly before this date are considered, so a transfer that
+        has not happened yet at the reference date does not leak backwards.
+    recent_n
+        The player's most recent ``recent_n`` dated appearances are always
+        included in the window, regardless of age. Default 15 (≈ half a
+        Superliga season), enough to resolve a club even for a player who
+        has been inactive recently.
+    window_days
+        Any appearance within ``window_days`` of ``as_of_date`` is also
+        included, even beyond the ``recent_n`` cut. Default 150 days.
+
+    Returns
+    -------
+    dict[int, str]
+        ``{playerId: team_short}`` for every player with at least one
+        in-window dated appearance.
+    """
+    from collections import Counter
+
+    from ml.match_dates import date_for, parse_date
+    from sportradar.team_registry import SUPERLIGA_TEAMS, normalise as _norm  # type: ignore
+
+    cutoff = parse_date(as_of_date) if isinstance(as_of_date, str) else as_of_date
+    if cutoff is None:
+        return {}
+
+    from datetime import timedelta
+
+    window_start = cutoff - timedelta(days=window_days)
+
+    # Pre-normalise each team's substring once.
+    team_needles = [(t.short, _norm(t.wy_substr)) for t in SUPERLIGA_TEAMS]
+
+    # For each player, collect (date, set_of_team_shorts_in_this_file).
+    per_player: Dict[int, List] = {}
+    for fp in match_stat_files:
+        nfp = _norm(os.path.basename(fp))
+        teams_in_file = [short for short, needle in team_needles if needle and needle in nfp]
+        if not teams_in_file:
+            continue
+        try:
+            with open(fp, encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            continue
+        for entry in data.get("players", []):
+            pid = entry.get("playerId")
+            if pid is None:
+                continue
+            mins = (entry.get("total", {}) or {}).get("minutesOnField", 0) or 0
+            if mins <= 0:
+                continue
+            d = parse_date(date_for(entry.get("matchId")))
+            if d is None or not (d < cutoff):
+                continue
+            per_player.setdefault(int(pid), []).append((d, teams_in_file))
+
+    result: Dict[int, str] = {}
+    for pid, rows in per_player.items():
+        rows.sort(key=lambda r: r[0], reverse=True)  # most recent first
+        windowed = [r for i, r in enumerate(rows) if i < recent_n or r[0] >= window_start]
+        if not windowed:
+            continue
+        counts: Counter = Counter()
+        for _d, shorts in windowed:
+            for s in shorts:
+                counts[s] += 1
+        # Most-frequent club wins; ties broken by who appeared most recently
+        # (the player's own club is present in *every* file, so a tie only
+        # arises in degenerate single-match windows, where recency is the
+        # right tiebreak for a transfer).
+        best = max(
+            counts.items(),
+            key=lambda kv: (kv[1], _most_recent_index_weight(kv[0], windowed)),
+        )
+        result[pid] = best[0]
+    return result
+
+
+def _most_recent_index_weight(team_short: str, windowed: List) -> int:
+    """Recency tiebreak: higher when ``team_short`` appears in a more recent
+    in-window file. ``windowed`` is ordered most-recent-first, so an earlier
+    index is more recent and yields a larger weight."""
+    n = len(windowed)
+    for i, (_d, shorts) in enumerate(windowed):
+        if team_short in shorts:
+            return n - i
+    return 0
+
+
 def get_team_squad_from_matches(
     match_stat_files: List[str],
     team_name_substring: str,
     recent_n: Optional[int] = None,
     min_appearances: int = 5,
+    as_of_date=None,
 ) -> set:
     """Identify a team's squad from appearance frequency in their match files.
 
@@ -298,6 +435,20 @@ def get_team_squad_from_matches(
         squad member appears in seven or more. A threshold of five
         therefore separates the two populations cleanly while still
         capturing fringe / late-arriving squad players.
+    as_of_date
+        Date-awareness switch for mid-season transfers. When ``None`` (the
+        default) the behaviour is exactly the all-time appearance count
+        documented above, byte-for-byte. When a ``datetime.date`` (or ISO
+        ``YYYY-MM-DD`` string) is supplied, two extra filters apply: (a) an
+        appearance is only counted if its match is dated strictly *before*
+        ``as_of_date`` (so a future move does not leak backwards and an
+        already-departed player's stale fixtures are still counted toward
+        the *frequency*, but see (b)); and (b) a player is retained only if
+        ``team_name_substring``'s registry club is the player's *primary*
+        club as of that date per :func:`primary_club_as_of`. Filter (b) is
+        what drops a transferred player from their former club: M. Thiam's
+        six stale U Cluj appearances (Jul–Aug 2025) no longer keep him in
+        the U Cluj squad once his primary recent club has become FCSB.
 
     Returns
     -------
@@ -317,6 +468,26 @@ def get_team_squad_from_matches(
     else:
         recent_ids = None
 
+    # Iteration M: date-aware path. Resolve each player's single primary club
+    # as of the reference date, and resolve which registry short label this
+    # ``team_name_substring`` denotes, so the appearance count can be confined
+    # to the team's own current squad. When ``as_of_date`` is None both stay
+    # ``None`` and every legacy code path below is untouched.
+    primary_by_player: Optional[Dict[int, str]] = None
+    this_team_short: Optional[str] = None
+    cutoff = None
+    if as_of_date is not None:
+        from ml.match_dates import date_for, parse_date
+        from sportradar.team_registry import team_by_alias
+
+        cutoff = parse_date(as_of_date) if isinstance(as_of_date, str) else as_of_date
+        if cutoff is not None:
+            primary_by_player = primary_club_as_of(
+                match_stat_files, cutoff, recent_n=recent_n or 15
+            )
+            ref = team_by_alias(team_name_substring)
+            this_team_short = ref.short if ref is not None else None
+
     needle = _norm(team_name_substring)
     team_files = [fp for fp in match_stat_files if needle in _norm(fp)]
 
@@ -331,6 +502,14 @@ def get_team_squad_from_matches(
             mid = players[0].get("matchId")
             if recent_ids is not None and mid is not None and int(mid) not in recent_ids:
                 continue
+            # Date filter (a): only count appearances dated strictly before
+            # the reference date when date-awareness is on. ``date_for`` /
+            # ``parse_date`` are imported above in the same ``as_of_date is
+            # not None`` branch that sets ``cutoff``.
+            if cutoff is not None:
+                d = parse_date(date_for(mid))
+                if d is None or not (d < cutoff):
+                    continue
             for entry in players:
                 pid = entry.get("playerId")
                 if pid is None:
@@ -341,7 +520,21 @@ def get_team_squad_from_matches(
         except Exception:
             continue
 
-    return {pid for pid, count in appearances.items() if count >= min_appearances}
+    squad = {pid for pid, count in appearances.items() if count >= min_appearances}
+
+    # Filter (b): in the date-aware path, keep a player only if this team IS
+    # their primary recent club. A player whose primary club resolved to a
+    # different registry team (a mover) is dropped; a player who could not be
+    # resolved at all (no in-window dated match) is kept, so the all-time
+    # recall is never reduced by missing date metadata.
+    if primary_by_player is not None and this_team_short is not None:
+        squad = {
+            pid
+            for pid in squad
+            if primary_by_player.get(pid, this_team_short) == this_team_short
+        }
+
+    return squad
 
 
 def get_team_match_chronology(
