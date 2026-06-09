@@ -58,9 +58,14 @@ class _PrescriptionBlueprint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final baselinePct = '${(prescription.baselineProb * 100).round()}%';
-    final bestPct = '${(prescription.bestProb * 100).round()}%';
-    final upliftPct = '+${(prescription.improvement * 100).round()}%';
+    // Round the endpoints first and derive the uplift from those, so the badge
+    // always equals (optimised - baseline) as displayed. Computing it from the
+    // raw improvement could read "+2%" beside a 57% -> 60% jump.
+    final baselineRounded = (prescription.baselineProb * 100).round();
+    final bestRounded = (prescription.bestProb * 100).round();
+    final baselinePct = '$baselineRounded%';
+    final bestPct = '$bestRounded%';
+    final upliftPct = '+${bestRounded - baselineRounded}%';
     final recs = prescription.recommendations;
 
     return Container(
@@ -367,6 +372,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                       _sectionLabel(L10n.t('sheet.officialStats')),
                       const SizedBox(height: SpacingTokens.sm),
                       _buildTeamStats(f, _matchDetails!),
+                      const SizedBox(height: SpacingTokens.xs),
+                      Text(L10n.t('sheet.statsEstimated'),
+                          style: TypographyTokens.meta
+                              .copyWith(color: c.textMuted)),
                       const SizedBox(height: SpacingTokens.xl),
                     ],
                     if (_matchDetails!.hasLineups) ...[

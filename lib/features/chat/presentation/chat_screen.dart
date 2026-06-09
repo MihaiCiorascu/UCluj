@@ -32,11 +32,12 @@ class _Msg {
     required this.text,
     required this.sender,
     required this.time,
+    String? createdAt,
     this.senderAvatarUrl,
     this.fileUrl,
     this.fileType,
     this.status = _MsgStatus.sent,
-  });
+  }) : createdAt = createdAt ?? DateTime.now().toUtc().toIso8601String();
 
   final String id;
   final String senderId;
@@ -48,10 +49,12 @@ class _Msg {
   final String? fileType;
   final _MsgStatus status;
 
-  /// Raw ISO-8601 timestamp kept for `since`-based reconnect gap-fill. Optimistic
-  /// (local) messages carry the local send time so ordering still holds before
-  /// the server echo arrives.
-  final String createdAt = DateTime.now().toUtc().toIso8601String();
+  /// Raw ISO-8601 server timestamp, kept for `since`-based reconnect gap-fill so
+  /// the backend filters on its OWN clock (it parses `since` with fromisoformat
+  /// and returns messages strictly newer). Optimistic (local) messages fall back
+  /// to the local send time, which only orders them before the server echo and
+  /// never feeds `since` (gap-fill advances only on server-confirmed messages).
+  final String createdAt;
 
   _Msg copyWith({_MsgStatus? status}) => _Msg(
         id: id,
@@ -59,6 +62,7 @@ class _Msg {
         text: text,
         sender: sender,
         time: time,
+        createdAt: createdAt,
         senderAvatarUrl: senderAvatarUrl,
         fileUrl: fileUrl,
         fileType: fileType,
@@ -75,6 +79,7 @@ class _Msg {
       // null when the user has no picture — rendered via PlayerPhotoAvatar with
       // an initials fallback.
       senderAvatarUrl: json['author_avatar_url'] as String?,
+      createdAt: json['created_at'] as String?,
       time: _formatTime(json['created_at'] as String?),
       fileUrl: json['file_url'] as String?,
       fileType: json['file_type'] as String?,

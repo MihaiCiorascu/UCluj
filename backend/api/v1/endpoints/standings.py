@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
-# Live Sportradar season ID for the production code path. The demo path
-# resolves through ``effective_season_id()`` in app/config.py.
+# Live Sportradar season ID for the production (non-demo) code path. Demo mode
+# is served fully offline from the baked dataset and never calls Sportradar.
 SUPERLIGA_SEASON_ID = "sr:season:131507"   # Superliga 25/26
 SUPERLIGA_GROUP_REGULAR = "Superliga"
 SUPERLIGA_GROUP_CHAMPIONSHIP = "Championship Round"
@@ -124,16 +124,22 @@ async def standings(
     _user=Depends(get_current_user),
     svc: FixtureService = Depends(_get_fixture_service),
 ):
-    # 1. Try fresh cache. Used in demo mode too now that the demo mirrors the
-    # live 25/26 season, so there is no demo-vs-prod season to keep apart, and
-    # caching avoids the trial-tier 429 the standings load otherwise hits.
+    # Demo mode is fully offline: never touch Sportradar or its on-disk cache.
+    # The baked 2025-26 standings (the regular table plus the top-6 championship
+    # and bottom-10 relegation groups) come straight from the committed Wyscout
+    # dataset through the same helper the CSV fallback below uses.
+    if settings.demo_mode:
+        return svc.standings_with_groups(
+            season=season if season is not None else effective_season()
+        )
+
+    # 1. Try fresh cache (live production path only; demo returned above). The
+    # 6 h TTL avoids the trial-tier 429 the standings load otherwise hits.
     cached = _load_cache()
     if cached is not None:
         return cached
 
-    # 2. Fetch from Sportradar (cap at 5 s). Demo mode now goes through here
-    # too, pinned to the 2024-25 season via effective_season_id(); only the
-    # cache is bypassed so the demo path stays self-contained.
+    # 2. Fetch from Sportradar (cap at 5 s), live production path only.
     sr_data: dict | None = None
     if settings.sportradar_api_key:
         try:
