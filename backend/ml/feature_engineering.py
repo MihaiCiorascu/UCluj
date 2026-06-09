@@ -95,9 +95,14 @@ FINE_GROUP_TO_COARSE: Dict[str, str] = {
 # to keep performance-score values comparable.
 FINE_POSITION_STAT_WEIGHTS: Dict[str, Dict[str, float]] = {
     "GK": {
-        "gkSaves": 3.0, "gkCleanSheets": 3.0, "gkSuccessfulExits": 2.0,
-        "gkAerialDuelsWon": 2.0, "gkShotsAgainst": -1.0,
-        "successfulPasses": 1.0, "losses": -1.0,
+        # Shot-stopping is rated on saves AND the difficulty of the shots faced
+        # (xgSave = expected goals on target faced), not on the team statistic of
+        # a clean sheet. Goals conceded carry the keeper's share of the blame;
+        # merely facing shots (gkShotsAgainst) is no longer penalised, since that
+        # reflects the defence in front of the keeper, not the keeper.
+        "gkSaves": 3.0, "xgSave": 3.0, "gkSuccessfulExits": 2.0,
+        "gkAerialDuelsWon": 2.0, "gkConcededGoals": -1.5,
+        "gkCleanSheets": 0.5, "successfulPasses": 0.5, "losses": -1.0,
     },
     "CB": {
         "defensiveDuelsWon": 3.0, "aerialDuelsWon": 3.0, "clearances": 2.0,
@@ -939,7 +944,12 @@ def compute_performance_score(stats: Dict, role_group: str, fine_group: Optional
     total = stats.get("minutesOnField", 0)
     if total == 0:
         return 0.0
-    per90 = 90.0 / total  # normalize to per-90 minutes
+    # Floor the minutes used for per-90 normalisation so a short cameo cannot be
+    # extrapolated into an extreme full-match projection (a 10-minute goal would
+    # otherwise be scaled as if scored nine times). Long appearances are
+    # unaffected, and the XI predictor feeds season aggregates where this floor
+    # never binds.
+    per90 = 90.0 / max(total, 25.0)
     score = 0.0
     for stat, w in weights.items():
         val = stats.get(stat, 0) or 0
