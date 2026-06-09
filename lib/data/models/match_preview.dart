@@ -270,6 +270,10 @@ class MatchPreviewResponse {
   // toggle. Empty on older backends, in which case the toggle is hidden.
   final List<MatchPreviewPlayer> bestXi;
   final List<MatchPreviewPlayer> bestBench;
+  // The opponent's own predicted XI (and bench), from the same model, for the
+  // scouting view. Empty on older backends, in which case the toggle is hidden.
+  final List<MatchPreviewPlayer> opponentXi;
+  final List<MatchPreviewPlayer> opponentBench;
   final MatchTeamStats teamStats;
   final MatchTeamStats opponentStats;
   final H2HStats headToHead;
@@ -285,6 +289,8 @@ class MatchPreviewResponse {
     required this.bench,
     this.bestXi = const [],
     this.bestBench = const [],
+    this.opponentXi = const [],
+    this.opponentBench = const [],
     required this.teamStats,
     required this.opponentStats,
     required this.headToHead,
@@ -311,6 +317,8 @@ class MatchPreviewResponse {
       bench: parsePlayers('bench'),
       bestXi: parsePlayers('best_xi'),
       bestBench: parsePlayers('best_bench'),
+      opponentXi: parsePlayers('opponent_xi'),
+      opponentBench: parsePlayers('opponent_bench'),
       teamStats: MatchTeamStats.fromJson(
           j['team_stats'] as Map<String, dynamic>? ?? {}),
       opponentStats: MatchTeamStats.fromJson(
