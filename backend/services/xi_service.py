@@ -731,17 +731,20 @@ class XiService:
         opponent_stats: Dict = self._squad_stats(None)
         opponent_xi_records: list = []
         opponent_bench_records: list = []
+        opponent_formation: str = ""
         if opp_team_df is not None and not opp_team_df.empty:
             try:
-                # Opponent XI uses the resolved home formation (never "auto" and
-                # never the home team's locks, which are slot pins for our squad).
-                # It is itself opponent-aware: the opponent conditions on us.
+                # Opponent XI picks the opponent's OWN best shape ("auto"), not the
+                # home team's formation, so its pitch arrangement is distinct. It is
+                # also opponent-aware (it conditions on us). The home team's locks
+                # are slot pins for our squad, so they are not passed here.
                 opp_result = self.predictor.predict_xi(
                     df=opp_team_df,
-                    formation=resolved_formation,
+                    formation="auto",
                     your_team_id=opp_team_id,
                     opponent_short=home.short,
                 )
+                opponent_formation = opp_result.get("formation", "") or ""
                 opponent_xi = opp_result.get("xi", pd.DataFrame())
                 opponent_xi_records = self._format_records(opponent_xi)
                 opponent_bench_records = self._format_records(
@@ -814,6 +817,7 @@ class XiService:
             "opponent_stats": opponent_stats,
             "opponent_xi": opponent_xi_records,
             "opponent_bench": opponent_bench_records,
+            "opponent_formation": opponent_formation,
             "head_to_head": h2h,
         }
 
