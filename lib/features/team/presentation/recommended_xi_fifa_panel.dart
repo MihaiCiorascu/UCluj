@@ -50,6 +50,7 @@ class RecommendedXiFifaPanel extends StatefulWidget {
     this.homeTeam,
     this.xiRepository,
     this.onPreviewChanged,
+    this.onShowOpponentChanged,
     this.ratingForDisplay = _defaultRatingForDisplay,
   });
 
@@ -75,6 +76,11 @@ class RecommendedXiFifaPanel extends StatefulWidget {
   /// can keep its own copy (e.g. a formation badge) in sync.
   final ValueChanged<MatchPreviewResponse>? onPreviewChanged;
 
+  /// Notifies the parent when the user toggles between our XI and the opponent
+  /// XI, so a host can hide controls that only apply to our team (e.g. the
+  /// formation selector) while the read-only opponent XI is shown.
+  final ValueChanged<bool>? onShowOpponentChanged;
+
   final double Function(MatchPreviewPlayer p) ratingForDisplay;
 
   static double _defaultRatingForDisplay(MatchPreviewPlayer p) =>
@@ -93,9 +99,9 @@ class RecommendedXiFifaPanel extends StatefulWidget {
 
 class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
   MatchPreviewPlayer? _selected;
-  // Which eleven the pitch shows: the predicted-most-likely lineup (default) or
-  // the best-by-rating ('ideal') eleven. The best lists are empty on older
-  // backends, so the toggle is hidden and this stays false.
+  // Which eleven the pitch shows: our predicted XI (default) or the opponent's
+  // predicted XI. The opponent lists are empty on older backends, so the toggle
+  // is hidden and this stays false.
   bool _showOpponent = false;
 
   // The live preview the pitch renders. It starts as the widget's preview and
@@ -172,6 +178,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
       _showOpponent = v;
       _pickDefault();
     });
+    widget.onShowOpponentChanged?.call(v);
   }
 
   // ── Flexible-XI editing ──────────────────────────────────────────────────
