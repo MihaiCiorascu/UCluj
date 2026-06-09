@@ -406,6 +406,41 @@ def _resolve_side(
     return None
 
 
+def _player_stats(total: dict) -> dict:
+    """Curated per-player match stats from the Wyscout ``total`` block: raw counts
+    plus pass-accuracy, duel-win-rate percentages, and goalkeeper figures. The
+    client renders a position-aware subset of these on the player-detail sheet."""
+    def g(k: str) -> float:
+        return total.get(k, 0) or 0
+
+    passes = g("passes")
+    duels = g("duels")
+    return {
+        "minutes": int(g("minutesOnField")),
+        "goals": int(g("goals")),
+        "assists": int(g("assists")),
+        "shots": int(g("shots")),
+        "shotsOnTarget": int(g("shotsOnTarget")),
+        "keyPasses": int(g("keyPasses")),
+        "passes": int(passes),
+        "passAccuracy": round(g("successfulPasses") / passes * 100) if passes else 0,
+        "duels": int(duels),
+        "duelsWon": int(g("duelsWon")),
+        "duelWinRate": round(g("duelsWon") / duels * 100) if duels else 0,
+        "dribbles": int(g("dribbles")),
+        "dribblesWon": int(g("successfulDribbles")),
+        "interceptions": int(g("interceptions")),
+        "recoveries": int(g("recoveries")),
+        "clearances": int(g("clearances")),
+        "crosses": int(g("crosses")),
+        "successfulCrosses": int(g("successfulCrosses")),
+        "fouls": int(g("fouls")),
+        "gkSaves": int(g("gkSaves")),
+        "gkConceded": int(g("gkConcededGoals")),
+        "gkCleanSheet": 1 if g("gkCleanSheets") else 0,
+    }
+
+
 def _build_player(
     entry: dict,
     total: dict,
@@ -438,6 +473,7 @@ def _build_player(
         "shots_on_target": int(total.get("shotsOnTarget", 0) or 0),
         "minutes_played": minutes,
         "grade": grade,
+        "stats": _player_stats(total),
         "photo_url": photo_url,
         "_pos_raw": pos_name,
         "_pos_side": pos_side,  # L/R/C, consumed by _assign_official_positions
