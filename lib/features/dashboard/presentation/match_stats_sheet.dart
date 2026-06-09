@@ -227,6 +227,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   // label always read from the RESOLVED formation the backend reports, never
   // from this requested value.
   String _formation = kFormationAuto;
+  // True while the embedded XI panel is showing the (read-only) opponent XI,
+  // mirrored from the panel via onShowOpponentChanged. The formation selector
+  // edits OUR shape, so it is hidden while this is true.
+  bool _showingOpponentXi = false;
   // The opponent short label for the loaded preview, kept so the interactive
   // pitch can re-request the flexible-XI POST when staff edit the lineup.
   String? _xiOpponent;
@@ -1543,42 +1547,50 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           children: [
             _sectionLabel(L10n.t('sheet.recommendedXi')),
             const Spacer(),
-            DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _formation,
-                dropdownColor: context.colors.surfaceLow,
-                style: TypographyTokens.body
-                    .copyWith(color: context.colors.textPrimary, fontSize: 12),
-                icon: Icon(Icons.keyboard_arrow_down,
-                    color: context.colors.accent, size: 16),
-                onChanged: (v) {
-                  if (v != null && v != _formation) {
-                    AppHaptics.selection();
-                    // A formation change invalidates any slot pins: the new
-                    // preview the POST returns is a genuinely fresh object, so
-                    // the interactive panel clears its locks in didUpdateWidget
-                    // when the parent passes it down.
-                    setState(() => _formation = v);
-                    _loadXi();
-                  }
-                },
-                items: _formations
-                    .map((f) => DropdownMenuItem(
-                          value: f,
-                          child: Text(f == kFormationAuto
-                              ? L10n.t('team.formationAuto')
-                              : f),
-                        ))
-                    .toList(),
+            // The formation selector edits OUR shape, so it is shown only for
+            // our XI. While the read-only opponent XI is displayed, hide it.
+            if (!_showingOpponentXi)
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: _formation,
+                  dropdownColor: context.colors.surfaceLow,
+                  style: TypographyTokens.body.copyWith(
+                      color: context.colors.textPrimary, fontSize: 12),
+                  icon: Icon(Icons.keyboard_arrow_down,
+                      color: context.colors.accent, size: 16),
+                  onChanged: (v) {
+                    if (v != null && v != _formation) {
+                      AppHaptics.selection();
+                      // A formation change invalidates any slot pins: the new
+                      // preview the POST returns is a genuinely fresh object, so
+                      // the interactive panel clears its locks in didUpdateWidget
+                      // when the parent passes it down.
+                      setState(() => _formation = v);
+                      _loadXi();
+                    }
+                  },
+                  items: _formations
+                      .map((f) => DropdownMenuItem(
+                            value: f,
+                            child: Text(f == kFormationAuto
+                                ? L10n.t('team.formationAuto')
+                                : f),
+                          ))
+                      .toList(),
+                ),
               ),
-            ),
           ],
         ),
-        // Surface the RESOLVED shape next to the selector (with an AUTO tag when
-        // AUTO was requested), so staff see which shape the optimiser chose.
-        if (_preview!.formation.isNotEmpty) ...[
+        // Resolved shape next to the selector: our chosen shape (with an AUTO
+        // tag when AUTO was requested) for our XI, or the opponent's own
+        // resolved shape while the read-only opponent XI is shown.
+        if (!_showingOpponentXi && _preview!.formation.isNotEmpty) ...[
           const SizedBox(height: SpacingTokens.xs),
           _buildResolvedFormation(_preview!),
+        ] else if (_showingOpponentXi &&
+            _preview!.opponentFormation.isNotEmpty) ...[
+          const SizedBox(height: SpacingTokens.xs),
+          _buildOpponentFormation(_preview!.opponentFormation),
         ],
         const SizedBox(height: SpacingTokens.sm),
         RecommendedXiFifaPanel(
@@ -1593,6 +1605,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             // Keep the sheet's copy in sync so a formation switch after an edit
             // re-fetches from the latest resolved shape, not a stale one.
             if (mounted) setState(() => _preview = updated);
+          },
+          onShowOpponentChanged: (v) {
+            if (mounted) setState(() => _showingOpponentXi = v);
           },
         ),
       ],
@@ -1635,6 +1650,33 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             ),
           ),
         ],
+      ],
+    );
+  }
+
+  // Read-only badge for the opponent's own resolved shape while the opponent XI
+  // is shown (the formation selector is hidden because it only edits our shape).
+  Widget _buildOpponentFormation(String formation) {
+    final c = context.colors;
+    return Row(
+      children: [
+        Text(
+          L10n.t('team.opponentFormation'),
+          style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted),
+        ),
+        const SizedBox(width: SpacingTokens.sm),
+        // Neutral tone (not cobalt): the sheet reserves the accent for the
+        // tracked team, so the opponent's shape reads in the muted palette.
+        Container(
+          padding: const EdgeInsets.symmetric(
+              horizontal: SpacingTokens.sm, vertical: 3),
+          color: c.textMuted.withValues(alpha: 0.14),
+          child: Text(
+            formation,
+            style: TypographyTokens.sectionLabel
+                .copyWith(color: c.textPrimary, letterSpacing: 1.2),
+          ),
+        ),
       ],
     );
   }
