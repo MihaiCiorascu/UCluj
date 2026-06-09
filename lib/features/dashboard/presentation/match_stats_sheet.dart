@@ -388,7 +388,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     ],
                   ],
                 ] else ...[
-                  // ML prediction — only for upcoming. For U Cluj fixtures the
+                  // ML prediction - only for upcoming. For U Cluj fixtures the
                   // single U-Cluj-framed arc gauge reads a correct P(U Cluj win)
                   // (the backend now runs the binary model with U Cluj as the
                   // home subject, whether they play home or away). For every
@@ -570,7 +570,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
                 child: Text(
-                  '–',
+                  '-',
                   style: TypographyTokens.statLarge
                       .copyWith(fontSize: 28, color: c.textMuted),
                 ),
@@ -606,6 +606,12 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               ),
             ),
           ],
+          const SizedBox(height: SpacingTokens.sm),
+          Text(
+            f.venue != null ? '${f.displayDate}  ·  ${f.venue}' : f.displayDate,
+            style:
+                TypographyTokens.sectionLabel.copyWith(color: c.textMuted),
+          ),
         ],
       );
     }
@@ -702,15 +708,15 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           if (h.ballPossession != null || a.ballPossession != null)
             _buildStatRow(
               L10n.t('sheet.statPossession'),
-              '${h.ballPossession?.toStringAsFixed(0) ?? '—'}%',
-              '${a.ballPossession?.toStringAsFixed(0) ?? '—'}%',
+              '${h.ballPossession?.toStringAsFixed(0) ?? '-'}%',
+              '${a.ballPossession?.toStringAsFixed(0) ?? '-'}%',
               homeVal: h.ballPossession ?? 50,
               awayVal: a.ballPossession ?? 50,
               higherIsBetter: true,
               isUCLujHome: f.isUCLujHome,
             ),
           _buildStatRowRaw(L10n.t('sheet.statShotsOnTarget'),
-              '${h.shotsOnTarget ?? '—'}', '${a.shotsOnTarget ?? '—'}',
+              '${h.shotsOnTarget ?? '-'}', '${a.shotsOnTarget ?? '-'}',
               homeVal: (h.shotsOnTarget ?? 0).toDouble(),
               awayVal: (a.shotsOnTarget ?? 0).toDouble(),
               higherIsBetter: true, isUCLujHome: f.isUCLujHome),
@@ -720,23 +726,23 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               awayVal: a.totalShots.toDouble(),
               higherIsBetter: true, isUCLujHome: f.isUCLujHome),
           _buildStatRowRaw(L10n.t('sheet.statCorners'),
-              '${h.cornerKicks ?? '—'}', '${a.cornerKicks ?? '—'}',
+              '${h.cornerKicks ?? '-'}', '${a.cornerKicks ?? '-'}',
               homeVal: (h.cornerKicks ?? 0).toDouble(),
               awayVal: (a.cornerKicks ?? 0).toDouble(),
               higherIsBetter: true, isUCLujHome: f.isUCLujHome),
           _buildStatRowRaw(L10n.t('sheet.statOffsides'),
-              '${h.offsides ?? '—'}', '${a.offsides ?? '—'}',
+              '${h.offsides ?? '-'}', '${a.offsides ?? '-'}',
               homeVal: (h.offsides ?? 0).toDouble(),
               awayVal: (a.offsides ?? 0).toDouble(),
               higherIsBetter: false, isUCLujHome: f.isUCLujHome),
           _buildStatRowRaw(L10n.t('sheet.statFouls'),
-              '${h.fouls ?? '—'}', '${a.fouls ?? '—'}',
+              '${h.fouls ?? '-'}', '${a.fouls ?? '-'}',
               homeVal: (h.fouls ?? 0).toDouble(),
               awayVal: (a.fouls ?? 0).toDouble(),
               higherIsBetter: false, isUCLujHome: f.isUCLujHome),
           if (h.yellowCards != null || a.yellowCards != null)
             _buildStatRowRaw(L10n.t('sheet.statYellow'),
-                '${h.yellowCards ?? '—'}', '${a.yellowCards ?? '—'}',
+                '${h.yellowCards ?? '-'}', '${a.yellowCards ?? '-'}',
                 homeVal: (h.yellowCards ?? 0).toDouble(),
                 awayVal: (a.yellowCards ?? 0).toDouble(),
                 higherIsBetter: false, isUCLujHome: f.isUCLujHome),
@@ -770,9 +776,12 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     final homeTone = isUCLujHome ? c.accent : c.roleDefender;
     final awayTone = !isUCLujHome ? c.accent : c.roleDefender;
     final muted = c.textMuted.withValues(alpha: 0.35);
+    // On a tie both sides share a distinct, more-visible neutral tone so the row
+    // does not read like a double loss.
+    final tieTone = c.textMuted.withValues(alpha: 0.6);
 
-    final homeBar = tie ? muted : (homeLeads ? homeTone : muted);
-    final awayBar = tie ? muted : (awayLeads ? awayTone : muted);
+    final homeBar = tie ? tieTone : (homeLeads ? homeTone : muted);
+    final awayBar = tie ? tieTone : (awayLeads ? awayTone : muted);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: SpacingTokens.sm),
@@ -872,7 +881,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     final players = isShowingHome ? d.homeLineup : d.awayLineup;
 
     // Which side is the tracked team. Each side is U Cluj only when the fixture
-    // actually involves U Cluj AND that side is the U-Cluj side — so on a
+    // actually involves U Cluj AND that side is the U-Cluj side - so on a
     // neutral fixture neither tab nor the formation label takes the accent, and
     // the away tab correctly takes it when U Cluj plays away.
     final homeIsUCluj = f.involvesUCluj && f.isUCLujHome;
@@ -1058,7 +1067,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           SizedBox(
             width: 22,
             child: Text(
-              p.jerseyNumber != null ? '${p.jerseyNumber}' : '—',
+              p.jerseyNumber != null ? '${p.jerseyNumber}' : '-',
               style: TypographyTokens.sectionLabel.copyWith(
                 fontSize: 10,
                 color: c.textMuted,
@@ -1114,7 +1123,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       return SizedBox(
         width: 48,
         child: Text(
-          '—',
+          '-',
           textAlign: TextAlign.right,
           style: TypographyTokens.statValue
               .copyWith(color: c.textMuted, fontSize: 18),
@@ -1158,16 +1167,17 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     final badges = <Widget>[];
 
     if (p.goalsScored > 0) {
-      badges.add(_badge('⚽ ${p.goalsScored}', context.colors.positive));
+      badges.add(_iconBadge(Icons.sports_soccer,
+          p.goalsScored > 1 ? '${p.goalsScored}' : null, context.colors.positive));
     }
     if (p.assists > 0) {
       badges.add(_badge('A${p.assists}', context.colors.accent));
     }
     if (p.yellowCards > 0) {
-      badges.add(_badge('▪', const Color(0xFFFFD700)));
+      badges.add(_cardChip(const Color(0xFFFFD700)));
     }
     if (p.redCards > 0) {
-      badges.add(_badge('▪', context.colors.negative));
+      badges.add(_cardChip(context.colors.negative));
     }
     if (p.minutesPlayed != null && p.minutesPlayed! < 90 && !p.isStarter) {
       badges.add(_badge("${p.minutesPlayed}'", context.colors.textMuted));
@@ -1190,6 +1200,36 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
         child: Text(text,
             style:
                 TypographyTokens.sectionLabel.copyWith(color: color, fontSize: 9)),
+      );
+
+  // Badge with a leading vector icon (goals), optionally trailed by a count.
+  // Crisper and more consistent than an emoji glyph across platforms.
+  Widget _iconBadge(IconData icon, String? trailing, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+        color: color.withValues(alpha: 0.15),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 11, color: color),
+            if (trailing != null) ...[
+              const SizedBox(width: 2),
+              Text(trailing,
+                  style: TypographyTokens.sectionLabel
+                      .copyWith(color: color, fontSize: 9)),
+            ],
+          ],
+        ),
+      );
+
+  // Small football-card rectangle (yellow / red), shared shape with the pitch
+  // chip so cards read identically in both places.
+  Widget _cardChip(Color color) => Container(
+        width: 9,
+        height: 12,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(1.5),
+        ),
       );
 
   Color _positionColor(String pos) {
@@ -1764,9 +1804,9 @@ class _ActualPlayerChip extends StatelessWidget {
 
   String get _lastName {
     final name = player.name.trim();
-    // Data arrives as "Surname, Firstname" — take the part before the comma
+    // Data arrives as "Surname, Firstname" - take the part before the comma
     if (name.contains(',')) return name.split(',').first.trim();
-    // Fallback: "Firstname Surname" — take the last word
+    // Fallback: "Firstname Surname" - take the last word
     final parts = name.split(' ');
     return parts.length > 1 ? parts.last : name;
   }
@@ -1776,6 +1816,7 @@ class _ActualPlayerChip extends StatelessWidget {
     final c = context.colors;
     final posColor = _roleColor(c);
     final hasGoal = player.goalsScored > 0;
+    final hasAssist = player.assists > 0;
     final hasYellow = player.yellowCards > 0;
     final hasRed = player.redCards > 0;
     final grade = player.grade;
@@ -1806,7 +1847,7 @@ class _ActualPlayerChip extends StatelessWidget {
                 ),
               ),
               // Grade + position badge (top-left), the prominent corner glyph
-              // that anchors the chip — grade tone by band, position beneath.
+              // that anchors the chip - grade tone by band, position beneath.
               Positioned(
                 top: chipSize * 0.04,
                 left: chipSize * 0.04,
@@ -1824,7 +1865,7 @@ class _ActualPlayerChip extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        grade != null ? gradeLabel(grade) : '—',
+                        grade != null ? gradeLabel(grade) : '-',
                         style: TypographyTokens.statValue.copyWith(
                           color: Colors.white,
                           fontSize: chipSize * 0.22,
@@ -1887,7 +1928,7 @@ class _ActualPlayerChip extends StatelessWidget {
             ),
           ),
         ),
-        if (hasGoal || hasYellow || hasRed)
+        if (hasGoal || hasAssist || hasYellow || hasRed)
           SizedBox(
             width: cellWidth,
             child: Row(
@@ -1895,7 +1936,8 @@ class _ActualPlayerChip extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 if (hasGoal) ...[
-                  Text('⚽', style: TextStyle(fontSize: chipSize * 0.18)),
+                  Icon(Icons.sports_soccer,
+                      size: chipSize * 0.2, color: c.textPrimary),
                   if (player.goalsScored > 1)
                     Text(
                       '×${player.goalsScored}',
@@ -1904,6 +1946,17 @@ class _ActualPlayerChip extends StatelessWidget {
                         color: c.textPrimary,
                       ),
                     ),
+                ],
+                if (hasAssist) ...[
+                  if (hasGoal) SizedBox(width: chipSize * 0.05),
+                  Text(
+                    player.assists > 1 ? 'A${player.assists}' : 'A',
+                    style: TypographyTokens.sectionLabel.copyWith(
+                      fontSize: chipSize * 0.15,
+                      color: c.accent,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ],
                 if (hasYellow)
                   Container(

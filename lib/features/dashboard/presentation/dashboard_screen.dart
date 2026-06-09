@@ -299,12 +299,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     final hasGroups = _playoffTeams.isNotEmpty && _playoutTeams.isNotEmpty;
     if (!_weekIsPlayoffWindow() || !hasGroups) {
-      return _buildOtherList(
-        L10n.t('dashboard.otherMatches'),
-        otherFixtures,
-        c,
-        nextIndex,
-      );
+      // Regular-season weeks name the phase ("REGULAR SEASON"). A play-off
+      // window that arrives before the group sets are known keeps the neutral
+      // "other matches" label rather than mislabelling the phase.
+      final label = _weekIsPlayoffWindow()
+          ? L10n.t('dashboard.otherMatches')
+          : L10n.t('dashboard.regularSeason');
+      return _buildOtherList(label, otherFixtures, c, nextIndex);
     }
 
     final playoff = <WeekFixture>[];
@@ -451,7 +452,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final withRound = _roundFixture();
     if (withRound == null) return null;
     final ro = L10n.instance.isRomanian;
-    return ro ? 'Etapa ${withRound.round}' : 'Round ${withRound.round}';
+    final r = withRound.round;
+    // Knockout phase: the play-off and play-out share a matchday number that
+    // restarts at 1 after the 30-round regular season, so map round 31.. back
+    // to "Round 1.." under a "Play-off / Play-out" label rather than "Round 31".
+    const regularRounds = 30;
+    if (r != null && r > regularRounds) {
+      return L10n.t('dashboard.knockoutRound')
+          .replaceAll('{n}', '${r - regularRounds}');
+    }
+    return ro ? 'Etapa $r' : 'Round $r';
   }
 
   /// True when the displayed round sits in the Romanian Superliga play-off /

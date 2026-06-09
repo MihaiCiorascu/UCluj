@@ -415,7 +415,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Lock to slot — only meaningful for an assigned starter.
+            // Lock to slot - only meaningful for an assigned starter.
             if (isStarter && !isLocked)
               _actionTile(
                 ctx,
@@ -691,7 +691,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
   ) {
     if (bench.isEmpty) {
       return Text(
-        '—',
+        '-',
         style: TypographyTokens.body.copyWith(color: c.textMuted),
       );
     }
@@ -817,7 +817,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
 class _FifaAttr {
   const _FifaAttr(this.label, this.value);
   final String label;
-  final double value; // 0–100
+  final double value; // 0-100
 }
 
 // Two honest lenses, kept separate (a club reads volume and efficiency as

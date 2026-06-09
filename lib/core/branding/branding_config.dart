@@ -14,7 +14,7 @@ class BrandingConfig {
   static const String tagline = "Tactical Intelligence";
 
   /// Full application title shown in the OS task switcher.
-  static const String title = "$appName — $tagline";
+  static const String title = "$appName · $tagline";
 
   /// Square icon, used in the AppScaffold header and any 24-48 px slot.
   static const String logoIcon = "assets/branding/logo_icon.png";
