@@ -583,6 +583,7 @@ class StartingXIPredictor:
         opponent_df: Optional[pd.DataFrame] = None,
         method: str = "auto",
         locked: Optional[Dict[int, int]] = None,
+        opponent_short: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Return the optimal starting eleven and bench under a formation.
 
@@ -665,7 +666,7 @@ class StartingXIPredictor:
                     "loaded onto the predictor (set .supervised_bundle = "
                     "joblib.load('backend/ml/xi_lineup_model.joblib'))."
                 )
-            pool["predicted_score"] = self._score_supervised(pool)
+            pool["predicted_score"] = self._score_supervised(pool, opponent_short=opponent_short)
         else:
             pool["predicted_score"] = pool.apply(self._composite_score, axis=1)
             if opponent_df is not None and not opponent_df.empty:
@@ -779,18 +780,18 @@ class StartingXIPredictor:
         return self.predict_xi(*args, **kwargs)
 
     # ── Supervised scoring (Iteration J.4) ───────────────────────────────────
-    def _score_supervised(self, pool: pd.DataFrame) -> pd.Series:
+    def _score_supervised(self, pool: pd.DataFrame, opponent_short: Optional[str] = None) -> pd.Series:
         """Return the per-player supervised-classifier probability.
 
         The supervised bundle (a dict of ``{model, scaler, feature_cols,
-        fine_groups, ...}`` produced by
-        ``train_lineup_classifier.py``) is consumed *as if every row were
-        a candidate for the team's most recent fixture*: dynamic
-        availability features and opponent features must already be on
-        the input ``pool`` (in production these are emitted by
-        :func:`ml.feature_engineering.build_player_feature_vector`). If a
-        required feature column is missing, it is filled with zeros so
-        the classifier can still produce a probability.
+        fine_groups, ...}`` produced by ``train_lineup_classifier_league.py``)
+        is consumed *as if every row were a candidate for the team's most recent
+        fixture*. Dynamic availability features are emitted upstream by
+        :func:`ml.feature_engineering.build_player_feature_vector`; the position
+        one-hot and the opponent-archetype x position interactions are derived
+        here from ``position_group_fine`` and ``opponent_short``. Any feature
+        column still missing is filled with zeros so the classifier can always
+        produce a probability.
         """
         if self.supervised_bundle is None:
             return pd.Series(0.0, index=pool.index)
@@ -799,13 +800,30 @@ class StartingXIPredictor:
         fine_groups: List[str] = list(bundle.get("fine_groups", []))
         # Position one-hot: derive from the row if pos_* columns are absent.
         pool = pool.copy()
+        fine_upper = (
+            pool.get("position_group_fine", pd.Series("", index=pool.index))
+            .astype(str).str.upper()
+        )
         for g in fine_groups:
             col = f"pos_{g}"
             if col not in pool.columns:
-                pool[col] = (
-                    pool.get("position_group_fine", pd.Series("", index=pool.index))
-                    .astype(str).str.upper() == g
-                ).astype(float)
+                pool[col] = (fine_upper == g).astype(float)
+        # Opponent-archetype x position interaction (opponent-aware selection).
+        # This is the one opponent signal that varies across candidates within a
+        # fixture, so it is what actually shifts the picked XI by opponent. All
+        # zero when the opponent archetype is unknown -> graceful no-op.
+        inter_cols: List[str] = list(bundle.get("opp_interaction_cols") or [])
+        if inter_cols:
+            for col in inter_cols:
+                pool[col] = 0.0
+            cl = (bundle.get("opp_cluster_team_map") or {}).get(opponent_short)
+            if cl is not None:
+                inter_set = set(inter_cols)
+                for a in bundle.get("opp_interaction_attrs", []):
+                    col = f"oppcl{cl}_x_{a}"
+                    if col in inter_set:
+                        pool[col] = pd.to_numeric(
+                            pool.get(a, 0.0), errors="coerce").fillna(0.0)
         X = np.zeros((len(pool), len(feature_cols)), dtype=float)
         for j, col in enumerate(feature_cols):
             if col in pool.columns:

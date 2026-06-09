@@ -32,6 +32,7 @@ from __future__ import annotations
 import glob
 import json
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -52,13 +53,21 @@ from ml.feature_engineering import (  # type: ignore  # noqa: E402
     get_team_squad_from_matches,
     load_match_stats_json,
 )
-from ml.match_dates import date_for  # type: ignore  # noqa: E402
-from ml.opponent_profile import build_opponent_profile_table  # type: ignore  # noqa: E402
+from ml.match_dates import date_for, parse_date  # type: ignore  # noqa: E402
+from ml.opponent_style import (  # type: ignore  # noqa: E402
+    INTERACTION_ATTRS,
+    cluster_for_team,
+    fit_team_clusters,
+    interaction_columns,
+    interaction_row,
+    team_style_vectors,
+)
 from ml.pipeline import load_player_profiles  # type: ignore  # noqa: E402
 from sportradar.team_registry import (  # type: ignore  # noqa: E402
     SUPERLIGA_TEAMS,
     TeamRef,
     files_for_team,
+    team_by_alias,
 )
 
 DRIVE = ROOT / "ml" / "data" / "drive_cache"
@@ -96,6 +105,26 @@ OPP_XI_SUM_COLS = [
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
+
+_FNAME_RE = re.compile(r"^(?P<home>.*?) - (?P<away>.*?), \d+-\d+")
+
+
+def _opponent_short(filename: str, team_short: str) -> Optional[str]:
+    """The opponent club's registry short for a fixture, parsed from the
+    drive-cache filename ("{Home} - {Away}, {score}..."), or None."""
+    m = _FNAME_RE.match(filename or "")
+    if not m:
+        return None
+    th = team_by_alias(m.group("home"))
+    ta = team_by_alias(m.group("away"))
+    if th is None or ta is None:
+        return None
+    if th.short == team_short:
+        return ta.short
+    if ta.short == team_short:
+        return th.short
+    return None
+
 
 def _per_match_blocks(match_stat_files: List[str]) -> Dict[int, List[dict]]:
     """playerId -> list of {matchId, seasonId, roundId, total} blocks."""
@@ -251,6 +280,7 @@ def _build_training_rows(
     combined_by_pid: Dict[int, List[dict]],
     profiles: Dict[int, dict],
     opp_xi_lookup: Dict[Tuple[int, str], Dict[str, float]],
+    cluster_bundle: dict,
 ) -> pd.DataFrame:
     """One (player, fixture) row per squad member, every per-player feature
     computed strictly POINT-IN-TIME (leakage-free).
@@ -274,9 +304,11 @@ def _build_training_rows(
             sid = int(fx["season_id"] or 0)
             rid = int(fx["round_id"] or 0)
             before = set(chrono[:fixture_idx])
-            fixture_date = date_for(mid)
+            fixture_date = parse_date(date_for(mid))
             starter_pids = {int(s["playerId"]) for s in fx["starters"]}
             opp_features = opp_xi_lookup.get((mid, team_short), _zero_opp_xi())
+            opp_short = _opponent_short(fx.get("filename", ""), team_short)
+            opp_cluster = cluster_for_team(cluster_bundle, opp_short)
 
             for pid in squad_ids:
                 blocks_before = [
@@ -320,6 +352,14 @@ def _build_training_rows(
                 for c in LOAD_FEATURE_COLS:
                     row[c] = float(fv.get(c, load.get(c, 0.0)) or 0.0)
                 row.update(opp_features)
+                # Opponent-archetype x player-position interaction: the only
+                # opponent signal that varies across candidates within a fixture,
+                # so the only one that can shift the within-fixture selection.
+                row.update(interaction_row(
+                    opp_cluster,
+                    {a: fv.get(a, 0.0) for a in INTERACTION_ATTRS},
+                    cluster_bundle["k"],
+                ))
                 # Position one-hot
                 for g in FINE_GROUPS:
                     row[f"pos_{g}"] = 1.0 if fine == g else 0.0
@@ -393,9 +433,14 @@ def main() -> int:
     opp_xi_lookup = _build_opp_xi_lookup(league_history, static_by_team)
     print(f"  populated opp_xi for {len(opp_xi_lookup)} (matchId, team) pairs.")
 
+    print("\nFitting opponent style clusters (latest rolling-5 + Elo, k-means) ...")
+    cluster_bundle = fit_team_clusters(team_style_vectors(str(ALL_DATA_CSV)), k=4)
+    print(f"  team -> archetype: {cluster_bundle['team_cluster']}")
+
     print("\nAssembling POINT-IN-TIME (leakage-free) training rows ...")
     table = _build_training_rows(
-        league_history, static_by_team, combined_by_pid, profiles, opp_xi_lookup
+        league_history, static_by_team, combined_by_pid, profiles, opp_xi_lookup,
+        cluster_bundle,
     )
     print(f"  training table shape: {table.shape}")
     print(f"  positives: {int(table['started'].sum())}/{len(table)} "
@@ -523,6 +568,10 @@ def main() -> int:
         "team_shorts": [t.short for t in SUPERLIGA_TEAMS],
         "opp_xi_sum_cols": OPP_XI_SUM_COLS,
         "static_player_cols": STATIC_PLAYER_COLS,
+        "opp_cluster_team_map": cluster_bundle["team_cluster"],
+        "opp_cluster_k": cluster_bundle["k"],
+        "opp_interaction_cols": interaction_columns(cluster_bundle["k"]),
+        "opp_interaction_attrs": INTERACTION_ATTRS,
         "per_team_mean_jaccard": {
             t: float(np.mean(per_team_overlaps[t])) if per_team_overlaps[t] else float("nan")
             for t in (team.short for team in SUPERLIGA_TEAMS)

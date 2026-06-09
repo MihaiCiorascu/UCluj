@@ -585,6 +585,12 @@ class XiService:
         opp_team_df = (
             df[df["teamId"] == opponent_team_id].copy() if opponent_team_id else None
         )
+        # Opponent registry short (for the opponent-aware interaction features),
+        # resolved from the fixture-id map; None -> no opponent effect.
+        opp_short = None
+        if opponent_team_id is not None:
+            opp_short = next(
+                (s for s, i in FIXTURE_NAME_TO_ID.items() if i == opponent_team_id), None)
 
         result = self.predictor.predict_xi(
             df=my_team_df,
@@ -592,6 +598,7 @@ class XiService:
             your_team_id=opponent_team_id,
             opponent_df=opp_team_df,
             locked=locked,
+            opponent_short=opp_short,
         )
 
         # Surface the resolved home team in the response payload so the
@@ -690,6 +697,7 @@ class XiService:
             your_team_id=FIXTURE_NAME_TO_ID.get(home.short),
             opponent_df=opp_team_df,
             locked=locked,
+            opponent_short=(opp_ref.short if opp_ref else opponent_name),
         )
         # The resolved shape ("auto" picks one of the curated nine; an explicit
         # key passes through). Every shape-coupled view below uses this so the
@@ -721,16 +729,23 @@ class XiService:
         # XI in ``result`` (only used for opponent adjustments above), so derive
         # its predicted eleven on the same Hungarian path before aggregating.
         opponent_stats: Dict = self._squad_stats(None)
+        opponent_xi_records: list = []
+        opponent_bench_records: list = []
         if opp_team_df is not None and not opp_team_df.empty:
             try:
                 # Opponent XI uses the resolved home formation (never "auto" and
                 # never the home team's locks, which are slot pins for our squad).
+                # It is itself opponent-aware: the opponent conditions on us.
                 opp_result = self.predictor.predict_xi(
                     df=opp_team_df,
                     formation=resolved_formation,
                     your_team_id=opp_team_id,
+                    opponent_short=home.short,
                 )
                 opponent_xi = opp_result.get("xi", pd.DataFrame())
+                opponent_xi_records = self._format_records(opponent_xi)
+                opponent_bench_records = self._format_records(
+                    opp_result.get("bench", pd.DataFrame()))
             except Exception:
                 opponent_xi = pd.DataFrame()
             opponent_stats = self._squad_stats(opponent_xi)
@@ -797,6 +812,8 @@ class XiService:
             "best_bench": self._format_records(best["bench"]),
             "team_stats": team_stats,
             "opponent_stats": opponent_stats,
+            "opponent_xi": opponent_xi_records,
+            "opponent_bench": opponent_bench_records,
             "head_to_head": h2h,
         }
 

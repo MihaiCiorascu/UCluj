@@ -88,7 +88,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
   // Which eleven the pitch shows: the predicted-most-likely lineup (default) or
   // the best-by-rating ('ideal') eleven. The best lists are empty on older
   // backends, so the toggle is hidden and this stays false.
-  bool _showBest = false;
+  bool _showOpponent = false;
 
   // The live preview the pitch renders. It starts as the widget's preview and
   // is swapped for the POST result after every edit, so the panel re-renders
@@ -115,9 +115,9 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
       _preview.formation.isNotEmpty ? _preview.formation : widget.formation;
 
   List<MatchPreviewPlayer> get _activeXi =>
-      _showBest ? _preview.bestXi : _preview.startingXi;
+      _showOpponent ? _preview.opponentXi : _preview.startingXi;
   List<MatchPreviewPlayer> get _activeBench =>
-      _showBest ? _preview.bestBench : _preview.bench;
+      _showOpponent ? _preview.opponentBench : _preview.bench;
 
   @override
   void initState() {
@@ -148,10 +148,10 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
     _selected = xi.isNotEmpty ? xi.first : null;
   }
 
-  void _setShowBest(bool v) {
-    if (_showBest == v) return;
+  void _setShowOpponent(bool v) {
+    if (_showOpponent == v) return;
     setState(() {
-      _showBest = v;
+      _showOpponent = v;
       _pickDefault();
     });
   }
@@ -265,7 +265,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
               selected: wide ? _selected : null,
               ratingForDisplay: rf,
               onSelect: onSelect,
-              lockedSlots: _interactive && !_showBest
+              lockedSlots: _interactive && !_showOpponent
                   ? _locked.keys.toSet()
                   : const {},
             ),
@@ -293,11 +293,11 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
               _editBar(c),
               const SizedBox(height: SpacingTokens.sm),
             ],
-            if (p.bestXi.isNotEmpty) ...[
+            if (p.opponentXi.isNotEmpty) ...[
               _xiToggle(c),
               const SizedBox(height: SpacingTokens.md),
             ],
-            _statsBar(p.teamStats, c),
+            _statsBar(_showOpponent ? p.opponentStats : p.teamStats, c),
             const SizedBox(height: SpacingTokens.md),
             AspectRatio(
               aspectRatio: 4 / 5,
@@ -662,17 +662,17 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SegmentedToggle<bool>(
-          value: _showBest,
-          onChanged: _setShowBest,
+          value: _showOpponent,
+          onChanged: _setShowOpponent,
           segments: [
             SegmentOption(value: false, label: L10n.t('team.segLikelyXi')),
-            SegmentOption(value: true, label: L10n.t('team.segBestXi')),
+            SegmentOption(value: true, label: L10n.t('team.segOpponentXi')),
           ],
         ),
         const SizedBox(height: 6),
         Text(
-          _showBest
-              ? L10n.t('team.explainBestXi')
+          _showOpponent
+              ? L10n.t('team.explainOpponentXi')
               : L10n.t('team.explainLikelyXi'),
           style: TypographyTokens.bodySmall.copyWith(
             color: c.textMuted,
