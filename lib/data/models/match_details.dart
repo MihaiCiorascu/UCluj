@@ -69,6 +69,12 @@ class MatchPlayer {
   // Wyscout stats (or for cached payloads built before grades shipped).
   final double? grade;
 
+  /// Per-player match stats (curated Wyscout totals + computed percentages),
+  /// keyed by stat name (e.g. 'passAccuracy', 'duelWinRate', 'interceptions').
+  /// Empty for payloads without per-player detail. Rendered on the player-detail
+  /// sheet when a concluded-match player is tapped.
+  final Map<String, double> stats;
+
   MatchPlayer({
     required this.name,
     this.jerseyNumber,
@@ -84,6 +90,7 @@ class MatchPlayer {
     this.minutesPlayed,
     this.photoUrl = '',
     this.grade,
+    this.stats = const {},
   });
 
   bool get isStarter => type == 'starter';
@@ -103,6 +110,10 @@ class MatchPlayer {
         minutesPlayed: (j['minutes_played'] as num?)?.toInt(),
         photoUrl: j['photo_url'] as String? ?? '',
         grade: (j['grade'] as num?)?.toDouble(),
+        stats: {
+          for (final e in (j['stats'] as Map<String, dynamic>? ?? {}).entries)
+            e.key: (e.value as num?)?.toDouble() ?? 0,
+        },
       );
 }
 

@@ -952,7 +952,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             }
           },
           child: starters.isNotEmpty
-              ? _ActualLineupPitchPanel(starters: starters, formation: formation)
+              ? _ActualLineupPitchPanel(
+                  starters: starters,
+                  formation: formation,
+                  onPlayerTap: _showPlayerDetail)
               : const SizedBox.shrink(),
         ),
 
@@ -976,7 +979,11 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             ),
           ),
           const SizedBox(height: SpacingTokens.xxs),
-          ...subs.map((p) => _buildPlayerRow(p, isSub: true)),
+          ...subs.map((p) => GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => _showPlayerDetail(p),
+                child: _buildPlayerRow(p, isSub: true),
+              )),
         ],
       ],
     );
@@ -1043,6 +1050,18 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     final fw = starters.where((p) => p.position == 'F').length;
     if (d + m + fw == 0) return '';
     return '$d-$m-$fw';
+  }
+
+  /// Open the per-player stat sheet for a concluded-match player. Reachable by
+  /// tapping a pitch chip or a substitute row.
+  void _showPlayerDetail(MatchPlayer p) {
+    AppHaptics.selection();
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      barrierColor: context.colors.scrim,
+      builder: (_) => _PlayerDetailSheet(player: p),
+    );
   }
 
   Widget _buildPlayerRow(MatchPlayer p, {bool isSub = false}) {
@@ -1633,10 +1652,144 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
 // ── Actual lineup pitch widgets ──────────────────────────────────────────────
 
+/// Bottom sheet of a single concluded-match player's stats (curated Wyscout
+/// totals). Position-aware: goalkeepers show shot-stopping figures, outfield
+/// players show attacking / passing / defending stats. Empty stats degrade to a
+/// minutes-only view.
+class _PlayerDetailSheet extends StatelessWidget {
+  const _PlayerDetailSheet({required this.player});
+  final MatchPlayer player;
+
+  bool get _isGk =>
+      player.position == 'G' || player.officialPosition.toUpperCase() == 'GK';
+
+  List<(String, String)> _rows() {
+    final st = player.stats;
+    int s(String k) => (st[k] ?? 0).round();
+    if (_isGk) {
+      return [
+        ('pstat.minutes', "${s('minutes')}'"),
+        ('pstat.saves', '${s('gkSaves')}'),
+        ('pstat.goalsConceded', '${s('gkConceded')}'),
+        ('pstat.cleanSheet', s('gkCleanSheet') == 1 ? '✓' : '-'),
+        ('pstat.passAccuracy', '${s('passAccuracy')}%'),
+        ('pstat.passes', '${s('passes')}'),
+      ];
+    }
+    return [
+      ('pstat.minutes', "${s('minutes')}'"),
+      ('pstat.goals', '${s('goals')}'),
+      ('pstat.assists', '${s('assists')}'),
+      ('pstat.shots', '${s('shots')} (${s('shotsOnTarget')})'),
+      ('pstat.passAccuracy', '${s('passAccuracy')}%  ·  ${s('passes')}'),
+      ('pstat.keyPasses', '${s('keyPasses')}'),
+      ('pstat.duelsWon', '${s('duelWinRate')}%  ·  ${s('duelsWon')}/${s('duels')}'),
+      ('pstat.dribbles', '${s('dribblesWon')}/${s('dribbles')}'),
+      ('pstat.interceptions', '${s('interceptions')}'),
+      ('pstat.recoveries', '${s('recoveries')}'),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final rows = _rows();
+    final pos = player.officialPosition.isNotEmpty
+        ? player.officialPosition
+        : player.position;
+    return Container(
+      decoration: BoxDecoration(
+        color: c.surfaceHigh,
+        borderRadius: ShapeTokens.sheetTop,
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(SpacingTokens.lg, SpacingTokens.sm,
+              SpacingTokens.lg, SpacingTokens.lg),
+          child: SingleChildScrollView(
+            child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: c.textMuted.withValues(alpha: 0.5),
+                    borderRadius: ShapeTokens.chip,
+                  ),
+                ),
+              ),
+              const SizedBox(height: SpacingTokens.md),
+              Row(
+                children: [
+                  PlayerPhotoAvatar(
+                    photoUrl: player.photoUrl,
+                    name: player.name,
+                    ringColor: c.accent,
+                    size: 48,
+                  ),
+                  const SizedBox(width: SpacingTokens.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          player.name.replaceAll('Universitatea Cluj', 'U Cluj'),
+                          style: TypographyTokens.cardTitle
+                              .copyWith(color: c.textPrimary),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(pos,
+                            style: TypographyTokens.sectionLabel
+                                .copyWith(color: c.accent)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: SpacingTokens.lg),
+              Text(
+                L10n.t('pstat.title'),
+                style: TypographyTokens.sectionLabel
+                    .copyWith(color: c.textMuted, letterSpacing: 1.2),
+              ),
+              const SizedBox(height: SpacingTokens.xs),
+              ...rows.map((r) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(L10n.t(r.$1),
+                            style: TypographyTokens.body
+                                .copyWith(color: c.textMuted, fontSize: 13)),
+                        Text(r.$2,
+                            style: TypographyTokens.mono.copyWith(
+                                color: c.textPrimary,
+                                fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  )),
+            ],
+          ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _ActualLineupPitchPanel extends StatelessWidget {
-  const _ActualLineupPitchPanel({required this.starters, this.formation = ''});
+  const _ActualLineupPitchPanel(
+      {required this.starters, this.formation = '', this.onPlayerTap});
   final List<MatchPlayer> starters;
   final String formation;
+  final ValueChanged<MatchPlayer>? onPlayerTap;
 
   List<double> _distributedXs(int count) {
     if (count <= 1) return const [0.50];
@@ -1759,11 +1912,17 @@ class _ActualLineupPitchPanel extends StatelessWidget {
                       .toDouble(),
                   top: p.offset.dy * c.maxHeight - chipBoxH / 2,
                   width: chipBoxW,
-                  child: _ActualPlayerChip(
-                      player: p.player,
-                      chipSize: chipSize,
-                      cellWidth: chipBoxW,
-                      positionLabel: p.label),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: onPlayerTap == null
+                        ? null
+                        : () => onPlayerTap!(p.player),
+                    child: _ActualPlayerChip(
+                        player: p.player,
+                        chipSize: chipSize,
+                        cellWidth: chipBoxW,
+                        positionLabel: p.label),
+                  ),
                 ),
             ],
           );
