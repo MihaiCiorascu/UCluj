@@ -1,0 +1,8252 @@
+{
+"5715680": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 3
+}
+},
+"5715681": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 8,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 25,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 13,
+"yellow_cards": 5
+}
+},
+"5715682": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 0
+}
+},
+"5715683": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 0,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 7,
+"shots_total": 16,
+"yellow_cards": 3
+}
+},
+"5715684": {
+"away_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 13,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 7,
+"shots_total": 17,
+"yellow_cards": 0
+}
+},
+"5715685": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 1,
+"shots_total": 9,
+"yellow_cards": 1
+}
+},
+"5715686": {
+"away_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 3,
+"shots_total": 5,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 1
+}
+},
+"5715687": {
+"away_stats": {
+"ball_possession": 68.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 9,
+"shots_total": 14,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 32.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 7,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 6,
+"yellow_cards": 1
+}
+},
+"5715688": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 3,
+"shots_total": 13,
+"yellow_cards": 1
+}
+},
+"5715689": {
+"away_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 2
+}
+},
+"5715690": {
+"away_stats": {
+"ball_possession": 31.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 69.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 11,
+"shots_on_target": 5,
+"shots_total": 17,
+"yellow_cards": 2
+}
+},
+"5715691": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 13,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 4,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 1,
+"shots_total": 11,
+"yellow_cards": 3
+}
+},
+"5715692": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 0,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 6,
+"shots_total": 14,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 0
+}
+},
+"5715693": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 10,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 3,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 7,
+"shots_total": 21,
+"yellow_cards": 1
+}
+},
+"5715694": {
+"away_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 5,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 8,
+"shots_total": 13,
+"yellow_cards": 0
+}
+},
+"5715695": {
+"away_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 21,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 5,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 2,
+"shots_total": 12,
+"yellow_cards": 0
+}
+},
+"5715696": {
+"away_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 6,
+"shots_total": 8,
+"yellow_cards": 2
+}
+},
+"5715697": {
+"away_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 7,
+"shots_total": 11,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 5,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 1
+}
+},
+"5715698": {
+"away_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 1,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 1
+}
+},
+"5715699": {
+"away_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 7,
+"shots_total": 20,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 5,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 5
+}
+},
+"5715700": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 2,
+"shots_total": 11,
+"yellow_cards": 2
+}
+},
+"5715701": {
+"away_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 6,
+"shots_total": 14,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 1
+}
+},
+"5715702": {
+"away_stats": {
+"ball_possession": 36.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 0,
+"offsides": 8,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 4,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 64.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 1,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 2
+}
+},
+"5715703": {
+"away_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 12,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 5,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 6,
+"shots_total": 23,
+"yellow_cards": 0
+}
+},
+"5715704": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 7,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 8,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 9,
+"shots_total": 21,
+"yellow_cards": 3
+}
+},
+"5715705": {
+"away_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 0,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 7,
+"shots_total": 12,
+"yellow_cards": 1
+}
+},
+"5715706": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 3,
+"shots_total": 5,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 5,
+"shots_total": 17,
+"yellow_cards": 0
+}
+},
+"5715707": {
+"away_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 0,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 4,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 3
+}
+},
+"5715708": {
+"away_stats": {
+"ball_possession": 73.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 13,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 27.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 4,
+"shots_total": 16,
+"yellow_cards": 1
+}
+},
+"5715709": {
+"away_stats": {
+"ball_possession": null,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": null,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 6,
+"shots_total": 7,
+"yellow_cards": 2
+}
+},
+"5715710": {
+"away_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 6,
+"shots_total": 9,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 3,
+"shots_total": 16,
+"yellow_cards": 2
+}
+},
+"5715711": {
+"away_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 8,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 2,
+"shots_on_target": 3,
+"shots_total": 6,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 8,
+"shots_total": 21,
+"yellow_cards": 2
+}
+},
+"5715713": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 6,
+"shots_total": 8,
+"yellow_cards": 3
+}
+},
+"5715714": {
+"away_stats": {
+"ball_possession": 30.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 15,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 70.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 15,
+"shots_on_target": 14,
+"shots_total": 32,
+"yellow_cards": 2
+}
+},
+"5715715": {
+"away_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 11,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 3,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 1,
+"shots_total": 9,
+"yellow_cards": 1
+}
+},
+"5715716": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 13,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 8,
+"shots_total": 18,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 7,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 13,
+"yellow_cards": 1
+}
+},
+"5715717": {
+"away_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 5,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 2
+}
+},
+"5715718": {
+"away_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 2
+}
+},
+"5715719": {
+"away_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 11,
+"shots_on_target": 7,
+"shots_total": 23,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 6,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 7,
+"shots_total": 13,
+"yellow_cards": 1
+}
+},
+"5715720": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 14,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 3,
+"shots_total": 4,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 12,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 0,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 16,
+"shots_total": 25,
+"yellow_cards": 2
+}
+},
+"5715721": {
+"away_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 6,
+"yellow_cards": 4
+}
+},
+"5715722": {
+"away_stats": {
+"ball_possession": 39.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 4,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 7,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 61.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 6,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 2,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 2
+}
+},
+"5715723": {
+"away_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 5,
+"shots_total": 23,
+"yellow_cards": 2
+}
+},
+"5715724": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 7,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5715725": {
+"away_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 12,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 11,
+"yellow_cards": 1
+}
+},
+"5715726": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 12,
+"yellow_cards": 1
+}
+},
+"5715727": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 4,
+"shots_total": 5,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 14,
+"yellow_cards": 4
+}
+},
+"5715728": {
+"away_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 3,
+"shots_total": 6,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 25,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 7,
+"shots_total": 15,
+"yellow_cards": 5
+}
+},
+"5715729": {
+"away_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 1,
+"shots_total": 12,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 1,
+"offsides": 7,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 3
+}
+},
+"5715730": {
+"away_stats": {
+"ball_possession": 32.0,
+"corner_kicks": 12,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 68.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 1,
+"shots_total": 11,
+"yellow_cards": 1
+}
+},
+"5715731": {
+"away_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 7,
+"shots_total": 11,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 2
+}
+},
+"5715732": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 3,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 5,
+"shots_total": 6,
+"yellow_cards": 2
+}
+},
+"5715733": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 1,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 1,
+"shots_total": 3,
+"yellow_cards": 3
+}
+},
+"5715734": {
+"away_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 7,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 0,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 0,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 9,
+"shots_total": 17,
+"yellow_cards": 0
+}
+},
+"5715735": {
+"away_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 4,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 4,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5715736": {
+"away_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 5,
+"shots_total": 18,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 3,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 0
+}
+},
+"5715737": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 5,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 4,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 1
+}
+},
+"5715738": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 5,
+"shots_total": 17,
+"yellow_cards": 2
+}
+},
+"5715739": {
+"away_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 1,
+"shots_total": 11,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 0,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 0
+}
+},
+"5715740": {
+"away_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 10,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 4,
+"shots_total": 18,
+"yellow_cards": 2
+}
+},
+"5715741": {
+"away_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 4
+}
+},
+"5715742": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 1,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 10,
+"yellow_cards": 4
+}
+},
+"5715743": {
+"away_stats": {
+"ball_possession": 68.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 12,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 32.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 2,
+"shots_total": 12,
+"yellow_cards": 0
+}
+},
+"5715744": {
+"away_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 6,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 3,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 0,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 6,
+"shots_total": 19,
+"yellow_cards": 3
+}
+},
+"5715745": {
+"away_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 11,
+"shots_total": 20,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 10,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 1
+}
+},
+"5715746": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 8,
+"shots_total": 15,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 8,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 1,
+"shots_total": 8,
+"yellow_cards": 1
+}
+},
+"5715747": {
+"away_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 20,
+"goalkeeper_saves": 7,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 1,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 7,
+"shots_total": 17,
+"yellow_cards": 3
+}
+},
+"5715748": {
+"away_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 22,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 4,
+"shots_total": 14,
+"yellow_cards": 2
+}
+},
+"5715749": {
+"away_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 9,
+"yellow_cards": 2
+}
+},
+"5715750": {
+"away_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 15,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 5,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 12,
+"yellow_cards": 3
+}
+},
+"5715751": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 4,
+"shots_total": 13,
+"yellow_cards": 2
+}
+},
+"5715752": {
+"away_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 13,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 6,
+"shots_total": 14,
+"yellow_cards": 4
+}
+},
+"5715753": {
+"away_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 9,
+"shots_total": 17,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 7,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 5,
+"shots_total": 15,
+"yellow_cards": 1
+}
+},
+"5715754": {
+"away_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 6,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 3
+}
+},
+"5715755": {
+"away_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 17,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 7,
+"shots_on_target": 3,
+"shots_total": 13,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 4
+}
+},
+"5715756": {
+"away_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 7,
+"shots_total": 11,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 20,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 4
+}
+},
+"5715757": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 12,
+"yellow_cards": 3
+}
+},
+"5715758": {
+"away_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 6,
+"shots_on_target": 2,
+"shots_total": 8,
+"yellow_cards": 2
+}
+},
+"5715759": {
+"away_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 1,
+"shots_total": 13,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 3,
+"shots_total": 13,
+"yellow_cards": 1
+}
+},
+"5715760": {
+"away_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 4,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 12,
+"shots_on_target": 6,
+"shots_total": 26,
+"yellow_cards": 2
+}
+},
+"5715761": {
+"away_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 5,
+"shots_total": 6,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 1,
+"shots_total": 7,
+"yellow_cards": 1
+}
+},
+"5715762": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 6,
+"shots_total": 8,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 2
+}
+},
+"5715763": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 8,
+"shots_total": 20,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 2
+}
+},
+"5715764": {
+"away_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 1,
+"shots_total": 7,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 1,
+"shots_total": 9,
+"yellow_cards": 2
+}
+},
+"5715765": {
+"away_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 12,
+"yellow_cards": 1
+}
+},
+"5715766": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 6,
+"shots_total": 12,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 8,
+"shots_on_target": 4,
+"shots_total": 14,
+"yellow_cards": 0
+}
+},
+"5715767": {
+"away_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 12,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 11,
+"shots_on_target": 2,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5715768": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 1,
+"shots_total": 6,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 4,
+"goalkeeper_saves": 0,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 8,
+"shots_total": 16,
+"yellow_cards": 0
+}
+},
+"5715769": {
+"away_stats": {
+"ball_possession": 70.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 7,
+"shots_total": 20,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 30.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 6,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 6,
+"shots_total": 10,
+"yellow_cards": 1
+}
+},
+"5715770": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 20,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 1,
+"shots_total": 12,
+"yellow_cards": 3
+}
+},
+"5715771": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 2,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 1
+}
+},
+"5715772": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 7,
+"shots_total": 16,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 6,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 3,
+"shots_total": 12,
+"yellow_cards": 2
+}
+},
+"5715773": {
+"away_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 11,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 4
+}
+},
+"5715774": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 19,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 7,
+"shots_total": 17,
+"yellow_cards": 4
+}
+},
+"5715775": {
+"away_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 0,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 13,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 22,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 0,
+"shots_total": 2,
+"yellow_cards": 3
+}
+},
+"5715776": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 6,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 5,
+"shots_on_target": 1,
+"shots_total": 6,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 0,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 13,
+"yellow_cards": 0
+}
+},
+"5715777": {
+"away_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 1,
+"shots_total": 9,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 1,
+"shots_total": 7,
+"yellow_cards": 2
+}
+},
+"5715778": {
+"away_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 5,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 0,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 11,
+"shots_on_target": 5,
+"shots_total": 16,
+"yellow_cards": 3
+}
+},
+"5715779": {
+"away_stats": {
+"ball_possession": 67.0,
+"corner_kicks": 12,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 0,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 6,
+"shots_total": 15,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 33.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 6,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 5,
+"yellow_cards": 5
+}
+},
+"5715780": {
+"away_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 1,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 19,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 2,
+"shots_total": 9,
+"yellow_cards": 3
+}
+},
+"5715781": {
+"away_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 8,
+"shots_total": 19,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 6,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 1,
+"shots_total": 10,
+"yellow_cards": 2
+}
+},
+"5715782": {
+"away_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 1,
+"shots_on_target": 5,
+"shots_total": 8,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 8,
+"shots_total": 19,
+"yellow_cards": 1
+}
+},
+"5715783": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 6,
+"shots_on_target": 0,
+"shots_total": 10,
+"yellow_cards": 1
+}
+},
+"5715784": {
+"away_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 12,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 12,
+"shots_total": 22,
+"yellow_cards": 1
+}
+},
+"5715785": {
+"away_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 5,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 3,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5715786": {
+"away_stats": {
+"ball_possession": 67.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 1,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 4,
+"shots_total": 5,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 33.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 19,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 3,
+"yellow_cards": 3
+}
+},
+"5715787": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 13,
+"yellow_cards": 2
+}
+},
+"5715788": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 4,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 5,
+"shots_total": 17,
+"yellow_cards": 0
+}
+},
+"5715789": {
+"away_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 3,
+"goalkeeper_saves": 7,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 8,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 11,
+"shots_total": 21,
+"yellow_cards": 1
+}
+},
+"5715790": {
+"away_stats": {
+"ball_possession": 67.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 1,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 13,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 33.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 1,
+"shots_total": 2,
+"yellow_cards": 2
+}
+},
+"5715791": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 0
+}
+},
+"5715792": {
+"away_stats": {
+"ball_possession": 39.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 61.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 5,
+"offsides": 6,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 7,
+"shots_total": 15,
+"yellow_cards": 1
+}
+},
+"5715793": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 2,
+"shots_total": 11,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 7,
+"shots_total": 12,
+"yellow_cards": 2
+}
+},
+"5715794": {
+"away_stats": {
+"ball_possession": 73.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 15,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 27.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 1
+}
+},
+"5715795": {
+"away_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 8,
+"shots_total": 13,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 8,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 2
+}
+},
+"5715796": {
+"away_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 0,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 9,
+"shots_total": 25,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 7,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 6,
+"yellow_cards": 2
+}
+},
+"5715797": {
+"away_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 9,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 19,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 2
+}
+},
+"5715798": {
+"away_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 7,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 3,
+"shots_total": 5,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 9,
+"shots_total": 19,
+"yellow_cards": 4
+}
+},
+"5715799": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5715800": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 8,
+"shots_total": 12,
+"yellow_cards": 2
+}
+},
+"5715801": {
+"away_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 5,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 2
+}
+},
+"5715802": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 2
+}
+},
+"5715803": {
+"away_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 4,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 15,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 0,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 7,
+"shots_on_target": 3,
+"shots_total": 19,
+"yellow_cards": 3
+}
+},
+"5715804": {
+"away_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 8,
+"shots_on_target": 9,
+"shots_total": 20,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 1
+}
+},
+"5715805": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 5,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 5,
+"shots_total": 17,
+"yellow_cards": 2
+}
+},
+"5715806": {
+"away_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 6,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 2,
+"shots_total": 10,
+"yellow_cards": 1
+}
+},
+"5715807": {
+"away_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 7,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 0,
+"shots_total": 6,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 11,
+"shots_total": 19,
+"yellow_cards": 2
+}
+},
+"5715808": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 3,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 6,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 2
+}
+},
+"5715809": {
+"away_stats": {
+"ball_possession": null,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 1,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": null,
+"corner_kicks": 13,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 0,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 4,
+"yellow_cards": 3
+}
+},
+"5715810": {
+"away_stats": {
+"ball_possession": null,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 7,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": null,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 4,
+"goalkeeper_saves": 3,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 7,
+"shots_total": 13,
+"yellow_cards": 1
+}
+},
+"5715811": {
+"away_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 5,
+"shots_total": 17,
+"yellow_cards": 1
+}
+},
+"5715812": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 20,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 5,
+"shots_total": 13,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 6,
+"shots_total": 17,
+"yellow_cards": 0
+}
+},
+"5715813": {
+"away_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 6,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 0,
+"shots_total": 11,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 0,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 9,
+"shots_total": 15,
+"yellow_cards": 2
+}
+},
+"5715814": {
+"away_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 13,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 20,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 7,
+"shots_total": 16,
+"yellow_cards": 1
+}
+},
+"5715815": {
+"away_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 4,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 9,
+"shots_total": 13,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 8,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 13,
+"yellow_cards": 2
+}
+},
+"5715816": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5715817": {
+"away_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 4,
+"shots_total": 13,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 20,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 7,
+"shots_total": 17,
+"yellow_cards": 1
+}
+},
+"5715818": {
+"away_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 20,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 14,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 5,
+"yellow_cards": 0
+}
+},
+"5715819": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 10,
+"yellow_cards": 2
+}
+},
+"5715820": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 3
+}
+},
+"5715821": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 0,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 5,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 1,
+"shots_total": 3,
+"yellow_cards": 2
+}
+},
+"5715822": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 24,
+"goalkeeper_saves": 2,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 5,
+"yellow_cards": 6
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 1,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 6
+}
+},
+"5715823": {
+"away_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 4,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 1,
+"shots_total": 5,
+"yellow_cards": 0
+}
+},
+"5715824": {
+"away_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 9,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 3,
+"shots_total": 5,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 2,
+"offsides": 6,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 10,
+"shots_total": 20,
+"yellow_cards": 1
+}
+},
+"5715825": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 2,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 5,
+"yellow_cards": 3
+}
+},
+"5715826": {
+"away_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 13,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 10,
+"yellow_cards": 3
+}
+},
+"5715827": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 2,
+"shots_total": 9,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 0,
+"shots_total": 6,
+"yellow_cards": 1
+}
+},
+"5715828": {
+"away_stats": {
+"ball_possession": null,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 1,
+"shots_total": 8,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": null,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 3
+}
+},
+"5715829": {
+"away_stats": {
+"ball_possession": 39.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 8,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 1,
+"shots_total": 8,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 61.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 21,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 8,
+"shots_total": 18,
+"yellow_cards": 3
+}
+},
+"5715830": {
+"away_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 6,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 5,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 5,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 7,
+"shots_total": 13,
+"yellow_cards": 3
+}
+},
+"5715831": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 1,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 13,
+"yellow_cards": 1
+}
+},
+"5715832": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 15,
+"yellow_cards": 3
+}
+},
+"5715833": {
+"away_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 8,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 8,
+"yellow_cards": 1
+}
+},
+"5715834": {
+"away_stats": {
+"ball_possession": 73.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 5,
+"shots_total": 16,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 27.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 2,
+"shots_on_target": 1,
+"shots_total": 4,
+"yellow_cards": 0
+}
+},
+"5715835": {
+"away_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 4,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 6,
+"shots_total": 17,
+"yellow_cards": 0
+}
+},
+"5715836": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 22,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 15,
+"yellow_cards": 1
+}
+},
+"5715837": {
+"away_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 20,
+"goalkeeper_saves": 0,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 8,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 50.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 0,
+"shots_total": 11,
+"yellow_cards": 1
+}
+},
+"5715838": {
+"away_stats": {
+"ball_possession": null,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": null,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 3,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 2
+}
+},
+"5715839": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 12,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 4,
+"shots_total": 16,
+"yellow_cards": 2
+}
+},
+"5715841": {
+"away_stats": {
+"ball_possession": 27.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 5,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 0,
+"shots_on_target": 0,
+"shots_total": 1,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 73.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 10,
+"shots_total": 17,
+"yellow_cards": 0
+}
+},
+"5715842": {
+"away_stats": {
+"ball_possession": 70.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 4,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 6,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 30.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5715843": {
+"away_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 5,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 4,
+"shots_total": 14,
+"yellow_cards": 0
+}
+},
+"5715844": {
+"away_stats": {
+"ball_possession": 32.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 8,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 68.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 10,
+"shots_total": 15,
+"yellow_cards": 2
+}
+},
+"5715845": {
+"away_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 3
+}
+},
+"5715846": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 4,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 5,
+"shots_total": 19,
+"yellow_cards": 2
+}
+},
+"5715847": {
+"away_stats": {
+"ball_possession": 36.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 64.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 5
+}
+},
+"5715848": {
+"away_stats": {
+"ball_possession": 61.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 16,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 39.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 6,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 2
+}
+},
+"5715849": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 7,
+"shots_total": 12,
+"yellow_cards": 1
+}
+},
+"5715850": {
+"away_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 1
+}
+},
+"5715851": {
+"away_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 10,
+"shots_on_target": 4,
+"shots_total": 19,
+"yellow_cards": 1
+}
+},
+"5715852": {
+"away_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 7,
+"shots_on_target": 5,
+"shots_total": 16,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 5,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 4
+}
+},
+"5715853": {
+"away_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 11,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 7,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 7,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 11,
+"shots_total": 22,
+"yellow_cards": 1
+}
+},
+"5715854": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 0
+}
+},
+"5715855": {
+"away_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 7,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 3
+}
+},
+"5715856": {
+"away_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 7,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 6,
+"shots_total": 10,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 8,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5715857": {
+"away_stats": {
+"ball_possession": 30.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 0,
+"shots_total": 6,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 70.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 0,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 5,
+"shots_total": 13,
+"yellow_cards": 0
+}
+},
+"5715858": {
+"away_stats": {
+"ball_possession": 79.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 21.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 6,
+"yellow_cards": 2
+}
+},
+"5715859": {
+"away_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 25,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 3,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 1,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 1,
+"shots_total": 17,
+"yellow_cards": 2
+}
+},
+"5715860": {
+"away_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 12,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 2,
+"shots_on_target": 1,
+"shots_total": 3,
+"yellow_cards": 3
+}
+},
+"5715861": {
+"away_stats": {
+"ball_possession": 36.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 1,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 64.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 11,
+"yellow_cards": 2
+}
+},
+"5715862": {
+"away_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 3,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 16,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 12,
+"yellow_cards": 1
+}
+},
+"5715863": {
+"away_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 2,
+"offsides": 8,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 1,
+"shots_total": 3,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 0
+}
+},
+"5715864": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 1,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 1
+}
+},
+"5715866": {
+"away_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 6,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 6,
+"shots_total": 9,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 10,
+"shots_total": 22,
+"yellow_cards": 1
+}
+},
+"5715867": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 3,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 5,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 3,
+"shots_total": 15,
+"yellow_cards": 1
+}
+},
+"5715868": {
+"away_stats": {
+"ball_possession": 26.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 3,
+"shots_total": 4,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 74.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 4,
+"shots_total": 13,
+"yellow_cards": 2
+}
+},
+"5715869": {
+"away_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 10,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 3
+}
+},
+"5715870": {
+"away_stats": {
+"ball_possession": 71.0,
+"corner_kicks": 13,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 13,
+"shots_on_target": 7,
+"shots_total": 27,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 29.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 8,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 6,
+"yellow_cards": 1
+}
+},
+"5715871": {
+"away_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 4,
+"yellow_cards": 4
+}
+},
+"5715872": {
+"away_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 3,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 2,
+"shots_total": 3,
+"yellow_cards": 2
+}
+},
+"5715873": {
+"away_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 19,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 3,
+"shots_total": 6,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 11,
+"shots_on_target": 2,
+"shots_total": 14,
+"yellow_cards": 2
+}
+},
+"5715874": {
+"away_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 17,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 1
+}
+},
+"5715875": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 2,
+"shots_total": 9,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 6,
+"shots_total": 9,
+"yellow_cards": 0
+}
+},
+"5715876": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 12,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 14,
+"shots_total": 22,
+"yellow_cards": 1
+}
+},
+"5715877": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 1,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 6,
+"shots_total": 9,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 1,
+"shots_total": 5,
+"yellow_cards": 2
+}
+},
+"5715878": {
+"away_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 0,
+"shots_total": 2,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 0,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 4,
+"shots_total": 12,
+"yellow_cards": 3
+}
+},
+"5715879": {
+"away_stats": {
+"ball_possession": 32.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 7,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 3,
+"shots_total": 5,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 68.0,
+"corner_kicks": 14,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 8,
+"shots_total": 20,
+"yellow_cards": 1
+}
+},
+"5715880": {
+"away_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 3,
+"shots_total": 13,
+"yellow_cards": 1
+}
+},
+"5715881": {
+"away_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 1,
+"shots_on_target": 4,
+"shots_total": 7,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 14,
+"yellow_cards": 0
+}
+},
+"5715882": {
+"away_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 13,
+"shots_total": 21,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 9,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 2
+}
+},
+"5715883": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 5,
+"shots_total": 15,
+"yellow_cards": 0
+}
+},
+"5715884": {
+"away_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 2,
+"shots_on_target": 1,
+"shots_total": 3,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 0,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 11,
+"yellow_cards": 2
+}
+},
+"5715885": {
+"away_stats": {
+"ball_possession": 69.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 0,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 7,
+"shots_total": 14,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 31.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 2
+}
+},
+"5715886": {
+"away_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 10,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 4,
+"yellow_cards": 2
+}
+},
+"5715887": {
+"away_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 6,
+"shots_total": 17,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 6,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 4
+}
+},
+"5715888": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 5,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 2
+}
+},
+"5715889": {
+"away_stats": {
+"ball_possession": 28.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 6,
+"shots_total": 13,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 72.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 5,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 2
+}
+},
+"5715890": {
+"away_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 1,
+"shots_total": 5,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 0,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 1
+}
+},
+"5715891": {
+"away_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 3,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 3
+}
+},
+"5715892": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 15,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 4
+}
+},
+"5715894": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 3,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 4,
+"shots_total": 14,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 1
+}
+},
+"5715895": {
+"away_stats": {
+"ball_possession": 26.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 7,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 74.0,
+"corner_kicks": 14,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 8,
+"shots_total": 24,
+"yellow_cards": 1
+}
+},
+"5715896": {
+"away_stats": {
+"ball_possession": 74.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 4,
+"shots_total": 15,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 26.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 3
+}
+},
+"5715897": {
+"away_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 1,
+"shots_total": 4,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 3,
+"shots_total": 13,
+"yellow_cards": 1
+}
+},
+"5715898": {
+"away_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 1,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 1
+}
+},
+"5715899": {
+"away_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 7,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 13,
+"shots_on_target": 11,
+"shots_total": 27,
+"yellow_cards": 0
+}
+},
+"5715900": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 7,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 9,
+"shots_total": 24,
+"yellow_cards": 4
+}
+},
+"5715901": {
+"away_stats": {
+"ball_possession": 30.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 70.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5715902": {
+"away_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 2,
+"shots_total": 3,
+"yellow_cards": 2
+}
+},
+"5715903": {
+"away_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 5,
+"shots_total": 15,
+"yellow_cards": 2
+}
+},
+"5715904": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 4,
+"shots_total": 14,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 14,
+"yellow_cards": 0
+}
+},
+"5715905": {
+"away_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 3,
+"shots_total": 4,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 2
+}
+},
+"5715906": {
+"away_stats": {
+"ball_possession": 41.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 59.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 1
+}
+},
+"5715907": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 12,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 4
+}
+},
+"5715908": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 7,
+"shots_total": 21,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 1
+}
+},
+"5715909": {
+"away_stats": {
+"ball_possession": 67.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 10,
+"shots_total": 16,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 33.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 6,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 2,
+"shots_on_target": 3,
+"shots_total": 5,
+"yellow_cards": 2
+}
+},
+"5715910": {
+"away_stats": {
+"ball_possession": 28.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 2,
+"shots_total": 2,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 72.0,
+"corner_kicks": 12,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 1
+}
+},
+"5715911": {
+"away_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 1,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 3,
+"shots_total": 3,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 0,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 10,
+"shots_total": 15,
+"yellow_cards": 0
+}
+},
+"5715912": {
+"away_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 13,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 3
+}
+},
+"5715913": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 4,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 1
+}
+},
+"5715914": {
+"away_stats": {
+"ball_possession": 53.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 11,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 47.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 4,
+"offsides": 5,
+"pass_accuracy": null,
+"red_cards": 3,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 5,
+"yellow_cards": 2
+}
+},
+"5715915": {
+"away_stats": {
+"ball_possession": 39.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 4,
+"offsides": 9,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 61.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 2
+}
+},
+"5715916": {
+"away_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 10,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 11,
+"yellow_cards": 4
+}
+},
+"5715917": {
+"away_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 11,
+"yellow_cards": 1
+}
+},
+"5715918": {
+"away_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 3,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 9,
+"yellow_cards": 2
+}
+},
+"5715919": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 6,
+"shots_total": 14,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 3
+}
+},
+"5822250": {
+"away_stats": {
+"ball_possession": 33.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 8,
+"shots_total": 9,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 67.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 6,
+"shots_total": 16,
+"yellow_cards": 2
+}
+},
+"5822251": {
+"away_stats": {
+"ball_possession": 25.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 9,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 0,
+"shots_on_target": 2,
+"shots_total": 4,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 75.0,
+"corner_kicks": 14,
+"duel_win_rate": null,
+"fouls": 4,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 9,
+"shots_total": 24,
+"yellow_cards": 1
+}
+},
+"5822252": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 9,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 7,
+"shots_total": 20,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 7,
+"offsides": 7,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 11,
+"shots_total": 15,
+"yellow_cards": 1
+}
+},
+"5822253": {
+"away_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 6,
+"yellow_cards": 1
+}
+},
+"5822254": {
+"away_stats": {
+"ball_possession": 29.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 20,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 71.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 0,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 5,
+"shots_on_target": 6,
+"shots_total": 13,
+"yellow_cards": 0
+}
+},
+"5823149": {
+"away_stats": {
+"ball_possession": 30.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 4,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 1,
+"shots_total": 4,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 70.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 0,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 2
+}
+},
+"5823151": {
+"away_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 1,
+"shots_on_target": 5,
+"shots_total": 6,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 8,
+"yellow_cards": 5
+}
+},
+"5823152": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 8,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 10,
+"yellow_cards": 3
+}
+},
+"5823248": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 1,
+"offsides": 6,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 6,
+"yellow_cards": 6
+}
+},
+"5823754": {
+"away_stats": {
+"ball_possession": 35.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 0,
+"shots_total": 8,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 65.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 0,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 1,
+"shots_total": 12,
+"yellow_cards": 4
+}
+},
+"5823755": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 1,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 4,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 2,
+"shots_total": 12,
+"yellow_cards": 2
+}
+},
+"5823756": {
+"away_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 7,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 4,
+"shots_total": 9,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 8,
+"shots_total": 14,
+"yellow_cards": 1
+}
+},
+"5823757": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 2,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 9,
+"shots_on_target": 6,
+"shots_total": 21,
+"yellow_cards": 3
+}
+},
+"5823758": {
+"away_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 19,
+"goalkeeper_saves": 1,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 12,
+"yellow_cards": 1
+}
+},
+"5823759": {
+"away_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 5,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 5,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 6,
+"shots_total": 16,
+"yellow_cards": 3
+}
+},
+"5823760": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 6,
+"yellow_cards": 1
+}
+},
+"5827250": {
+"away_stats": {
+"ball_possession": 38.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 13,
+"goalkeeper_saves": 5,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 1,
+"shots_on_target": 3,
+"shots_total": 6,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 62.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 8,
+"shots_total": 17,
+"yellow_cards": 5
+}
+},
+"5827663": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 3,
+"shots_total": 6,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 3,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 6,
+"shots_total": 12,
+"yellow_cards": 2
+}
+},
+"5827664": {
+"away_stats": {
+"ball_possession": 66.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 5
+},
+"home_stats": {
+"ball_possession": 34.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 4,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 2
+}
+},
+"5828021": {
+"away_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 3,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 4,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 10,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 9,
+"shots_on_target": 8,
+"shots_total": 19,
+"yellow_cards": 2
+}
+},
+"5828022": {
+"away_stats": {
+"ball_possession": 32.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 4,
+"shots_total": 6,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 68.0,
+"corner_kicks": 11,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 11,
+"shots_on_target": 6,
+"shots_total": 19,
+"yellow_cards": 0
+}
+},
+"5828023": {
+"away_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 2,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 4
+}
+},
+"5828094": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 18,
+"goalkeeper_saves": 3,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 5,
+"shots_total": 8,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 5,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 5,
+"shots_total": 13,
+"yellow_cards": 4
+}
+},
+"5828095": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 16,
+"goalkeeper_saves": 6,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 1,
+"shots_total": 8,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 7,
+"shots_total": 11,
+"yellow_cards": 3
+}
+},
+"5828964": {
+"away_stats": {
+"ball_possession": 48.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 4,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 6,
+"shots_total": 12,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 52.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 6,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 5,
+"shots_total": 18,
+"yellow_cards": 0
+}
+},
+"5828965": {
+"away_stats": {
+"ball_possession": 60.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 1,
+"shots_total": 12,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 40.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 19,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 9,
+"yellow_cards": 2
+}
+},
+"5828966": {
+"away_stats": {
+"ball_possession": 43.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 2,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 57.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 2,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 4,
+"shots_total": 11,
+"yellow_cards": 3
+}
+},
+"5828967": {
+"away_stats": {
+"ball_possession": 70.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 17,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 8,
+"shots_on_target": 10,
+"shots_total": 23,
+"yellow_cards": 4
+},
+"home_stats": {
+"ball_possession": 30.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 8,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 2,
+"shots_on_target": 2,
+"shots_total": 6,
+"yellow_cards": 4
+}
+},
+"5828968": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 2,
+"shots_total": 9,
+"yellow_cards": 3
+}
+},
+"5829257": {
+"away_stats": {
+"ball_possession": 56.0,
+"corner_kicks": 2,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 10,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 44.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 2,
+"shots_total": 11,
+"yellow_cards": 1
+}
+},
+"5829258": {
+"away_stats": {
+"ball_possession": 39.0,
+"corner_kicks": 5,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 1,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 2,
+"shots_on_target": 0,
+"shots_total": 3,
+"yellow_cards": 2
+},
+"home_stats": {
+"ball_possession": 61.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 1,
+"shots_total": 8,
+"yellow_cards": 2
+}
+},
+"5831722": {
+"away_stats": {
+"ball_possession": 37.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 2,
+"shots_off_target": 2,
+"shots_on_target": 3,
+"shots_total": 9,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 63.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 19,
+"goalkeeper_saves": 4,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 13,
+"yellow_cards": 2
+}
+},
+"5831723": {
+"away_stats": {
+"ball_possession": 55.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 6,
+"goalkeeper_saves": 7,
+"offsides": 4,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 7,
+"shots_total": 14,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 45.0,
+"corner_kicks": 7,
+"duel_win_rate": null,
+"fouls": 15,
+"goalkeeper_saves": 6,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 10,
+"shots_total": 20,
+"yellow_cards": 5
+}
+},
+"5831724": {
+"away_stats": {
+"ball_possession": 54.0,
+"corner_kicks": 9,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 6,
+"offsides": 0,
+"pass_accuracy": null,
+"red_cards": 1,
+"shots_off_target": 6,
+"shots_on_target": 2,
+"shots_total": 9,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 46.0,
+"corner_kicks": 8,
+"duel_win_rate": null,
+"fouls": 2,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 7,
+"shots_total": 16,
+"yellow_cards": 2
+}
+},
+"5831725": {
+"away_stats": {
+"ball_possession": 33.0,
+"corner_kicks": 3,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 5,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 4,
+"shots_total": 5,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 67.0,
+"corner_kicks": 6,
+"duel_win_rate": null,
+"fouls": 8,
+"goalkeeper_saves": 2,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 7,
+"shots_on_target": 8,
+"shots_total": 17,
+"yellow_cards": 1
+}
+},
+"5831726": {
+"away_stats": {
+"ball_possession": 61.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 7,
+"goalkeeper_saves": 0,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 13,
+"shots_on_target": 6,
+"shots_total": 20,
+"yellow_cards": 0
+},
+"home_stats": {
+"ball_possession": 39.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 14,
+"goalkeeper_saves": 3,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 1,
+"shots_on_target": 2,
+"shots_total": 5,
+"yellow_cards": 4
+}
+},
+"5831727": {
+"away_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 1,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 4,
+"shots_on_target": 5,
+"shots_total": 11,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 12,
+"goalkeeper_saves": 4,
+"offsides": 2,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 1,
+"shots_total": 9,
+"yellow_cards": 3
+}
+},
+"5831728": {
+"away_stats": {
+"ball_possession": 42.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 9,
+"goalkeeper_saves": 1,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 5,
+"shots_on_target": 3,
+"shots_total": 10,
+"yellow_cards": 3
+},
+"home_stats": {
+"ball_possession": 58.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 2,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 3,
+"shots_total": 7,
+"yellow_cards": 2
+}
+},
+"5831729": {
+"away_stats": {
+"ball_possession": 49.0,
+"corner_kicks": 0,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 3,
+"offsides": 1,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 3,
+"shots_on_target": 0,
+"shots_total": 3,
+"yellow_cards": 1
+},
+"home_stats": {
+"ball_possession": 51.0,
+"corner_kicks": 4,
+"duel_win_rate": null,
+"fouls": 11,
+"goalkeeper_saves": 0,
+"offsides": 3,
+"pass_accuracy": null,
+"red_cards": 0,
+"shots_off_target": 6,
+"shots_on_target": 4,
+"shots_total": 12,
+"yellow_cards": 2
+}
+}
+}

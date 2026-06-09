@@ -226,6 +226,33 @@ def _aggregate_team_stats(player_totals: list[dict]) -> dict:
     }
 
 
+# ── Official team stats (baked from Sportradar summaries) ─────────────────────
+_BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+_TEAM_STATS_PATH = os.path.join(_BACKEND_ROOT, "ml", "data", "matchid_to_team_stats.json")
+_TEAM_STATS_CACHE: Optional[dict] = None
+
+
+def _official_team_stats(match_id: str) -> Optional[dict]:
+    """Return the baked official Sportradar team stats for a match, or ``None``.
+
+    Built once by ``scripts/build_team_stats_from_sportradar.py`` and committed as
+    ``ml/data/matchid_to_team_stats.json``; loaded lazily and cached. Each value
+    is ``{"home_stats": {...}, "away_stats": {...}}`` in the same field shape as
+    ``_aggregate_team_stats``. Matches we have no official stats for fall back to
+    the per-player aggregation.
+    """
+    global _TEAM_STATS_CACHE
+    if _TEAM_STATS_CACHE is None:
+        try:
+            with open(_TEAM_STATS_PATH, encoding="utf-8") as fh:
+                _TEAM_STATS_CACHE = json.load(fh)
+        except Exception:
+            logger.warning("Could not load %s; using Wyscout-aggregated team stats",
+                           _TEAM_STATS_PATH, exc_info=True)
+            _TEAM_STATS_CACHE = {}
+    return _TEAM_STATS_CACHE.get(str(match_id))
+
+
 # ── Public entry point ────────────────────────────────────────────────────────
 def build_offline_match_details(match_id: str, grade_service, photo_service) -> Optional[dict]:
     """Build the ``/match-details`` payload for a Wyscout match id, or ``None``.
@@ -325,6 +352,18 @@ def build_offline_match_details(match_id: str, grade_service, photo_service) -> 
         home_stats["ball_possession"] = round(hp / total_passes * 100, 1)
         away_stats["ball_possession"] = round(ap / total_passes * 100, 1)
 
+    # Prefer the official Sportradar team totals when we have baked them for this
+    # match; otherwise keep the per-player Wyscout aggregation above and flag the
+    # stats as estimated so the sheet can caption them honestly.
+    stats_estimated = True
+    official = _official_team_stats(match_id)
+    if official:
+        oh, oa = official.get("home_stats"), official.get("away_stats")
+        if oh or oa:
+            home_stats = oh or home_stats
+            away_stats = oa or away_stats
+            stats_estimated = False
+
     return {
         "match_id": str(match_id),
         "home_stats": home_stats,
@@ -333,6 +372,7 @@ def build_offline_match_details(match_id: str, grade_service, photo_service) -> 
         "away_lineup": away_lineup,
         "home_formation": home_formation,
         "away_formation": away_formation,
+        "stats_estimated": stats_estimated,
     }
 
 
@@ -451,4 +491,5 @@ def _empty_payload(match_id: str) -> dict:
         "away_lineup": [],
         "home_formation": "",
         "away_formation": "",
+        "stats_estimated": False,
     }
