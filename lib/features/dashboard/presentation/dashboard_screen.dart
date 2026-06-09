@@ -64,14 +64,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // api/v1/endpoints/standings.py::SUPERLIGA_SEASON_ID.
   static const String _seasonId = 'sr:season:131507';
 
-  // Normalised team-name sets for the two play-off groups, fetched once from
-  // the standings group-phase endpoint. Used to classify "other" matches into
-  // Play-off / Play-out sections during the play-off window. Empty until loaded
-  // (or when the group data is unavailable), in which case classification falls
-  // back to a single undivided "OTHER MATCHES" list.
-  Set<String> _playoffTeams = {};
-  Set<String> _playoutTeams = {};
-  // Which group contains U Cluj: 'playoff', 'playout', or null when unknown.
+  // Crest-asset sets for the two season groups, resolved once from the standings
+  // group-phase endpoint via the shared crest resolver so every team-name variant
+  // (short, full, Sportradar, CSV) lines up. Used to sort fixtures into the
+  // Championship / Relegation group sections during the group phase. Empty until
+  // loaded (or when the data is unavailable), in which case the dashboard uses the
+  // regular-season layout.
+  Set<String> _playoffAssets = {};
+  Set<String> _playoutAssets = {};
+  // Which group contains the subject club: 'playoff', 'playout', or null.
   String? _subjectGroup;
 
   // Every fixture the backend returned for the selected round offset. The
@@ -106,32 +107,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  /// Fetch the play-off / play-out group membership once, so "other" matches
-  /// can be classified into the two sections during the play-off window. Best
-  /// effort: any failure leaves the sets empty, and the UI falls back to a
-  /// single undivided "OTHER MATCHES" list rather than crashing.
+  /// Fetch the Championship / Relegation group membership once, so fixtures can
+  /// be sorted into the two group sections during the group phase. Best effort:
+  /// any failure leaves the sets empty and the dashboard uses the regular-season
+  /// layout rather than crashing.
   Future<void> _loadPlayoffGroups() async {
     try {
       final groups = await _standingsRepo.fetchGroupPhase(_seasonId);
       if (!mounted) return;
       final playoff = groups.championshipRound.standings
-          .map((r) => _normalizeTeamName(r.teamName))
-          .where((n) => n.isNotEmpty)
+          .map((r) => badgeAssetForName(r.teamName))
+          .whereType<String>()
           .toSet();
       final playout = groups.relegationRound.standings
-          .map((r) => _normalizeTeamName(r.teamName))
-          .where((n) => n.isNotEmpty)
+          .map((r) => badgeAssetForName(r.teamName))
+          .whereType<String>()
           .toSet();
-      // Determine U Cluj's own group by which set contains it.
+      // The subject's own group, by which set holds its crest.
+      final subjectAsset = badgeAssetForName(_myTeam);
       String? subjectGroup;
-      if (playoff.any(_isSubjectName)) {
+      if (subjectAsset != null && playoff.contains(subjectAsset)) {
         subjectGroup = 'playoff';
-      } else if (playout.any(_isSubjectName)) {
+      } else if (subjectAsset != null && playout.contains(subjectAsset)) {
         subjectGroup = 'playout';
       }
       setState(() {
-        _playoffTeams = playoff;
-        _playoutTeams = playout;
+        _playoffAssets = playoff;
+        _playoutAssets = playout;
         _subjectGroup = subjectGroup;
       });
     } catch (_) {
@@ -235,14 +237,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildContent(AppColorTokens c) {
-    // The backend already scoped this offset to one round; show its fixtures
-    // directly, U Cluj pinned first, the rest split below.
+    // The backend already scoped this offset to one round. During the group
+    // phase every fixture is sorted into its Championship / Relegation group with
+    // the subject club's group (and match) first; otherwise the subject club is
+    // pinned above a single "Regular Season" list.
     final roundFixtures = _fixtures;
-    final subjectFixtures   = roundFixtures.where((f) => f.involvesSubject).toList();
-    final otherFixtures = roundFixtures.where((f) => !f.involvesSubject).toList();
-
-    // Continuous index so the whole list staggers in as one sequence.
     var index = 0;
+
+    final groupPhase = _weekIsPlayoffWindow() &&
+        _playoffAssets.isNotEmpty &&
+        _playoutAssets.isNotEmpty;
+    final sections = groupPhase
+        ? _buildGroupPhaseSections(roundFixtures, c, () => index++)
+        : _buildRegularSections(roundFixtures, c, () => index++);
 
     return RefreshIndicator(
       color: c.primary,
@@ -252,103 +259,110 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           _buildRoundHeader(c),
           const SizedBox(height: SpacingTokens.lg),
-
-          // U Cluj section (pinned at the top). Hidden gracefully when U Cluj
-          // has no match this round, so no empty card is shown.
-          if (subjectFixtures.isNotEmpty) ...[
-            _buildSectionLabel(
-              (_roundOffset < 0
-                      ? L10n.t('dashboard.subjectResults')
-                      : _roundOffset == 0
-                          ? L10n.t('dashboard.subjectThisRound')
-                          : L10n.t('dashboard.subjectNextRound'))
-                  .replaceAll('{team}', _myTeam.toUpperCase()),
-              c.primary,
-              c,
-            ),
-            const SizedBox(height: SpacingTokens.sm),
-            ...subjectFixtures.map(
-                (f) => _buildMatchCard(f, highlight: true, c: c, index: index++)),
-            const SizedBox(height: SpacingTokens.xl),
-          ],
-
-          // Other matches: split into Play-off / Play-out during the play-off
-          // window when group data is available; otherwise a single list.
-          ..._buildOtherSections(otherFixtures, c, () => index++),
-
+          ...sections,
           if (roundFixtures.isEmpty)
             AppEmptyState(
               icon: Icons.calendar_today_outlined,
               headline: L10n.t('dashboard.empty'),
               body: L10n.t('dashboard.emptyBody'),
             ),
-
           const SizedBox(height: SpacingTokens.xxl),
         ],
       ),
     );
   }
 
-  /// Builds the "other matches" portion of the list. During the play-off
-  /// window, and when the standings group sets are available, the matches are
-  /// split into "PLAY-OFF" and "PLAY-OUT" sections with U Cluj's own group
-  /// shown first. Otherwise it falls back to a single undivided
-  /// "OTHER MATCHES" list, which also covers regular-season weeks unchanged.
-  List<Widget> _buildOtherSections(
-    List<WeekFixture> otherFixtures,
+  /// Regular-season layout: the subject club pinned at the top (its match carries
+  /// the win-chance headline), then a single "Regular Season" list of the rest.
+  List<Widget> _buildRegularSections(
+    List<WeekFixture> roundFixtures,
     AppColorTokens c,
     int Function() nextIndex,
   ) {
-    if (otherFixtures.isEmpty) return const [];
-
-    final hasGroups = _playoffTeams.isNotEmpty && _playoutTeams.isNotEmpty;
-    if (!_weekIsPlayoffWindow() || !hasGroups) {
-      // Regular-season weeks name the phase ("REGULAR SEASON"). A play-off
-      // window that arrives before the group sets are known keeps the neutral
-      // "other matches" label rather than mislabelling the phase.
-      final label = _weekIsPlayoffWindow()
-          ? L10n.t('dashboard.otherMatches')
-          : L10n.t('dashboard.regularSeason');
-      return _buildOtherList(label, otherFixtures, c, nextIndex);
+    final subjectFixtures = roundFixtures.where((f) => f.involvesSubject).toList();
+    final otherFixtures = roundFixtures.where((f) => !f.involvesSubject).toList();
+    final widgets = <Widget>[];
+    if (subjectFixtures.isNotEmpty) {
+      widgets.add(_buildSectionLabel(
+        (_roundOffset < 0
+                ? L10n.t('dashboard.subjectResults')
+                : _roundOffset == 0
+                    ? L10n.t('dashboard.subjectThisRound')
+                    : L10n.t('dashboard.subjectNextRound'))
+            .replaceAll('{team}', _myTeam.toUpperCase()),
+        c.primary,
+        c,
+      ));
+      widgets.add(const SizedBox(height: SpacingTokens.sm));
+      widgets.addAll(subjectFixtures
+          .map((f) => _buildMatchCard(f, highlight: true, c: c, index: nextIndex())));
+      widgets.add(const SizedBox(height: SpacingTokens.xl));
     }
+    if (otherFixtures.isNotEmpty) {
+      widgets.addAll(_buildOtherList(
+          L10n.t('dashboard.regularSeason'), otherFixtures, c, nextIndex));
+    }
+    return widgets;
+  }
 
-    final playoff = <WeekFixture>[];
-    final playout = <WeekFixture>[];
+  /// Group-phase layout: every fixture is sorted into its Championship or
+  /// Relegation group. The subject club's group leads (in the cobalt accent) and
+  /// its own match is the first card of that group (and the only highlighted one),
+  /// so the coach's fixture is always the first row. Cross-group or unresolved
+  /// fixtures fall to a trailing "Other Matches" list rather than being dropped.
+  List<Widget> _buildGroupPhaseSections(
+    List<WeekFixture> roundFixtures,
+    AppColorTokens c,
+    int Function() nextIndex,
+  ) {
+    final championship = <WeekFixture>[];
+    final relegation = <WeekFixture>[];
     final unclassified = <WeekFixture>[];
-    for (final f in otherFixtures) {
+    for (final f in roundFixtures) {
       switch (_classifyFixture(f)) {
         case 'playoff':
-          playoff.add(f);
+          championship.add(f);
         case 'playout':
-          playout.add(f);
+          relegation.add(f);
         default:
           unclassified.add(f);
       }
     }
-
-    // U Cluj's own group is shown first; default to play-off ordering when
-    // U Cluj's group could not be resolved.
-    final playoutFirst = _subjectGroup == 'playout';
-    final playoffLabel = L10n.t('dashboard.playoff');
-    final playoutLabel = L10n.t('dashboard.playout');
+    // Float the subject's own match to the top of its group.
+    void subjectFirst(List<WeekFixture> list) {
+      final i = list.indexWhere((f) => f.involvesSubject);
+      if (i > 0) list.insert(0, list.removeAt(i));
+    }
+    subjectFirst(championship);
+    subjectFirst(relegation);
 
     final widgets = <Widget>[];
-    void addSection(String label, List<WeekFixture> fixtures) {
+    void addGroup(String label, List<WeekFixture> fixtures, Color color) {
       if (fixtures.isEmpty) return;
-      widgets.addAll(_buildOtherList(label, fixtures, c, nextIndex));
+      widgets.add(_buildSectionLabel(label, color, c));
+      widgets.add(const SizedBox(height: SpacingTokens.sm));
+      for (final f in fixtures) {
+        widgets.add(_buildMatchCard(
+            f, highlight: f.involvesSubject, c: c, index: nextIndex()));
+      }
+      widgets.add(const SizedBox(height: SpacingTokens.xl));
     }
 
-    if (playoutFirst) {
-      addSection(playoutLabel, playout);
-      addSection(playoffLabel, playoff);
+    final champLabel = L10n.t('dashboard.playoff');
+    final relLabel = L10n.t('dashboard.playout');
+    // The subject's own group leads in the accent tone; the other reads muted.
+    // Defaults to championship-first when the subject's group is unknown.
+    if (_subjectGroup == 'playout') {
+      addGroup(relLabel, relegation, c.primary);
+      addGroup(champLabel, championship, c.textMuted);
     } else {
-      addSection(playoffLabel, playoff);
-      addSection(playoutLabel, playout);
+      addGroup(champLabel, championship, c.primary);
+      addGroup(relLabel, relegation, c.textMuted);
     }
-    // Any match that did not fall cleanly into one group (mixed or unknown
-    // teams) is appended under the generic label rather than dropped.
-    addSection(L10n.t('dashboard.otherMatches'), unclassified);
-
+    if (unclassified.isNotEmpty) {
+      widgets.addAll(_buildOtherList(
+          L10n.t('dashboard.otherMatches'), unclassified, c, nextIndex));
+    }
     return widgets;
   }
 
@@ -369,18 +383,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ];
   }
 
-  /// Classify a non-U-Cluj fixture by the standings groups: 'playoff' when both
-  /// teams are in the championship set, 'playout' when both are in the
-  /// relegation set, otherwise null (mixed or unknown teams).
+  /// Classify a fixture by the standings groups: 'playoff' when both teams are in
+  /// the championship group, 'playout' when both are in the relegation group,
+  /// otherwise null. Matching is by resolved crest so every name variant (e.g.
+  /// "U Craiova" vs "Universitatea Craiova") lines up.
   String? _classifyFixture(WeekFixture f) {
-    final home = _normalizeTeamName(f.homeTeam);
-    final away = _normalizeTeamName(f.awayTeam);
-    final homeInPlayoff = _setContainsTeam(_playoffTeams, home);
-    final awayInPlayoff = _setContainsTeam(_playoffTeams, away);
-    if (homeInPlayoff && awayInPlayoff) return 'playoff';
-    final homeInPlayout = _setContainsTeam(_playoutTeams, home);
-    final awayInPlayout = _setContainsTeam(_playoutTeams, away);
-    if (homeInPlayout && awayInPlayout) return 'playout';
+    final home = badgeAssetForName(f.homeTeam);
+    final away = badgeAssetForName(f.awayTeam);
+    if (home == null || away == null) return null;
+    if (_playoffAssets.contains(home) && _playoffAssets.contains(away)) return 'playoff';
+    if (_playoutAssets.contains(home) && _playoutAssets.contains(away)) return 'playout';
     return null;
   }
 
@@ -757,60 +769,4 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return ro ? roMonths[month] : en[month];
   }
 
-  // ── Team-name matching ──────────────────────────────────────────────────────
-
-  /// Normalise a team name for matching: lowercase, fold Romanian diacritics,
-  /// and collapse non-alphanumeric runs to single spaces. Mirrors the helper in
-  /// core/data/superliga_teams.dart so dashboard and standings names line up.
-  String _normalizeTeamName(String s) {
-    final lowered = s.toLowerCase();
-    final buf = StringBuffer();
-    for (final ch in lowered.split('')) {
-      switch (ch) {
-        case 'ă':
-        case 'â':
-          buf.write('a');
-        case 'î':
-          buf.write('i');
-        case 'ș':
-        case 'ş':
-          buf.write('s');
-        case 'ț':
-        case 'ţ':
-          buf.write('t');
-        default:
-          if (RegExp(r'[a-z0-9]').hasMatch(ch)) {
-            buf.write(ch);
-          } else {
-            buf.write(' ');
-          }
-      }
-    }
-    return buf.toString().trim().replaceAll(RegExp(r'\s+'), ' ');
-  }
-
-  /// True when a normalised fixture team name matches any normalised name in a
-  /// standings group set. Uses a bidirectional contains (consistent with the
-  /// file's existing `contains` matching) so short and full forms of the same
-  /// club, e.g. "u cluj" and "universitatea cluj", still line up.
-  bool _setContainsTeam(Set<String> set, String normalized) {
-    if (normalized.isEmpty) return false;
-    for (final name in set) {
-      if (name == normalized) return true;
-      if (name.length >= 3 &&
-          normalized.length >= 3 &&
-          (name.contains(normalized) || normalized.contains(name))) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /// True when a normalised standings team name resolves to the subject club.
-  /// Uses the shared crest resolver so short and full name forms (e.g. "U Cluj"
-  /// vs "Universitatea Cluj") line up, while distinct clubs (CFR Cluj) do not.
-  bool _isSubjectName(String normalized) {
-    final subjectAsset = badgeAssetForName(_myTeam);
-    return subjectAsset != null && badgeAssetForName(normalized) == subjectAsset;
-  }
 }
