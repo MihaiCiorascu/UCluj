@@ -11,7 +11,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 1,
    "phase": "regular"
   },
@@ -22,7 +22,7 @@
    "away_team": "U Cluj",
    "home_score": 1,
    "away_score": 4,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 1,
    "phase": "regular"
   },
@@ -33,7 +33,7 @@
    "away_team": "Hermannstadt",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 1,
    "phase": "regular"
   },
@@ -44,7 +44,7 @@
    "away_team": "U Craiova",
    "home_score": 3,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 1,
    "phase": "regular"
   },
@@ -55,7 +55,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 1,
    "phase": "regular"
   },
@@ -66,7 +66,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 1,
    "phase": "regular"
   },
@@ -77,7 +77,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 1,
    "phase": "regular"
   },
@@ -88,7 +88,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 1,
    "phase": "regular"
   },
@@ -99,7 +99,7 @@
    "away_team": "Metaloglobus",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 2,
    "phase": "regular"
   },
@@ -110,7 +110,7 @@
    "away_team": "FC Argeş",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 2,
    "phase": "regular"
   },
@@ -121,7 +121,7 @@
    "away_team": "FCSB",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 2,
    "phase": "regular"
   },
@@ -132,7 +132,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 2,
    "phase": "regular"
   },
@@ -143,7 +143,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 3,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 2,
    "phase": "regular"
   },
@@ -154,7 +154,7 @@
    "away_team": "CFR Cluj",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 2,
    "phase": "regular"
   },
@@ -165,7 +165,7 @@
    "away_team": "Botoşani",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Arcul de Triumf",
    "round": 2,
    "phase": "regular"
   },
@@ -176,7 +176,7 @@
    "away_team": "Csikszereda",
    "home_score": 6,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Clinceni",
    "round": 2,
    "phase": "regular"
   },
@@ -187,7 +187,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 3,
    "phase": "regular"
   },
@@ -198,7 +198,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 0,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul Clinceni",
    "round": 3,
    "phase": "regular"
   },
@@ -209,7 +209,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 3,
    "phase": "regular"
   },
@@ -220,7 +220,7 @@
    "away_team": "Hermannstadt",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 3,
    "phase": "regular"
   },
@@ -231,7 +231,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 3,
    "phase": "regular"
   },
@@ -242,7 +242,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 3,
    "phase": "regular"
   },
@@ -253,7 +253,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 4,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 3,
    "phase": "regular"
   },
@@ -264,7 +264,7 @@
    "away_team": "U Cluj",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 3,
    "phase": "regular"
   },
@@ -275,7 +275,7 @@
    "away_team": "Metaloglobus",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Central",
    "round": 4,
    "phase": "regular"
   },
@@ -286,7 +286,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 4,
    "phase": "regular"
   },
@@ -297,7 +297,7 @@
    "away_team": "FCSB",
    "home_score": 4,
    "away_score": 3,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 4,
    "phase": "regular"
   },
@@ -308,7 +308,7 @@
    "away_team": "Csikszereda",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 4,
    "phase": "regular"
   },
@@ -319,7 +319,7 @@
    "away_team": "U Craiova",
    "home_score": 2,
    "away_score": 3,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 4,
    "phase": "regular"
   },
@@ -330,7 +330,7 @@
    "away_team": "U Cluj",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 4,
    "phase": "regular"
   },
@@ -341,7 +341,7 @@
    "away_team": "Botoşani",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 4,
    "phase": "regular"
   },
@@ -352,7 +352,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 4,
    "phase": "regular"
   },
@@ -363,7 +363,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 5,
    "phase": "regular"
   },
@@ -374,7 +374,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 5,
    "phase": "regular"
   },
@@ -385,7 +385,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 5,
    "phase": "regular"
   },
@@ -396,7 +396,7 @@
    "away_team": "CFR Cluj",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 5,
    "phase": "regular"
   },
@@ -407,7 +407,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 5,
    "phase": "regular"
   },
@@ -418,7 +418,7 @@
    "away_team": "Hermannstadt",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 5,
    "phase": "regular"
   },
@@ -429,7 +429,7 @@
    "away_team": "FC Argeş",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 5,
    "phase": "regular"
   },
@@ -440,7 +440,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 5,
    "phase": "regular"
   },
@@ -451,7 +451,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 6,
    "phase": "regular"
   },
@@ -462,7 +462,7 @@
    "away_team": "Metaloglobus",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 6,
    "phase": "regular"
   },
@@ -473,7 +473,7 @@
    "away_team": "Hermannstadt",
    "home_score": null,
    "away_score": null,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 6,
    "phase": "regular"
   },
@@ -484,7 +484,7 @@
    "away_team": "Botoşani",
    "home_score": 3,
    "away_score": 3,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 6,
    "phase": "regular"
   },
@@ -495,7 +495,7 @@
    "away_team": "U Craiova",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 6,
    "phase": "regular"
   },
@@ -506,7 +506,7 @@
    "away_team": "FCSB",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 6,
    "phase": "regular"
   },
@@ -517,7 +517,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 6,
    "phase": "regular"
   },
@@ -528,7 +528,7 @@
    "away_team": "U Cluj",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 6,
    "phase": "regular"
   },
@@ -539,7 +539,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 7,
    "phase": "regular"
   },
@@ -550,7 +550,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 7,
    "phase": "regular"
   },
@@ -561,7 +561,7 @@
    "away_team": "Csikszereda",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 7,
    "phase": "regular"
   },
@@ -572,7 +572,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 7,
    "phase": "regular"
   },
@@ -583,7 +583,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 7,
    "phase": "regular"
   },
@@ -594,7 +594,7 @@
    "away_team": "CFR Cluj",
    "home_score": 4,
    "away_score": 1,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 7,
    "phase": "regular"
   },
@@ -605,7 +605,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 7,
    "phase": "regular"
   },
@@ -616,7 +616,7 @@
    "away_team": "Farul Constanţa",
    "home_score": null,
    "away_score": null,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 7,
    "phase": "regular"
   },
@@ -627,7 +627,7 @@
    "away_team": "UTA Arad",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 8,
    "phase": "regular"
   },
@@ -638,7 +638,7 @@
    "away_team": "Hermannstadt",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Arcul de Triumf",
    "round": 8,
    "phase": "regular"
   },
@@ -649,7 +649,7 @@
    "away_team": "U Cluj",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 8,
    "phase": "regular"
   },
@@ -660,7 +660,7 @@
    "away_team": "U Craiova",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 8,
    "phase": "regular"
   },
@@ -671,7 +671,7 @@
    "away_team": "FCSB",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 8,
    "phase": "regular"
   },
@@ -682,7 +682,7 @@
    "away_team": "Metaloglobus",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 8,
    "phase": "regular"
   },
@@ -693,7 +693,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 8,
    "phase": "regular"
   },
@@ -704,7 +704,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Central Stadium of the Gheorghe Hagi Academy",
    "round": 8,
    "phase": "regular"
   },
@@ -715,7 +715,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 9,
    "phase": "regular"
   },
@@ -726,7 +726,7 @@
    "away_team": "CFR Cluj",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 9,
    "phase": "regular"
   },
@@ -737,7 +737,7 @@
    "away_team": "FC Argeş",
    "home_score": 3,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 9,
    "phase": "regular"
   },
@@ -748,7 +748,7 @@
    "away_team": "FCSB",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 9,
    "phase": "regular"
   },
@@ -759,7 +759,7 @@
    "away_team": "Csikszereda",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 24,
    "phase": "regular"
   },
@@ -770,7 +770,7 @@
    "away_team": "Botoşani",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 9,
    "phase": "regular"
   },
@@ -781,7 +781,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 9,
    "phase": "regular"
   },
@@ -792,7 +792,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 9,
    "phase": "regular"
   },
@@ -803,7 +803,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 0,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 9,
    "phase": "regular"
   },
@@ -814,7 +814,7 @@
    "away_team": "FCSB",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 10,
    "phase": "regular"
   },
@@ -825,7 +825,7 @@
    "away_team": "U Cluj",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 10,
    "phase": "regular"
   },
@@ -836,7 +836,7 @@
    "away_team": "U Craiova",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 10,
    "phase": "regular"
   },
@@ -847,7 +847,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 10,
    "phase": "regular"
   },
@@ -858,7 +858,7 @@
    "away_team": "Hermannstadt",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 10,
    "phase": "regular"
   },
@@ -869,7 +869,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 10,
    "phase": "regular"
   },
@@ -880,7 +880,7 @@
    "away_team": "Metaloglobus",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 10,
    "phase": "regular"
   },
@@ -891,7 +891,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 10,
    "phase": "regular"
   },
@@ -902,7 +902,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 11,
    "phase": "regular"
   },
@@ -913,7 +913,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 11,
    "phase": "regular"
   },
@@ -924,7 +924,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 11,
    "phase": "regular"
   },
@@ -935,7 +935,7 @@
    "away_team": "Csikszereda",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 11,
    "phase": "regular"
   },
@@ -946,7 +946,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 11,
    "phase": "regular"
   },
@@ -957,7 +957,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 11,
    "phase": "regular"
   },
@@ -968,7 +968,7 @@
    "away_team": "Botoşani",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 11,
    "phase": "regular"
   },
@@ -979,7 +979,7 @@
    "away_team": "CFR Cluj",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 11,
    "phase": "regular"
   },
@@ -990,7 +990,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 12,
    "phase": "regular"
   },
@@ -1001,7 +1001,7 @@
    "away_team": "U Cluj",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 12,
    "phase": "regular"
   },
@@ -1012,7 +1012,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 12,
    "phase": "regular"
   },
@@ -1023,7 +1023,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 12,
    "phase": "regular"
   },
@@ -1034,7 +1034,7 @@
    "away_team": "Hermannstadt",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 12,
    "phase": "regular"
   },
@@ -1045,7 +1045,7 @@
    "away_team": "U Craiova",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 12,
    "phase": "regular"
   },
@@ -1056,7 +1056,7 @@
    "away_team": "UTA Arad",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 12,
    "phase": "regular"
   },
@@ -1067,7 +1067,7 @@
    "away_team": "Metaloglobus",
    "home_score": 4,
    "away_score": 0,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 12,
    "phase": "regular"
   },
@@ -1078,7 +1078,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 13,
    "phase": "regular"
   },
@@ -1089,7 +1089,7 @@
    "away_team": "FCSB",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 13,
    "phase": "regular"
   },
@@ -1100,7 +1100,7 @@
    "away_team": "Botoşani",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 13,
    "phase": "regular"
   },
@@ -1111,7 +1111,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 13,
    "phase": "regular"
   },
@@ -1122,7 +1122,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 13,
    "phase": "regular"
   },
@@ -1133,7 +1133,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 0,
    "away_score": 4,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 13,
    "phase": "regular"
   },
@@ -1144,7 +1144,7 @@
    "away_team": "Csikszereda",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 13,
    "phase": "regular"
   },
@@ -1155,7 +1155,7 @@
    "away_team": "CFR Cluj",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 13,
    "phase": "regular"
   },
@@ -1166,7 +1166,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 14,
    "phase": "regular"
   },
@@ -1177,7 +1177,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": null,
    "away_score": null,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 14,
    "phase": "regular"
   },
@@ -1188,7 +1188,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 14,
    "phase": "regular"
   },
@@ -1199,7 +1199,7 @@
    "away_team": "U Cluj",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 14,
    "phase": "regular"
   },
@@ -1210,7 +1210,7 @@
    "away_team": "UTA Arad",
    "home_score": 4,
    "away_score": 0,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 14,
    "phase": "regular"
   },
@@ -1221,7 +1221,7 @@
    "away_team": "U Craiova",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 14,
    "phase": "regular"
   },
@@ -1232,7 +1232,7 @@
    "away_team": "Hermannstadt",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 14,
    "phase": "regular"
   },
@@ -1243,7 +1243,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 4,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 14,
    "phase": "regular"
   },
@@ -1254,7 +1254,7 @@
    "away_team": "CFR Cluj",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 15,
    "phase": "regular"
   },
@@ -1265,7 +1265,7 @@
    "away_team": "FCSB",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 15,
    "phase": "regular"
   },
@@ -1276,7 +1276,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 15,
    "phase": "regular"
   },
@@ -1287,7 +1287,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 1,
    "away_score": 3,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 15,
    "phase": "regular"
   },
@@ -1298,7 +1298,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 15,
    "phase": "regular"
   },
@@ -1309,7 +1309,7 @@
    "away_team": "Metaloglobus",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 15,
    "phase": "regular"
   },
@@ -1320,7 +1320,7 @@
    "away_team": "Csikszereda",
    "home_score": 3,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 15,
    "phase": "regular"
   },
@@ -1331,7 +1331,7 @@
    "away_team": "Botoşani",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 15,
    "phase": "regular"
   },
@@ -1342,7 +1342,7 @@
    "away_team": "Botoşani",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 16,
    "phase": "regular"
   },
@@ -1353,7 +1353,7 @@
    "away_team": "Metaloglobus",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 16,
    "phase": "regular"
   },
@@ -1364,7 +1364,7 @@
    "away_team": "Csikszereda",
    "home_score": 4,
    "away_score": 0,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 16,
    "phase": "regular"
   },
@@ -1375,7 +1375,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 16,
    "phase": "regular"
   },
@@ -1386,7 +1386,7 @@
    "away_team": "FC Argeş",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 16,
    "phase": "regular"
   },
@@ -1397,7 +1397,7 @@
    "away_team": "FCSB",
    "home_score": 3,
    "away_score": 3,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 16,
    "phase": "regular"
   },
@@ -1408,7 +1408,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 16,
    "phase": "regular"
   },
@@ -1419,7 +1419,7 @@
    "away_team": "CFR Cluj",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 16,
    "phase": "regular"
   },
@@ -1430,7 +1430,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 17,
    "phase": "regular"
   },
@@ -1441,7 +1441,7 @@
    "away_team": "U Craiova",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 17,
    "phase": "regular"
   },
@@ -1452,7 +1452,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 17,
    "phase": "regular"
   },
@@ -1463,7 +1463,7 @@
    "away_team": "U Cluj",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 17,
    "phase": "regular"
   },
@@ -1474,7 +1474,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 3,
    "away_score": 0,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 17,
    "phase": "regular"
   },
@@ -1485,7 +1485,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 17,
    "phase": "regular"
   },
@@ -1496,7 +1496,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 17,
    "phase": "regular"
   },
@@ -1507,7 +1507,7 @@
    "away_team": "Hermannstadt",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 17,
    "phase": "regular"
   },
@@ -1518,7 +1518,7 @@
    "away_team": "Csikszereda",
    "home_score": 4,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 18,
    "phase": "regular"
   },
@@ -1529,7 +1529,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 18,
    "phase": "regular"
   },
@@ -1540,7 +1540,7 @@
    "away_team": "CFR Cluj",
    "home_score": 3,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 18,
    "phase": "regular"
   },
@@ -1551,7 +1551,7 @@
    "away_team": "FCSB",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 18,
    "phase": "regular"
   },
@@ -1562,7 +1562,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 18,
    "phase": "regular"
   },
@@ -1573,7 +1573,7 @@
    "away_team": "Botoşani",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 18,
    "phase": "regular"
   },
@@ -1584,7 +1584,7 @@
    "away_team": "Metaloglobus",
    "home_score": 4,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 18,
    "phase": "regular"
   },
@@ -1595,7 +1595,7 @@
    "away_team": "U Craiova",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 18,
    "phase": "regular"
   },
@@ -1606,7 +1606,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 3,
    "away_score": 0,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 19,
    "phase": "regular"
   },
@@ -1617,7 +1617,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 19,
    "phase": "regular"
   },
@@ -1628,7 +1628,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 19,
    "phase": "regular"
   },
@@ -1639,7 +1639,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 19,
    "phase": "regular"
   },
@@ -1650,7 +1650,7 @@
    "away_team": "Hermannstadt",
    "home_score": 3,
    "away_score": 0,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 19,
    "phase": "regular"
   },
@@ -1661,7 +1661,7 @@
    "away_team": "CFR Cluj",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 19,
    "phase": "regular"
   },
@@ -1672,7 +1672,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 19,
    "phase": "regular"
   },
@@ -1683,7 +1683,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 19,
    "phase": "regular"
   },
@@ -1694,7 +1694,7 @@
    "away_team": "Csikszereda",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 20,
    "phase": "regular"
   },
@@ -1705,7 +1705,7 @@
    "away_team": "Botoşani",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 20,
    "phase": "regular"
   },
@@ -1716,7 +1716,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 20,
    "phase": "regular"
   },
@@ -1727,7 +1727,7 @@
    "away_team": "Metaloglobus",
    "home_score": 4,
    "away_score": 0,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 20,
    "phase": "regular"
   },
@@ -1738,7 +1738,7 @@
    "away_team": "U Craiova",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 20,
    "phase": "regular"
   },
@@ -1749,7 +1749,7 @@
    "away_team": "U Cluj",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 20,
    "phase": "regular"
   },
@@ -1760,7 +1760,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 20,
    "phase": "regular"
   },
@@ -1771,7 +1771,7 @@
    "away_team": "FCSB",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 20,
    "phase": "regular"
   },
@@ -1782,7 +1782,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 2,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 21,
    "phase": "regular"
   },
@@ -1793,7 +1793,7 @@
    "away_team": "FC Argeş",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 21,
    "phase": "regular"
   },
@@ -1804,7 +1804,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 21,
    "phase": "regular"
   },
@@ -1815,7 +1815,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 21,
    "phase": "regular"
   },
@@ -1826,7 +1826,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 21,
    "phase": "regular"
   },
@@ -1837,7 +1837,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 21,
    "phase": "regular"
   },
@@ -1848,7 +1848,7 @@
    "away_team": "Csikszereda",
    "home_score": 5,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 21,
    "phase": "regular"
   },
@@ -1859,7 +1859,7 @@
    "away_team": "FCSB",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 22,
    "phase": "regular"
   },
@@ -1870,7 +1870,7 @@
    "away_team": "Hermannstadt",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Central Stadium of the Gheorghe Hagi Academy",
    "round": 22,
    "phase": "regular"
   },
@@ -1881,7 +1881,7 @@
    "away_team": "Metaloglobus",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 22,
    "phase": "regular"
   },
@@ -1892,7 +1892,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 22,
    "phase": "regular"
   },
@@ -1903,7 +1903,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 22,
    "phase": "regular"
   },
@@ -1914,7 +1914,7 @@
    "away_team": "Botoşani",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 22,
    "phase": "regular"
   },
@@ -1925,7 +1925,7 @@
    "away_team": "U Cluj",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Arcul de Triumf",
    "round": 22,
    "phase": "regular"
   },
@@ -1936,7 +1936,7 @@
    "away_team": "U Craiova",
    "home_score": 0,
    "away_score": 4,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 22,
    "phase": "regular"
   },
@@ -1947,7 +1947,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 23,
    "phase": "regular"
   },
@@ -1958,7 +1958,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 23,
    "phase": "regular"
   },
@@ -1969,7 +1969,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 23,
    "phase": "regular"
   },
@@ -1980,7 +1980,7 @@
    "away_team": "Botoşani",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 23,
    "phase": "regular"
   },
@@ -1991,7 +1991,7 @@
    "away_team": "CFR Cluj",
    "home_score": 1,
    "away_score": 4,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 23,
    "phase": "regular"
   },
@@ -2002,7 +2002,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 23,
    "phase": "regular"
   },
@@ -2013,7 +2013,7 @@
    "away_team": "Csikszereda",
    "home_score": 3,
    "away_score": 0,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 23,
    "phase": "regular"
   },
@@ -2024,7 +2024,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 23,
    "phase": "regular"
   },
@@ -2035,7 +2035,7 @@
    "away_team": "Metaloglobus",
    "home_score": 4,
    "away_score": 2,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 24,
    "phase": "regular"
   },
@@ -2046,7 +2046,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 24,
    "phase": "regular"
   },
@@ -2057,7 +2057,7 @@
    "away_team": "UTA Arad",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 24,
    "phase": "regular"
   },
@@ -2068,7 +2068,7 @@
    "away_team": "U Cluj",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 24,
    "phase": "regular"
   },
@@ -2079,7 +2079,7 @@
    "away_team": "Hermannstadt",
    "home_score": 2,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 24,
    "phase": "regular"
   },
@@ -2090,7 +2090,7 @@
    "away_team": "U Craiova",
    "home_score": 4,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 24,
    "phase": "regular"
   },
@@ -2101,7 +2101,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 24,
    "phase": "regular"
   },
@@ -2112,7 +2112,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 0,
    "away_score": 3,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 25,
    "phase": "regular"
   },
@@ -2123,7 +2123,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 25,
    "phase": "regular"
   },
@@ -2134,7 +2134,7 @@
    "away_team": "FC Argeş",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 25,
    "phase": "regular"
   },
@@ -2145,7 +2145,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 2,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 25,
    "phase": "regular"
   },
@@ -2156,7 +2156,7 @@
    "away_team": "Csikszereda",
    "home_score": null,
    "away_score": null,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 25,
    "phase": "regular"
   },
@@ -2167,7 +2167,7 @@
    "away_team": "CFR Cluj",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 25,
    "phase": "regular"
   },
@@ -2178,7 +2178,7 @@
    "away_team": "Botoşani",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 25,
    "phase": "regular"
   },
@@ -2189,7 +2189,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 25,
    "phase": "regular"
   },
@@ -2200,7 +2200,7 @@
    "away_team": "Hermannstadt",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 26,
    "phase": "regular"
   },
@@ -2211,7 +2211,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 26,
    "phase": "regular"
   },
@@ -2222,7 +2222,7 @@
    "away_team": "U Cluj",
    "home_score": 3,
    "away_score": 2,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 26,
    "phase": "regular"
   },
@@ -2233,7 +2233,7 @@
    "away_team": "UTA Arad",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 26,
    "phase": "regular"
   },
@@ -2244,7 +2244,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 26,
    "phase": "regular"
   },
@@ -2255,7 +2255,7 @@
    "away_team": "Metaloglobus",
    "home_score": 3,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 26,
    "phase": "regular"
   },
@@ -2266,7 +2266,7 @@
    "away_team": "FCSB",
    "home_score": 1,
    "away_score": 4,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 26,
    "phase": "regular"
   },
@@ -2277,7 +2277,7 @@
    "away_team": "U Craiova",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 26,
    "phase": "regular"
   },
@@ -2288,7 +2288,7 @@
    "away_team": "FC Argeş",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 27,
    "phase": "regular"
   },
@@ -2299,7 +2299,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 27,
    "phase": "regular"
   },
@@ -2310,7 +2310,7 @@
    "away_team": "Csikszereda",
    "home_score": 4,
    "away_score": 1,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 27,
    "phase": "regular"
   },
@@ -2321,7 +2321,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 27,
    "phase": "regular"
   },
@@ -2332,7 +2332,7 @@
    "away_team": "Botoşani",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 27,
    "phase": "regular"
   },
@@ -2343,7 +2343,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Arcul de Triumf",
    "round": 27,
    "phase": "regular"
   },
@@ -2354,7 +2354,7 @@
    "away_team": "CFR Cluj",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 27,
    "phase": "regular"
   },
@@ -2365,7 +2365,7 @@
    "away_team": "U Cluj",
    "home_score": 1,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 28,
    "phase": "regular"
   },
@@ -2376,7 +2376,7 @@
    "away_team": "UTA Arad",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 28,
    "phase": "regular"
   },
@@ -2387,7 +2387,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 28,
    "phase": "regular"
   },
@@ -2398,7 +2398,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 28,
    "phase": "regular"
   },
@@ -2409,7 +2409,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 28,
    "phase": "regular"
   },
@@ -2420,7 +2420,7 @@
    "away_team": "U Craiova",
    "home_score": 0,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 28,
    "phase": "regular"
   },
@@ -2431,7 +2431,7 @@
    "away_team": "Hermannstadt",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 28,
    "phase": "regular"
   },
@@ -2442,7 +2442,7 @@
    "away_team": "Metaloglobus",
    "home_score": 4,
    "away_score": 1,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 28,
    "phase": "regular"
   },
@@ -2453,7 +2453,7 @@
    "away_team": "Botoşani",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 29,
    "phase": "regular"
   },
@@ -2464,7 +2464,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 4,
    "away_score": 0,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 29,
    "phase": "regular"
   },
@@ -2475,7 +2475,7 @@
    "away_team": "CFR Cluj",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 29,
    "phase": "regular"
   },
@@ -2486,7 +2486,7 @@
    "away_team": "Metaloglobus",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 29,
    "phase": "regular"
   },
@@ -2497,7 +2497,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 29,
    "phase": "regular"
   },
@@ -2508,7 +2508,7 @@
    "away_team": "Csikszereda",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 29,
    "phase": "regular"
   },
@@ -2519,7 +2519,7 @@
    "away_team": "FCSB",
    "home_score": 2,
    "away_score": 4,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 29,
    "phase": "regular"
   },
@@ -2530,7 +2530,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 29,
    "phase": "regular"
   },
@@ -2541,7 +2541,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 30,
    "phase": "regular"
   },
@@ -2552,7 +2552,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 30,
    "phase": "regular"
   },
@@ -2563,7 +2563,7 @@
    "away_team": "U Cluj",
    "home_score": 1,
    "away_score": 3,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 30,
    "phase": "regular"
   },
@@ -2574,7 +2574,7 @@
    "away_team": "UTA Arad",
    "home_score": 2,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 30,
    "phase": "regular"
   },
@@ -2585,7 +2585,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 30,
    "phase": "regular"
   },
@@ -2596,7 +2596,7 @@
    "away_team": "Hermannstadt",
    "home_score": 0,
    "away_score": 2,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 30,
    "phase": "regular"
   },
@@ -2607,7 +2607,7 @@
    "away_team": "U Craiova",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 30,
    "phase": "regular"
   },
@@ -2618,7 +2618,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 30,
    "phase": "regular"
   },
@@ -2629,7 +2629,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 31,
    "phase": "playoff_window"
   },
@@ -2640,7 +2640,7 @@
    "away_team": "Hermannstadt",
    "home_score": 3,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 31,
    "phase": "playoff_window"
   },
@@ -2651,7 +2651,7 @@
    "away_team": "Csikszereda",
    "home_score": 2,
    "away_score": 3,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 31,
    "phase": "playoff_window"
   },
@@ -2662,7 +2662,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 3,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 31,
    "phase": "playoff_window"
   },
@@ -2673,7 +2673,7 @@
    "away_team": "Metaloglobus",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 31,
    "phase": "playoff_window"
   },
@@ -2684,7 +2684,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Central Stadium of the Gheorghe Hagi Academy",
    "round": 31,
    "phase": "playoff_window"
   },
@@ -2695,7 +2695,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 3,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 31,
    "phase": "playoff_window"
   },
@@ -2706,7 +2706,7 @@
    "away_team": "CFR Cluj",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 31,
    "phase": "playoff_window"
   },
@@ -2717,7 +2717,7 @@
    "away_team": "U Craiova",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 32,
    "phase": "playoff_window"
   },
@@ -2728,7 +2728,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 32,
    "phase": "playoff_window"
   },
@@ -2739,7 +2739,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 32,
    "phase": "playoff_window"
   },
@@ -2750,7 +2750,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 32,
    "phase": "playoff_window"
   },
@@ -2761,7 +2761,7 @@
    "away_team": "U Cluj",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 32,
    "phase": "playoff_window"
   },
@@ -2772,7 +2772,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Clinceni",
    "round": 32,
    "phase": "playoff_window"
   },
@@ -2783,7 +2783,7 @@
    "away_team": "Botoşani",
    "home_score": 3,
    "away_score": 0,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 32,
    "phase": "playoff_window"
   },
@@ -2794,7 +2794,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 32,
    "phase": "playoff_window"
   },
@@ -2805,7 +2805,7 @@
    "away_team": "FCSB",
    "home_score": 3,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 33,
    "phase": "playoff_window"
   },
@@ -2816,7 +2816,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 33,
    "phase": "playoff_window"
   },
@@ -2827,7 +2827,7 @@
    "away_team": "Hermannstadt",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 33,
    "phase": "playoff_window"
   },
@@ -2838,7 +2838,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 33,
    "phase": "playoff_window"
   },
@@ -2849,7 +2849,7 @@
    "away_team": "U Cluj",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 33,
    "phase": "playoff_window"
   },
@@ -2860,7 +2860,7 @@
    "away_team": "Metaloglobus",
    "home_score": 5,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 33,
    "phase": "playoff_window"
   },
@@ -2871,7 +2871,7 @@
    "away_team": "Csikszereda",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 33,
    "phase": "playoff_window"
   },
@@ -2882,7 +2882,7 @@
    "away_team": "CFR Cluj",
    "home_score": 2,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 33,
    "phase": "playoff_window"
   },
@@ -2893,7 +2893,7 @@
    "away_team": "Farul Constanţa",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Municipal Sibiu",
    "round": 34,
    "phase": "playoff_window"
   },
@@ -2904,7 +2904,7 @@
    "away_team": "Oţelul Galaţi",
    "home_score": 4,
    "away_score": 0,
-   "venue": null,
+   "venue": "Arena Nationala",
    "round": 34,
    "phase": "playoff_window"
   },
@@ -2915,7 +2915,7 @@
    "away_team": "U Craiova",
    "home_score": 4,
    "away_score": 0,
-   "venue": null,
+   "venue": "Cluj Arena",
    "round": 34,
    "phase": "playoff_window"
   },
@@ -2926,7 +2926,7 @@
    "away_team": "Botoşani",
    "home_score": 3,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Francisc von Neumann",
    "round": 34,
    "phase": "playoff_window"
   },
@@ -2937,7 +2937,7 @@
    "away_team": "Dinamo Bucureşti",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dr. Constantin Radulescu",
    "round": 34,
    "phase": "playoff_window"
   },
@@ -2948,7 +2948,7 @@
    "away_team": "Petrolul Ploieşti",
    "home_score": 1,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul 1 Mai",
    "round": 34,
    "phase": "playoff_window"
   },
@@ -2959,7 +2959,7 @@
    "away_team": "Csikszereda",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Metaloglobus",
    "round": 34,
    "phase": "playoff_window"
   },
@@ -2970,7 +2970,7 @@
    "away_team": "FC Argeş",
    "home_score": 0,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Rapid-Giulesti",
    "round": 34,
    "phase": "playoff_window"
   },
@@ -2981,7 +2981,7 @@
    "away_team": "CFR Cluj",
    "home_score": 0,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Mioveni",
    "round": 35,
    "phase": "playoff_window"
   },
@@ -2992,7 +2992,7 @@
    "away_team": "UTA Arad",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Otelul Din Galati",
    "round": 35,
    "phase": "playoff_window"
   },
@@ -3003,7 +3003,7 @@
    "away_team": "Unirea Slobozia",
    "home_score": 3,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 35,
    "phase": "playoff_window"
   },
@@ -3014,7 +3014,7 @@
    "away_team": "U Cluj",
    "home_score": 2,
    "away_score": 1,
-   "venue": null,
+   "venue": "Dinamo Stadium",
    "round": 35,
    "phase": "playoff_window"
   },
@@ -3025,7 +3025,7 @@
    "away_team": "Hermannstadt",
    "home_score": 1,
    "away_score": 1,
-   "venue": null,
+   "venue": "Stadionul Ilie Oana",
    "round": 35,
    "phase": "playoff_window"
   },
@@ -3036,7 +3036,7 @@
    "away_team": "Rapid Bucureşti",
    "home_score": 1,
    "away_score": 0,
-   "venue": null,
+   "venue": "Stadionul Ion Oblemenco",
    "round": 35,
    "phase": "playoff_window"
   },
@@ -3047,7 +3047,7 @@
    "away_team": "Metaloglobus",
    "home_score": 3,
    "away_score": 2,
-   "venue": null,
+   "venue": "Stadionul Municipal",
    "round": 35,
    "phase": "playoff_window"
   },
@@ -3058,7 +3058,7 @@
    "away_team": "FCSB",
    "home_score": 2,
    "away_score": 3,
-   "venue": null,
+   "venue": "Stadionul Viitorul",
    "round": 35,
    "phase": "playoff_window"
   }

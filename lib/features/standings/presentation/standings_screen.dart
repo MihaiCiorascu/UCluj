@@ -384,12 +384,14 @@ class _StandingsScreenState extends State<StandingsScreen>
               trackedTeam: _team,
               tracked: _findTracked(_championship),
               emptyLabel: L10n.t('standings.emptyChampionship'),
+              note: L10n.t('standings.groupNote'),
             ),
             _StandingsTabView(
               rows: _relegation,
               trackedTeam: _team,
               tracked: _findTracked(_relegation),
               emptyLabel: L10n.t('standings.emptyRelegation'),
+              note: L10n.t('standings.groupNote'),
             ),
           ],
         ),
@@ -408,12 +410,14 @@ class _StandingsTabView extends StatelessWidget {
     required this.trackedTeam,
     this.tracked,
     this.emptyLabel = 'No standings data available.',
+    this.note,
   });
 
   final List<_TeamStanding> rows;
   final String? trackedTeam;
   final _TeamStanding? tracked;
   final String emptyLabel;
+  final String? note;
 
   @override
   Widget build(BuildContext context) {
@@ -431,6 +435,16 @@ class _StandingsTabView extends StatelessWidget {
       padding: EdgeInsets.zero,
       children: [
         const SizedBox(height: SpacingTokens.md),
+        if (note != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+                SpacingTokens.md, 0, SpacingTokens.md, SpacingTokens.sm),
+            child: Text(
+              note!,
+              style: TypographyTokens.meta
+                  .copyWith(color: context.colors.textMuted),
+            ),
+          ),
         if (tracked != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
