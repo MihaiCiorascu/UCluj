@@ -27,7 +27,7 @@ import json
 import logging
 
 import boto3
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Attr, Key
 
 from app.config import settings
 
@@ -121,4 +121,65 @@ async def push_to_channel(channel: str, payload: dict) -> int:
         return await asyncio.to_thread(_push_sync, channel, payload)
     except Exception:  # noqa: BLE001
         logger.warning("ws fan-out failed for channel %s", channel, exc_info=True)
+        return 0
+
+
+def _push_to_users_sync(user_ids: list[str], payload: dict) -> int:
+    """Blocking fan-out to every live connection owned by the given users.
+
+    Used for events that target people rather than a channel (e.g. a new group
+    appearing for its members), so they arrive whatever channel each member is
+    currently viewing. The connections table is small (one row per live socket,
+    TTL-expired), so a filtered scan is acceptable and avoids adding a userId GSI
+    just for this. Returns the number of connections delivered to.
+    """
+    targets = [u for u in dict.fromkeys(user_ids) if u]
+    if not targets:
+        return 0
+    table = _connections()
+    data = json.dumps(payload, default=str).encode("utf-8")
+    apigw = _apigw()
+    delivered = 0
+    stale: list[str] = []
+    scan_kwargs: dict = {"FilterExpression": Attr("userId").is_in(targets)}
+    while True:
+        response = table.scan(**scan_kwargs)
+        for item in response.get("Items", []):
+            connection_id = item.get("connectionId")
+            if not connection_id:
+                continue
+            try:
+                apigw.post_to_connection(ConnectionId=connection_id, Data=data)
+                delivered += 1
+            except apigw.exceptions.GoneException:
+                stale.append(connection_id)
+            except Exception:  # noqa: BLE001
+                logger.warning("ws user fan-out: post_to_connection failed for %s", connection_id, exc_info=True)
+        last_key = response.get("LastEvaluatedKey")
+        if not last_key:
+            break
+        scan_kwargs["ExclusiveStartKey"] = last_key
+
+    for connection_id in stale:
+        try:
+            table.delete_item(Key={"connectionId": connection_id})
+        except Exception:  # noqa: BLE001
+            logger.warning("ws user fan-out: failed to delete stale connection %s", connection_id, exc_info=True)
+    return delivered
+
+
+async def push_to_users(user_ids: list[str], payload: dict) -> int:
+    """Async wrapper around :func:`_push_to_users_sync`.
+
+    Mirrors :func:`push_to_channel`: runs the blocking boto3 work in a worker
+    thread and swallows transport failures so a hiccup never fails the caller's
+    REST request (the data is already persisted and back-fills on next load).
+    """
+    if not settings.ws_api_management_endpoint:
+        logger.debug("ws user fan-out skipped: WS_API_MANAGEMENT_ENDPOINT unset")
+        return 0
+    try:
+        return await asyncio.to_thread(_push_to_users_sync, list(user_ids), payload)
+    except Exception:  # noqa: BLE001
+        logger.warning("ws user fan-out failed", exc_info=True)
         return 0
