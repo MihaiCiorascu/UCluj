@@ -122,6 +122,16 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
   String get _resolvedFormation =>
       _preview.formation.isNotEmpty ? _preview.formation : widget.formation;
 
+  // Formation used to lay the CURRENTLY SHOWN XI out on the pitch. When the
+  // opponent XI is displayed, use the opponent's OWN resolved shape so its pitch
+  // arrangement is distinct from ours; otherwise fall back to our formation.
+  // Edits (_applyEdits / replace picker) keep using _resolvedFormation because
+  // editing is disabled while the opponent XI is shown.
+  String get _displayFormation =>
+      _showOpponent && _preview.opponentFormation.isNotEmpty
+          ? _preview.opponentFormation
+          : _resolvedFormation;
+
   List<MatchPreviewPlayer> get _activeXi =>
       _showOpponent ? _preview.opponentXi : _preview.startingXi;
   List<MatchPreviewPlayer> get _activeBench =>
@@ -257,7 +267,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         // unlock / details); otherwise it falls back to the read-only detail.
         void onSelect(MatchPreviewPlayer pl) {
           if (_busy) return;
-          if (_interactive) {
+          if (_interactive && !_showOpponent) {
             _openActionMenu(pl);
           } else if (wide) {
             setState(() => _selected = pl);
@@ -269,7 +279,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         final pitch = Stack(
           children: [
             FifaRecommendedXiPitch(
-              formation: _resolvedFormation,
+              formation: _displayFormation,
               players: _activeXi,
               selected: wide ? _selected : null,
               ratingForDisplay: rf,
@@ -298,7 +308,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (_interactive) ...[
+            if (_interactive && !_showOpponent) ...[
               _editBar(c),
               const SizedBox(height: SpacingTokens.sm),
             ],
@@ -362,7 +372,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
               const EdgeInsets.symmetric(horizontal: SpacingTokens.sm, vertical: 3),
           color: c.accent.withValues(alpha: 0.14),
           child: Text(
-            _resolvedFormation,
+            _displayFormation,
             style: TypographyTokens.sectionLabel
                 .copyWith(color: c.accent, letterSpacing: 1.2),
           ),
@@ -679,24 +689,14 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
           onChanged: _setShowOpponent,
           segments: [
             SegmentOption(
-                value: false,
-                label: widget.homeTeam != null
-                    ? _teamLabel(_preview.homeTeamShort)
-                    : L10n.t('team.segLikelyXi')),
+                value: false, label: _teamLabel(_preview.homeTeamShort)),
             SegmentOption(
-                value: true,
-                label: widget.homeTeam != null
-                    ? _teamLabel(_preview.opponentName)
-                    : L10n.t('team.segOpponentXi')),
+                value: true, label: _teamLabel(_preview.opponentName)),
           ],
         ),
         const SizedBox(height: 6),
         Text(
-          widget.homeTeam != null
-              ? L10n.t('team.explainOtherXi')
-              : (_showOpponent
-                  ? L10n.t('team.explainOpponentXi')
-                  : L10n.t('team.explainLikelyXi')),
+          L10n.t('team.explainOtherXi'),
           style: TypographyTokens.bodySmall.copyWith(
             color: c.textMuted,
             height: 1.2,

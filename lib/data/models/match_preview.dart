@@ -274,6 +274,9 @@ class MatchPreviewResponse {
   // scouting view. Empty on older backends, in which case the toggle is hidden.
   final List<MatchPreviewPlayer> opponentXi;
   final List<MatchPreviewPlayer> opponentBench;
+  // The opponent's OWN resolved formation (its best shape), so the pitch lays the
+  // opponent XI out distinctly from our team. Empty on older backends.
+  final String opponentFormation;
   final MatchTeamStats teamStats;
   final MatchTeamStats opponentStats;
   final H2HStats headToHead;
@@ -291,6 +294,7 @@ class MatchPreviewResponse {
     this.bestBench = const [],
     this.opponentXi = const [],
     this.opponentBench = const [],
+    this.opponentFormation = '',
     required this.teamStats,
     required this.opponentStats,
     required this.headToHead,
@@ -319,6 +323,7 @@ class MatchPreviewResponse {
       bestBench: parsePlayers('best_bench'),
       opponentXi: parsePlayers('opponent_xi'),
       opponentBench: parsePlayers('opponent_bench'),
+      opponentFormation: j['opponent_formation'] as String? ?? '',
       teamStats: MatchTeamStats.fromJson(
           j['team_stats'] as Map<String, dynamic>? ?? {}),
       opponentStats: MatchTeamStats.fromJson(
