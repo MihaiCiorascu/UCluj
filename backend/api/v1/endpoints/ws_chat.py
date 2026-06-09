@@ -13,7 +13,7 @@ from sqlalchemy import select, desc
 from db.engine import async_session as session_factory
 from db.models import Message, User, ChatGroup
 from core.security import get_current_user
-from services.ws_fanout_service import push_to_channel
+from services.ws_fanout_service import push_to_channel, push_to_users
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -214,7 +214,6 @@ async def get_team_users(
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(_get_db)
 ):
-    print(f"DEBUG: get_team_users for team={current_user.team_name}")
     if not current_user.team_name:
         return []
 
@@ -263,7 +262,21 @@ async def create_chat_group(
     session.add(new_group)
     await session.commit()
     await session.refresh(new_group)
-    return {"id": new_group.id, "name": new_group.name, "member_ids": list(members)}
+
+    member_list = list(members)
+    # Push the new group to every member's live connection so it appears for them
+    # immediately, whatever channel they are currently viewing, instead of only
+    # after their next reload. Best effort: a transport hiccup never fails create,
+    # and GET /chat/groups still back-fills it on the next load.
+    await push_to_users(member_list, {
+        "type": "group_created",
+        "group": {
+            "id": new_group.id,
+            "name": new_group.name,
+            "member_ids": member_list,
+        },
+    })
+    return {"id": new_group.id, "name": new_group.name, "member_ids": member_list}
 
 
 @router.get("/groups")

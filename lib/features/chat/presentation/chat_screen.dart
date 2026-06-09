@@ -309,6 +309,12 @@ class _ChatScreenState extends State<ChatScreen> {
               _handleRemoteTyping(data);
               return;
             }
+            // A group this user was just added to: make it appear in the channel
+            // list live, whatever channel we are currently viewing.
+            if (data['type'] == 'group_created') {
+              _handleGroupCreated(data['group']);
+              return;
+            }
             setState(() => _mergeMessage(_Msg.fromJson(data)));
             _scrollToBottom();
           } catch (e) {
@@ -427,6 +433,18 @@ class _ChatScreenState extends State<ChatScreen> {
   /// Handle an inbound "typing" fan-out frame. Ignores our own echo (matched on
   /// the same id used for the `isMe` bubble check), then shows the remote typer's
   /// name and (re)arms a TTL timer so the hint clears shortly after they stop.
+  /// A "group_created" push arrived for a group this user belongs to. Add it to
+  /// the channel list (de-duped by id) so the chip appears immediately. The
+  /// backend only pushes to members, and the creator's own re-fetch is idempotent.
+  void _handleGroupCreated(dynamic raw) {
+    if (raw is! Map) return;
+    final group = Map<String, dynamic>.from(raw);
+    final id = group['id'];
+    if (id == null) return;
+    if (_groups.any((g) => g['id'] == id)) return;
+    setState(() => _groups = [..._groups, group]);
+  }
+
   void _handleRemoteTyping(Map<String, dynamic> data) {
     final myId = widget.authState?.user?.id ?? '';
     final authorId = data['author_id'] as String? ?? '';
