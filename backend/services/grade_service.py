@@ -52,27 +52,31 @@ logger = logging.getLogger(__name__)
 # an order of magnitude higher than a striker on the same weighting scheme), so
 # a single global linear map would be unfair across positions. Instead we map a
 # player's raw score within its OWN fine-position-group's empirical [p10, p90]
-# band onto the [4.0, 9.0] match-rating band, then clamp to [1.0, 10.0]. The
+# band onto the [4.5, 8.5] match-rating band, then clamp to [1.0, 10.0]. The
 # anchors below are the per-group 10th/90th percentiles measured across every
 # qualifying appearance (>= 20 minutes) in the committed drive-cache corpus, so
 # the median appearance lands near a conventional 6.x match rating.
 _GRADE_ANCHORS: dict[str, tuple[float, float]] = {
-    "GK": (6.67, 25.9),
-    "CB": (45.4, 118.18),
-    "FB": (28.79, 90.4),
+    "GK": (5.43, 23.8),
+    "CB": (45.4, 118.08),
+    "FB": (28.56, 90.0),
     "WB": (4.29, 61.46),
-    "DM": (54.93, 152.51),
-    "CM": (39.49, 154.92),
+    "DM": (54.37, 152.15),
+    "CM": (39.18, 154.92),
     "AM": (4.39, 44.18),
-    "W": (-11.74, 13.0),
-    "WF": (2.93, 33.55),
-    "ST": (0.0, 31.03),
+    "W": (-11.74, 12.85),
+    "WF": (2.93, 32.51),
+    "ST": (0.0, 30.68),
 }
 # Fallback band when a fine group has no anchor (should not happen for the ten
 # canonical groups, but keeps the mapping total).
 _DEFAULT_ANCHOR = (0.0, 100.0)
-_GRADE_LOW, _GRADE_HIGH = 4.0, 9.0   # rating band the [p10, p90] anchors map to
+_GRADE_LOW, _GRADE_HIGH = 4.5, 8.5   # rating band the [p10, p90] anchors map to
 _GRADE_MIN, _GRADE_MAX = 1.0, 10.0   # hard clamp
+# Appearances shorter than this are left ungraded (rendered blank): too little
+# signal, and a brief cameo's per-90 projection stays noisy even with the minutes
+# floor in compute_performance_score. Calibration uses the same threshold.
+_MIN_GRADE_MINUTES = 20.0
 
 
 def _scale_to_grade(raw: float, fine_group: str) -> float:
@@ -269,7 +273,7 @@ class GradeService:
                 continue
             total = entry.get("total") or {}
             minutes = total.get("minutesOnField", 0) or 0
-            if minutes <= 0:
+            if minutes < _MIN_GRADE_MINUTES:
                 continue
             # Fine position from this match's own ``positions`` array (falls
             # back to MID inside the helper when codes are absent), then the
