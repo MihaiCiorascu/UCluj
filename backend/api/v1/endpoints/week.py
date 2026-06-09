@@ -432,7 +432,7 @@ def _sanitize_floats(value: Any) -> Any:
 def _apply_demo_horizon(fixtures: list[dict], horizon: datetime) -> list[dict]:
     """Null out scores for fixtures dated strictly after ``horizon``.
 
-    The 2024-25 dataset carries a final score for every fixture because the
+    The baked 2025-26 dataset carries a final score for every fixture because the
     season is fully played. Demo mode wants the coach to walk through the
     pre-match flow (Match Intelligence, tactical blueprint, recommended XI)
     on fixtures the demo treats as "upcoming," which means stripping the

@@ -13,7 +13,11 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000,http://localhost:8080,http://localhost:5555"
     database_url: str = "postgresql+asyncpg://postgres:password@localhost:5432/ucluj"
     jwt_secret: str = "CHANGE-ME-IN-PRODUCTION"
-    jwt_access_minutes: int = 15
+    # Demo: access tokens are minted with a very long lifetime so a session left
+    # open during the defence never expires mid-demo (the app has no silent token
+    # refresh). A real deployment would drop this back to ~15 minutes and rely on
+    # the /auth/refresh rotation instead.
+    jwt_access_minutes: int = 5256000  # ~10 years, effectively non-expiring
     jwt_refresh_days: int = 7
     sportradar_api_key: str = ""
     sportradar_base_url: str = "https://api.sportradar.com/soccer/trial/v4/en"
@@ -41,12 +45,13 @@ class Settings(BaseSettings):
     ws_connections_table: str = "umbraro-ws-connections"
 
     # Demo mode for the committee presentation.
-    # The Romanian Superliga 2024-2025 season is over and Sportradar trial
-    # returns no current fixtures, so the live dashboard would be empty. When
+    # The live data the Sportradar trial exposes does not line up with a clean,
+    # fully-played Superliga season, so the live dashboard would be patchy. When
     # demo_mode is on, the backend pretends "now" is demo_today (ISO date,
-    # interpreted at noon UTC) so the week-fixtures, standings, dashboard, and
-    # XI flows all light up against the CSV-backed 2024-2025 data. The live
-    # Sportradar fetch and its caches are bypassed in demo mode.
+    # interpreted at noon UTC) so the week-fixtures, standings, dashboard, and XI
+    # flows all light up against the baked 2025-26 Wyscout dataset. In demo mode
+    # the live Sportradar fetch and its on-disk caches are bypassed entirely, so
+    # the whole demo runs offline.
     demo_mode: bool = False
     demo_today: str = ""
 
