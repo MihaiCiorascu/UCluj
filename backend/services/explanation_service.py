@@ -5,7 +5,7 @@ import pandas as pd
 from ml.feature_config import OPTIMIZABLE_LABELS
 from services.model_service import ModelService
 
-# Labels when U Cluj is the HOME team (or generic perspective)
+# Labels when the SUBJECT team is the HOME team (or generic perspective)
 FEATURE_LABELS: dict[str, str] = {
     "Computed_Elo_Diff": "Elo Advantage",
     "Computed_HFA": "Home Field Advantage",
@@ -36,7 +36,7 @@ FEATURE_LABELS: dict[str, str] = {
     **OPTIMIZABLE_LABELS,
 }
 
-# Labels when U Cluj is the AWAY team — Home_* = opponent, Away_* = U Cluj
+# Labels when the SUBJECT team is the AWAY team (Home_* = opponent, Away_* = subject)
 FEATURE_LABELS_AWAY: dict[str, str] = {
     "Computed_Elo_Diff": "Opponent Elo Lead",
     "Computed_HFA": "Opponent Home Advantage",
@@ -90,18 +90,19 @@ class ExplanationService:
         self,
         features: pd.DataFrame,
         probability: float,
-        ucl_is_home: bool = True,
+        subject_is_home: bool = True,
     ) -> dict:
-        """Explain a fixture from U Cluj's perspective.
+        """Explain a fixture from the subject team's perspective.
 
-        probability must be P(U Cluj Win) — already converted from P(Home Win).
-        ucl_is_home controls which label set and SHAP sign convention to use.
-        Positive SHAP = increases P(Home Win); when U Cluj is away that's bad for U Cluj.
+        ``probability`` must be P(subject win), already converted from P(Home Win).
+        ``subject_is_home`` controls which label set and SHAP sign convention to
+        use. Positive SHAP increases P(Home Win); when the subject is away that is
+        bad for the subject, so the sign flips.
         """
         contributions = self._model.local_contributions(features)
-        label_map = FEATURE_LABELS if ucl_is_home else FEATURE_LABELS_AWAY
-        # sign: +1 when home (positive SHAP → good for U Cluj), -1 when away
-        sign = 1 if ucl_is_home else -1
+        label_map = FEATURE_LABELS if subject_is_home else FEATURE_LABELS_AWAY
+        # sign: +1 when home (positive SHAP benefits the subject), -1 when away
+        sign = 1 if subject_is_home else -1
 
         if not contributions:
             importances = self._model.feature_importances()
@@ -126,12 +127,12 @@ class ExplanationService:
         total_abs = sum(abs(float(v)) for v in contributions.values()) or 1.0
         items = []
         for feat, shap in contributions.items():
-            ucl_shap = sign * float(shap)  # positive = benefits U Cluj
+            subject_shap = sign * float(shap)  # positive = benefits the subject
             items.append({
                 "feature": feat,
                 "label": label_map.get(feat, feat),
                 "importance": round(abs(float(shap)) / total_abs, 4),
-                "direction": "positive" if ucl_shap >= 0.0 else "negative",
+                "direction": "positive" if subject_shap >= 0.0 else "negative",
             })
 
         items.sort(key=lambda x: x["importance"], reverse=True)

@@ -17,6 +17,7 @@ import '../../../core/widgets/app_empty_state.dart';
 import '../../../core/widgets/app_loading_skeleton.dart';
 import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/config/app_config.dart';
+import '../../../core/data/superliga_teams.dart';
 import '../../../data/models/week_fixture.dart';
 import '../../../data/repositories/match_details_repository.dart';
 import '../../../data/repositories/week_repository.dart';
@@ -55,7 +56,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   static const List<int> _cachedOffsets = [-2, -1, 0, 1, 2];
   final Map<int, List<WeekFixture>> _cache = {};
 
-  static const String _myTeam = 'Universitatea Cluj';
+  /// The analytical subject club: the signed-in user's team (registry short),
+  /// defaulting to U Cluj when unset. Drives the pinned section and its label.
+  String get _myTeam => widget.authState.user?.teamName ?? 'U Cluj';
 
   // Live Sportradar season ID, mirroring backend
   // api/v1/endpoints/standings.py::SUPERLIGA_SEASON_ID.
@@ -69,7 +72,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Set<String> _playoffTeams = {};
   Set<String> _playoutTeams = {};
   // Which group contains U Cluj: 'playoff', 'playout', or null when unknown.
-  String? _uclujGroup;
+  String? _subjectGroup;
 
   // Every fixture the backend returned for the selected round offset. The
   // backend already scopes the response to a single resolved round (all of
@@ -90,7 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void _prefetchMatchDetails() {
     final completed = _cache.values
         .expand((fixtures) => fixtures)
-        .where((f) => f.isCompleted && f.involvesUCluj && f.matchId.isNotEmpty)
+        .where((f) => f.isCompleted && f.involvesSubject && f.matchId.isNotEmpty)
         .map((f) => f.matchId)
         .toSet();
 
@@ -120,16 +123,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           .where((n) => n.isNotEmpty)
           .toSet();
       // Determine U Cluj's own group by which set contains it.
-      String? uclujGroup;
-      if (playoff.any(_isUClujName)) {
-        uclujGroup = 'playoff';
-      } else if (playout.any(_isUClujName)) {
-        uclujGroup = 'playout';
+      String? subjectGroup;
+      if (playoff.any(_isSubjectName)) {
+        subjectGroup = 'playoff';
+      } else if (playout.any(_isSubjectName)) {
+        subjectGroup = 'playout';
       }
       setState(() {
         _playoffTeams = playoff;
         _playoutTeams = playout;
-        _uclujGroup = uclujGroup;
+        _subjectGroup = subjectGroup;
       });
     } catch (_) {
       // Group data unavailable: leave sets empty, fall back to one list.
@@ -235,8 +238,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // The backend already scoped this offset to one round; show its fixtures
     // directly, U Cluj pinned first, the rest split below.
     final roundFixtures = _fixtures;
-    final uclFixtures   = roundFixtures.where((f) => f.involvesUCluj).toList();
-    final otherFixtures = roundFixtures.where((f) => !f.involvesUCluj).toList();
+    final subjectFixtures   = roundFixtures.where((f) => f.involvesSubject).toList();
+    final otherFixtures = roundFixtures.where((f) => !f.involvesSubject).toList();
 
     // Continuous index so the whole list staggers in as one sequence.
     var index = 0;
@@ -252,18 +255,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
           // U Cluj section (pinned at the top). Hidden gracefully when U Cluj
           // has no match this round, so no empty card is shown.
-          if (uclFixtures.isNotEmpty) ...[
+          if (subjectFixtures.isNotEmpty) ...[
             _buildSectionLabel(
-              _roundOffset < 0
-                  ? L10n.t('dashboard.uclujResults')
-                  : _roundOffset == 0
-                      ? L10n.t('dashboard.uclujThisWeek')
-                      : L10n.t('dashboard.uclujNextRound'),
+              (_roundOffset < 0
+                      ? L10n.t('dashboard.subjectResults')
+                      : _roundOffset == 0
+                          ? L10n.t('dashboard.subjectThisRound')
+                          : L10n.t('dashboard.subjectNextRound'))
+                  .replaceAll('{team}', _myTeam.toUpperCase()),
               c.primary,
               c,
             ),
             const SizedBox(height: SpacingTokens.sm),
-            ...uclFixtures.map(
+            ...subjectFixtures.map(
                 (f) => _buildMatchCard(f, highlight: true, c: c, index: index++)),
             const SizedBox(height: SpacingTokens.xl),
           ],
@@ -324,7 +328,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     // U Cluj's own group is shown first; default to play-off ordering when
     // U Cluj's group could not be resolved.
-    final playoutFirst = _uclujGroup == 'playout';
+    final playoutFirst = _subjectGroup == 'playout';
     final playoffLabel = L10n.t('dashboard.playoff');
     final playoutLabel = L10n.t('dashboard.playout');
 
@@ -547,13 +551,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required AppColorTokens c,
     required int index,
   }) {
-    final isHome = f.isUCLujHome;
+    final isHome = f.isSubjectHome;
     final isUpcoming = !f.isCompleted;
 
     // Result for the W/D/L dot + score colour (U Cluj completed only).
     Color? resultColor;
     String? resultLetter;
-    if (f.isCompleted && f.involvesUCluj) {
+    if (f.isCompleted && f.involvesSubject) {
       final myScore = isHome ? f.homeScore! : f.awayScore!;
       final theirScore = isHome ? f.awayScore! : f.homeScore!;
       final won = myScore > theirScore;
@@ -802,8 +806,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return false;
   }
 
-  /// True when a normalised standings team name is U Cluj (and not CFR Cluj),
-  /// mirroring the standings screen's tracked-team detection.
-  bool _isUClujName(String normalized) =>
-      normalized.contains('cluj') && !normalized.contains('cfr');
+  /// True when a normalised standings team name resolves to the subject club.
+  /// Uses the shared crest resolver so short and full name forms (e.g. "U Cluj"
+  /// vs "Universitatea Cluj") line up, while distinct clubs (CFR Cluj) do not.
+  bool _isSubjectName(String normalized) {
+    final subjectAsset = badgeAssetForName(_myTeam);
+    return subjectAsset != null && badgeAssetForName(normalized) == subjectAsset;
+  }
 }

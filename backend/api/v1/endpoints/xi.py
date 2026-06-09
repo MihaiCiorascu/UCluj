@@ -3,10 +3,17 @@ from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional
 
 from core.dependencies import get_xi_service, get_feature_service
+from core.security import get_current_user
 from services.xi_service import XiService
 from services.feature_service import FeatureService
 
 router = APIRouter()
+
+
+def _subject_short(user) -> str:
+    """The home team for XI prediction: the authenticated user's club (registry
+    short), defaulting to Universitatea Cluj when unset."""
+    return (getattr(user, "team_name", None) or "U Cluj").strip()
 
 
 def _coerce_locked(locked: Optional[Dict[str, int]]) -> Optional[Dict[int, int]]:
@@ -47,10 +54,15 @@ class OpponentTeam(BaseModel):
 @router.post("/predict", response_model=Dict[str, Any])
 def predict_xi(
     body: XiRequest,
-    xi_svc: XiService = Depends(get_xi_service)
+    xi_svc: XiService = Depends(get_xi_service),
+    _user=Depends(get_current_user),
 ):
     try:
-        result = xi_svc.predict_xi(formation=body.formation, opponent_team_id=body.opponent_team_id)
+        result = xi_svc.predict_xi(
+            formation=body.formation,
+            opponent_team_id=body.opponent_team_id,
+            home_team_short=_subject_short(_user),
+        )
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -59,9 +71,10 @@ def predict_xi(
 @router.get("/opponents", response_model=list[OpponentTeam])
 def list_opponents(
     xi_svc: XiService = Depends(get_xi_service),
+    _user=Depends(get_current_user),
 ):
     try:
-        return xi_svc.list_opponents()
+        return xi_svc.list_opponents(home_team_substring=_subject_short(_user))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -72,6 +85,7 @@ def match_preview(
     formation: str = Query("auto", description="A curated formation key, or 'auto' to auto-pick the best shape"),
     xi_svc: XiService = Depends(get_xi_service),
     feature_svc: FeatureService = Depends(get_feature_service),
+    _user=Depends(get_current_user),
 ):
     """Simple match preview (no slot locks). ``formation`` defaults to 'auto'."""
     try:
@@ -79,6 +93,7 @@ def match_preview(
             opponent_name=opponent_name,
             formation=formation,
             main_df=feature_svc._df,
+            home_team_short=_subject_short(_user),
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -89,6 +104,7 @@ def match_preview_post(
     body: MatchPreviewRequest,
     xi_svc: XiService = Depends(get_xi_service),
     feature_svc: FeatureService = Depends(get_feature_service),
+    _user=Depends(get_current_user),
 ):
     """Match preview with optional slot locks and lock-aware re-optimisation.
 
@@ -104,6 +120,7 @@ def match_preview_post(
             formation=body.formation,
             main_df=feature_svc._df,
             locked=_coerce_locked(body.locked),
+            home_team_short=_subject_short(_user),
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

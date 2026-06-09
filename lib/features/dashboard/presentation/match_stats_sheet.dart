@@ -214,8 +214,10 @@ class MatchStatsSheet extends StatefulWidget {
 }
 
 class _MatchStatsSheetState extends State<MatchStatsSheet> {
-  // XI (upcoming matches)
-  final _xiRepo = XiRepository();
+  // XI (upcoming matches). Built in initState with the authenticated client:
+  // the /xi endpoints now read the signed-in user's club from the JWT, so a
+  // tokenless client would be rejected.
+  late final XiRepository _xiRepo;
   bool _loadingXi = false;
   MatchPreviewResponse? _preview;
   String? _xiError;
@@ -244,10 +246,11 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   @override
   void initState() {
     super.initState();
+    _xiRepo = XiRepository(apiClient: widget.apiClient ?? ApiClient());
     final f = widget.fixture;
     if (f.isCompleted && f.matchId.isNotEmpty) {
       _loadMatchDetails();
-    } else if (f.involvesUCluj) {
+    } else if (f.involvesSubject) {
       _loadXi();
     }
   }
@@ -269,7 +272,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     setState(() { _loadingXi = true; _xiError = null; });
     try {
       final f = widget.fixture;
-      final opponent = f.isUCLujHome ? f.awayTeam : f.homeTeam;
+      final opponent = f.isSubjectHome ? f.awayTeam : f.homeTeam;
       // Use the flexible-XI POST so "auto" (the default) lets the optimiser
       // score the nine curated shapes and return the best one; an explicit
       // curated key forces that shape instead. The panel renders from the
@@ -375,7 +378,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   // other fixture the home/away framing is what matters, so we
                   // show a neutral three-way split (home win / draw / away win)
                   // from the per-team odds the backend attaches there instead.
-                  if (f.involvesUCluj) ...[
+                  if (f.involvesSubject) ...[
                     if (uclProb != null) ...[
                       _buildMLBlock(f, uclProb),
                       const SizedBox(height: SpacingTokens.xl),
@@ -397,8 +400,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   // The U-Cluj-centric AI key drivers + tactical diagnostic are
                   // meaningful only for the tracked team. On non-U-Cluj fixtures
                   // the backend nulls these (and the new 3-way odds carry the
-                  // story instead), so both blocks are gated behind involvesUCluj.
-                  if (f.involvesUCluj) ...[
+                  // story instead), so both blocks are gated behind involvesSubject.
+                  if (f.involvesSubject) ...[
                     if (f.keyDrivers.isNotEmpty || f.topRisks.isNotEmpty) ...[
                       _sectionLabel(L10n.t('sheet.keyDrivers')),
                       const SizedBox(height: SpacingTokens.sm),
@@ -426,7 +429,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                   ],
 
                   // XI only for upcoming U Cluj matches
-                  if (f.involvesUCluj) _buildXiSection(),
+                  if (f.involvesSubject) _buildXiSection(),
 
                   const SizedBox(height: SpacingTokens.md),
                   Text(L10n.t('sheet.modelFooter'),
@@ -456,7 +459,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             child: _headerTeam(
               teamName: f.homeTeam,
               display: homeDisplay,
-              isUCluj: f.isUCLujHome,
+              isUCluj: f.isSubjectHome,
             ),
           ),
           Padding(
@@ -469,7 +472,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
             child: _headerTeam(
               teamName: f.awayTeam,
               display: awayDisplay,
-              isUCluj: !f.isUCLujHome && f.involvesUCluj,
+              isUCluj: !f.isSubjectHome && f.involvesSubject,
             ),
           ),
         ],
@@ -508,7 +511,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   Widget _buildMatchStatus(WeekFixture f) {
     final c = context.colors;
     if (f.isCompleted) {
-      final isHome = f.isUCLujHome;
+      final isHome = f.isSubjectHome;
       final myScore = isHome ? f.homeScore! : f.awayScore!;
       final theirScore = isHome ? f.awayScore! : f.homeScore!;
       String result;
@@ -528,8 +531,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       // it belongs to the tracked team: the tracked side keeps the strong
       // primary tone, the opponent drops to the muted tone, so the result
       // reads even before the pill below it.
-      final homeIsUCluj = f.isUCLujHome;
-      final neutral = !f.involvesUCluj;
+      final homeIsUCluj = f.isSubjectHome;
+      final neutral = !f.involvesSubject;
 
       return Column(
         children: [
@@ -566,7 +569,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               ),
             ],
           ),
-          if (f.involvesUCluj) ...[
+          if (f.involvesSubject) ...[
             const SizedBox(height: SpacingTokens.sm),
             Container(
               color: col.withValues(alpha: 0.15),
@@ -641,7 +644,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                             .replaceAll('Universitatea Cluj', 'U CLUJ')
                             .toUpperCase(),
                         style: TypographyTokens.sectionLabel.copyWith(
-                          color: f.involvesUCluj && f.isUCLujHome
+                          color: f.involvesSubject && f.isSubjectHome
                               ? context.colors.accent
                               : context.colors.textPrimary,
                           fontSize: 10,
@@ -664,7 +667,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                             .replaceAll('Universitatea Cluj', 'U CLUJ')
                             .toUpperCase(),
                         style: TypographyTokens.sectionLabel.copyWith(
-                          color: f.involvesUCluj && !f.isUCLujHome
+                          color: f.involvesSubject && !f.isSubjectHome
                               ? context.colors.accent
                               : context.colors.textPrimary,
                           fontSize: 10,
@@ -693,39 +696,39 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               homeVal: h.ballPossession ?? 50,
               awayVal: a.ballPossession ?? 50,
               higherIsBetter: true,
-              isUCLujHome: f.isUCLujHome,
+              isSubjectHome: f.isSubjectHome,
             ),
           _buildStatRowRaw(L10n.t('sheet.statShotsOnTarget'),
               '${h.shotsOnTarget ?? '-'}', '${a.shotsOnTarget ?? '-'}',
               homeVal: (h.shotsOnTarget ?? 0).toDouble(),
               awayVal: (a.shotsOnTarget ?? 0).toDouble(),
-              higherIsBetter: true, isUCLujHome: f.isUCLujHome),
+              higherIsBetter: true, isSubjectHome: f.isSubjectHome),
           _buildStatRowRaw(L10n.t('sheet.statShotsTotal'),
               '${h.totalShots}', '${a.totalShots}',
               homeVal: h.totalShots.toDouble(),
               awayVal: a.totalShots.toDouble(),
-              higherIsBetter: true, isUCLujHome: f.isUCLujHome),
+              higherIsBetter: true, isSubjectHome: f.isSubjectHome),
           _buildStatRowRaw(L10n.t('sheet.statCorners'),
               '${h.cornerKicks ?? '-'}', '${a.cornerKicks ?? '-'}',
               homeVal: (h.cornerKicks ?? 0).toDouble(),
               awayVal: (a.cornerKicks ?? 0).toDouble(),
-              higherIsBetter: true, isUCLujHome: f.isUCLujHome),
+              higherIsBetter: true, isSubjectHome: f.isSubjectHome),
           _buildStatRowRaw(L10n.t('sheet.statOffsides'),
               '${h.offsides ?? '-'}', '${a.offsides ?? '-'}',
               homeVal: (h.offsides ?? 0).toDouble(),
               awayVal: (a.offsides ?? 0).toDouble(),
-              higherIsBetter: false, isUCLujHome: f.isUCLujHome),
+              higherIsBetter: false, isSubjectHome: f.isSubjectHome),
           _buildStatRowRaw(L10n.t('sheet.statFouls'),
               '${h.fouls ?? '-'}', '${a.fouls ?? '-'}',
               homeVal: (h.fouls ?? 0).toDouble(),
               awayVal: (a.fouls ?? 0).toDouble(),
-              higherIsBetter: false, isUCLujHome: f.isUCLujHome),
+              higherIsBetter: false, isSubjectHome: f.isSubjectHome),
           if (h.yellowCards != null || a.yellowCards != null)
             _buildStatRowRaw(L10n.t('sheet.statYellow'),
                 '${h.yellowCards ?? '-'}', '${a.yellowCards ?? '-'}',
                 homeVal: (h.yellowCards ?? 0).toDouble(),
                 awayVal: (a.yellowCards ?? 0).toDouble(),
-                higherIsBetter: false, isUCLujHome: f.isUCLujHome),
+                higherIsBetter: false, isSubjectHome: f.isSubjectHome),
         ],
       ),
     );
@@ -738,7 +741,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     required double homeVal,
     required double awayVal,
     required bool higherIsBetter,
-    required bool isUCLujHome,
+    required bool isSubjectHome,
   }) {
     final c = context.colors;
     final total = homeVal + awayVal;
@@ -753,8 +756,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
     // Team tones: the tracked side carries cobalt, the opponent steel, so the
     // bar speaks the same role language as the rest of the sheet.
-    final homeTone = isUCLujHome ? c.accent : c.roleDefender;
-    final awayTone = !isUCLujHome ? c.accent : c.roleDefender;
+    final homeTone = isSubjectHome ? c.accent : c.roleDefender;
+    final awayTone = !isSubjectHome ? c.accent : c.roleDefender;
     final muted = c.textMuted.withValues(alpha: 0.35);
     // On a tie both sides share a distinct, more-visible neutral tone so the row
     // does not read like a double loss.
@@ -843,13 +846,13 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     required double homeVal,
     required double awayVal,
     required bool higherIsBetter,
-    required bool isUCLujHome,
+    required bool isSubjectHome,
   }) =>
       _buildStatRow(label, homeStr, awayStr,
           homeVal: homeVal,
           awayVal: awayVal,
           higherIsBetter: higherIsBetter,
-          isUCLujHome: isUCLujHome);
+          isSubjectHome: isSubjectHome);
 
   // ── Lineup pitch section (completed matches) ─────────────────────────────
 
@@ -864,8 +867,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     // actually involves U Cluj AND that side is the U-Cluj side - so on a
     // neutral fixture neither tab nor the formation label takes the accent, and
     // the away tab correctly takes it when U Cluj plays away.
-    final homeIsUCluj = f.involvesUCluj && f.isUCLujHome;
-    final awayIsUCluj = f.involvesUCluj && !f.isUCLujHome;
+    final homeIsUCluj = f.involvesSubject && f.isSubjectHome;
+    final awayIsUCluj = f.involvesSubject && !f.isSubjectHome;
     final isUCluj = isShowingHome ? homeIsUCluj : awayIsUCluj;
 
     final starters = players.where((p) => p.isStarter).toList();
