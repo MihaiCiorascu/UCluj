@@ -47,6 +47,7 @@ class RecommendedXiFifaPanel extends StatefulWidget {
     required this.preview,
     required this.formation,
     this.opponentName,
+    this.homeTeam,
     this.xiRepository,
     this.onPreviewChanged,
     this.ratingForDisplay = _defaultRatingForDisplay,
@@ -58,6 +59,13 @@ class RecommendedXiFifaPanel extends StatefulWidget {
   /// Opponent short label used to re-request the preview when the staff edit
   /// the XI. When null the panel is read-only (no action menu, no locks).
   final String? opponentName;
+
+  /// Home-team override for the preview re-fetch, mirroring the sheet's initial
+  /// load. Non-null only for non-subject ("other") matches, where the previewed
+  /// home team is the fixture's home club rather than the user's; passing it on
+  /// every edit keeps the re-optimised XI framed on the same team. Also used to
+  /// label the toggle by team name for those matches.
+  final String? homeTeam;
 
   /// Repository used for the flexible-XI POST round-trips. Defaults to a fresh
   /// [XiRepository] when interactivity is enabled and none is injected.
@@ -170,6 +178,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         opponentName: widget.opponentName!,
         formation: _resolvedFormation,
         locked: Map<int, int>.from(_locked),
+        homeTeam: widget.homeTeam,
       );
       if (!mounted) return;
       setState(() {
@@ -657,6 +666,10 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
 
   // Predicted-most-likely XI (default) vs the best-by-rating 'ideal' XI, so the
   // committee can contrast selection-likelihood against raw quality.
+  /// Segment label for a club: shorten U Cluj's long form and upper-case it.
+  String _teamLabel(String name) =>
+      name.replaceAll('Universitatea Cluj', 'U Cluj').toUpperCase();
+
   Widget _xiToggle(AppColorTokens c) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -665,15 +678,25 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
           value: _showOpponent,
           onChanged: _setShowOpponent,
           segments: [
-            SegmentOption(value: false, label: L10n.t('team.segLikelyXi')),
-            SegmentOption(value: true, label: L10n.t('team.segOpponentXi')),
+            SegmentOption(
+                value: false,
+                label: widget.homeTeam != null
+                    ? _teamLabel(_preview.homeTeamShort)
+                    : L10n.t('team.segLikelyXi')),
+            SegmentOption(
+                value: true,
+                label: widget.homeTeam != null
+                    ? _teamLabel(_preview.opponentName)
+                    : L10n.t('team.segOpponentXi')),
           ],
         ),
         const SizedBox(height: 6),
         Text(
-          _showOpponent
-              ? L10n.t('team.explainOpponentXi')
-              : L10n.t('team.explainLikelyXi'),
+          widget.homeTeam != null
+              ? L10n.t('team.explainOtherXi')
+              : (_showOpponent
+                  ? L10n.t('team.explainOpponentXi')
+                  : L10n.t('team.explainLikelyXi')),
           style: TypographyTokens.bodySmall.copyWith(
             color: c.textMuted,
             height: 1.2,

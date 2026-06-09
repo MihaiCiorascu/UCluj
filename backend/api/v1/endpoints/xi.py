@@ -16,6 +16,14 @@ def _subject_short(user) -> str:
     return (getattr(user, "team_name", None) or "U Cluj").strip()
 
 
+def _home_kwargs(home_team, user) -> dict:
+    """Resolve the preview's home team: an explicit override (used to view any
+    club's fixture, e.g. a non-subject match) when given, else the user's club."""
+    if home_team and str(home_team).strip():
+        return {"home_team_substring": str(home_team).strip()}
+    return {"home_team_short": _subject_short(user)}
+
+
 def _coerce_locked(locked: Optional[Dict[str, int]]) -> Optional[Dict[int, int]]:
     """Coerce a JSON ``locked`` object to ``{slot_index(int) -> playerId(int)}``.
 
@@ -45,6 +53,9 @@ class MatchPreviewRequest(BaseModel):
     formation: str = "auto"
     # JSON object keyed by stringified slot index -> playerId.
     locked: Dict[str, int] = Field(default_factory=dict)
+    # Home team override (defaults to the user's club); set when previewing a
+    # fixture that does not involve the user's team.
+    home_team: Optional[str] = None
 
 
 class OpponentTeam(BaseModel):
@@ -83,6 +94,7 @@ def list_opponents(
 def match_preview(
     opponent_name: str = Query(..., description="Opponent team name as it appears in fixtures"),
     formation: str = Query("auto", description="A curated formation key, or 'auto' to auto-pick the best shape"),
+    home_team: Optional[str] = Query(None, description="Home team override (defaults to the user's club)"),
     xi_svc: XiService = Depends(get_xi_service),
     feature_svc: FeatureService = Depends(get_feature_service),
     _user=Depends(get_current_user),
@@ -93,7 +105,7 @@ def match_preview(
             opponent_name=opponent_name,
             formation=formation,
             main_df=feature_svc._df,
-            home_team_short=_subject_short(_user),
+            **_home_kwargs(home_team, _user),
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -120,7 +132,7 @@ def match_preview_post(
             formation=body.formation,
             main_df=feature_svc._df,
             locked=_coerce_locked(body.locked),
-            home_team_short=_subject_short(_user),
+            **_home_kwargs(body.home_team, _user),
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
