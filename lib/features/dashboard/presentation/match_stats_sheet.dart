@@ -372,10 +372,12 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                       _sectionLabel(L10n.t('sheet.officialStats')),
                       const SizedBox(height: SpacingTokens.sm),
                       _buildTeamStats(f, _matchDetails!),
-                      const SizedBox(height: SpacingTokens.xs),
-                      Text(L10n.t('sheet.statsEstimated'),
-                          style: TypographyTokens.meta
-                              .copyWith(color: c.textMuted)),
+                      if (_matchDetails!.statsEstimated) ...[
+                        const SizedBox(height: SpacingTokens.xs),
+                        Text(L10n.t('sheet.statsEstimated'),
+                            style: TypographyTokens.meta
+                                .copyWith(color: c.textMuted)),
+                      ],
                       const SizedBox(height: SpacingTokens.xl),
                     ],
                     if (_matchDetails!.hasLineups) ...[

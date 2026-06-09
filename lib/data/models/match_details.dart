@@ -117,6 +117,10 @@ class MatchDetails {
   // full eleven was assigned.
   final String homeFormation;
   final String awayFormation;
+  // True when the team stats are the per-player Wyscout approximation (the sheet
+  // then shows an "estimated" caveat); false when they are official Sportradar
+  // totals. Defaults false for the live Sportradar path and older payloads.
+  final bool statsEstimated;
 
   MatchDetails({
     required this.matchId,
@@ -126,6 +130,7 @@ class MatchDetails {
     required this.awayLineup,
     this.homeFormation = '',
     this.awayFormation = '',
+    this.statsEstimated = false,
   });
 
   bool get hasStats => homeStats.hasData || awayStats.hasData;
@@ -147,5 +152,6 @@ class MatchDetails {
             [],
         homeFormation: j['home_formation'] as String? ?? '',
         awayFormation: j['away_formation'] as String? ?? '',
+        statsEstimated: j['stats_estimated'] as bool? ?? false,
       );
 }
