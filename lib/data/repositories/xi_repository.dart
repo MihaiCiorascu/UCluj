@@ -87,6 +87,7 @@ class XiRepository {
     required String opponentName,
     String formation = kFormationAuto,
     Map<int, int> locked = const {},
+    String? homeTeam,
   }) async {
     final response = await _apiClient.post(
       '/xi/match-preview',
@@ -96,6 +97,9 @@ class XiRepository {
         'locked': {
           for (final e in locked.entries) e.key.toString(): e.value,
         },
+        // Home-team override: set when previewing a fixture that does not
+        // involve the user's club; omitted otherwise so the backend uses it.
+        if (homeTeam != null && homeTeam.isNotEmpty) 'home_team': homeTeam,
       },
     );
     return MatchPreviewResponse.fromJson(response);

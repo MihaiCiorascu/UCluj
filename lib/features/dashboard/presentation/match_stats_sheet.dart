@@ -15,7 +15,7 @@ import '../../../core/primitives/win_probability_arc.dart';
 import '../../../core/primitives/skeleton_box.dart';
 import '../../../data/models/week_fixture.dart';
 import '../../../data/models/match_details.dart';
-import '../../../data/models/match_preview.dart' show MatchPreviewResponse;
+import '../../../data/models/match_preview.dart' show H2HStats, MatchPreviewResponse;
 import '../../../data/repositories/xi_repository.dart';
 import '../../../data/repositories/match_details_repository.dart';
 import '../../../core/services/api_client.dart';
@@ -250,7 +250,9 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     final f = widget.fixture;
     if (f.isCompleted && f.matchId.isNotEmpty) {
       _loadMatchDetails();
-    } else if (f.involvesSubject) {
+    } else if (!f.isCompleted) {
+      // Load the XI preview for ANY upcoming match (subject or not), so the
+      // "other matches" view also shows both teams' predicted XIs + H2H.
       _loadXi();
     }
   }
@@ -272,7 +274,14 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     setState(() { _loadingXi = true; _xiError = null; });
     try {
       final f = widget.fixture;
-      final opponent = f.isSubjectHome ? f.awayTeam : f.homeTeam;
+      // For the subject's own match the backend frames the home team as the
+      // user's club (leave homeTeam null, pass the actual opponent). For a
+      // non-subject match we preview the fixture itself: home = its home team,
+      // opponent = its away team, overriding the home via [homeTeam].
+      final String opponent = f.involvesSubject
+          ? (f.isSubjectHome ? f.awayTeam : f.homeTeam)
+          : f.awayTeam;
+      final String? homeOverride = f.involvesSubject ? null : f.homeTeam;
       // Use the flexible-XI POST so "auto" (the default) lets the optimiser
       // score the nine curated shapes and return the best one; an explicit
       // curated key forces that shape instead. The panel renders from the
@@ -280,6 +289,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
       final preview = await _xiRepo.postMatchPreview(
         opponentName: opponent,
         formation: _formation,
+        homeTeam: homeOverride,
       );
       if (mounted) {
         setState(() {
@@ -428,8 +438,14 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                     ],
                   ],
 
-                  // XI only for upcoming U Cluj matches
-                  if (f.involvesSubject) _buildXiSection(),
+                  // Recommended XI for ANY upcoming match: the subject's XI for
+                  // its own fixtures, or both teams' XIs (via the toggle) for
+                  // other matches.
+                  _buildXiSection(),
+                  if (_preview != null && _preview!.headToHead.total > 0) ...[
+                    const SizedBox(height: SpacingTokens.xl),
+                    _buildH2HSection(_preview!.headToHead, f),
+                  ],
 
                   const SizedBox(height: SpacingTokens.md),
                   Text(L10n.t('sheet.modelFooter'),
@@ -1410,6 +1426,69 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
 
   // ── XI section (upcoming U Cluj) ─────────────────────────────────────────
 
+  /// Head-to-head record for the previewed fixture: the home team's wins, draws,
+  /// and the opponent's wins over the last meetings, with average goals. Shown
+  /// for any upcoming match once the preview has loaded a non-empty record.
+  Widget _buildH2HSection(H2HStats h2h, WeekFixture f) {
+    final c = context.colors;
+    final our = (_preview?.homeTeamShort.isNotEmpty ?? false)
+        ? _preview!.homeTeamShort
+        : f.homeTeam;
+    final their = (_preview?.opponentName.isNotEmpty ?? false)
+        ? _preview!.opponentName
+        : f.awayTeam;
+    Widget cell(String label, int n, Color tone) => Expanded(
+          child: Column(
+            children: [
+              Text('$n',
+                  style: TypographyTokens.statValue
+                      .copyWith(color: tone, fontSize: 22)),
+              const SizedBox(height: 2),
+              Text(
+                label.replaceAll('Universitatea Cluj', 'U Cluj'),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TypographyTokens.meta.copyWith(color: c.textMuted),
+              ),
+            ],
+          ),
+        );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionLabel(L10n.t('sheet.headToHead')),
+        const SizedBox(height: SpacingTokens.sm),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: c.surfaceLow,
+            borderRadius: ShapeTokens.card,
+            border: Border.all(color: c.divider),
+          ),
+          padding: const EdgeInsets.all(SpacingTokens.md),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  cell(our, h2h.ourWins, c.positive),
+                  cell(L10n.t('sheet.h2hDraws'), h2h.draws, c.textMuted),
+                  cell(their, h2h.theirWins, c.roleDefender),
+                ],
+              ),
+              const SizedBox(height: SpacingTokens.sm),
+              Text(
+                '${L10n.t('sheet.h2hLast').replaceAll('{n}', '${h2h.total}')}'
+                '  ·  ${h2h.ourAvgGoals} - ${h2h.theirAvgGoals}',
+                style: TypographyTokens.meta.copyWith(color: c.textMuted),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildXiSection() {
     if (_loadingXi) {
       return Column(
@@ -1489,6 +1568,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               ? _preview!.formation
               : _formation,
           opponentName: _xiOpponent,
+          homeTeam: widget.fixture.involvesSubject ? null : widget.fixture.homeTeam,
           xiRepository: _xiRepo,
           onPreviewChanged: (updated) {
             // Keep the sheet's copy in sync so a formation switch after an edit
