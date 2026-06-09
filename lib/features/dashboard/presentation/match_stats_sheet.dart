@@ -21,26 +21,6 @@ import '../../../data/repositories/match_details_repository.dart';
 import '../../../core/services/api_client.dart';
 import '../../team/presentation/recommended_xi_fifa_panel.dart';
 
-// ── Player-grade helpers ────────────────────────────────────────────────────
-//
-// Completed-match player grades arrive on a 0-10 scale (one decimal). The
-// scale is position-fair, so a typical appearance lands near 6.x. We band the
-// colour the same way the upcoming-XI percentile rating does (strong / neutral
-// / weak), so the completed pitch reads in the same Stoic-Analyst language as
-// the predicted pitch while staying accent-forward for the headline number.
-
-/// Tone for a 0-10 match grade: green for a strong showing, cobalt accent for
-/// a solid-to-average one, red for a weak one. Mirrors the band thresholds the
-/// FIFA rating bars use, scaled to the 0-10 grade range.
-Color gradeColor(double grade, AppColorTokens c) {
-  if (grade >= 7.0) return c.positive;
-  if (grade >= 6.0) return c.accent;
-  return c.negative;
-}
-
-/// One-decimal display string for a grade (e.g. 7.6).
-String gradeLabel(double grade) => grade.toStringAsFixed(1);
-
 // ── Prescription blueprint widget ──────────────────────────────────────────
 
 class _PrescriptionBlueprint extends StatelessWidget {
@@ -1050,9 +1030,8 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
     final c = context.colors;
     final posColor = _positionColor(p.position);
     // Modern completed-match row, aligned with the upcoming-XI player rows: a
-    // role-coloured left rule, headshot, name + role code, the stat badges, and
-    // a dominant accent-coloured match grade on the right (the same hierarchy
-    // the predicted-score column uses on the preview screen).
+    // role-coloured left rule, headshot, name + role code, and the stat badges
+    // (goals, assists, cards, minutes).
     return Container(
       margin: const EdgeInsets.only(bottom: 5),
       decoration: BoxDecoration(
@@ -1104,52 +1083,6 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
                 ],
               ],
             ),
-          ),
-          const SizedBox(width: SpacingTokens.sm),
-          // Dominant match grade, accent-coloured like the upcoming-XI score.
-          _buildGradeColumn(p),
-        ],
-      ),
-    );
-  }
-
-  /// Right-hand grade column for a completed-match player row: a large
-  /// band-coloured grade over a small caption, or a muted dash when the player
-  /// could not be matched to Wyscout stats. The column is fixed at 48 px wide so
-  /// a two-digit "10.0" and the GRADE caption never clip or shift the row.
-  Widget _buildGradeColumn(MatchPlayer p) {
-    final c = context.colors;
-    if (p.grade == null) {
-      return SizedBox(
-        width: 48,
-        child: Text(
-          '-',
-          textAlign: TextAlign.right,
-          style: TypographyTokens.statValue
-              .copyWith(color: c.textMuted, fontSize: 18),
-        ),
-      );
-    }
-    final tone = gradeColor(p.grade!, c);
-    return SizedBox(
-      width: 48,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            gradeLabel(p.grade!),
-            textAlign: TextAlign.right,
-            style: TypographyTokens.statValue.copyWith(
-              color: tone,
-              fontSize: 20,
-            ),
-          ),
-          Text(
-            L10n.t('sheet.playerGrade'),
-            textAlign: TextAlign.right,
-            style: TypographyTokens.sectionLabel
-                .copyWith(color: c.textMuted, fontSize: 7, letterSpacing: 1.2),
           ),
         ],
       ),
@@ -1819,14 +1752,12 @@ class _ActualPlayerChip extends StatelessWidget {
     final hasAssist = player.assists > 0;
     final hasYellow = player.yellowCards > 0;
     final hasRed = player.redCards > 0;
-    final grade = player.grade;
-    final gradeTone = grade != null ? gradeColor(grade, c) : posColor;
     final r = chipSize * 0.1; // rounded-badge radius, mirrors the predictor chip
 
     // Modern completed-match chip, mirroring the upcoming-XI FifaPitchPlayerChip:
     // a role-ringed headshot, a rounded role-coloured corner badge carrying the
-    // dominant match grade over the position label, the shirt number on the
-    // opposite corner, event markers below, and the surname captioned beneath.
+    // position label, the shirt number on the opposite corner, event markers
+    // below, and the surname captioned beneath.
     // Everything is constrained to [cellWidth] so dense lines never overlap.
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -1846,8 +1777,8 @@ class _ActualPlayerChip extends StatelessWidget {
                   size: chipSize,
                 ),
               ),
-              // Grade + position badge (top-left), the prominent corner glyph
-              // that anchors the chip - grade tone by band, position beneath.
+              // Position badge (top-left), a role-coloured corner tag that
+              // anchors the chip.
               Positioned(
                 top: chipSize * 0.04,
                 left: chipSize * 0.04,
@@ -1857,21 +1788,13 @@ class _ActualPlayerChip extends StatelessWidget {
                     vertical: chipSize * 0.02,
                   ),
                   decoration: BoxDecoration(
-                    color: gradeTone,
+                    color: posColor,
                     borderRadius: BorderRadius.circular(r),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        grade != null ? gradeLabel(grade) : '-',
-                        style: TypographyTokens.statValue.copyWith(
-                          color: Colors.white,
-                          fontSize: chipSize * 0.22,
-                          height: 1.0,
-                        ),
-                      ),
                       Text(
                         _posLabel,
                         maxLines: 1,
