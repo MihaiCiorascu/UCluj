@@ -63,7 +63,6 @@ def decode_token(token: str, expected_type: str = "access") -> dict:
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
 ) -> User:
-    print(f"DEBUG: get_current_user attempt with credentials={'yes' if credentials else 'no'}")
     if credentials is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 

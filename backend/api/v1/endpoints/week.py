@@ -22,6 +22,7 @@ from services.feature_service import FeatureService
 from services.fixture_service import FixtureService
 from services.model_service import ModelService
 from services.prescription_service import PrescriptionService
+from sportradar.team_registry import TeamRef, team_by_alias
 
 logger = logging.getLogger(__name__)
 
@@ -46,9 +47,19 @@ _PRED_CACHE: dict[str, tuple[float, list[dict]]] = {}
 _PRED_CACHE_TTL_SECONDS = 6 * 3600
 
 
-def _ucluj_is_home(home_team: str, away_team: str) -> bool:
-    home = str(home_team or "").strip().lower()
-    return ("u cluj" in home) or ("universitatea cluj" in home)
+def _resolve_subject(user) -> TeamRef | None:
+    """The analytical subject: the authenticated user's club, falling back to
+    Universitatea Cluj when the user has no (or an unrecognised) club set."""
+    name = (getattr(user, "team_name", None) or "").strip()
+    return team_by_alias(name) or team_by_alias(TRACKED_TEAM_NAME)
+
+
+def _is_subject(team_str: str, subject: TeamRef | None) -> bool:
+    """True when a fixture team name resolves to the subject club."""
+    if subject is None:
+        return False
+    ref = team_by_alias(team_str)
+    return ref is not None and ref.short == subject.short
 
 
 def _fixture_service(request: Request) -> FixtureService:
@@ -86,14 +97,14 @@ def _save_cache(fixtures: list[dict]) -> None:
         logger.warning("Could not write fixture cache: %s", exc)
 
 
-def _predictions_signature(week_offset: int, fixtures: list[dict]) -> str:
+def _predictions_signature(week_offset: int, fixtures: list[dict], subject_short: str = "") -> str:
     """Stable cache key for a week's computed predictions.
 
-    Encodes the week and each fixture's identity plus score, so the cache is
-    reused only while those are unchanged and recomputes the moment a score
-    lands or a different week is requested.
+    Encodes the subject club, the week, and each fixture's identity plus score, so
+    the cache is reused only while those are unchanged and recomputes the moment a
+    score lands, a different week is requested, or a different subject views it.
     """
-    parts = [str(week_offset)]
+    parts = [str(subject_short), str(week_offset)]
     for f in fixtures:
         parts.append("|".join((
             str(f.get("match_id", "")),
@@ -115,33 +126,44 @@ async def week_fixtures(
     _user=Depends(get_current_user),
     week_offset: int = Query(default=0, ge=-52, le=52),
 ):
-    """Return Liga 1 fixtures with U Cluj-centric ML predictions.
+    """Return Liga 1 fixtures with subject-team-centric ML predictions.
 
-    For the baked 2025-26 season the ``week_offset`` is reinterpreted as a ROUND
-    offset: 0 is the current round (resolved from the server's effective clock),
-    -1 the previous round, +1 the next, clamped to [1, 33]. Every fixture of the
-    resolved round is returned, each carrying ``round`` and ``phase``. For
-    historical seasons the offset keeps its Mon-Sun week-window meaning against
-    All_Data.csv. Sportradar is never called.
+    The analytical subject is the authenticated user's club (``team_name``),
+    defaulting to Universitatea Cluj when unset. For the baked 2025-26 season the
+    ``week_offset`` is reinterpreted as a ROUND offset: 0 is the current round
+    (resolved from the server's effective clock), -1 the previous round, +1 the
+    next, clamped to [1, 33]. Every fixture of the resolved round is returned, each
+    carrying ``round`` and ``phase``. For historical seasons the offset keeps its
+    Mon-Sun week-window meaning against All_Data.csv. Sportradar is never called.
 
-    home_win_probability in each item is P(U Cluj Win), not P(Home Win).
-    key_drivers and top_risks are from U Cluj's perspective regardless of home/away.
+    home_win_probability in each item is P(Subject Team Win), not P(Home Win), and
+    key_drivers / top_risks are from the subject team's perspective regardless of
+    whether it plays home or away.
     """
     st = request.app.state
+    subject = _resolve_subject(_user)
     return await _compute_week(
-        st.df, st.stadium_map, getattr(st, "bundle", None), week_offset
+        st.df, st.stadium_map, getattr(st, "bundle", None), week_offset, subject
     )
 
 
-async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list[dict]:
-    """Slice the requested week's fixtures, attach U-Cluj-centric ML predictions,
-    and memoise the result.
+async def _compute_week(
+    df, stadium_map: dict, bundle, week_offset: int,
+    subject: TeamRef | None = None,
+) -> list[dict]:
+    """Slice the requested week's fixtures, attach subject-team-centric ML
+    predictions, and memoise the result.
 
-    Extracted from the endpoint so the startup pre-warm can populate the same
-    in-process cache (_PRED_CACHE). The expensive step is the per-fixture Monte
-    Carlo prescription; it runs only on a cache miss (a new round or a changed
-    score). Returns the sanitised, client-ready list.
+    ``subject`` is the analytical subject club; when None (e.g. the startup
+    pre-warm) it defaults to Universitatea Cluj. Extracted from the endpoint so the
+    pre-warm can populate the same in-process cache (_PRED_CACHE). The expensive
+    step is the per-fixture Monte Carlo prescription; it runs only on a cache miss
+    (a new round, a changed score, or a different subject). Returns the sanitised,
+    client-ready list.
     """
+    if subject is None:
+        subject = team_by_alias(TRACKED_TEAM_NAME)
+    subject_short = subject.short if subject else TRACKED_TEAM_NAME
     now = effective_now()
 
     # 1. Fixture source. The 2025-26 season is served from the committed baked
@@ -176,7 +198,7 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
         if sr_all:
             fixtures = _slice_fixtures(sr_all, monday, sunday)
         else:
-            fixtures = _csv_week_fixtures(FixtureService(df, stadium_map), monday, sunday)
+            fixtures = _csv_week_fixtures(FixtureService(df, stadium_map), monday, sunday, subject_short)
 
     # 3b. Demo horizon: treat fixtures dated after the pinned demo "now" as not
     # yet played, so the pre-match flow (win probability + drivers + blueprint)
@@ -187,7 +209,7 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
     # 3c. Cache: the signature captures the post-horizon fixture state, so a
     # score change or a different week recomputes; otherwise this returns
     # instantly and skips the per-fixture Monte Carlo below.
-    cache_key = _predictions_signature(week_offset, fixtures)
+    cache_key = _predictions_signature(week_offset, fixtures, subject_short)
     hit = _PRED_CACHE.get(cache_key)
     if hit is not None and (time.monotonic() - hit[0]) < _PRED_CACHE_TTL_SECONDS:
         return hit[1]
@@ -202,6 +224,14 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
         result = []
         for f in fixtures_list:
             item = dict(f)
+            # Subject identity for the client, independent of prediction success:
+            # True when the user's club is the home side, False when away, None
+            # when the fixture does not involve the subject club. The frontend uses
+            # this to decide which fixtures are "my team" and which side to feature.
+            _sub_home = _is_subject(f.get("home_team", ""), subject)
+            item["subject_is_home"] = _sub_home if (
+                _sub_home or _is_subject(f.get("away_team", ""), subject)
+            ) else None
             try:
                 if model_svc.is_ready:
                     home_team = f["home_team"]
@@ -215,24 +245,25 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
                     # the map is a no-op there.
                     home_lookup = baked_fixtures.canonical_team_name(home_team)
                     away_lookup = baked_fixtures.canonical_team_name(away_team)
-                    involves_ucluj = _ucluj_is_home(home_team, away_team) or _ucluj_is_home(
-                        away_team, home_team
+                    involves_subject = _is_subject(home_team, subject) or _is_subject(
+                        away_team, subject
                     )
 
-                    if involves_ucluj:
-                        # ── U Cluj fixture: U-Cluj-centric diagnostic + blueprint ──
-                        ucl_is_home = _ucluj_is_home(home_team, away_team)
-                        # P(U Cluj win) computed DIRECTLY by placing U Cluj in the
-                        # home slot of the feature vector, whether they actually
-                        # play home or away. This replaces the old
-                        # `1 - P(home win)` complement, which for U-Cluj-away
-                        # folded draws into U Cluj's win share (the binary model's
-                        # complement is P(U Cluj win OR draw)) and overstated them.
-                        if ucl_is_home:
-                            subject, opponent = home_lookup, away_lookup
+                    if involves_subject:
+                        # ── Subject fixture: subject-centric diagnostic + blueprint ──
+                        subject_is_home = _is_subject(home_team, subject)
+                        # P(subject win) computed DIRECTLY by placing the subject in
+                        # the home slot of the feature vector, whether it actually
+                        # plays home or away. This replaces the old
+                        # `1 - P(home win)` complement, which for a subject-away
+                        # fixture folded draws into the subject's win share (the
+                        # binary model's complement is P(subject win OR draw)) and
+                        # overstated them.
+                        if subject_is_home:
+                            subj_lookup, opp_lookup = home_lookup, away_lookup
                         else:
-                            subject, opponent = away_lookup, home_lookup
-                        ucl_prob = feature_svc.win_prob(model_svc, subject, opponent)
+                            subj_lookup, opp_lookup = away_lookup, home_lookup
+                        subject_prob = feature_svc.win_prob(model_svc, subj_lookup, opp_lookup)
 
                         # The diagnostic / blueprint is still built from the real
                         # home-vs-away vector so its directional drivers read
@@ -246,7 +277,7 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
                             and f.get("away_score") is not None
                         )
                         if not is_completed:
-                            presc = presc_svc.prescribe(feat, ucl_is_home=ucl_is_home)
+                            presc = presc_svc.prescribe(feat, subject_is_home=subject_is_home)
                             prescription = presc.get("structured")
                             # The headline win chance must equal the diagnostic
                             # baseline shown in the same card. The prescription
@@ -255,25 +286,25 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
                             # headline was dampened toward 50% while the baseline
                             # stayed raw, so the two numbers disagreed.
                             if prescription and prescription.get("baseline_prob") is not None:
-                                ucl_prob = float(prescription["baseline_prob"])
+                                subject_prob = float(prescription["baseline_prob"])
                         else:
                             presc = None
                             prescription = None
 
-                        expl = expl_svc.explain(feat, ucl_prob, ucl_is_home=ucl_is_home)
+                        expl = expl_svc.explain(feat, subject_prob, subject_is_home=subject_is_home)
                         narrative = ""
                         if not is_completed:
                             narrative = (
                                 presc["text"] if presc and presc["text"] else expl["narrative"]
                             )
 
-                        item["home_win_probability"] = round(ucl_prob, 4)
+                        item["home_win_probability"] = round(subject_prob, 4)
                         item["key_drivers"] = expl["top_drivers"][:3]
                         item["top_risks"] = expl["top_risks"][:2]
                         item["narrative"] = narrative
                         item["prescription"] = prescription
                     else:
-                        # ── Non-U-Cluj fixture: neutral 3-way odds, no diagnostic ──
+                        # ── Non-subject fixture: neutral 3-way odds, no diagnostic ──
                         # Two independent BINARY calls (each team placed in the
                         # home slot) give P(home win) and P(away win) directly;
                         # the draw is the documented residual mass. This is NOT a
@@ -286,7 +317,7 @@ async def _compute_week(df, stadium_map: dict, bundle, week_offset: int) -> list
                         item["home_team_win_prob"] = round(home_win, 4)
                         item["away_team_win_prob"] = round(away_win, 4)
                         item["draw_prob"] = round(draw, 4)
-                        # No U-Cluj-centric headline / prescription / drivers for
+                        # No subject-centric headline / prescription / drivers for
                         # other matches; the client hides that section here.
                         item["home_win_probability"] = None
                         item["key_drivers"] = []
@@ -454,7 +485,10 @@ def _apply_demo_horizon(fixtures: list[dict], horizon: datetime) -> list[dict]:
     return result
 
 
-def _csv_week_fixtures(fix_svc: FixtureService, monday: datetime, sunday: datetime) -> list[dict]:
+def _csv_week_fixtures(
+    fix_svc: FixtureService, monday: datetime, sunday: datetime,
+    subject_name: str = TRACKED_TEAM_NAME,
+) -> list[dict]:
     """Return every Liga 1 fixture inside [monday, sunday) from the in-memory CSV.
 
     Previously this only returned U Cluj fixtures, which made the dashboard's
@@ -469,11 +503,11 @@ def _csv_week_fixtures(fix_svc: FixtureService, monday: datetime, sunday: dateti
     if week:
         return week
 
-    # Nothing in the requested window. Fall back to the nearest U Cluj
+    # Nothing in the requested window. Fall back to the nearest subject-club
     # fixture either side so the screen is not completely empty.
-    all_ucluj = fix_svc.list_fixtures(team=TRACKED_TEAM_NAME, limit=500)
-    past = [f for f in all_ucluj if _parse_dt(f.get("match_date", "")) < monday]
-    future = [f for f in all_ucluj if _parse_dt(f.get("match_date", "")) >= sunday]
+    all_subject = fix_svc.list_fixtures(team=subject_name, limit=500)
+    past = [f for f in all_subject if _parse_dt(f.get("match_date", "")) < monday]
+    future = [f for f in all_subject if _parse_dt(f.get("match_date", "")) >= sunday]
     out: list[dict] = []
     if past:
         out.append(past[-1])

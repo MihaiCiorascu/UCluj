@@ -232,10 +232,8 @@ class _StandingsScreenState extends State<StandingsScreen>
     if (list.isEmpty) return null;
     final t = _team;
     if (t == null) {
-      for (final team in list) {
-        if (team.name.toLowerCase().contains('cluj') &&
-            !team.name.toLowerCase().contains('cfr')) { return team; }
-      }
+      // No tracked club set (e.g. an unauthenticated view): do not assume
+      // U Cluj, simply fall back to the table leader.
       return list.first;
     }
     for (final team in list) {

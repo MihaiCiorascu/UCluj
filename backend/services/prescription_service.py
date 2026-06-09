@@ -45,7 +45,7 @@ class PrescriptionService:
     def prescribe(
         self,
         features: pd.DataFrame,
-        ucl_is_home: bool,
+        subject_is_home: bool,
         num_simulations: int | None = None,
         random_state: int | None = None,
     ) -> dict:
@@ -69,7 +69,7 @@ class PrescriptionService:
 
         feature_cols = self._model.feature_cols
         bounds = self._model.bounds          # {stat: {'low': x, 'high': y}}
-        target_stats = _HOME_STATS if ucl_is_home else _AWAY_STATS
+        target_stats = _HOME_STATS if subject_is_home else _AWAY_STATS
 
         # Build index map once
         feat_idx = {col: i for i, col in enumerate(feature_cols)}
@@ -88,8 +88,8 @@ class PrescriptionService:
             return float(self._model._model.predict_proba(df)[0, 1])
 
         raw_baseline = _predict(baseline_vec)
-        # Convert to P(U Cluj win) perspective for display
-        baseline_prob = raw_baseline if ucl_is_home else 1.0 - raw_baseline
+        # Convert to P(subject win) perspective for display
+        baseline_prob = raw_baseline if subject_is_home else 1.0 - raw_baseline
 
         # Resolve marginal bounds for the four controllable levers, keyed by the
         # Home_* names the shared sampler expects. The bundle only ships Home_*
@@ -144,9 +144,9 @@ class PrescriptionService:
                 batch_arr[:, feat_idx[target_stats[i]]] = levers[home_key].to_numpy(dtype=float)
             batch = pd.DataFrame(batch_arr, columns=feature_cols)
             probs = self._model._model.predict_proba(batch)[:, 1]
-            best_idx = int(np.argmax(probs) if ucl_is_home else np.argmin(probs))
+            best_idx = int(np.argmax(probs) if subject_is_home else np.argmin(probs))
             candidate_raw = float(probs[best_idx])
-            improved = (candidate_raw > best_raw) if ucl_is_home else (candidate_raw < best_raw)
+            improved = (candidate_raw > best_raw) if subject_is_home else (candidate_raw < best_raw)
             if improved:
                 best_raw = candidate_raw
                 best_tactic = {
@@ -154,7 +154,7 @@ class PrescriptionService:
                     for i, home_key in enumerate(OPTIMIZABLE_FEATURES)
                 }
 
-        best_prob = best_raw if ucl_is_home else 1.0 - best_raw
+        best_prob = best_raw if subject_is_home else 1.0 - best_raw
         improvement = best_prob - baseline_prob
 
         if best_tactic is None or improvement < 0.01:

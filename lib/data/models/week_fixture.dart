@@ -79,13 +79,17 @@ class WeekFixture {
   final int? round;
   final String? phase;
   final double? homeWinProbability;
-  // Three-way odds present ONLY on non-U-Cluj fixtures (the backend runs the
+  // Three-way odds present ONLY on non-subject fixtures (the backend runs the
   // binary model once per team as the home subject and reports a documented
-  // residual draw). On U-Cluj fixtures these are null and homeWinProbability
-  // carries a correct P(U Cluj win) instead.
+  // residual draw). On the subject's fixtures these are null and
+  // homeWinProbability carries a correct P(subject win) instead.
   final double? homeTeamWinProb;
   final double? awayTeamWinProb;
   final double? drawProb;
+  // Subject (the signed-in user's club) side, stamped by the backend: true when
+  // the subject plays at home, false when away, null when it is not in this
+  // fixture. The client uses this instead of matching the club name itself.
+  final bool? subjectIsHome;
   final List<WeekFixtureDriver> keyDrivers;
   final List<WeekFixtureDriver> topRisks;
   final String narrative;
@@ -106,6 +110,7 @@ class WeekFixture {
     this.homeTeamWinProb,
     this.awayTeamWinProb,
     this.drawProb,
+    this.subjectIsHome,
     required this.keyDrivers,
     required this.topRisks,
     required this.narrative,
@@ -114,15 +119,13 @@ class WeekFixture {
 
   bool get isCompleted => homeScore != null && awayScore != null;
 
-  bool get involvesUCluj =>
-      homeTeam.toLowerCase().contains('universitatea cluj') ||
-      awayTeam.toLowerCase().contains('universitatea cluj') ||
-      homeTeam.toLowerCase().contains('u cluj') ||
-      awayTeam.toLowerCase().contains('u cluj');
+  /// Whether this fixture involves the analytical subject (the signed-in user's
+  /// club). Derived from the backend's ``subject_is_home`` stamp: non-null when
+  /// the subject plays in this fixture, null otherwise.
+  bool get involvesSubject => subjectIsHome != null;
 
-  bool get isUCLujHome =>
-      homeTeam.toLowerCase().contains('universitatea cluj') ||
-      homeTeam.toLowerCase().contains('u cluj');
+  /// True only when the subject club is the home side of this fixture.
+  bool get isSubjectHome => subjectIsHome == true;
 
   String get displayDate {
     if (matchDate.length >= 10) {
@@ -147,6 +150,7 @@ class WeekFixture {
         homeTeamWinProb: (j['home_team_win_prob'] as num?)?.toDouble(),
         awayTeamWinProb: (j['away_team_win_prob'] as num?)?.toDouble(),
         drawProb: (j['draw_prob'] as num?)?.toDouble(),
+        subjectIsHome: j['subject_is_home'] as bool?,
         keyDrivers: (j['key_drivers'] as List<dynamic>?)
                 ?.map((e) =>
                     WeekFixtureDriver.fromJson(e as Map<String, dynamic>))
