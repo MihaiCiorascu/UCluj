@@ -61,10 +61,11 @@ class MatchPlayer {
   final int shotsOnTarget;
   final int? minutesPlayed;
   // Ground-truth substitution flags from the Wyscout total block. cameOff: a
-  // starter who was substituted OFF (minutesPlayed is the approximate off minute,
-  // since a starter begins at kick-off). cameOn: a substitute who came ON
-  // (minutesPlayed is the duration played, not an entry minute). The data has no
-  // in/out pairing or exact event minute. Both false for older payloads.
+  // starter who was substituted OFF. cameOn: a substitute who came ON. In both
+  // cases minutesPlayed is the elapsed duration on the pitch (minutesOnField,
+  // including stoppage, so it can exceed 90); it is shown as a duration, not a
+  // match-clock minute. The data has no in/out pairing or exact event minute.
+  // Both false for older payloads.
   final bool cameOff;
   final bool cameOn;
   // Self-hosted headshot URL resolved server-side by name; '' when unmatched
