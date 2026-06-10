@@ -472,6 +472,13 @@ def _build_player(
         "red_cards": int(total.get("redCards", 0) or 0) + int(total.get("directRedCards", 0) or 0),
         "shots_on_target": int(total.get("shotsOnTarget", 0) or 0),
         "minutes_played": minutes,
+        # Ground-truth substitution flags from the Wyscout total block: a
+        # matchesSubstituted starter was subbed OFF, a matchesComingOff player
+        # came ON as a sub. Verified corpus-wide with zero anomalies (2,511 off /
+        # 2,521 on / 3,605 full across the 278 files; full-match starters carry
+        # neither flag), which is why the earlier minutes heuristic was removed.
+        "came_off": (total.get("matchesSubstituted", 0) or 0) > 0,
+        "came_on": (total.get("matchesComingOff", 0) or 0) > 0,
         "grade": grade,
         "stats": _player_stats(total),
         "photo_url": photo_url,

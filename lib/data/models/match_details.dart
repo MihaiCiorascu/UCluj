@@ -60,6 +60,13 @@ class MatchPlayer {
   final int redCards;
   final int shotsOnTarget;
   final int? minutesPlayed;
+  // Ground-truth substitution flags from the Wyscout total block. cameOff: a
+  // starter who was substituted OFF (minutesPlayed is the approximate off minute,
+  // since a starter begins at kick-off). cameOn: a substitute who came ON
+  // (minutesPlayed is the duration played, not an entry minute). The data has no
+  // in/out pairing or exact event minute. Both false for older payloads.
+  final bool cameOff;
+  final bool cameOn;
   // Self-hosted headshot URL resolved server-side by name; '' when unmatched
   // (the avatar then renders initials).
   final String photoUrl;
@@ -88,6 +95,8 @@ class MatchPlayer {
     required this.redCards,
     required this.shotsOnTarget,
     this.minutesPlayed,
+    this.cameOff = false,
+    this.cameOn = false,
     this.photoUrl = '',
     this.grade,
     this.stats = const {},
@@ -108,6 +117,8 @@ class MatchPlayer {
         redCards: (j['red_cards'] as num?)?.toInt() ?? 0,
         shotsOnTarget: (j['shots_on_target'] as num?)?.toInt() ?? 0,
         minutesPlayed: (j['minutes_played'] as num?)?.toInt(),
+        cameOff: j['came_off'] as bool? ?? false,
+        cameOn: j['came_on'] as bool? ?? false,
         photoUrl: j['photo_url'] as String? ?? '',
         grade: (j['grade'] as num?)?.toDouble(),
         stats: {
