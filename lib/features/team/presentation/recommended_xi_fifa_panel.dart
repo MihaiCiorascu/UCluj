@@ -118,7 +118,11 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
 
   XiRepository? _repo;
 
-  bool get _interactive => widget.opponentName != null;
+  // Editing (formation locks, replace, reset) only makes sense for the user's
+  // own team. [homeTeam] is non-null only on "other" matches (neither club is the
+  // subject), where the panel is a read-only scouting view of both predicted XIs.
+  bool get _interactive =>
+      widget.opponentName != null && widget.homeTeam == null;
 
   XiRepository get _repository =>
       widget.xiRepository ?? (_repo ??= XiRepository());
