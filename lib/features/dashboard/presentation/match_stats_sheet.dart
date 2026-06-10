@@ -1132,80 +1132,27 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
   }
 
   bool _hasPlayerBadges(MatchPlayer p) =>
-      p.goalsScored > 0 ||
-      p.assists > 0 ||
-      p.yellowCards > 0 ||
-      p.redCards > 0 ||
-      (p.minutesPlayed != null && p.minutesPlayed! < 90 && !p.isStarter);
+      _eventMarksFor(p, context.colors, size: 12).isNotEmpty;
 
+  // Player-row event marks: the shared signs wrapped in tinted pills (cards stay
+  // bare, since the rectangle is itself the sign).
   Widget _buildPlayerBadges(MatchPlayer p) {
-    final badges = <Widget>[];
-
-    if (p.goalsScored > 0) {
-      badges.add(_iconBadge(Icons.sports_soccer,
-          p.goalsScored > 1 ? '${p.goalsScored}' : null, context.colors.positive));
+    final marks = _eventMarksFor(p, context.colors, size: 12);
+    if (marks.isEmpty) return const SizedBox.shrink();
+    final children = <Widget>[];
+    for (final m in marks) {
+      children.add(m.pill
+          ? Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+              color: m.color.withValues(alpha: 0.15),
+              child: m.glyph,
+            )
+          : m.glyph);
+      children.add(const SizedBox(width: 4));
     }
-    if (p.assists > 0) {
-      badges.add(_badge('A${p.assists}', context.colors.accent));
-    }
-    if (p.yellowCards > 0) {
-      badges.add(_cardChip(const Color(0xFFFFD700)));
-    }
-    if (p.redCards > 0) {
-      badges.add(_cardChip(context.colors.negative));
-    }
-    if (p.minutesPlayed != null && p.minutesPlayed! < 90 && !p.isStarter) {
-      badges.add(_badge("${p.minutesPlayed}'", context.colors.textMuted));
-    }
-
-    if (badges.isEmpty) return const SizedBox.shrink();
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: badges
-          .expand((b) => [b, const SizedBox(width: 3)])
-          .toList()
-        ..removeLast(),
-    );
+    children.removeLast();
+    return Row(mainAxisSize: MainAxisSize.min, children: children);
   }
-
-  Widget _badge(String text, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-        color: color.withValues(alpha: 0.15),
-        child: Text(text,
-            style:
-                TypographyTokens.sectionLabel.copyWith(color: color, fontSize: 9)),
-      );
-
-  // Badge with a leading vector icon (goals), optionally trailed by a count.
-  // Crisper and more consistent than an emoji glyph across platforms.
-  Widget _iconBadge(IconData icon, String? trailing, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-        color: color.withValues(alpha: 0.15),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 11, color: color),
-            if (trailing != null) ...[
-              const SizedBox(width: 2),
-              Text(trailing,
-                  style: TypographyTokens.sectionLabel
-                      .copyWith(color: color, fontSize: 9)),
-            ],
-          ],
-        ),
-      );
-
-  // Small football-card rectangle (yellow / red), shared shape with the pitch
-  // chip so cards read identically in both places.
-  Widget _cardChip(Color color) => Container(
-        width: 9,
-        height: 12,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(1.5),
-        ),
-      );
 
   Color _positionColor(String pos) {
     switch (pos.toUpperCase()) {
@@ -1705,40 +1652,69 @@ class _PlayerDetailSheet extends StatelessWidget {
   bool get _isGk =>
       player.position == 'G' || player.officialPosition.toUpperCase() == 'GK';
 
-  List<(String, String)> _rows() {
+  // Three headline numbers shown big at the top: (labelKey, value).
+  List<(String, String)> _heroStats() {
     final st = player.stats;
     int s(String k) => (st[k] ?? 0).round();
     if (_isGk) {
       return [
-        ('pstat.minutes', "${s('minutes')}'"),
+        ('pstat.minutes', '${s('minutes')}'),
         ('pstat.saves', '${s('gkSaves')}'),
         ('pstat.goalsConceded', '${s('gkConceded')}'),
-        ('pstat.cleanSheet', s('gkCleanSheet') == 1 ? '✓' : '-'),
-        ('pstat.passAccuracy', '${s('passAccuracy')}%'),
-        ('pstat.passes', '${s('passes')}'),
       ];
     }
     return [
-      ('pstat.minutes', "${s('minutes')}'"),
+      ('pstat.minutes', '${s('minutes')}'),
       ('pstat.goals', '${s('goals')}'),
       ('pstat.assists', '${s('assists')}'),
-      ('pstat.shots', '${s('shots')} (${s('shotsOnTarget')})'),
-      ('pstat.passAccuracy', '${s('passAccuracy')}%  ·  ${s('passes')}'),
-      ('pstat.keyPasses', '${s('keyPasses')}'),
-      ('pstat.duelsWon', '${s('duelWinRate')}%  ·  ${s('duelsWon')}/${s('duels')}'),
-      ('pstat.dribbles', '${s('dribblesWon')}/${s('dribbles')}'),
-      ('pstat.interceptions', '${s('interceptions')}'),
-      ('pstat.recoveries', '${s('recoveries')}'),
+    ];
+  }
+
+  // Grouped detail rows: (sectionLabelKey, [(labelKey, value, barFraction?)]).
+  // A non-null fraction renders a thin proportion bar under the row.
+  List<(String, List<(String, String, double?)>)> _sections() {
+    final st = player.stats;
+    int s(String k) => (st[k] ?? 0).round();
+    double f(String k) => ((st[k] ?? 0) / 100).clamp(0, 1).toDouble();
+    if (_isGk) {
+      return [
+        ('pstat.secShotStopping', [
+          ('pstat.cleanSheet', s('gkCleanSheet') == 1 ? '✓' : '-', null),
+        ]),
+        ('pstat.secDistribution', [
+          ('pstat.passAccuracy', '${s('passAccuracy')}%', f('passAccuracy')),
+          ('pstat.passes', '${s('passes')}', null),
+        ]),
+      ];
+    }
+    return [
+      ('pstat.secAttacking', [
+        ('pstat.shots', '${s('shots')} (${s('shotsOnTarget')})', null),
+        ('pstat.keyPasses', '${s('keyPasses')}', null),
+        ('pstat.dribbles', '${s('dribblesWon')}/${s('dribbles')}', null),
+      ]),
+      ('pstat.secPassing', [
+        ('pstat.passAccuracy', '${s('passAccuracy')}%  ·  ${s('passes')}',
+            f('passAccuracy')),
+      ]),
+      ('pstat.secDefending', [
+        ('pstat.duelsWon', '${s('duelsWon')}/${s('duels')}', f('duelWinRate')),
+        ('pstat.interceptions', '${s('interceptions')}', null),
+        ('pstat.recoveries', '${s('recoveries')}', null),
+        ('pstat.clearances', '${s('clearances')}', null),
+      ]),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final rows = _rows();
+    final hero = _heroStats();
+    final sections = _sections();
     final pos = player.officialPosition.isNotEmpty
         ? player.officialPosition
         : player.position;
+    final marks = _eventMarksFor(player, c, size: 13);
     return Container(
       decoration: BoxDecoration(
         color: c.surfaceHigh,
@@ -1751,76 +1727,170 @@ class _PlayerDetailSheet extends StatelessWidget {
               SpacingTokens.lg, SpacingTokens.lg),
           child: SingleChildScrollView(
             child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: c.textMuted.withValues(alpha: 0.5),
-                    borderRadius: ShapeTokens.chip,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: c.textMuted.withValues(alpha: 0.5),
+                      borderRadius: ShapeTokens.chip,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: SpacingTokens.md),
-              Row(
-                children: [
-                  PlayerPhotoAvatar(
-                    photoUrl: player.photoUrl,
-                    name: player.name,
-                    ringColor: c.accent,
-                    size: 48,
-                  ),
-                  const SizedBox(width: SpacingTokens.md),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          player.name.replaceAll('Universitatea Cluj', 'U Cluj'),
-                          style: TypographyTokens.cardTitle
-                              .copyWith(color: c.textPrimary),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(pos,
-                            style: TypographyTokens.sectionLabel
-                                .copyWith(color: c.accent)),
-                      ],
+                const SizedBox(height: SpacingTokens.md),
+                // Header: avatar + name + position chip + this match's event marks.
+                Row(
+                  children: [
+                    PlayerPhotoAvatar(
+                      photoUrl: player.photoUrl,
+                      name: player.name,
+                      ringColor: c.accent,
+                      size: 48,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: SpacingTokens.lg),
-              Text(
-                L10n.t('pstat.title'),
-                style: TypographyTokens.sectionLabel
-                    .copyWith(color: c.textMuted, letterSpacing: 1.2),
-              ),
-              const SizedBox(height: SpacingTokens.xs),
-              ...rows.map((r) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(L10n.t(r.$1),
-                            style: TypographyTokens.body
-                                .copyWith(color: c.textMuted, fontSize: 13)),
-                        Text(r.$2,
-                            style: TypographyTokens.mono.copyWith(
-                                color: c.textPrimary,
-                                fontWeight: FontWeight.w700)),
-                      ],
+                    const SizedBox(width: SpacingTokens.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            player.name.replaceAll('Universitatea Cluj', 'U Cluj'),
+                            style: TypographyTokens.title
+                                .copyWith(color: c.textPrimary),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                color: c.accent.withValues(alpha: 0.14),
+                                child: Text(pos,
+                                    style: TypographyTokens.sectionLabel
+                                        .copyWith(color: c.accent)),
+                              ),
+                              if (marks.isNotEmpty) ...[
+                                const SizedBox(width: SpacingTokens.sm),
+                                ..._spaced(
+                                    marks.map((m) => m.glyph).toList(), 7),
+                              ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  )),
-            ],
-          ),
+                  ],
+                ),
+                const SizedBox(height: SpacingTokens.lg),
+                // Hero numbers.
+                Row(children: _heroRow(c, hero)),
+                const SizedBox(height: SpacingTokens.xs),
+                Container(height: 1, color: c.textMuted.withValues(alpha: 0.14)),
+                // Grouped detail sections.
+                ...sections.map((sec) => _sectionBlock(c, sec.$1, sec.$2)),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  // Even horizontal spacing between inline glyphs.
+  List<Widget> _spaced(List<Widget> items, double gap) {
+    final out = <Widget>[];
+    for (var i = 0; i < items.length; i++) {
+      out.add(items[i]);
+      if (i < items.length - 1) out.add(SizedBox(width: gap));
+    }
+    return out;
+  }
+
+  // Three big numbers with muted labels, split by thin vertical rules.
+  List<Widget> _heroRow(AppColorTokens c, List<(String, String)> hero) {
+    final cells = <Widget>[];
+    for (var i = 0; i < hero.length; i++) {
+      if (i > 0) {
+        cells.add(const SizedBox(width: SpacingTokens.sm));
+        cells.add(Container(
+            width: 1, height: 30, color: c.textMuted.withValues(alpha: 0.18)));
+        cells.add(const SizedBox(width: SpacingTokens.sm));
+      }
+      cells.add(Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(hero[i].$2,
+                style: TypographyTokens.statValue.copyWith(color: c.textPrimary)),
+            const SizedBox(height: 3),
+            Text(L10n.t(hero[i].$1),
+                style: TypographyTokens.sectionLabel
+                    .copyWith(color: c.textMuted, fontSize: 9, letterSpacing: 1.0)),
+          ],
+        ),
+      ));
+    }
+    return cells;
+  }
+
+  Widget _sectionBlock(AppColorTokens c, String labelKey,
+      List<(String, String, double?)> rows) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: SpacingTokens.md),
+        Text(L10n.t(labelKey),
+            style: TypographyTokens.sectionLabel
+                .copyWith(color: c.textMuted, letterSpacing: 1.2)),
+        const SizedBox(height: SpacingTokens.xs),
+        ...rows.map((r) => _statRow(c, r.$1, r.$2, r.$3)),
+      ],
+    );
+  }
+
+  Widget _statRow(AppColorTokens c, String labelKey, String value,
+      double? fraction) {
+    final header = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(L10n.t(labelKey),
+            style: TypographyTokens.body.copyWith(color: c.textMuted, fontSize: 13)),
+        Text(value,
+            style: TypographyTokens.mono
+                .copyWith(color: c.textPrimary, fontWeight: FontWeight.w700)),
+      ],
+    );
+    if (fraction == null) {
+      return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6), child: header);
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          header,
+          const SizedBox(height: 5),
+          SizedBox(
+            height: 4,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Container(color: c.textMuted.withValues(alpha: 0.18)),
+                FractionallySizedBox(
+                  widthFactor: fraction.clamp(0, 1),
+                  alignment: Alignment.centerLeft,
+                  child: Container(color: c.accent),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -2032,10 +2102,6 @@ class _ActualPlayerChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final posColor = _roleColor(c);
-    final hasGoal = player.goalsScored > 0;
-    final hasAssist = player.assists > 0;
-    final hasYellow = player.yellowCards > 0;
-    final hasRed = player.redCards > 0;
     final r = chipSize * 0.1; // rounded-badge radius, mirrors the predictor chip
 
     // Modern completed-match chip, mirroring the upcoming-XI FifaPitchPlayerChip:
@@ -2135,62 +2201,135 @@ class _ActualPlayerChip extends StatelessWidget {
             ),
           ),
         ),
-        if (hasGoal || hasAssist || hasYellow || hasRed)
-          SizedBox(
-            width: cellWidth,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                if (hasGoal) ...[
-                  Icon(Icons.sports_soccer,
-                      size: chipSize * 0.2, color: c.textPrimary),
-                  if (player.goalsScored > 1)
-                    Text(
-                      '×${player.goalsScored}',
-                      style: TypographyTokens.mono.copyWith(
-                        fontSize: chipSize * 0.16,
-                        color: c.textPrimary,
-                      ),
-                    ),
-                ],
-                if (hasAssist) ...[
-                  if (hasGoal) SizedBox(width: chipSize * 0.05),
-                  Text(
-                    player.assists > 1 ? 'A${player.assists}' : 'A',
-                    style: TypographyTokens.sectionLabel.copyWith(
-                      fontSize: chipSize * 0.15,
-                      color: c.accent,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-                if (hasYellow)
-                  Container(
-                    width: chipSize * 0.12,
-                    height: chipSize * 0.17,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFD700),
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                    margin: const EdgeInsets.symmetric(horizontal: 1.5),
-                  ),
-                if (hasRed)
-                  Container(
-                    width: chipSize * 0.12,
-                    height: chipSize * 0.17,
-                    decoration: BoxDecoration(
-                      color: c.negative,
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                    margin: const EdgeInsets.symmetric(horizontal: 1.5),
-                  ),
-              ],
-            ),
-          ),
+        _chipEventRow(player, c, chipSize, cellWidth),
       ],
     );
   }
+}
+
+// ── Concluded-match event marks (shared) ─────────────────────────────────────
+// Refined, on-brand signs so goals / assists / cards / substitutions read
+// identically on the pitch chips and in the player rows. Each glyph is
+// size-parameterised; rows wrap them in a tinted pill, the pitch places them
+// bare on the turf. Substitutions are per-player (the data has no in/out pairing
+// or event minute): a starter who came off shows a red down-arrow + the off
+// minute (its minutes played, counted from kick-off), a substitute who came on a
+// green up-arrow + minutes played labelled as a duration (never a match minute,
+// which would misread as the entry time).
+const Color _kCardYellow = Color(0xFFEBC400);
+
+class _EventMark {
+  final Widget glyph;
+  final Color color; // pill tint when shown in a player row
+  final bool pill;
+  const _EventMark(this.glyph, this.color, {this.pill = true});
+}
+
+List<_EventMark> _eventMarksFor(MatchPlayer p, AppColorTokens c,
+    {required double size, bool onPitch = false}) {
+  final marks = <_EventMark>[];
+  // The assist letter is the one mark whose accent tone is too dark to read bare
+  // on the always-navy pitch in the light theme; lift it to a fixed bright cobalt
+  // there. Everywhere else (pilled rows, the detail header) the theme accent is fine.
+  final assistColor = onPitch ? const Color(0xFF1E88E5) : c.accent;
+  if (p.goalsScored > 0) {
+    marks.add(_EventMark(
+      _eventGlyph(Icon(Icons.sports_soccer, size: size, color: c.positive),
+          p.goalsScored > 1 ? '×${p.goalsScored}' : null, c.positive, size),
+      c.positive,
+    ));
+  }
+  if (p.assists > 0) {
+    marks.add(_EventMark(
+      Text(p.assists > 1 ? 'A${p.assists}' : 'A',
+          style: TypographyTokens.sectionLabel.copyWith(
+              color: assistColor,
+              fontSize: size * 0.9,
+              fontWeight: FontWeight.w800,
+              height: 1.0)),
+      assistColor,
+    ));
+  }
+  if (p.yellowCards > 0) {
+    marks.add(_EventMark(_eventCard(_kCardYellow, size), _kCardYellow, pill: false));
+  }
+  if (p.redCards > 0) {
+    marks.add(_EventMark(_eventCard(c.negative, size), c.negative, pill: false));
+  }
+  if (p.cameOff) {
+    // Subbed off: a starter begins at kick-off, so minutes played is the off
+    // minute. Shown as a match minute (e.g. 67').
+    marks.add(_EventMark(
+      _eventGlyph(Icon(Icons.arrow_downward, size: size, color: c.negative),
+          p.minutesPlayed != null ? "${p.minutesPlayed}'" : null, c.negative, size),
+      c.negative,
+    ));
+  } else if (!p.isStarter && p.cameOn) {
+    // Came on (shown on substitute rows only; an ambiguous-lineup match may
+    // reclassify a sub into the pitch eleven, where a came-on arrow would
+    // contradict the starting slot). Only the duration played is known, not the
+    // entry minute, so it is labelled as a duration (e.g. "67 min"), never a
+    // match minute.
+    final played = p.minutesPlayed;
+    marks.add(_EventMark(
+      _eventGlyph(Icon(Icons.arrow_upward, size: size, color: c.positive),
+          (played != null && played > 0)
+              ? "$played ${L10n.t('pstat.minShort')}"
+              : null,
+          c.positive, size),
+      c.positive,
+    ));
+  }
+  return marks;
+}
+
+// A leading icon + optional trailing count/minute (mono) in [color].
+Widget _eventGlyph(Widget leading, String? trailing, Color color, double size) =>
+    Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        leading,
+        if (trailing != null) ...[
+          SizedBox(width: size * 0.16),
+          Text(trailing,
+              style: TypographyTokens.mono
+                  .copyWith(color: color, fontSize: size * 0.82, height: 1.0)),
+        ],
+      ],
+    );
+
+// Football card rectangle (yellow / red), slightly taller than wide. The hairline
+// border keeps the card legible on any surface (notably a yellow card on the pale
+// light-theme sheet, where a bare fill would near-vanish).
+Widget _eventCard(Color color, double size) => Container(
+      width: size * 0.66,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(1.5),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.22), width: 0.5),
+      ),
+    );
+
+// Centred row of bare event marks for a pitch chip; empty when nothing happened.
+Widget _chipEventRow(
+    MatchPlayer p, AppColorTokens c, double chipSize, double cellWidth) {
+  final marks = _eventMarksFor(p, c, size: chipSize * 0.2, onPitch: true);
+  if (marks.isEmpty) return const SizedBox.shrink();
+  final children = <Widget>[];
+  for (final m in marks) {
+    children.add(m.glyph);
+    children.add(SizedBox(width: chipSize * 0.06));
+  }
+  children.removeLast();
+  return SizedBox(
+    width: cellWidth,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: children,
+    ),
+  );
 }
 
 // ── Shared widgets ───────────────────────────────────────────────────────────
