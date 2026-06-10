@@ -1494,9 +1494,10 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
           children: [
             _sectionLabel(L10n.t('sheet.recommendedXi')),
             const Spacer(),
-            // The formation selector edits OUR shape, so it is shown only for
-            // our XI. While the read-only opponent XI is displayed, hide it.
-            if (!_showingOpponentXi)
+            // The formation selector edits OUR shape, so it is shown only on the
+            // user's own match (involvesSubject), not on "other" matches where
+            // neither club is the subject. Also hidden while the opponent XI shows.
+            if (widget.fixture.involvesSubject && !_showingOpponentXi)
               DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: _formation,
@@ -1528,13 +1529,17 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               ),
           ],
         ),
-        // Resolved shape next to the selector: our chosen shape (with an AUTO
-        // tag when AUTO was requested) for our XI, or the opponent's own
-        // resolved shape while the read-only opponent XI is shown.
-        if (!_showingOpponentXi && _preview!.formation.isNotEmpty) ...[
+        // Resolved-shape badge next to the selector: our chosen shape (with an
+        // AUTO tag) for our XI, or the opponent's own shape while the opponent XI
+        // shows. Only on the user's own match; "other" matches stay a clean
+        // read-only scouting view (the pitch itself still conveys the shape).
+        if (widget.fixture.involvesSubject &&
+            !_showingOpponentXi &&
+            _preview!.formation.isNotEmpty) ...[
           const SizedBox(height: SpacingTokens.xs),
           _buildResolvedFormation(_preview!),
-        ] else if (_showingOpponentXi &&
+        ] else if (widget.fixture.involvesSubject &&
+            _showingOpponentXi &&
             _preview!.opponentFormation.isNotEmpty) ...[
           const SizedBox(height: SpacingTokens.xs),
           _buildOpponentFormation(_preview!.opponentFormation),
