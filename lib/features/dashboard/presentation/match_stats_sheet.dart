@@ -2212,10 +2212,15 @@ class _ActualPlayerChip extends StatelessWidget {
 // identically on the pitch chips and in the player rows. Each glyph is
 // size-parameterised; rows wrap them in a tinted pill, the pitch places them
 // bare on the turf. Substitutions are per-player (the data has no in/out pairing
-// or event minute): a starter who came off shows a red down-arrow + the off
-// minute (its minutes played, counted from kick-off), a substitute who came on a
-// green up-arrow + minutes played labelled as a duration (never a match minute,
-// which would misread as the entry time).
+// or event minute, only minutes played): both a starter who came off (red
+// down-arrow) and a substitute who came on (green up-arrow) carry minutes played
+// labelled as a duration ("67 min"), never a match minute, because minutesOnField
+// is elapsed time including stoppage (it can exceed 90), not the substitution
+// clock. The cramped pitch chip shows the bare arrow; the roomy rows and detail
+// header add the duration.
+// A real-world football yellow is a fixed signal colour with no equivalent in the
+// brand palette, so it stays a documented, theme-invariant const (the red card
+// uses the c.negative token).
 const Color _kCardYellow = Color(0xFFEBC400);
 
 class _EventMark {
@@ -2256,27 +2261,27 @@ List<_EventMark> _eventMarksFor(MatchPlayer p, AppColorTokens c,
   if (p.redCards > 0) {
     marks.add(_EventMark(_eventCard(c.negative, size), c.negative, pill: false));
   }
-  if (p.cameOff) {
-    // Subbed off: a starter begins at kick-off, so minutes played is the off
-    // minute. Shown as a match minute (e.g. 67').
+  // Substitution arrows. minutesOnField is elapsed duration on the pitch
+  // (including stoppage, so it can exceed 90 and is NOT the substitution clock
+  // minute), so it is labelled as a duration ("67 min"), never "67'". The cramped
+  // pitch chip shows the bare arrow (onPitch); the roomy rows and detail header
+  // add the duration. cameOff renders on the starter slot, cameOn on substitute
+  // rows only (an ambiguous-lineup match can reclassify a sub into the pitch
+  // eleven, where a came-on arrow would contradict the starting slot).
+  final mins = p.minutesPlayed;
+  final durationLabel = (!onPitch && mins != null && mins > 0)
+      ? "$mins ${L10n.t('pstat.minShort')}"
+      : null;
+  if (p.isStarter && p.cameOff) {
     marks.add(_EventMark(
       _eventGlyph(Icon(Icons.arrow_downward, size: size, color: c.negative),
-          p.minutesPlayed != null ? "${p.minutesPlayed}'" : null, c.negative, size),
+          durationLabel, c.negative, size),
       c.negative,
     ));
   } else if (!p.isStarter && p.cameOn) {
-    // Came on (shown on substitute rows only; an ambiguous-lineup match may
-    // reclassify a sub into the pitch eleven, where a came-on arrow would
-    // contradict the starting slot). Only the duration played is known, not the
-    // entry minute, so it is labelled as a duration (e.g. "67 min"), never a
-    // match minute.
-    final played = p.minutesPlayed;
     marks.add(_EventMark(
       _eventGlyph(Icon(Icons.arrow_upward, size: size, color: c.positive),
-          (played != null && played > 0)
-              ? "$played ${L10n.t('pstat.minShort')}"
-              : null,
-          c.positive, size),
+          durationLabel, c.positive, size),
       c.positive,
     ));
   }
