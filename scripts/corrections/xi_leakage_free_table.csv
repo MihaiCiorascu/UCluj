@@ -1,0 +1,17 @@
+team,n,leaky,leakage_free,delta,below_top_by_minutes
+Dinamo Bucureşti,27,0.7253,0.6913,-0.034,False
+Oţelul Galaţi,27,0.7076,0.6834,-0.0242,False
+UTA Arad,27,0.7163,0.6804,-0.0359,False
+Petrolul Ploieşti,27,0.6759,0.6795,0.0037,False
+CFR Cluj,26,0.6261,0.6429,0.0168,False
+Farul Constanţa,27,0.6847,0.6422,-0.0425,False
+Csikszereda,27,0.6244,0.6154,-0.009,False
+FC Argeş,27,0.6268,0.6124,-0.0144,False
+Botoşani,26,0.6075,0.5928,-0.0147,False
+Hermannstadt,27,0.5781,0.585,0.0069,False
+U Cluj,27,0.5802,0.5661,-0.0141,False
+Metaloglobus,27,0.5775,0.5485,-0.0289,False
+U Craiova,26,0.5771,0.5413,-0.0358,False
+Rapid Bucureşti,27,0.5598,0.5133,-0.0465,True
+Unirea Slobozia,27,0.5468,0.5023,-0.0445,True
+FCSB,26,0.5443,0.493,-0.0513,True
