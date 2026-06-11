@@ -669,26 +669,29 @@ class XiService:
         opp_team_df = None
         opp_team_id = opp_id  # your_team_id passed into the opponent predict_xi
         if opp_ref is not None:
-            match_files = sorted(glob.glob(os.path.join(self.data_dir, "*.json")))
-            opp_squad_ids = get_team_squad_from_matches(
-                match_files,
-                opp_ref.wy_substr,
-                as_of_date=self._asof_date(),
-            )
-            if opp_squad_ids:
-                opp_team_df = df[df["playerId"].isin(opp_squad_ids)].copy()
+            # Build the opponent's feature frame keyed to the OPPONENT's own squad,
+            # through the same path as the home team, so its availability_score is
+            # REAL (computed against the opponent's own fixtures). Slicing the
+            # opponent out of the home-keyed frame instead would zero every
+            # opponent's availability, which flattens the razor-thin per-formation
+            # scores and biases the opponent's "auto" shape and its player scores,
+            # uniformly across every opponent rather than for isolated cases.
+            opp_df = self._get_feature_df(opp_ref)
+            squad = opp_df[opp_df["is_home_squad"]].copy()
+            if not squad.empty:
+                opp_team_df = squad
                 # ``predict_xi`` does not filter by team id (the home path proves
-                # this); ``your_team_id`` is carried into the payload only. When
-                # the legacy fixture map misses the opponent, fall back to the
-                # squad's modal ``teamId`` so the field stays populated.
+                # this); ``your_team_id`` is carried into the payload only. When the
+                # legacy fixture map misses the opponent, fall back to the squad's
+                # modal ``teamId`` so the field stays populated.
                 if opp_team_id is None and "teamId" in opp_team_df.columns:
                     modal = opp_team_df["teamId"].dropna()
                     if not modal.empty:
                         opp_team_id = modal.mode().iloc[0]
         if opp_team_df is None:
-            # Legacy fallback: stale ``currentTeamId`` filter (kept so the
-            # previous behaviour is preserved when the empirical path cannot
-            # resolve a squad).
+            # Legacy fallback: stale ``currentTeamId`` filter on the home-keyed
+            # frame (kept so previous behaviour holds when the empirical path
+            # cannot resolve the opponent squad).
             opp_team_df = df[df["teamId"] == opp_id].copy() if opp_id else None
 
         result = self.predictor.predict_xi(
