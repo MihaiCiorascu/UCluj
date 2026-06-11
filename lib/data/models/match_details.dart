@@ -61,13 +61,19 @@ class MatchPlayer {
   final int shotsOnTarget;
   final int? minutesPlayed;
   // Ground-truth substitution flags from the Wyscout total block. cameOff: a
-  // starter who was substituted OFF. cameOn: a substitute who came ON. In both
-  // cases minutesPlayed is the elapsed duration on the pitch (minutesOnField,
-  // including stoppage, so it can exceed 90); it is shown as a duration, not a
-  // match-clock minute. The data has no in/out pairing or exact event minute.
-  // Both false for older payloads.
+  // starter who was substituted OFF. cameOn: a substitute who came ON. Both false
+  // for older payloads.
   final bool cameOff;
   final bool cameOn;
+  // Real substitution clock minute from the baked Sportradar timeline, e.g.
+  // cameOffMinute=78 (+ cameOffStoppage=2 renders "90+2"). Null when the match was
+  // not baked or the player could not be matched, in which case the UI falls back
+  // to the minutesPlayed duration (which includes stoppage and is not a clock
+  // minute).
+  final int? cameOffMinute;
+  final int? cameOffStoppage;
+  final int? cameOnMinute;
+  final int? cameOnStoppage;
   // Self-hosted headshot URL resolved server-side by name; '' when unmatched
   // (the avatar then renders initials).
   final String photoUrl;
@@ -98,6 +104,10 @@ class MatchPlayer {
     this.minutesPlayed,
     this.cameOff = false,
     this.cameOn = false,
+    this.cameOffMinute,
+    this.cameOffStoppage,
+    this.cameOnMinute,
+    this.cameOnStoppage,
     this.photoUrl = '',
     this.grade,
     this.stats = const {},
@@ -120,6 +130,10 @@ class MatchPlayer {
         minutesPlayed: (j['minutes_played'] as num?)?.toInt(),
         cameOff: j['came_off'] as bool? ?? false,
         cameOn: j['came_on'] as bool? ?? false,
+        cameOffMinute: (j['came_off_minute'] as num?)?.toInt(),
+        cameOffStoppage: (j['came_off_stoppage'] as num?)?.toInt(),
+        cameOnMinute: (j['came_on_minute'] as num?)?.toInt(),
+        cameOnStoppage: (j['came_on_stoppage'] as num?)?.toInt(),
         photoUrl: j['photo_url'] as String? ?? '',
         grade: (j['grade'] as num?)?.toDouble(),
         stats: {

@@ -2266,31 +2266,41 @@ List<_EventMark> _eventMarksFor(MatchPlayer p, AppColorTokens c,
   if (p.redCards > 0) {
     marks.add(_EventMark(_eventCard(c.negative, size), c.negative, pill: false));
   }
-  // Substitution arrows. minutesOnField is elapsed duration on the pitch
-  // (including stoppage, so it can exceed 90 and is NOT the substitution clock
-  // minute), so it is labelled as a duration ("67 min"), never "67'". The cramped
-  // pitch chip shows the bare arrow (onPitch); the roomy rows and detail header
-  // add the duration. cameOff renders on the starter slot, cameOn on substitute
-  // rows only (an ambiguous-lineup match can reclassify a sub into the pitch
-  // eleven, where a came-on arrow would contradict the starting slot).
+  // Substitution arrows. When the real clock minute is known (baked from the
+  // Sportradar timeline) it is shown as a match minute ("78'", or "90+2'"). When
+  // it is not, we fall back to the minutes-played duration ("67 min"): that value
+  // is elapsed time including stoppage, NOT a clock minute, so it is never shown
+  // with an apostrophe and is suppressed on the cramped pitch chip (onPitch).
+  // cameOff renders on the starter slot, cameOn on substitute rows only (an
+  // ambiguous-lineup match can reclassify a sub into the pitch eleven, where a
+  // came-on arrow would contradict the starting slot).
   final mins = p.minutesPlayed;
   final durationLabel = (!onPitch && mins != null && mins > 0)
       ? "$mins ${L10n.t('pstat.minShort')}"
       : null;
   if (p.isStarter && p.cameOff) {
+    final label = _subClock(p.cameOffMinute, p.cameOffStoppage) ?? durationLabel;
     marks.add(_EventMark(
       _eventGlyph(Icon(Icons.arrow_downward, size: size, color: c.negative),
-          durationLabel, c.negative, size),
+          label, c.negative, size),
       c.negative,
     ));
   } else if (!p.isStarter && p.cameOn) {
+    final label = _subClock(p.cameOnMinute, p.cameOnStoppage) ?? durationLabel;
     marks.add(_EventMark(
       _eventGlyph(Icon(Icons.arrow_upward, size: size, color: c.positive),
-          durationLabel, c.positive, size),
+          label, c.positive, size),
       c.positive,
     ));
   }
   return marks;
+}
+
+// Real substitution clock minute, e.g. "78'" or "90+2'"; null when unknown.
+String? _subClock(int? minute, int? stoppage) {
+  if (minute == null) return null;
+  final extra = (stoppage != null && stoppage > 0) ? '+$stoppage' : '';
+  return "$minute$extra'";
 }
 
 // A leading icon + optional trailing count/minute (mono) in [color].

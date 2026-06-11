@@ -42,6 +42,8 @@ import glob
 import json
 import logging
 import os
+import re
+import unicodedata
 from pathlib import Path
 from typing import Optional
 
@@ -59,6 +61,110 @@ logger = logging.getLogger(__name__)
 _DATA_DIR = Path(__file__).resolve().parents[3] / "ml" / "data"
 _DRIVE_CACHE_DIR = _DATA_DIR / "drive_cache"
 _PROFILES_PATH = _DRIVE_CACHE_DIR / "players (1).json"
+
+# Real substitution clock minutes, baked once from the Sportradar timeline
+# (scripts/bake_sub_minutes.py) and keyed by Wyscout match id. Absent when a match
+# was not baked, in which case the lineup simply carries no minute and the client
+# falls back to the duration / bare arrow.
+_SUB_MIN_PATH = _DATA_DIR / "match_sub_minutes.json"
+_SUB_MIN_CACHE: Optional[dict] = None
+
+
+def _sub_minutes() -> dict:
+    global _SUB_MIN_CACHE
+    if _SUB_MIN_CACHE is None:
+        try:
+            _SUB_MIN_CACHE = json.loads(_SUB_MIN_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            _SUB_MIN_CACHE = {}
+    return _SUB_MIN_CACHE
+
+
+def _name_tokens(name: str) -> set[str]:
+    s = "".join(c for c in unicodedata.normalize("NFKD", name or "") if not unicodedata.combining(c))
+    return {t for t in re.split(r"[^a-z]+", s.lower()) if len(t) >= 3}
+
+
+def _sr_surname_tokens(sr_name: str) -> set[str]:
+    """Tokens of the Sportradar surname (the part before the comma in 'Surname, First')."""
+    return _name_tokens((sr_name or "").split(",")[0])
+
+
+def _best_sub(pt: set[str], subs: list[dict], key: str, token_fn) -> Optional[dict]:
+    best, best_score = None, 0
+    for s in subs:
+        score = len(pt & token_fn(s.get(key) or ""))
+        if score > best_score:
+            best, best_score = s, score
+    return best if best_score >= 1 else None
+
+
+def _name_initial(name: str) -> str:
+    """First alphabetic character (accent-stripped, lower-cased) of a name; the
+    given-name initial for both "M. Popescu" and "Mihai Popescu" forms."""
+    s = "".join(c for c in unicodedata.normalize("NFKD", name or "") if not unicodedata.combining(c))
+    for ch in s:
+        if ch.isalpha():
+            return ch.lower()
+    return ""
+
+
+def _sr_given_initial(sr_name: str) -> str:
+    """Initial of the Sportradar given name (the part after the comma)."""
+    parts = (sr_name or "").split(",", 1)
+    return _name_initial(parts[1]) if len(parts) > 1 else ""
+
+
+def _match_sub_minute(player_name: str, same_side: list[dict], all_subs: list[dict],
+                      key: str) -> Optional[tuple[int, int]]:
+    """(minute, stoppage) of the substitution for ``player_name``. Matches on the
+    Sportradar SURNAME first (same side, then either side), which avoids given- and
+    middle-name collisions (e.g. a player "Mihai" binding to another player's middle
+    name "Mihai"). When two same-surname players collide (e.g. M. Popescu / O. Popescu),
+    the given-name initial disambiguates. Falls back to the full name only when no
+    surname candidate exists, for players listed by their given name (e.g. some
+    Brazilians). Returns None when nothing matches."""
+    pt = _name_tokens(player_name)
+    if not pt:
+        return None
+    pinit = _name_initial(player_name)
+    for pool in (same_side, all_subs):
+        cands = [s for s in pool if pt & _sr_surname_tokens(s.get(key) or "")]
+        if not cands:
+            continue
+        if len(cands) > 1 and pinit:
+            by_init = [s for s in cands if _sr_given_initial(s.get(key) or "") == pinit]
+            if by_init:
+                cands = by_init
+        s = cands[0]
+        return int(s.get("minute") or 0), int(s.get("stoppage") or 0)
+    # No surname candidate: full-name fallback (player listed by given name).
+    hit = _best_sub(pt, same_side, key, _name_tokens) or _best_sub(pt, all_subs, key, _name_tokens)
+    if hit is None:
+        return None
+    return int(hit.get("minute") or 0), int(hit.get("stoppage") or 0)
+
+
+def _attach_sub_minutes(match_id, home_players: list[dict], away_players: list[dict]) -> None:
+    """Attach real substitution clock minutes (``came_off_minute`` / ``came_on_minute``
+    plus ``*_stoppage``) to lineup players, matched by side + surname against the baked
+    Sportradar timeline. No-op when the match was not baked or a player has no match."""
+    subs = _sub_minutes().get(str(match_id))
+    if not subs:
+        return
+    for side, players in (("home", home_players), ("away", away_players)):
+        same = [s for s in subs if s.get("side") == side]
+        for p in players:
+            key = "out" if p.get("came_off") else ("in" if p.get("came_on") else None)
+            if key is None:
+                continue
+            hit = _match_sub_minute(p.get("name", ""), same, subs, key)
+            if not hit:
+                continue
+            if key == "out":
+                p["came_off_minute"], p["came_off_stoppage"] = hit
+            else:
+                p["came_on_minute"], p["came_on_stoppage"] = hit
 
 
 # ── drive_cache match-id index ────────────────────────────────────────────────
@@ -337,6 +443,8 @@ def build_offline_match_details(match_id: str, grade_service, photo_service) -> 
         else:
             away_players.append(player_dict)
             away_totals.append(total)
+
+    _attach_sub_minutes(match_id, home_players, away_players)
 
     home_lineup, home_formation = _finalise_side(home_players)
     away_lineup, away_formation = _finalise_side(away_players)
