@@ -9,9 +9,14 @@ class L10n extends ChangeNotifier {
   L10n._();
   static final L10n instance = L10n._();
 
-  static const _prefsKey = 'app_locale';
+  // Bumped from 'app_locale' to retire stale 'ro' selections from earlier
+  // builds: the app defaults to English, and only an explicit RO/EN choice in
+  // the Profile screen persists under this key.
+  static const _prefsKey = 'app_locale_v2';
   static const _supported = ['ro', 'en'];
 
+  // Default language is English. Romanian is only used when the user explicitly
+  // selects it (and that choice is then saved under _prefsKey).
   String _locale = 'en';
   String get locale => _locale;
   bool get isRomanian => _locale == 'ro';
