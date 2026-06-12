@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/branding/branding_config.dart';
-import '../../../core/state/auth_state.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/shape_tokens.dart';
-import '../../../core/theme/spacing_tokens.dart';
-import '../../../core/theme/typography_tokens.dart';
+import 'package:umbraro/core/l10n/strings.dart';
+import 'package:umbraro/core/state/auth_state.dart';
+import 'package:umbraro/core/theme/app_colors.dart';
+import 'package:umbraro/core/theme/spacing_tokens.dart';
+import 'package:umbraro/core/theme/typography_tokens.dart';
+import 'package:umbraro/features/auth/presentation/widgets/auth_button.dart';
+import 'package:umbraro/features/auth/presentation/widgets/auth_error_banner.dart';
+import 'package:umbraro/features/auth/presentation/widgets/auth_scaffold.dart';
+import 'package:umbraro/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:umbraro/features/auth/validation/auth_validators.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -25,8 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   bool _submitting = false;
-  bool _obscure = true;
-  String? _localError;
+  bool _submitted = false;
+  String? _emailError;
+  String? _passError;
 
   @override
   void dispose() {
@@ -35,221 +40,90 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  // Sign-in is lenient: a well-formed email and a non-empty password. The
+  // strength rule only applies when creating an account.
+  void _revalidate() {
+    if (!_submitted) return;
+    final emailKey = AuthValidators.email(_emailCtrl.text);
+    setState(() {
+      _emailError = emailKey == null ? null : L10n.t(emailKey);
+      _passError =
+          _passCtrl.text.isEmpty ? L10n.t('validation.passwordRequired') : null;
+    });
+  }
+
   Future<void> _submit() async {
     if (_submitting) return;
-    final email = _emailCtrl.text.trim();
-    final pass = _passCtrl.text;
-    if (email.isEmpty || !email.contains('@') || pass.isEmpty) {
-      setState(() => _localError = 'Enter a valid email and password.');
-      return;
-    }
+    final emailKey = AuthValidators.email(_emailCtrl.text);
+    final passEmpty = _passCtrl.text.isEmpty;
     setState(() {
-      _submitting = true;
-      _localError = null;
+      _submitted = true;
+      _emailError = emailKey == null ? null : L10n.t(emailKey);
+      _passError = passEmpty ? L10n.t('validation.passwordRequired') : null;
     });
-    await widget.authState.login(email: email, password: pass);
+    if (emailKey != null || passEmpty) return;
+
+    setState(() => _submitting = true);
+    await widget.authState.login(
+      email: AuthValidators.normalizeEmail(_emailCtrl.text),
+      password: _passCtrl.text,
+    );
     if (mounted) setState(() => _submitting = false);
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(gradient: c.surfaceBaseGradient),
-        child: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.xxl),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 380),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Center(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 140,
-                          width: 140,
-                          child: Image.asset(
-                            BrandingConfig.logoFull,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: SpacingTokens.sm),
-                  Text(
-                    'TACTICAL INTELLIGENCE PLATFORM',
-                    textAlign: TextAlign.center,
-                    style: TypographyTokens.sectionLabel,
-                  ),
-                  const SizedBox(height: 48),
-                  Text('SIGN IN', style: TypographyTokens.sectionLabel),
-                  const SizedBox(height: SpacingTokens.md),
-                  _buildField(
-                    context,
-                    controller: _emailCtrl,
-                    label: 'Email',
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    autofillHints: const [
-                      AutofillHints.username,
-                      AutofillHints.email,
-                    ],
-                  ),
-                  const SizedBox(height: SpacingTokens.md),
-                  _buildField(
-                    context,
-                    controller: _passCtrl,
-                    label: 'Password',
-                    isPassword: true,
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (_) => _submit(),
-                    autofillHints: const [AutofillHints.password],
-                  ),
-                  const SizedBox(height: SpacingTokens.xl),
-                  if ((_localError ?? widget.authState.error) != null) ...[
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(SpacingTokens.sm),
-                      decoration: BoxDecoration(
-                        color: c.negative.withValues(alpha: 0.12),
-                        borderRadius: ShapeTokens.control,
-                        border:
-                            Border.all(color: c.negative.withValues(alpha: 0.4)),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.error_outline, size: 16, color: c.negative),
-                          const SizedBox(width: SpacingTokens.xs),
-                          Expanded(
-                            child: Text(
-                              _localError ?? widget.authState.error!,
-                              style: TypographyTokens.bodySmall
-                                  .copyWith(color: c.negative),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: SpacingTokens.md),
-                  ],
-                  SizedBox(
-                    height: 48,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: c.accent,
-                        foregroundColor: c.onAccent,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: ShapeTokens.control),
-                      ),
-                      onPressed: _submitting ? null : _submit,
-                      child: _submitting
-                          ? SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: c.onAccent,
-                              ),
-                            )
-                          : Text(
-                              'Sign in',
-                              style: TypographyTokens.buttonLabel
-                                  .copyWith(color: c.onAccent),
-                            ),
-                    ),
-                  ),
-                  const SizedBox(height: SpacingTokens.lg),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'NO ACCOUNT? ',
-                        style: TypographyTokens.sectionLabel,
-                      ),
-                      GestureDetector(
-                        onTap: widget.onRegisterTap,
-                        child: Text(
-                          'REGISTER',
-                          style: TypographyTokens.sectionLabel.copyWith(
-                            color: c.accent,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+    final serverError = widget.authState.error;
+    return AuthScaffold(
+      tagline: L10n.t('login.tagline'),
+      title: L10n.t('login.title'),
+      fields: [
+        AuthTextField(
+          controller: _emailCtrl,
+          label: L10n.t('login.email'),
+          errorText: _emailError,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          autofillHints: const [AutofillHints.username, AutofillHints.email],
+          onChanged: (_) => _revalidate(),
         ),
+        const SizedBox(height: SpacingTokens.md),
+        AuthTextField(
+          controller: _passCtrl,
+          label: L10n.t('login.password'),
+          isPassword: true,
+          errorText: _passError,
+          textInputAction: TextInputAction.done,
+          autofillHints: const [AutofillHints.password],
+          onSubmitted: (_) => _submit(),
+          onChanged: (_) => _revalidate(),
         ),
-      ),
-    );
-  }
-
-  Widget _buildField(
-    BuildContext context, {
-    required TextEditingController controller,
-    required String label,
-    bool isPassword = false,
-    TextInputType? keyboardType,
-    TextInputAction? textInputAction,
-    ValueChanged<String>? onSubmitted,
-    List<String>? autofillHints,
-  }) {
-    final c = context.colors;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label,
-            style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted)),
-        const SizedBox(height: SpacingTokens.xs),
-        TextField(
-          controller: controller,
-          obscureText: isPassword && _obscure,
-          keyboardType: keyboardType,
-          textInputAction: textInputAction,
-          onSubmitted: onSubmitted,
-          autofillHints: autofillHints,
-          style: TypographyTokens.body,
-          cursorColor: c.accent,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: c.surfaceLow,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: SpacingTokens.md,
-              vertical: SpacingTokens.md,
-            ),
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _obscure ? Icons.visibility_off : Icons.visibility,
-                      size: 20,
-                      color: c.textMuted,
-                    ),
-                    onPressed: () => setState(() => _obscure = !_obscure),
-                  )
-                : null,
-            border: OutlineInputBorder(
-              borderRadius: ShapeTokens.control,
-              borderSide: BorderSide(color: c.divider),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: ShapeTokens.control,
-              borderSide: BorderSide(color: c.divider),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: ShapeTokens.control,
-              borderSide: BorderSide(color: c.accent, width: 1.5),
-            ),
-          ),
+        const SizedBox(height: SpacingTokens.xl),
+        if (serverError != null) ...[
+          AuthErrorBanner(message: serverError),
+          const SizedBox(height: SpacingTokens.md),
+        ],
+        AuthButton(
+          label: L10n.t('login.submit'),
+          busy: _submitting,
+          onPressed: _submit,
         ),
       ],
+      footer: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('${L10n.t('login.noAccount')} ',
+              style: TypographyTokens.sectionLabel),
+          GestureDetector(
+            onTap: widget.onRegisterTap,
+            child: Text(
+              L10n.t('login.register'),
+              style: TypographyTokens.sectionLabel.copyWith(color: c.accent),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

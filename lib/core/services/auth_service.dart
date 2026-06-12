@@ -76,6 +76,24 @@ class AuthService {
     _setTokensFromResponse(data);
   }
 
+  /// Exchange a verified Cognito ID token for the local JWT pair (returning
+  /// user whose RDS row already exists).
+  Future<void> exchangeCognito(String idToken) async {
+    final data = await _api.post('/auth/cognito', bearer: idToken);
+    _setTokensFromResponse(data);
+  }
+
+  /// First Cognito sign-in: create/link the local user row (carrying the
+  /// chosen team) and return the local JWT pair.
+  Future<void> registerWithCognito(String idToken, String teamName) async {
+    final data = await _api.post(
+      '/auth/register_with_cognito',
+      body: {'team_name': teamName},
+      bearer: idToken,
+    );
+    _setTokensFromResponse(data);
+  }
+
   void _setTokensFromResponse(Map<String, dynamic> data) {
     _api.setTokens(
       access: data['access_token'] as String,

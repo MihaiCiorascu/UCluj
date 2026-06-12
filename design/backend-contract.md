@@ -123,6 +123,15 @@ Endpoint names may evolve, but the backend will likely support:
 - standings
 - chat query
 
+### Auth endpoints
+
+Authentication is Cognito-mediated (the pool is provisioned by `infra/auth/cognito.yml`, which also configures emailed 6-digit confirmation through Amazon SES):
+- `POST /auth/cognito` — body none; `Authorization: Bearer <Cognito ID token>`. Verifies the token and returns the local `{access_token, refresh_token}` for an existing user.
+- `POST /auth/register_with_cognito` — body `{ "team_name": "<club>" }`; same Bearer Cognito ID token. Creates/links the `users` row (with `cognito_sub` and the chosen team) and returns the local JWT pair. Called on first sign-up.
+- `POST /auth/register` and `POST /auth/login` (bcrypt over RDS) remain as a fallback only, used when no Cognito pool is configured.
+
+Email verification is mandatory: a Cognito account that has not confirmed its emailed code cannot sign in, so the client routes it to the verification screen before any of the endpoints above succeed.
+
 ## 10. Non-Negotiables
 
 - Do not expose fantasy outputs that the notebook cannot support.

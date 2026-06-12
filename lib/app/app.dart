@@ -8,6 +8,7 @@ import '../core/theme/app_colors.dart';
 import '../core/theme/app_theme.dart';
 import '../core/theme/theme_mode_notifier.dart';
 import '../core/widgets/team_accent_scope.dart';
+import '../features/auth/presentation/email_verification_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
 
@@ -76,7 +77,20 @@ class _UmbraRoAppState extends State<UmbraRoApp> {
     }
 
     if (!_authState.isLoggedIn) {
-      return _AuthGate(authState: _authState, themeMode: _themeMode);
+      switch (_authState.stage) {
+        case AuthFlowStage.login:
+          return LoginScreen(
+            authState: _authState,
+            onRegisterTap: _authState.goToRegister,
+          );
+        case AuthFlowStage.register:
+          return RegisterScreen(
+            authState: _authState,
+            onLoginTap: _authState.goToLogin,
+          );
+        case AuthFlowStage.verify:
+          return EmailVerificationScreen(authState: _authState);
+      }
     }
 
     return AppShell(authState: _authState, themeMode: _themeMode);
@@ -122,29 +136,3 @@ class _SplashScreen extends StatelessWidget {
   }
 }
 
-class _AuthGate extends StatefulWidget {
-  const _AuthGate({required this.authState, required this.themeMode});
-  final AuthState authState;
-  final ThemeModeNotifier themeMode;
-
-  @override
-  State<_AuthGate> createState() => _AuthGateState();
-}
-
-class _AuthGateState extends State<_AuthGate> {
-  bool _showLogin = true;
-
-  @override
-  Widget build(BuildContext context) {
-    if (_showLogin) {
-      return LoginScreen(
-        authState: widget.authState,
-        onRegisterTap: () => setState(() => _showLogin = false),
-      );
-    }
-    return RegisterScreen(
-      authState: widget.authState,
-      onLoginTap: () => setState(() => _showLogin = true),
-    );
-  }
-}

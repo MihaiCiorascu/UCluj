@@ -79,6 +79,43 @@ class L10n extends ChangeNotifier {
     'register.errorRequired': 'Toate câmpurile sunt obligatorii',
     'register.errorPasswordLen': 'Parola trebuie să aibă cel puțin 8 caractere',
     'register.errorPasswordMatch': 'Parolele nu coincid',
+    'register.club': 'CLUBUL TĂU',
+    'register.clubHint': 'Alege echipa',
+
+    // Auth — field validation
+    'validation.nameRequired': 'Introdu numele.',
+    'validation.nameLength': 'Numele trebuie să aibă între 2 și 60 de caractere.',
+    'validation.nameChars': 'Folosește litere, spații, cratime sau apostrofuri.',
+    'validation.nameNoDigits': 'Numele nu poate conține cifre.',
+    'validation.emailRequired': 'Introdu adresa de email.',
+    'validation.emailInvalid': 'Introdu o adresă de email validă.',
+    'validation.passwordRequired': 'Introdu parola.',
+    'validation.passwordLength': 'Parola trebuie să aibă cel puțin 8 caractere.',
+    'validation.passwordLetter': 'Adaugă cel puțin o literă.',
+    'validation.passwordDigit': 'Adaugă cel puțin o cifră.',
+    'validation.confirmRequired': 'Confirmă parola.',
+    'validation.passwordMatch': 'Parolele nu coincid.',
+    'validation.teamRequired': 'Alege un club.',
+
+    // Auth — email verification
+    'verify.title': 'VERIFICĂ EMAILUL',
+    'verify.sentTo': 'Am trimis un cod din 6 cifre la {email}.',
+    'verify.codeLabel': 'COD DE VERIFICARE',
+    'verify.submit': 'VERIFICĂ',
+    'verify.resend': 'Retrimite codul',
+    'verify.resendIn': 'Retrimite în {s}s',
+    'verify.backToLogin': 'ÎNAPOI LA AUTENTIFICARE',
+    'verify.codeRequired': 'Introdu codul din 6 cifre.',
+    'verify.errorMismatch': 'Codul nu este corect. Verifică și încearcă din nou.',
+    'verify.errorExpired': 'Codul a expirat. Solicită unul nou.',
+    'verify.errorLimit': 'Prea multe încercări. Așteaptă puțin și reîncearcă.',
+    'verify.resent': 'Un cod nou este pe drum.',
+
+    // Auth — error messages
+    'auth.errorNotConfirmed': 'Verifică-ți emailul pentru a continua.',
+    'auth.errorUserExists': 'Există deja un cont cu acest email.',
+    'auth.errorInvalidCredentials': 'Email sau parolă incorecte.',
+    'auth.errorGeneric': 'A apărut o eroare. Încearcă din nou.',
 
     // Dashboard
     'dashboard.errorTitle': 'Eroare la încărcare',
@@ -290,6 +327,43 @@ class L10n extends ChangeNotifier {
     'register.errorRequired': 'All fields are required',
     'register.errorPasswordLen': 'Password must be at least 8 characters',
     'register.errorPasswordMatch': 'Passwords do not match',
+    'register.club': 'YOUR CLUB',
+    'register.clubHint': 'Pick your team',
+
+    // Auth — field validation
+    'validation.nameRequired': 'Please enter your name.',
+    'validation.nameLength': 'Name must be 2 to 60 characters.',
+    'validation.nameChars': 'Use letters, spaces, hyphens or apostrophes.',
+    'validation.nameNoDigits': "Names can't contain numbers.",
+    'validation.emailRequired': 'Please enter your email.',
+    'validation.emailInvalid': 'Enter a valid email address.',
+    'validation.passwordRequired': 'Please enter your password.',
+    'validation.passwordLength': 'Password must be at least 8 characters.',
+    'validation.passwordLetter': 'Add at least one letter.',
+    'validation.passwordDigit': 'Add at least one number.',
+    'validation.confirmRequired': 'Please confirm your password.',
+    'validation.passwordMatch': "Passwords don't match.",
+    'validation.teamRequired': 'Pick a club.',
+
+    // Auth — email verification
+    'verify.title': 'VERIFY YOUR EMAIL',
+    'verify.sentTo': 'We sent a 6-digit code to {email}.',
+    'verify.codeLabel': 'VERIFICATION CODE',
+    'verify.submit': 'VERIFY',
+    'verify.resend': 'Resend code',
+    'verify.resendIn': 'Resend in {s}s',
+    'verify.backToLogin': 'BACK TO SIGN IN',
+    'verify.codeRequired': 'Enter the 6-digit code.',
+    'verify.errorMismatch': "That code isn't right. Check and try again.",
+    'verify.errorExpired': 'That code expired. Request a new one.',
+    'verify.errorLimit': 'Too many attempts. Wait a moment and retry.',
+    'verify.resent': 'A new code is on its way.',
+
+    // Auth — error messages
+    'auth.errorNotConfirmed': 'Please verify your email to continue.',
+    'auth.errorUserExists': 'An account with this email already exists.',
+    'auth.errorInvalidCredentials': 'Incorrect email or password.',
+    'auth.errorGeneric': 'Something went wrong. Please try again.',
 
     // Dashboard
     'dashboard.errorTitle': 'Loading error',

@@ -16,6 +16,10 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   logger: ^2.4.0
   cached_network_image: ^3.4.1
+  # AWS Cognito email/password auth with emailed 6-digit confirmation (web +
+  # mobile). Guarded at runtime: unused when no Cognito pool is configured.
+  amplify_flutter: ^2.6.1
+  amplify_auth_cognito: ^2.6.1
 
 dev_dependencies:
   flutter_test:

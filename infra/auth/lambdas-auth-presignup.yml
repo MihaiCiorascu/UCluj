@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  UmbraRo Cognito PreSignUp trigger: deletes a still-UNCONFIRMED duplicate so a
+  user who abandoned email verification can sign up again with the same email.
+  Deploy this AFTER infra/auth/cognito.yml (it needs the pool id), then re-deploy
+  cognito.yml with PreSignUpLambdaArn set to this stack's PreSignUpLambdaArn
+  output. Region: eu-central-1. Account: 302432776212.
+
+# ---------------------------------------------------------------------------
+# Parameters
+# ---------------------------------------------------------------------------
+Parameters:
+
+  UserPoolId:
+    Type: String
+    Description: >
+      The Cognito user pool id from the cognito.yml stack's UserPoolId output
+      (e.g. eu-central-1_xxxxxxxxx). Scopes the function's IAM policy and the
+      Cognito invoke permission to that one pool, and is passed to the handler
+      as the USER_POOL_ID fallback env var.
+
+# ---------------------------------------------------------------------------
+# Resources
+# ---------------------------------------------------------------------------
+Resources:
+
+  PreSignUpLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: umbraro-auth-pre-signup-lambda-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: umbraro-auth-pre-signup-lambda-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: CognitoCleanupUnconfirmed
+                Effect: Allow
+                Action:
+                  - cognito-idp:AdminGetUser
+                  - cognito-idp:AdminDeleteUser
+                Resource: !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPoolId}
+
+  PreSignUpLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: umbraro-auth-pre-signup
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt PreSignUpLambdaRole.Arn
+      Timeout: 10
+      MemorySize: 128
+      Environment:
+        Variables:
+          USER_POOL_ID: !Ref UserPoolId
+      # Canonical source: infra/auth/lambdas/auth_pre_signup/handler.py. Keep in sync.
+      Code:
+        ZipFile: |
+          import os
+
+          import boto3
+          from botocore.exceptions import ClientError
+
+          client = boto3.client("cognito-idp")
+
+
+          def handler(event, context):
+              pool_id = event.get("userPoolId") or os.environ.get("USER_POOL_ID", "")
+              username = (event.get("userName") or "").strip()
+              if not pool_id or not username:
+                  return event
+              try:
+                  existing = client.admin_get_user(UserPoolId=pool_id, Username=username)
+                  if existing.get("UserStatus") == "UNCONFIRMED":
+                      client.admin_delete_user(UserPoolId=pool_id, Username=username)
+              except client.exceptions.UserNotFoundException:
+                  pass
+              except ClientError:
+                  pass
+              return event
+
+  # Lets Cognito invoke the trigger. Scoped to the one pool (no circular
+  # dependency: the pool id is a parameter, not a cross-stack ref).
+  PreSignUpInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt PreSignUpLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPoolId}
+
+# ---------------------------------------------------------------------------
+# Outputs
+# ---------------------------------------------------------------------------
+Outputs:
+
+  PreSignUpLambdaArn:
+    Value: !GetAtt PreSignUpLambda.Arn
+    Description: Pass this to cognito.yml as the PreSignUpLambdaArn parameter.
+    Export:
+      Name: umbraro-auth-pre-signup-arn

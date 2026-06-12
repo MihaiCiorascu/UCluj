@@ -1,0 +1,143 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  UmbraRo authentication: an AWS Cognito user pool with email sign-in and
+  emailed 6-digit confirmation codes delivered through Amazon SES. The Flutter
+  client signs up / signs in against this pool via Amplify; the FastAPI backend
+  verifies the resulting Cognito ID token (JWKS) and issues its own local JWT.
+
+  Deploy region: eu-central-1. Account: 302432776212.
+  Outputs feed two places (see infra/README.md):
+    - web/config.json  -> cognitoUserPoolId / cognitoAppClientId (Flutter)
+    - App Runner env   -> COGNITO_USER_POOL_ID / COGNITO_APP_CLIENT_ID (backend)
+
+# ---------------------------------------------------------------------------
+# Parameters
+# ---------------------------------------------------------------------------
+Parameters:
+
+  SesFromAddress:
+    Type: String
+    Default: mihaiciorascu11@gmail.com
+    Description: >
+      The verified Amazon SES identity that sends the confirmation emails (the
+      EmailSendingAccount is DEVELOPER, i.e. SES). This address (or its domain)
+      MUST be a verified SES identity in this region BEFORE the pool can send.
+      While SES is in the sandbox, only verified recipient addresses receive
+      mail; request SES production access to email arbitrary users.
+
+  PreSignUpLambdaArn:
+    Type: String
+    Default: ""
+    Description: >
+      Optional. The PreSignUpLambdaArn output from
+      infra/auth/lambdas-auth-presignup.yml. When set, the pool calls that
+      trigger before each sign-up to delete a still-UNCONFIRMED duplicate, so a
+      user who abandoned verification can sign up again with the same email.
+      Leave blank on the first deploy (the Lambda stack needs this pool's id);
+      then deploy the Lambda stack and re-deploy this stack with the ARN.
+
+# ---------------------------------------------------------------------------
+# Conditions
+# ---------------------------------------------------------------------------
+Conditions:
+  HasPreSignUp: !Not [!Equals [!Ref PreSignUpLambdaArn, ""]]
+
+# ---------------------------------------------------------------------------
+# Resources
+# ---------------------------------------------------------------------------
+Resources:
+
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: umbraro-user-pool
+      # Email is the username and is auto-verified by entering the emailed code.
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+      # Optional PreSignUp trigger (deletes UNCONFIRMED duplicates). Attached
+      # only when PreSignUpLambdaArn is provided; omitted otherwise.
+      LambdaConfig:
+        !If
+          - HasPreSignUp
+          - PreSignUp: !Ref PreSignUpLambdaArn
+          - !Ref AWS::NoValue
+      EmailConfiguration:
+        EmailSendingAccount: DEVELOPER
+        From: !Ref SesFromAddress
+        SourceArn: !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/${SesFromAddress}
+      VerificationMessageTemplate:
+        DefaultEmailOption: CONFIRM_WITH_CODE
+        EmailSubject: "Your UmbraRo verification code"
+        EmailMessage: |
+          Welcome to UmbraRo, the tactical intelligence platform.
+          Your verification code is {####}.
+
+          If you did not create an UmbraRo account, you can ignore this email.
+      Policies:
+        PasswordPolicy:
+          # Mild rule: at least 8 characters with one digit. The "one letter and
+          # one digit" rule is enforced client-side; this is the server floor.
+          MinimumLength: 8
+          RequireNumbers: true
+          RequireUppercase: false
+          RequireLowercase: false
+          RequireSymbols: false
+      Schema:
+        - Name: name
+          AttributeDataType: String
+          Required: true
+          Mutable: true
+        - Name: avatar_url
+          AttributeDataType: String
+          Required: false
+          Mutable: true
+      # The optional PreSignUp trigger that deletes UNCONFIRMED duplicates lives
+      # in infra/auth/lambdas-auth-presignup.yml and is attached through the
+      # PreSignUpLambdaArn parameter above. Without it, re-signing-up an
+      # unconfirmed email returns "account already exists" until the stale entry
+      # expires; see infra/README.md "PreSignUp trigger".
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: umbraro-web-client
+      UserPoolId: !Ref UserPool
+      # Public SPA / mobile client: no secret (Amplify SRP flow).
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      ReadAttributes:
+        - email
+        - name
+        - custom:avatar_url
+      WriteAttributes:
+        - email
+        - name
+        - custom:avatar_url
+      AccessTokenValidity: 1
+      IdTokenValidity: 1
+      RefreshTokenValidity: 30
+      TokenValidityUnits:
+        AccessToken: hours
+        IdToken: hours
+        RefreshToken: days
+
+# ---------------------------------------------------------------------------
+# Outputs
+# ---------------------------------------------------------------------------
+Outputs:
+
+  UserPoolId:
+    Value: !Ref UserPool
+    Description: COGNITO_USER_POOL_ID (backend) / cognitoUserPoolId (web/config.json)
+    Export:
+      Name: umbraro-user-pool-id
+
+  UserPoolClientId:
+    Value: !Ref UserPoolClient
+    Description: COGNITO_APP_CLIENT_ID (backend) / cognitoAppClientId (web/config.json)
+    Export:
+      Name: umbraro-user-pool-client-id

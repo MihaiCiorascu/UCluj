@@ -23,14 +23,31 @@ class AppConfig {
     defaultValue: '',
   );
 
+  // AWS Cognito user pool, consumed by the Amplify Auth plugin (and matched by
+  // the backend, which verifies the Cognito ID token against this pool). Blank
+  // by default so a build with no Cognito pool simply runs the local
+  // email/password auth fallback instead of trying to talk to Cognito.
+  static const String _compiledUserPoolId =
+      String.fromEnvironment('COGNITO_USER_POOL_ID', defaultValue: '');
+  static const String _compiledAppClientId =
+      String.fromEnvironment('COGNITO_APP_CLIENT_ID', defaultValue: '');
+  static const String cognitoRegion =
+      String.fromEnvironment('COGNITO_REGION', defaultValue: 'eu-central-1');
+
   static String _runtimeApiUrl = _compiledApiUrl;
   static String get apiBaseUrl => _runtimeApiUrl;
 
   static String _runtimeWsConnectUrl = _compiledWsConnectUrl;
   static String get wsConnectUrl => _runtimeWsConnectUrl;
 
-  // On web, fetch /config.json at runtime so the API URL and WS URL can be
-  // updated without a full Flutter rebuild.
+  static String _runtimeUserPoolId = _compiledUserPoolId;
+  static String get cognitoUserPoolId => _runtimeUserPoolId;
+
+  static String _runtimeAppClientId = _compiledAppClientId;
+  static String get cognitoAppClientId => _runtimeAppClientId;
+
+  // On web, fetch /config.json at runtime so the API URL, WS URL, and Cognito
+  // pool can be updated without a full Flutter rebuild.
   static Future<void> load() async {
     if (!kIsWeb) return;
     try {
@@ -43,6 +60,12 @@ class AppConfig {
         if (url != null && url.isNotEmpty) _runtimeApiUrl = url;
         final wsUrl = data['wsConnectUrl'] as String?;
         if (wsUrl != null && wsUrl.isNotEmpty) _runtimeWsConnectUrl = wsUrl;
+        final poolId = data['cognitoUserPoolId'] as String?;
+        if (poolId != null && poolId.isNotEmpty) _runtimeUserPoolId = poolId;
+        final clientId = data['cognitoAppClientId'] as String?;
+        if (clientId != null && clientId.isNotEmpty) {
+          _runtimeAppClientId = clientId;
+        }
       }
     } catch (_) {}
   }

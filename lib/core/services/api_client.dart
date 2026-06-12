@@ -56,12 +56,19 @@ class ApiClient {
   Future<Map<String, dynamic>> post(
     String path, {
     Map<String, dynamic>? body,
+    String? bearer,
   }) async {
+    // `bearer` overrides the stored local access token for a single call. Used
+    // by the Cognito exchange endpoints, which must present the Cognito ID
+    // token before any local JWT exists.
+    final headers = bearer != null
+        ? {'Content-Type': 'application/json', 'Authorization': 'Bearer $bearer'}
+        : _headers;
     try {
       final response = await http
           .post(
             Uri.parse('$_baseUrl$path'),
-            headers: _headers,
+            headers: headers,
             body: body != null ? jsonEncode(body) : null,
           )
           .timeout(_requestTimeout);
