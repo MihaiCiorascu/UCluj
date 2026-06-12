@@ -1,6 +1,6 @@
 {
   "apiBaseUrl": "https://b7fukv3pxv.eu-central-1.awsapprunner.com/api/v1",
   "wsConnectUrl": "wss://kf4p4x26t9.execute-api.eu-central-1.amazonaws.com/prod",
-  "cognitoUserPoolId": "",
-  "cognitoAppClientId": ""
+  "cognitoUserPoolId": "eu-central-1_l0Pq6ZGAz",
+  "cognitoAppClientId": "5gapouvh8avthv514e319bo2n7"
 }
