@@ -434,6 +434,10 @@ Reasonable endpoint directions include:
 
 But endpoint names may evolve later.
 
+### Authentication and email verification
+
+Auth is Cognito + Amplify + SES (provisioned by `infra/auth/cognito.yml`). Sign-up emails a 6-digit confirmation code; an unconfirmed account is blocked from sign-in (the client shows an `EmailVerificationScreen`). After confirmation the client exchanges the Cognito ID token for a local JWT via `POST /auth/cognito` or `POST /auth/register_with_cognito` (the latter carries the chosen club). Field validation is intentionally permissive but real: a full name (letters, spaces, diacritics, hyphens, apostrophes, no digits), a well-formed email, and a password of at least 8 characters with a letter and a digit. The club picker still feeds `register_with_cognito`. A local bcrypt path (`/auth/register` + `/auth/login`) stays as a fallback when no Cognito pool is configured.
+
 ## 14. Tactical Blueprint Contract
 
 A tactical blueprint is not vague advice.  

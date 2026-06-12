@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/branding/branding_config.dart';
-import '../../../core/data/superliga_teams.dart';
-import '../../../core/state/auth_state.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/spacing_tokens.dart';
-import '../../../core/theme/typography_tokens.dart';
+import 'package:umbraro/core/data/superliga_teams.dart';
+import 'package:umbraro/core/l10n/strings.dart';
+import 'package:umbraro/core/state/auth_state.dart';
+import 'package:umbraro/core/theme/app_colors.dart';
+import 'package:umbraro/core/theme/shape_tokens.dart';
+import 'package:umbraro/core/theme/spacing_tokens.dart';
+import 'package:umbraro/core/theme/typography_tokens.dart';
+import 'package:umbraro/features/auth/presentation/widgets/auth_button.dart';
+import 'package:umbraro/features/auth/presentation/widgets/auth_error_banner.dart';
+import 'package:umbraro/features/auth/presentation/widgets/auth_scaffold.dart';
+import 'package:umbraro/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:umbraro/features/auth/validation/auth_validators.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
@@ -27,14 +33,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passCtrl = TextEditingController();
   final _confirmCtrl = TextEditingController();
 
-  /// Default to FC Universitatea Cluj for back-compat with the previous
-  /// build (which hardcoded U Cluj), but the user must explicitly confirm
-  /// a team via the picker.
-  SuperligaTeam? _selectedTeam = teamByShort("U Cluj");
+  /// Default to FC Universitatea Cluj for back-compat with the previous build
+  /// (which hardcoded U Cluj), but the user can pick any club.
+  SuperligaTeam? _selectedTeam = teamByShort('U Cluj');
 
   bool _submitting = false;
-  bool _obscure = true;
-  String? _localError;
+  bool _submitted = false;
+  String? _nameError;
+  String? _emailError;
+  String? _passError;
+  String? _confirmError;
+  String? _teamError;
 
   @override
   void dispose() {
@@ -45,284 +54,158 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  void _revalidate() {
+    if (!_submitted) return;
+    setState(() {
+      _nameError = _key(AuthValidators.fullName(_nameCtrl.text));
+      _emailError = _key(AuthValidators.email(_emailCtrl.text));
+      _passError = _key(AuthValidators.password(_passCtrl.text));
+      _confirmError =
+          _key(AuthValidators.confirm(_passCtrl.text, _confirmCtrl.text));
+    });
+  }
+
+  String? _key(String? k) => k == null ? null : L10n.t(k);
+
   Future<void> _submit() async {
     if (_submitting) return;
-
-    final name = _nameCtrl.text.trim();
-    final email = _emailCtrl.text.trim();
-    final pass = _passCtrl.text;
-    final confirm = _confirmCtrl.text;
-    final team = _selectedTeam;
-
-    if (name.isEmpty || email.isEmpty || pass.isEmpty || team == null) {
-      setState(() => _localError = 'All fields are required');
-      return;
-    }
-    if (pass.length < 8) {
-      setState(() => _localError = 'Password must be at least 8 characters');
-      return;
-    }
-    if (pass != confirm) {
-      setState(() => _localError = 'Passwords do not match');
-      return;
-    }
-
+    final nameKey = AuthValidators.fullName(_nameCtrl.text);
+    final emailKey = AuthValidators.email(_emailCtrl.text);
+    final passKey = AuthValidators.password(_passCtrl.text);
+    final confirmKey = AuthValidators.confirm(_passCtrl.text, _confirmCtrl.text);
+    final noTeam = _selectedTeam == null;
     setState(() {
-      _submitting = true;
-      _localError = null;
+      _submitted = true;
+      _nameError = _key(nameKey);
+      _emailError = _key(emailKey);
+      _passError = _key(passKey);
+      _confirmError = _key(confirmKey);
+      _teamError = noTeam ? L10n.t('validation.teamRequired') : null;
     });
-
-    final success = await widget.authState.register(
-      email: email,
-      password: pass,
-      fullName: name,
-      teamName: team.short,
-    );
-
-    if (mounted) {
-      setState(() {
-        _submitting = false;
-        if (!success) _localError = widget.authState.error;
-      });
+    if (nameKey != null ||
+        emailKey != null ||
+        passKey != null ||
+        confirmKey != null ||
+        noTeam) {
+      return;
     }
+
+    setState(() => _submitting = true);
+    await widget.authState.register(
+      email: AuthValidators.normalizeEmail(_emailCtrl.text),
+      password: _passCtrl.text,
+      fullName: _nameCtrl.text.trim(),
+      teamName: _selectedTeam!.short,
+    );
+    if (mounted) setState(() => _submitting = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
-    final displayError = _localError ?? widget.authState.error;
-
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(gradient: c.surfaceBaseGradient),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: SpacingTokens.xxl),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 380),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Center(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 140,
-                            width: 140,
-                            child: Image.asset(
-                              BrandingConfig.logoFull,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: SpacingTokens.sm),
-                    Text(
-                      'CREATE YOUR ACCOUNT',
-                      textAlign: TextAlign.center,
-                      style: TypographyTokens.sectionLabel,
-                    ),
-                    const SizedBox(height: 48),
-                    _buildField(
-                      context,
-                      controller: _nameCtrl,
-                      label: 'Full name',
-                      keyboardType: TextInputType.name,
-                      textInputAction: TextInputAction.next,
-                      autofillHints: const [AutofillHints.name],
-                    ),
-                    const SizedBox(height: SpacingTokens.md),
-                    _buildField(
-                      context,
-                      controller: _emailCtrl,
-                      label: 'Email',
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      autofillHints: const [AutofillHints.email],
-                    ),
-                    const SizedBox(height: SpacingTokens.md),
-                    _buildField(
-                      context,
-                      controller: _passCtrl,
-                      label: 'Password',
-                      isPassword: true,
-                      textInputAction: TextInputAction.next,
-                      autofillHints: const [AutofillHints.newPassword],
-                    ),
-                    const SizedBox(height: SpacingTokens.md),
-                    _buildField(
-                      context,
-                      controller: _confirmCtrl,
-                      label: 'Confirm password',
-                      isPassword: true,
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => _submit(),
-                    ),
-                    const SizedBox(height: SpacingTokens.md),
-                    _buildTeamPicker(context),
-                    const SizedBox(height: SpacingTokens.xl),
-                    if (displayError != null) ...[
-                      Container(
-                        padding: const EdgeInsets.all(SpacingTokens.sm),
-                        decoration: BoxDecoration(
-                          color: c.negative.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                              color: c.negative.withValues(alpha: 0.4)),
-                        ),
-                        child: Text(
-                          displayError,
-                          style: TypographyTokens.body.copyWith(
-                            color: c.negative,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: SpacingTokens.md),
-                    ],
-                    SizedBox(
-                      height: 48,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          backgroundColor: c.primary,
-                          foregroundColor: c.onPrimary,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                        ),
-                        onPressed: _submitting ? null : _submit,
-                        child: _submitting
-                            ? SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: c.onPrimary,
-                                ),
-                              )
-                            : Text(
-                                'Create account',
-                                style: TypographyTokens.buttonLabel
-                                    .copyWith(color: c.onPrimary),
-                              ),
-                      ),
-                    ),
-                    const SizedBox(height: SpacingTokens.lg),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'ALREADY HAVE AN ACCOUNT? ',
-                          style: TypographyTokens.sectionLabel,
-                        ),
-                        GestureDetector(
-                          onTap: widget.onLoginTap,
-                          child: Text(
-                            'SIGN IN',
-                            style: TypographyTokens.sectionLabel.copyWith(
-                              color: c.primary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+    final serverError = widget.authState.error;
+    return AuthScaffold(
+      title: L10n.t('register.title'),
+      fields: [
+        AuthTextField(
+          controller: _nameCtrl,
+          label: L10n.t('register.fullName'),
+          errorText: _nameError,
+          keyboardType: TextInputType.name,
+          textInputAction: TextInputAction.next,
+          autofillHints: const [AutofillHints.name],
+          onChanged: (_) => _revalidate(),
+        ),
+        const SizedBox(height: SpacingTokens.md),
+        AuthTextField(
+          controller: _emailCtrl,
+          label: L10n.t('register.email'),
+          errorText: _emailError,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          autofillHints: const [AutofillHints.email],
+          onChanged: (_) => _revalidate(),
+        ),
+        const SizedBox(height: SpacingTokens.md),
+        AuthTextField(
+          controller: _passCtrl,
+          label: L10n.t('register.password'),
+          isPassword: true,
+          errorText: _passError,
+          textInputAction: TextInputAction.next,
+          autofillHints: const [AutofillHints.newPassword],
+          onChanged: (_) => _revalidate(),
+        ),
+        const SizedBox(height: SpacingTokens.md),
+        AuthTextField(
+          controller: _confirmCtrl,
+          label: L10n.t('register.confirmPassword'),
+          isPassword: true,
+          errorText: _confirmError,
+          textInputAction: TextInputAction.done,
+          onSubmitted: (_) => _submit(),
+          onChanged: (_) => _revalidate(),
+        ),
+        const SizedBox(height: SpacingTokens.md),
+        _buildTeamPicker(context),
+        const SizedBox(height: SpacingTokens.xl),
+        if (serverError != null) ...[
+          AuthErrorBanner(message: serverError),
+          const SizedBox(height: SpacingTokens.md),
+        ],
+        AuthButton(
+          label: L10n.t('register.submit'),
+          busy: _submitting,
+          onPressed: _submit,
+        ),
+      ],
+      footer: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('${L10n.t('register.haveAccount')} ',
+              style: TypographyTokens.sectionLabel),
+          GestureDetector(
+            onTap: widget.onLoginTap,
+            child: Text(
+              L10n.t('register.signIn'),
+              style: TypographyTokens.sectionLabel.copyWith(
+                color: context.colors.accent,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
-        ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildField(
-    BuildContext context, {
-    required TextEditingController controller,
-    required String label,
-    bool isPassword = false,
-    TextInputType? keyboardType,
-    TextInputAction? textInputAction,
-    ValueChanged<String>? onSubmitted,
-    List<String>? autofillHints,
-  }) {
-    final c = context.colors;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label,
-            style: TypographyTokens.sectionLabel.copyWith(color: c.textMuted)),
-        const SizedBox(height: SpacingTokens.xs),
-        TextField(
-          controller: controller,
-          obscureText: isPassword && _obscure,
-          keyboardType: keyboardType,
-          textInputAction: textInputAction,
-          onSubmitted: onSubmitted,
-          autofillHints: autofillHints,
-          style: TypographyTokens.body.copyWith(color: c.textPrimary),
-          cursorColor: c.primary,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: c.surfaceElevatedTop,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: SpacingTokens.md,
-              vertical: SpacingTokens.md,
-            ),
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _obscure ? Icons.visibility_off : Icons.visibility,
-                      size: 20,
-                      color: c.textMuted,
-                    ),
-                    onPressed: () => setState(() => _obscure = !_obscure),
-                  )
-                : null,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: c.chrome, width: 0.8),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: c.chrome, width: 0.8),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: c.primary, width: 1.4),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
   Widget _buildTeamPicker(BuildContext context) {
     final c = context.colors;
+    final hasError = _teamError != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('YOUR CLUB', style: TypographyTokens.sectionLabel),
+        Text(
+          L10n.t('register.club'),
+          style: TypographyTokens.sectionLabel
+              .copyWith(color: hasError ? c.negative : c.textMuted),
+        ),
         const SizedBox(height: SpacingTokens.xs),
         Container(
           decoration: BoxDecoration(
-            color: c.surfaceElevatedTop,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: c.chrome, width: 0.8),
+            color: c.surfaceLow,
+            borderRadius: ShapeTokens.control,
+            border: Border.all(color: hasError ? c.negative : c.divider),
           ),
           padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<SuperligaTeam>(
               isExpanded: true,
               value: _selectedTeam,
-              icon: Icon(Icons.arrow_drop_down, color: c.primary),
+              icon: Icon(Icons.arrow_drop_down, color: c.accent),
               dropdownColor: c.surfaceElevatedTop,
               style: TypographyTokens.body.copyWith(color: c.textPrimary),
               hint: Text(
-                'Pick your team',
+                L10n.t('register.clubHint'),
                 style: TypographyTokens.body.copyWith(color: c.textMuted),
               ),
               items: [
@@ -332,7 +215,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: _TeamRow(team: t),
                   ),
               ],
-              onChanged: (t) => setState(() => _selectedTeam = t),
+              onChanged: (t) => setState(() {
+                _selectedTeam = t;
+                if (_submitted) _teamError = null;
+              }),
               selectedItemBuilder: (ctx) {
                 return [
                   for (final t in kSuperligaTeams)
@@ -345,6 +231,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
         ),
+        if (hasError) ...[
+          const SizedBox(height: SpacingTokens.xxs),
+          Text(_teamError!,
+              style: TypographyTokens.bodySmall.copyWith(color: c.negative)),
+        ],
       ],
     );
   }
@@ -368,7 +259,7 @@ class _TeamRow extends StatelessWidget {
           decoration: BoxDecoration(
             color: c.surfaceElevatedTop,
             shape: BoxShape.circle,
-            border: Border.all(color: c.chrome.withValues(alpha: 0.6)),
+            border: Border.all(color: c.divider),
           ),
           padding: const EdgeInsets.all(2),
           child: Image.asset(team.badgeAsset, fit: BoxFit.contain),

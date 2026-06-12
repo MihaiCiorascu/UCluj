@@ -111,11 +111,13 @@ Any UI change that softens the aesthetic, adds decorative elements, or dilutes t
 
 ## Auth Flow
 
-Single Cognito-mediated path:
+Single Cognito-mediated path (provisioned by `infra/auth/cognito.yml`):
 
-1. The Flutter client signs the user in against the **AWS Cognito** user pool and obtains a Cognito ID token.
-2. The client posts that ID token to the backend (`POST /auth/cognito`, or `POST /auth/register_with_cognito` on first sign-up).
+1. On first sign-up the Flutter client calls Amplify `signUp` against the **AWS Cognito** user pool. Cognito emails a 6-digit confirmation code through **Amazon SES**; the user enters it on the `EmailVerificationScreen` (`confirmSignUp`). An account that is not confirmed cannot sign in, so registration is gated by email verification.
+2. After confirmation (or for a returning user) the client signs in via Amplify and obtains a Cognito ID token, which it posts to the backend (`POST /auth/cognito`, or `POST /auth/register_with_cognito` with the chosen team on first sign-up).
 3. The backend verifies the token against Cognito, looks up or creates a row in the `users` table on RDS, and issues a short-lived local JWT pair (access + refresh) bound to the Cognito subject.
 4. Subsequent API calls present the local JWT; `AuthSessionRepository` refreshes it automatically when needed.
 
-`AuthState` (ChangeNotifier) is the single source of truth for the current user across the Flutter app.
+The `COGNITO_USER_POOL_ID` / `COGNITO_APP_CLIENT_ID` values are read by both the backend (`backend/app/config.py`) and the Flutter client (`web/config.json` via `app_config.dart`). When they are blank, the app falls back to a local email/password path (`POST /auth/register` + `/auth/login`, bcrypt in RDS). Client-side validation (full name, email, password ≥ 8 with a letter and a digit) lives in `lib/features/auth/validation/auth_validators.dart`.
+
+`AuthState` (ChangeNotifier) is the single source of truth for the current user across the Flutter app, and `AuthState.stage` drives the logged-out gate (login / register / verify).

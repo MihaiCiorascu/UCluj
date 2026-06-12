@@ -317,6 +317,74 @@ Example `web/config.json` after deploy:
 
 ---
 
+## Auth: Cognito + SES + PreSignUp trigger (`infra/auth/`)
+
+A separate, smaller set of templates provisions authentication. They are **not**
+part of `template.yaml`.
+
+| File | Creates |
+|---|---|
+| `auth/cognito.yml` | `AWS::Cognito::UserPool` (`umbraro-user-pool`, email sign-in, emailed 6-digit confirmation via SES) + `UserPoolClient` (`umbraro-web-client`, SRP, no secret). No IAM. |
+| `auth/lambdas-auth-presignup.yml` | A Python Lambda (`umbraro-auth-pre-signup`) + its IAM role + the Cognito invoke permission. Optional, recommended. Deletes a still-`UNCONFIRMED` duplicate before each sign-up so a user who abandoned verification can sign up again with the same email. |
+| `auth/lambdas/auth_pre_signup/handler.py` | Canonical source for the Lambda (the template embeds the same code inline). |
+
+The two stacks have a one-way dependency the other way round (the pool needs the
+Lambda ARN; the Lambda needs the pool id), so deploy in this order:
+
+```bash
+# 0) One-time: verify the SES sender identity (then click the link AWS emails).
+aws ses verify-email-identity --email-address mihaiciorascu11@gmail.com --region eu-central-1
+
+# 1) Create the pool WITHOUT the trigger. No IAM, so no --capabilities.
+aws cloudformation deploy --template-file infra/auth/cognito.yml \
+  --stack-name umbraro-auth --region eu-central-1
+aws cloudformation describe-stacks --stack-name umbraro-auth --region eu-central-1 \
+  --query "Stacks[0].Outputs"   # note UserPoolId + UserPoolClientId
+
+# 2) (Recommended) Deploy the PreSignUp Lambda, passing the pool id from step 1.
+aws cloudformation deploy --template-file infra/auth/lambdas-auth-presignup.yml \
+  --stack-name umbraro-auth-presignup \
+  --parameter-overrides UserPoolId=<UserPoolId> \
+  --capabilities CAPABILITY_NAMED_IAM --region eu-central-1
+aws cloudformation describe-stacks --stack-name umbraro-auth-presignup --region eu-central-1 \
+  --query "Stacks[0].Outputs"   # note PreSignUpLambdaArn
+
+# 3) Re-deploy the pool WITH the trigger attached.
+aws cloudformation deploy --template-file infra/auth/cognito.yml \
+  --stack-name umbraro-auth \
+  --parameter-overrides PreSignUpLambdaArn=<PreSignUpLambdaArn> \
+  --region eu-central-1
+```
+
+### Config contract
+
+The two pool outputs feed both ends:
+
+| Output | Frontend (`web/config.json`) | Backend (App Runner `ucluj-backend` env) |
+|---|---|---|
+| `UserPoolId` | `cognitoUserPoolId` | `COGNITO_USER_POOL_ID` |
+| `UserPoolClientId` | `cognitoAppClientId` | `COGNITO_APP_CLIENT_ID` |
+| (region) | (implicit) | `COGNITO_REGION=eu-central-1` |
+
+While both `web/config.json` values are blank, the Flutter client runs the local
+email/password fallback instead of Cognito.
+
+### SES sandbox
+
+`EmailConfiguration` uses `DEVELOPER` mode (SES). While the account is in the SES
+sandbox, only **verified** recipient addresses receive the confirmation email, so
+verify the committee's test addresses, or request SES production access (~24h)
+before relying on arbitrary user emails.
+
+### PreSignUp trigger
+
+Without step 2, re-signing-up an email that is still `UNCONFIRMED` returns
+"account already exists" until the stale entry expires. The trigger (step 2)
+removes that friction. To detach it later, re-deploy `cognito.yml` with an empty
+`PreSignUpLambdaArn`.
+
+---
+
 ## Teardown
 
 ```bash

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:umbraro/core/auth/amplify_config.dart';
 import 'package:umbraro/core/config/app_config.dart';
 import 'package:umbraro/core/l10n/strings.dart';
 import 'package:umbraro/core/observability/app_logger.dart';
@@ -18,6 +19,9 @@ Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   installGlobalErrorHandlers();
   await AppConfig.load();
+  // Configure Amplify Cognito from the runtime config. No-ops (and the app
+  // stays on local-auth) when no Cognito pool is provisioned.
+  await configureAmplify();
   await L10n.instance.load();
   ThemeNotifier.instance.init();
 
