@@ -33,7 +33,7 @@ backend/uploads/
 backend/catboost_info/
 data/catboost_info/
 data/artifacts/
-data/TheNotebook.executed.ipynb
+data/*.executed.ipynb
 _sr_fixtures_cache.json
 _sr_standings_cache.json
 
@@ -42,6 +42,10 @@ _sr_standings_cache.json
 
 # Claude internal state
 .claude/
+
+# Internal product/agent docs (kept local, out of the public repo)
+AGENTS.md
+CLAUDE.md
 
 # Local copyrighted-paper archive (kept out of the remote)
 citations/
