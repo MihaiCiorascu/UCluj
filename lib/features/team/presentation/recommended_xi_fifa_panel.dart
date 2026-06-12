@@ -1273,22 +1273,22 @@ class _PlayerDetailColumn extends StatelessWidget {
     switch (p.loadStatus) {
       case 'at_risk':
         color = c.negative;
-        label = 'RISC OBOSEALA';
+        label = L10n.t('team.loadAtRisk');
         break;
       case 'fresh':
         color = c.positive;
-        label = 'PROASPAT';
+        label = L10n.t('team.loadFresh');
         break;
       default:
         color = c.accent;
-        label = 'APT';
+        label = L10n.t('team.loadOk');
     }
     return Wrap(
       spacing: SpacingTokens.xs,
       runSpacing: SpacingTokens.xs,
       children: [
         _loadPill(label, color, c),
-        if (p.restedAndReady) _loadPill('ODIHNIT, GATA', c.accent, c),
+        if (p.restedAndReady) _loadPill(L10n.t('team.restedReady'), c.accent, c),
       ],
     );
   }
