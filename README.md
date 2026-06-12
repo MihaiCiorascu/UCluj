@@ -1,34 +1,218 @@
-# UmbraRo (ucluj-hackathon)
+<p align="center">
+  <img src="assets/branding/umbraro_wordmark.png" alt="UmbraRo" width="360"/>
+</p>
 
-Tactical intelligence Flutter client and FastAPI backend (ML stays on the server).
+<h1 align="center">UmbraRo</h1>
 
-## How to run (local)
+<p align="center">
+  An AI tactical intelligence assistant for professional Romanian Superliga football coaches.
+</p>
 
-1. **Backend** - from `backend/` with Python 3.11+:
-   - `python -m venv .venv` and activate
-   - `pip install -r requirements.txt`
-   - Copy `backend/.env.example` to `backend/.env` and set `JWT_SECRET`
-   - Set `FIREBASE_PROJECT_ID` and optionally `FIREBASE_CREDENTIALS_PATH` if you use Firebase sign-in
-   - Start Uvicorn from `backend/` with your `app.main:app` entry (see `backend/app/main.py`).
+<p align="center">
+  <img src="https://img.shields.io/badge/Flutter-web%20%2B%20Android-02569B?logo=flutter&logoColor=white" alt="Flutter"/>
+  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/FastAPI-async-009688?logo=fastapi&logoColor=white" alt="FastAPI"/>
+  <img src="https://img.shields.io/badge/AWS-Amplify%20%7C%20App%20Runner-FF9900?logo=amazonwebservices&logoColor=white" alt="AWS"/>
+  <img src="https://img.shields.io/badge/License-MIT-3DA639" alt="MIT License"/>
+</p>
 
-2. **Flutter** - from repo root:
-   - `flutter pub get`
-   - Default: **legacy** email/password to FastAPI; JWTs stored in secure storage.
-   - **Firebase hybrid (dev):** run `flutterfire configure` and replace `lib/firebase_options.dart` with real project values.
-   - **Stable local URL (recommended):** always open `http://127.0.0.1:8080` using:
-     - `./scripts/run_web_firebase.ps1`
-     - `./scripts/run_web_legacy.ps1`
-   - Add `http://127.0.0.1:8080` to backend `CORS_ORIGINS` if the browser blocks API calls.
+<p align="center">
+  <b>Live demo:</b> <a href="https://umbraro.d2j9yfctr6ipf6.amplifyapp.com">umbraro.d2j9yfctr6ipf6.amplifyapp.com</a>
+</p>
 
-3. **Firestore rules** (cloud data):
-   - `firebase deploy --only firestore:rules`
+---
 
-## How to roll back (Firebase off)
+## Overview
 
-- Build or run without `USE_FIREBASE_AUTH=true` (default `false`).
-- Legacy `POST /auth/login` and `POST /auth/register` remain available.
+UmbraRo operationalises a Babes-Bolyai University bachelor thesis into a deployed product. It turns
+predictive match analytics into prescriptive tactical guidance for coaching staff, answering not only
+what is likely to happen but also what the staff should do to improve the outcome. The system runs as
+a single cross-platform Flutter client backed by a Python FastAPI service, fully hosted on AWS.
 
-## Verification (quick)
+The intelligence pipeline has four stages:
 
-- `USE_FIREBASE_AUTH=false` - sign in, restart app, still logged in (`/auth/me` succeeds).
-- `USE_FIREBASE_AUTH=true` - sign in with Firebase, CatBoost logic still runs via FastAPI.
+1. **Predict.** A calibrated CatBoost classifier estimates the binary home-win probability of a
+   fixture (Home Win versus Not Home Win).
+2. **Explain.** SHAP attributions surface the strongest positive drivers and the strongest negative
+   risks behind that probability.
+3. **Prescribe.** A constrained Monte Carlo optimiser searches thousands of realistic tactical
+   permutations and returns a feasible tactical blueprint that raises the win probability, reported
+   with the measured uplift.
+4. **Select.** A separate supervised model predicts each club's likely starting eleven, combining
+   per-90 player metrics, availability, an opponent-style profile, and a Hungarian assignment to fill
+   the formation.
+
+## Architecture
+
+```mermaid
+flowchart TD
+    subgraph Client["Flutter client (web and Android)"]
+      UI["Feature screens<br/>ChangeNotifier + Repository"]
+    end
+
+    subgraph Cloud["AWS, region eu-central-1"]
+      Amplify["Amplify Hosting<br/>(web app)"]
+      Cognito["Cognito + SES<br/>(email verification)"]
+      API["FastAPI on App Runner"]
+      ECR[("ECR image")]
+      RDS[("RDS PostgreSQL")]
+      S3[("S3 avatars")]
+      WS["API Gateway WebSocket<br/>+ DynamoDB"]
+    end
+
+    ML["CatBoost bundle<br/>+ Monte Carlo optimiser"]
+
+    Amplify -. serves .-> UI
+    UI -->|Amplify Auth| Cognito
+    UI -->|REST /api/v1| API
+    UI -->|live chat| WS
+    Cognito -->|ID token| API
+    ECR -. deploys .-> API
+    API --> RDS
+    API --> S3
+    API --> ML
+```
+
+- **Frontend.** A Flutter app with a feature-first layout under `lib/features/` and shared
+  infrastructure in `lib/core/`. State management uses `ChangeNotifier` with a repository pattern. The
+  web build is hosted on AWS Amplify, and a native Android target ships as a release APK. The runtime
+  API URL and Cognito identifiers are read from `web/config.json` on web, so they can change without a
+  rebuild. On mobile, the same values are compiled in at build time.
+- **Backend.** A layered async FastAPI service (`api/v1/endpoints/` to `services/` to `data/`),
+  packaged as a Docker image in Amazon ECR and served by AWS App Runner. The machine learning bundle
+  loads once at startup through a lifespan hook.
+- **Data and identity.** Persistent state (users, profiles, and chat) lives in AWS RDS PostgreSQL
+  through async SQLAlchemy over asyncpg. Authentication is handled by AWS Cognito with email
+  verification through Amazon SES. Avatars use presigned Amazon S3 uploads, and instant chat fans out
+  over an API Gateway WebSocket backed by a DynamoDB connections table.
+
+## Features
+
+- **Win probability**, shown as the probability of a home win in the binary formulation.
+- **Key drivers**, the top positive contributions and the top risks behind the current probability.
+- **Tactical blueprint**, the optimiser's recommended target values for possession, shots, shots on
+  target, and corners, together with the baseline probability, the optimised probability, and the
+  uplift.
+- **Starting eleven prediction** for each club, with availability and opponent context.
+- **Standings** in an editorial, premium league table.
+- **Command chat**, a direct, operational tactical interface rather than a social messenger.
+
+## Machine learning
+
+The model is trained on roughly 1,600 Romanian Superliga matches across five seasons, from 2020 to
+2025. The production engine is **CatBoost**, chosen because it handles non-linear tactical
+interactions and behaves smoothly inside the optimisation loop. Logistic Regression is retained as an
+interpretable predictive baseline, and it is never presented as the production model.
+
+**Supported inputs** (rolling five-match aggregates and pre-match context): Elo difference,
+head-to-head record, rest days, possession, shots, shots on target, corners, goals scored, and goals
+conceded.
+
+**Prescriptive optimiser.** A constrained Monte Carlo search (N = 25,000) explores four controllable
+levers (possession, shots, shots on target, and corners) while goals scored and conceded stay frozen.
+It stays within historically plausible tactical ranges so that every recommendation is both
+statistically useful and football-plausible.
+
+**What the model does not use.** To keep every output grounded in the training data, UmbraRo does not
+include biometrics, GPS or wearable tracking, player-level running load, expected-threat pipelines,
+passing-network models, three-way home/draw/away classification, or any betting-odds framing.
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Client | Flutter (Dart), `ChangeNotifier` + repository pattern, Amplify Auth |
+| Backend | FastAPI (async Python 3.11+), SQLAlchemy over asyncpg |
+| Machine learning | CatBoost, SHAP, constrained Monte Carlo optimisation |
+| Identity | AWS Cognito, Amazon SES, short-lived local JWT |
+| Hosting | AWS Amplify Hosting (web), AWS App Runner and Amazon ECR (backend) |
+| Data | AWS RDS PostgreSQL, Amazon S3, API Gateway WebSocket and DynamoDB |
+
+## Project structure
+
+```text
+lib/            Flutter client (feature-first under features/, shared core/)
+backend/        FastAPI service: api/v1/endpoints, services, data loaders, ml bundle
+android/        Native Android target (release APK)
+web/            Web entrypoint and runtime config.json
+data/           Research dataset and notebooks (canonical thesis numbers)
+design/         Design system and product specification
+infra/          Infrastructure templates (Cognito, WebSocket, Lambdas)
+scripts/        Developer and data-pipeline utilities
+```
+
+## Getting started (local)
+
+### Backend
+
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate          # Windows, use source .venv/bin/activate on macOS or Linux
+pip install -r requirements.txt
+cp .env.example .env            # then set JWT_SECRET, DATABASE_URL, and the COGNITO_* values
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+The committed `.env.example` defaults `DATABASE_URL` to a local SQLite file, so the backend runs with
+no external services. Point it at the PostgreSQL URL to mirror production.
+
+### Flutter (web)
+
+```bash
+flutter pub get
+flutter run -d chrome --web-port 8080 \
+  --dart-define=APP_ENV=development \
+  --dart-define=API_BASE_URL=http://127.0.0.1:8000/api/v1
+```
+
+### Android (release APK)
+
+Because `web/config.json` is read only on web, a mobile build must bake the production values in at
+build time:
+
+```bash
+flutter build apk --release \
+  --dart-define=APP_ENV=production \
+  --dart-define=API_BASE_URL=https://<app-runner-host>/api/v1 \
+  --dart-define=COGNITO_USER_POOL_ID=<pool-id> \
+  --dart-define=COGNITO_APP_CLIENT_ID=<app-client-id>
+```
+
+### Tests
+
+```bash
+flutter test
+flutter drive --target=integration_test/app_test.dart
+```
+
+## Deployment
+
+- **Frontend.** Pushing to the `umbraro` branch triggers AWS Amplify Hosting, which builds the Flutter
+  web app and serves it.
+- **Backend.** A GitHub Actions workflow builds the Docker image, pushes it to Amazon ECR, and starts
+  an AWS App Runner deployment.
+
+## Authentication
+
+Sign-up and sign-in go through AWS Cognito using Amplify. On first sign-up the client requests a
+six-digit confirmation code, which Cognito emails through Amazon SES. An account that has not
+confirmed its email cannot sign in. After confirmation the client exchanges the Cognito ID token for a
+short-lived local JWT bound to the Cognito subject, and subsequent API calls present that JWT. A local
+email and password path remains available as a fallback when no Cognito pool is configured.
+
+## Design system
+
+The visual language is "The Stoic Analyst": a severe, editorial, data-minimalist aesthetic built for
+elite coaching staff. It uses a deep navy surface (`#0A1929`), a cobalt accent (`#1E88E5`), and
+off-white text (`#F2F6FB`), the Epilogue and Inter typefaces, sharp corners with zero border radius,
+and depth through tonal layering rather than gradients, glows, or shadows.
+
+## License
+
+Released under the MIT License. See [LICENSE](LICENSE).
+
+## Author
+
+Built by Mihai Ciorascu as a bachelor thesis at Babes-Bolyai University, under the supervision of
+Asist. Dr. Anamaria Briciu.
