@@ -1,7 +1,10 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   UmbraRo authentication: an AWS Cognito user pool with email sign-in and
-  emailed 6-digit confirmation codes delivered through Amazon SES. The Flutter
+  emailed 6-digit confirmation codes. By default Cognito sends the code itself
+  (COGNITO_DEFAULT, reaches any recipient, ~50 emails/day); set EmailSendingMode
+  to DEVELOPER to send through Amazon SES instead (branded, high volume, but
+  sandbox-limited to verified recipients until SES production access). The Flutter
   client signs up / signs in against this pool via Amplify; the FastAPI backend
   verifies the resulting Cognito ID token (JWKS) and issues its own local JWT.
 
@@ -15,12 +18,26 @@ Description: >
 # ---------------------------------------------------------------------------
 Parameters:
 
+  EmailSendingMode:
+    Type: String
+    Default: COGNITO_DEFAULT
+    AllowedValues:
+      - COGNITO_DEFAULT
+      - DEVELOPER
+    Description: >
+      How Cognito sends the verification email. COGNITO_DEFAULT uses Cognito's
+      own mail service: it reaches any recipient even while SES is in the
+      sandbox, but is capped at ~50 emails/day and uses a generic Amazon From
+      address. DEVELOPER sends through your SES identity (SesFromAddress): your
+      own branded sender and high volume, but limited to verified recipients
+      until SES production access is granted.
+
   SesFromAddress:
     Type: String
     Default: mihaiciorascu11@gmail.com
     Description: >
-      The verified Amazon SES identity that sends the confirmation emails (the
-      EmailSendingAccount is DEVELOPER, i.e. SES). This address (or its domain)
+      Only used when EmailSendingMode is DEVELOPER. The verified Amazon SES
+      identity that sends the confirmation emails. This address (or its domain)
       MUST be a verified SES identity in this region BEFORE the pool can send.
       While SES is in the sandbox, only verified recipient addresses receive
       mail; request SES production access to email arbitrary users.
@@ -40,6 +57,7 @@ Parameters:
 # Conditions
 # ---------------------------------------------------------------------------
 Conditions:
+  UseSes: !Equals [!Ref EmailSendingMode, "DEVELOPER"]
   HasPreSignUp: !Not [!Equals [!Ref PreSignUpLambdaArn, ""]]
 
 # ---------------------------------------------------------------------------
@@ -63,10 +81,15 @@ Resources:
           - HasPreSignUp
           - PreSignUp: !Ref PreSignUpLambdaArn
           - !Ref AWS::NoValue
+      # COGNITO_DEFAULT (default): Cognito sends the code, no SES From/SourceArn.
+      # DEVELOPER: sends via the SES identity below.
       EmailConfiguration:
-        EmailSendingAccount: DEVELOPER
-        From: !Ref SesFromAddress
-        SourceArn: !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/${SesFromAddress}
+        EmailSendingAccount: !Ref EmailSendingMode
+        From: !If [UseSes, !Ref SesFromAddress, !Ref "AWS::NoValue"]
+        SourceArn: !If
+          - UseSes
+          - !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/${SesFromAddress}
+          - !Ref "AWS::NoValue"
       VerificationMessageTemplate:
         DefaultEmailOption: CONFIRM_WITH_CODE
         EmailSubject: "Your UmbraRo verification code"
