@@ -105,6 +105,7 @@ class L10n extends ChangeNotifier {
     // Auth — email verification
     'verify.title': 'VERIFICĂ EMAILUL',
     'verify.sentTo': 'Am trimis un cod din 6 cifre la {email}.',
+    'verify.spamHint': 'Nu îl găsești în inbox? Verifică și folderul spam.',
     'verify.codeLabel': 'COD DE VERIFICARE',
     'verify.submit': 'VERIFICĂ',
     'verify.resend': 'Retrimite codul',
@@ -353,6 +354,7 @@ class L10n extends ChangeNotifier {
     // Auth — email verification
     'verify.title': 'VERIFY YOUR EMAIL',
     'verify.sentTo': 'We sent a 6-digit code to {email}.',
+    'verify.spamHint': 'Not in your inbox? Check your spam folder too.',
     'verify.codeLabel': 'VERIFICATION CODE',
     'verify.submit': 'VERIFY',
     'verify.resend': 'Resend code',

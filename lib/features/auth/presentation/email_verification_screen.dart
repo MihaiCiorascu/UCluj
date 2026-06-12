@@ -107,6 +107,20 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           L10n.t('verify.sentTo').replaceAll('{email}', email),
           style: TypographyTokens.body.copyWith(color: c.textMuted),
         ),
+        const SizedBox(height: SpacingTokens.xs),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.info_outline, size: 14, color: c.textMuted),
+            const SizedBox(width: SpacingTokens.xs),
+            Expanded(
+              child: Text(
+                L10n.t('verify.spamHint'),
+                style: TypographyTokens.bodySmall.copyWith(color: c.textMuted),
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: SpacingTokens.md),
         AuthTextField(
           controller: _codeCtrl,
