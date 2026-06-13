@@ -1,0 +1,56 @@
+// UmbraRo, AWS RDS PostgreSQL schema (from backend/db/models.py)
+// team_name is the shared tenant key (the tracked club). There is no teams
+// table: clubs come from a static registry, so team_name is a plain column.
+// The relationships below are enforced in the application layer, not by
+// database foreign keys.
+//
+// Render: paste into https://dbdiagram.io
+// Authentic alternative: reverse-engineer the same ERD from the live RDS
+// Postgres with DBeaver or pgAdmin (View Diagram / ERD).
+
+Table users {
+  id            varchar(36)  [pk, note: 'UUID']
+  email         varchar(255) [not null, unique]
+  password_hash varchar(255) [not null]
+  cognito_sub   varchar(128) [unique, note: 'AWS Cognito subject; null for local accounts']
+  full_name     varchar(255)
+  role          varchar(20)  [not null, default: 'coach']
+  team_name     varchar(120) [note: 'Tracked club, e.g. U Cluj']
+  is_active     boolean      [not null, default: true]
+  avatar_url    varchar(512) [note: 'Public S3 URL']
+  created_at    timestamptz  [not null]
+}
+
+Table messages {
+  id          varchar(36)   [pk, note: 'UUID']
+  team_name   varchar(120)  [not null]
+  author_id   varchar(36)   [not null, note: 'users.id (app-level link)']
+  channel_id  varchar(255)  [not null, default: 'general']
+  author_name varchar(255)  [not null, note: 'Denormalised sender name']
+  content     varchar(1000)
+  file_url    varchar(512)
+  file_type   varchar(50)
+  created_at  timestamptz   [not null]
+
+  indexes {
+    team_name
+    author_id
+    channel_id
+    created_at
+  }
+}
+
+Table chat_groups {
+  id         varchar(36)   [pk, note: 'UUID']
+  team_name  varchar(120)  [not null]
+  name       varchar(255)  [not null]
+  member_ids varchar(1000) [not null, note: 'Comma-separated users.id (denormalised membership)']
+
+  indexes {
+    team_name
+  }
+}
+
+// Application-level relationships (no DB-enforced foreign keys)
+Ref: messages.author_id > users.id          // a user authors many messages
+Ref: chat_groups.member_ids <> users.id     // group membership (denormalised)

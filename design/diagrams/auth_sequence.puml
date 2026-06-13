@@ -1,0 +1,44 @@
+@startuml
+title UmbraRo, Cognito sign-up and token exchange (first-time user)
+
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam defaultFontName Inter
+
+actor "Coach" as U
+participant "UmbraRo app\n(Flutter)" as App
+participant "AWS Cognito" as Cog
+participant "Amazon SES" as SES
+participant "FastAPI backend\n(App Runner)" as API
+database "RDS\nPostgreSQL" as DB
+
+U -> App : Enter name, email,\npassword, team
+App -> Cog : signUp(email, password, name)
+Cog -> SES : Send 6-digit code
+SES --> U : Verification email
+U -> App : Enter 6-digit code
+App -> Cog : confirmSignUp(email, code)
+Cog --> App : Confirmed
+
+App -> Cog : signIn(email, password)
+Cog --> App : Cognito ID token
+
+App -> API : POST /auth/register_with_cognito\n{ team_name }
+API -> Cog : GET /.well-known/jwks.json  (cached 1h)
+Cog --> API : JWKS public keys
+API -> API : Verify ID token (RS256),\nread sub + email
+API -> DB : INSERT user (email, cognito_sub,\nteam_name, full_name)
+DB --> API : user row
+API --> App : { access_token, refresh_token }\n(local JWT pair)
+
+App -> API : GET /auth/me
+API -> DB : SELECT user by id
+DB --> API : user
+API --> App : Profile (UserResponse)
+App --> U : Signed in (dashboard)
+
+note over App, API
+  Returning user: signIn, then POST /auth/cognito
+  returns the same JWT pair (matched by cognito_sub or email).
+end note
+@enduml

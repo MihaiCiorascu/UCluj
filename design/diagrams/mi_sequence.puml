@@ -1,0 +1,33 @@
+@startuml
+title UmbraRo, request flow behind the Match Analysis sheet
+
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam defaultFontName Inter
+
+actor "Coach" as U
+participant "UmbraRo app\n(Flutter)" as App
+participant "FastAPI backend\n(App Runner)" as API
+participant "CatBoost + optimiser" as ML
+participant "XI predictor" as XI
+
+== Dashboard load (weekly fixtures, cached) ==
+U -> App : open dashboard
+App -> API : GET /week-fixtures
+API -> ML : baseline P(win) + SHAP drivers
+ML --> API : calibrated probability + drivers
+API -> ML : optimise (Monte Carlo, N = 25,000)
+ML --> API : optimised P + blueprint
+API --> App : fixtures + probability + drivers + blueprint\n(cached ~6 h)
+
+== Open the Match Analysis sheet (on tap) ==
+U -> App : tap a fixture
+alt upcoming fixture
+  App -> XI : GET recommended XI
+  XI --> App : recommended starting eleven
+else completed fixture
+  App -> API : GET match details
+  API --> App : official stats + real lineups\n(cached 24 h)
+end
+App --> U : render panels
+@enduml

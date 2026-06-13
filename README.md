@@ -20,7 +20,27 @@
   <b>Live demo:</b> <a href="https://umbraro.d2j9yfctr6ipf6.amplifyapp.com">umbraro.d2j9yfctr6ipf6.amplifyapp.com</a>
 </p>
 
+<p align="center">
+  <b>Thesis:</b> <a href="docs/UmbraRo-Thesis.pdf">Read the full bachelor thesis (PDF)</a>
+</p>
+
 ---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Thesis](#thesis)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Machine learning](#machine-learning)
+- [Tech stack](#tech-stack)
+- [Project structure](#project-structure)
+- [Getting started (local)](#getting-started-local)
+- [Deployment](#deployment)
+- [Authentication](#authentication)
+- [Design system](#design-system)
+- [License](#license)
+- [Author](#author)
 
 ## Overview
 
@@ -41,6 +61,24 @@ The intelligence pipeline has four stages:
 4. **Select.** A separate supervised model predicts each club's likely starting eleven, combining
    per-90 player metrics, availability, an opponent-style profile, and a Hungarian assignment to fill
    the formation.
+
+## Thesis
+
+UmbraRo is the deployed artefact of the bachelor thesis *UmbraRo: From Match Forecasting to Tactical
+Prescription and Lineup Selection for the Romanian Superliga*, submitted to the Faculty of Mathematics
+and Computer Science, Babes-Bolyai University Cluj-Napoca, under the supervision of Asist. dr. Briciu
+Anamaria.
+
+The thesis develops the full predictive-to-prescriptive pipeline, the constrained Monte Carlo tactical
+optimiser, and the player-level Starting XI predictor, and reports their evaluation on roughly 1,600
+Romanian Superliga matches across five seasons (2020 to 2025).
+
+- **Read the thesis:** [docs/UmbraRo-Thesis.pdf](docs/UmbraRo-Thesis.pdf)
+- **Reproducible analysis:** the canonical numbers come from the notebooks in
+  [`data/`](data/) (`TheNotebook.ipynb` for the team-level pipeline, `TheXIBook.ipynb` for the
+  Starting XI layer).
+- **Diagram sources:** the thesis figures (ER schema, sequence) are kept render-ready in
+  [`design/diagrams/`](design/diagrams/).
 
 ## Architecture
 
@@ -136,7 +174,8 @@ backend/        FastAPI service: api/v1/endpoints, services, data loaders, ml bu
 android/        Native Android target (release APK)
 web/            Web entrypoint and runtime config.json
 data/           Research dataset and notebooks (canonical thesis numbers)
-design/         Design system and product specification
+design/         Design system, product specification, and diagram sources
+docs/           Final bachelor thesis (PDF)
 infra/          Infrastructure templates (Cognito, WebSocket, Lambdas)
 scripts/        Developer and data-pipeline utilities
 ```
@@ -215,4 +254,4 @@ Released under the MIT License. See [LICENSE](LICENSE).
 ## Author
 
 Built by Mihai Ciorascu as a bachelor thesis at Babes-Bolyai University, under the supervision of
-Asist. Dr. Anamaria Briciu.
+Asist. dr. Briciu Anamaria.
