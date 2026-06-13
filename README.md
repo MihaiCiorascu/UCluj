@@ -82,34 +82,9 @@ Romanian Superliga matches across five seasons (2020 to 2025).
 
 ## Architecture
 
-```mermaid
-flowchart TD
-    subgraph Client["Flutter client (web and Android)"]
-      UI["Feature screens<br/>ChangeNotifier + Repository"]
-    end
-
-    subgraph Cloud["AWS, region eu-central-1"]
-      Amplify["Amplify Hosting<br/>(web app)"]
-      Cognito["Cognito + SES<br/>(email verification)"]
-      API["FastAPI on App Runner"]
-      ECR[("ECR image")]
-      RDS[("RDS PostgreSQL")]
-      S3[("S3 avatars")]
-      WS["API Gateway WebSocket<br/>+ DynamoDB"]
-    end
-
-    ML["CatBoost bundle<br/>+ Monte Carlo optimiser"]
-
-    Amplify -. serves .-> UI
-    UI -->|Amplify Auth| Cognito
-    UI -->|REST /api/v1| API
-    UI -->|live chat| WS
-    Cognito -->|ID token| API
-    ECR -. deploys .-> API
-    API --> RDS
-    API --> S3
-    API --> ML
-```
+<p align="center">
+  <img src="docs/architecture.png" alt="UmbraRo system architecture" width="560"/>
+</p>
 
 - **Frontend.** A Flutter app with a feature-first layout under `lib/features/` and shared
   infrastructure in `lib/core/`. State management uses `ChangeNotifier` with a repository pattern. The
@@ -138,9 +113,15 @@ flowchart TD
 ## Machine learning
 
 The model is trained on roughly 1,600 Romanian Superliga matches across five seasons, from 2020 to
-2025. The production engine is **CatBoost**, chosen because it handles non-linear tactical
-interactions and behaves smoothly inside the optimisation loop. Logistic Regression is retained as an
-interpretable predictive baseline, and it is never presented as the production model.
+2025. A central finding of the thesis is that predictive accuracy and prescriptive usefulness are
+distinct criteria. Logistic Regression is in fact the most accurate engineered model, yet inside the
+optimiser it concentrates almost its entire response in a single tactical lever and exaggerates the
+effect of changing it. The production engine is therefore **calibrated CatBoost**: marginally less
+accurate, but it spreads its sensitivity across the controllable variables and saturates rather than
+extrapolating, giving the bounded, realistic responses a tactical optimiser needs. Logistic Regression
+is kept as an interpretable forecasting benchmark. A one-feature Elo-only baseline is already as
+accurate as any engineered model, so the added features contribute mainly through calibration,
+explanation, and prescription rather than through raw predictive power.
 
 **Supported inputs** (rolling five-match aggregates and pre-match context): Elo difference,
 head-to-head record, rest days, possession, shots, shots on target, corners, goals scored, and goals
