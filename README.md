@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/branding/umbraro_wordmark.png" alt="UmbraRo" width="360"/>
+  <img src="design/logos/Umbraro_Name.png" alt="UmbraRo" width="200"/>
 </p>
 
 <h1 align="center">UmbraRo</h1>
