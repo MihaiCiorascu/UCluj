@@ -2,8 +2,6 @@
   <img src="design/logos/Umbraro_Name.png" alt="UmbraRo" width="200"/>
 </p>
 
-<h1 align="center">UmbraRo</h1>
-
 <p align="center">
   An AI tactical intelligence assistant for professional Romanian Superliga football coaches.
 </p>
