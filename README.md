@@ -95,8 +95,8 @@ Romanian Superliga matches across five seasons (2020 to 2025).
   packaged as a Docker image in Amazon ECR and served by AWS App Runner. The machine learning bundle
   loads once at startup through a lifespan hook.
 - **Data and identity.** Persistent state (users, profiles, and chat) lives in AWS RDS PostgreSQL
-  through async SQLAlchemy over asyncpg. Authentication is handled by AWS Cognito with email
-  verification through Amazon SES. Avatars use presigned Amazon S3 uploads, and instant chat fans out
+  through async SQLAlchemy over asyncpg. Authentication is handled by AWS Cognito, which sends the email
+  verification code through its managed mailer by default, with Amazon SES configurable as the sender. Avatars use presigned Amazon S3 uploads, and instant chat fans out
   over an API Gateway WebSocket backed by a DynamoDB connections table.
 
 ## Features
@@ -143,7 +143,7 @@ passing-network models, three-way home/draw/away classification, or any betting-
 | Client | Flutter (Dart), `ChangeNotifier` + repository pattern, Amplify Auth |
 | Backend | FastAPI (async Python 3.11+), SQLAlchemy over asyncpg |
 | Machine learning | CatBoost, SHAP, constrained Monte Carlo optimisation |
-| Identity | AWS Cognito, Amazon SES, short-lived local JWT |
+| Identity | AWS Cognito (managed email by default, Amazon SES configurable), short-lived local JWT |
 | Hosting | AWS Amplify Hosting (web), AWS App Runner and Amazon ECR (backend) |
 | Data | AWS RDS PostgreSQL, Amazon S3, API Gateway WebSocket and DynamoDB |
 
@@ -216,7 +216,8 @@ flutter drive --target=integration_test/app_test.dart
 ## Authentication
 
 Sign-up and sign-in go through AWS Cognito using Amplify. On first sign-up the client requests a
-six-digit confirmation code, which Cognito emails through Amazon SES. An account that has not
+six-digit confirmation code, which Cognito delivers through its managed mailer by default (Amazon SES
+can be configured as the sender). An account that has not
 confirmed its email cannot sign in. After confirmation the client exchanges the Cognito ID token for a
 short-lived local JWT bound to the Cognito subject, and subsequent API calls present that JWT. A local
 email and password path remains available as a fallback when no Cognito pool is configured.
