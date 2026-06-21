@@ -632,6 +632,7 @@ class XiService:
         home_team_sr_id: Optional[str] = None,
         home_team_short: Optional[str] = None,
         locked: Optional[Dict[int, int]] = None,
+        fixture_date: Optional[str] = None,
     ) -> Dict:
         """Return starting XI + team stats + H2H record for an upcoming match."""
         if not self.predictor:
@@ -805,7 +806,7 @@ class XiService:
             except Exception:
                 pass
 
-        return {
+        preview = {
             "formation": resolved_formation,
             "formation_scores": result.get("formation_scores", {}),
             "home_team_short": home.short,
@@ -823,6 +824,31 @@ class XiService:
             "opponent_formation": opponent_formation,
             "head_to_head": h2h,
         }
+
+        # Display-only rest-days correction. The stored ``rest_days`` is measured
+        # against the data-anchored as-of date (which, in demo mode, is each
+        # player's most recent match, so it reads 0 for everyone). Shift it by
+        # (fixture_date - as_of) so the card shows rest before the real upcoming
+        # fixture. This touches only the serialised payload, never the
+        # research-locked feature pipeline or the XI model. Fully defensive: a
+        # missing or unparseable date leaves every value exactly as computed.
+        if fixture_date:
+            try:
+                from datetime import datetime as _dt
+                target = parse_date(fixture_date)
+                if target is not None:
+                    target = target.date() if isinstance(target, _dt) else target
+                    delta = (target - self._asof_date()).days
+                    if delta:
+                        for _key in ("starting_xi", "bench", "best_xi",
+                                     "best_bench", "opponent_xi", "opponent_bench"):
+                            for _rec in preview.get(_key) or []:
+                                _base = _rec.get("rest_days")
+                                if _base is not None:
+                                    _rec["rest_days"] = max(0.0, float(_base) + delta)
+            except Exception:
+                pass
+        return preview
 
     def list_opponents(self, min_players: int = 20,
                        home_team_substring: Optional[str] = None) -> list[dict]:

@@ -294,6 +294,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
         opponentName: opponent,
         formation: _formation,
         homeTeam: homeOverride,
+        fixtureDate: f.displayDate,
       );
       if (mounted) {
         setState(() {
@@ -1552,6 +1553,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               : _formation,
           opponentName: _xiOpponent,
           homeTeam: widget.fixture.involvesSubject ? null : widget.fixture.homeTeam,
+          fixtureDate: widget.fixture.displayDate,
           xiRepository: _xiRepo,
           onPreviewChanged: (updated) {
             // Keep the sheet's copy in sync so a formation switch after an edit

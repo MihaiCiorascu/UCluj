@@ -68,10 +68,14 @@ class XiRepository {
   Future<MatchPreviewResponse> fetchMatchPreview({
     required String opponentName,
     String formation = '4-3-3',
+    String? fixtureDate,
   }) async {
     final encoded = Uri.encodeComponent(opponentName);
+    final dateQ = (fixtureDate != null && fixtureDate.isNotEmpty)
+        ? '&fixture_date=${Uri.encodeComponent(fixtureDate)}'
+        : '';
     final response = await _apiClient
-        .get('/xi/match-preview?opponent_name=$encoded&formation=$formation');
+        .get('/xi/match-preview?opponent_name=$encoded&formation=$formation$dateQ');
     return MatchPreviewResponse.fromJson(response);
   }
 
@@ -88,6 +92,7 @@ class XiRepository {
     String formation = kFormationAuto,
     Map<int, int> locked = const {},
     String? homeTeam,
+    String? fixtureDate,
   }) async {
     final response = await _apiClient.post(
       '/xi/match-preview',
@@ -100,6 +105,10 @@ class XiRepository {
         // Home-team override: set when previewing a fixture that does not
         // involve the user's club; omitted otherwise so the backend uses it.
         if (homeTeam != null && homeTeam.isNotEmpty) 'home_team': homeTeam,
+        // Upcoming fixture date so the card can show rest-days before the real
+        // next match; omitted otherwise (backend leaves rest-days unchanged).
+        if (fixtureDate != null && fixtureDate.isNotEmpty)
+          'fixture_date': fixtureDate,
       },
     );
     return MatchPreviewResponse.fromJson(response);
