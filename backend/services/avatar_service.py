@@ -19,6 +19,7 @@ Public object URL shape (matches the infra AvatarsPublicBaseUrl output):
 from __future__ import annotations
 
 import time
+import uuid
 
 import boto3
 
@@ -77,4 +78,38 @@ def generate_presigned_put_url(user_id: str) -> str:
             "ContentType": AVATAR_CONTENT_TYPE,
         },
         ExpiresIn=PRESIGN_EXPIRY_SECONDS,
+    )
+
+
+# ── Chat attachments ─────────────────────────────────────────────────────────
+# Chat images reuse the avatars bucket under the avatars/chat/ prefix, so they
+# inherit the same public-read (avatars/*) and the App Runner role's PutObject
+# (avatars/*) with no infra change, and they persist across App Runner
+# redeploys instead of living on the ephemeral local disk.
+CHAT_PREFIX = "avatars/chat"
+
+
+def chat_files_enabled() -> bool:
+    """True when S3 is configured (an avatars bucket name is set)."""
+    return bool(settings.avatars_s3_bucket)
+
+
+def upload_chat_file(data: bytes, content_type: str, ext: str) -> str:
+    """Upload a chat attachment to S3 and return its public https URL.
+
+    Stored under ``avatars/chat/<uuid><ext>`` with a unique key per upload (no
+    overwrite, so no cache-buster is needed). Raises if S3 is not configured or
+    the put fails; the caller falls back to local disk in that case.
+    """
+    safe_ext = ext if (not ext or ext.startswith(".")) else f".{ext}"
+    key = f"{CHAT_PREFIX}/{uuid.uuid4()}{safe_ext}"
+    _client().put_object(
+        Bucket=settings.avatars_s3_bucket,
+        Key=key,
+        Body=data,
+        ContentType=content_type or "application/octet-stream",
+    )
+    return (
+        f"https://{settings.avatars_s3_bucket}.s3."
+        f"{settings.avatars_s3_region}.amazonaws.com/{key}"
     )
