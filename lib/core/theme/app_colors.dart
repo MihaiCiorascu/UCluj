@@ -194,9 +194,10 @@ class AppColorTokens {
     roleDefender:         Color(0xFF1A4F7A),
     roleMidfielder:       Color(0xFF2E7D32),
     roleForward:          Color(0xFFC62828),
-    // Pitch surface stays deep navy across both themes so the pitch reads
-    // as a single product element regardless of the page palette.
-    pitchSurface:         Color(0xFF0A1929),
+    // Pitch surface: a lighter slate in the light theme so the pitch lifts off
+    // the pale page (both the upcoming-preview and concluded pitches use this).
+    // The dark theme keeps the deep navy below.
+    pitchSurface:         Color(0xFF1C3C5A),
     pitchLine:            Color(0xB3FFFFFF),
     pitchHalo:            Color(0x141E88E5),
     cardGlow:             Color(0x140E50C9),
