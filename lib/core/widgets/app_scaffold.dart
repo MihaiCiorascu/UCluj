@@ -21,6 +21,7 @@ class AppScaffold extends StatelessWidget {
     required this.onTabSelected,
     this.onProfileTap,
     this.trailing,
+    this.avatarUrl,
     super.key,
   });
 
@@ -29,6 +30,10 @@ class AppScaffold extends StatelessWidget {
   final ValueChanged<AppTab> onTabSelected;
   final VoidCallback? onProfileTap;
   final Widget? trailing;
+
+  /// Signed-in user's avatar URL. When set, the header profile button shows the
+  /// photo instead of the placeholder glyph.
+  final String? avatarUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +80,7 @@ class AppScaffold extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          BrandingConfig.tagline.toUpperCase(),
+                          L10n.t('branding.tagline').toUpperCase(),
                           style: TextStyle(
                             color: c.primary,
                             fontWeight: FontWeight.w600,
@@ -89,7 +94,7 @@ class AppScaffold extends StatelessWidget {
                   ],
                 ),
                 trailing: trailing ??
-                    UserBadge(onTap: onProfileTap),
+                    UserBadge(onTap: onProfileTap, avatarUrl: avatarUrl),
               ),
               Expanded(
                 child: Padding(

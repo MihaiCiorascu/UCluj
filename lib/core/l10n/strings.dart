@@ -63,6 +63,9 @@ class L10n extends ChangeNotifier {
     'nav.standings': 'CLASAMENT',
     'nav.chat': 'CHAT',
 
+    // Branding
+    'branding.tagline': 'Inteligență Tactică',
+
     // Auth — login
     'login.tagline': 'PLATFORMĂ DE INTELLIGENCE TACTICĂ',
     'login.title': 'AUTENTIFICARE',
@@ -293,6 +296,33 @@ class L10n extends ChangeNotifier {
     'team.applyingLineup': 'Se reoptimizează echipa…',
     'team.selTag': 'SEL',
     'team.selExplain': 'scor de selecție (modelul alege pe acest scor)',
+    'team.rating': 'NOTĂ',
+
+    // Player stat labels (radar + efficiency, kept concise to fit the radar)
+    'stat.saves': 'Intervenții',
+    'stat.cleanSheet': 'Fără gol',
+    'stat.sweeping': 'Ieșiri',
+    'stat.aerial': 'Aerian',
+    'stat.passing': 'Pase',
+    'stat.form': 'Formă',
+    'stat.duels': 'Dueluri',
+    'stat.clears': 'Degajări',
+    'stat.intercept': 'Intercepții',
+    'stat.blocks': 'Blocaje',
+    'stat.progress': 'Progresie',
+    'stat.keyPass': 'Pasă cheie',
+    'stat.recover': 'Recuperări',
+    'stat.dribbles': 'Driblinguri',
+    'stat.goals': 'Goluri',
+    'stat.shots': 'Șuturi',
+    'stat.crosses': 'Centrări',
+    'stat.boxTouches': 'Careu',
+    'stat.passPct': 'Pase %',
+    'stat.aerialPct': 'Aerian %',
+    'stat.duelsPct': 'Dueluri %',
+    'stat.defPct': 'Defensivă %',
+    'stat.dribblePct': 'Dribling %',
+    'stat.shotPct': 'Șut %',
 
     // Standings
     'standings.tabRegular': 'PRINCIPAL',
@@ -308,6 +338,16 @@ class L10n extends ChangeNotifier {
     'standings.colLosses': 'Î',
     'standings.colGD': 'DG',
     'standings.colPts': 'PCT',
+    'standings.heroLine1': 'CLASAMENT',
+    'standings.heroLine2': 'GENERAL',
+    'standings.leagueName': 'SUPERLIGA ROMÂNIA',
+    'standings.yourClubLine': 'CLUBUL TĂU  ·  SUPERLIGA',
+    'standings.rank': 'LOC',
+    'standings.colClub': 'CLUB',
+    'standings.pointsToLeader': 'PUNCTE PÂNĂ LA LIDER',
+    'standings.leadsWith': 'conduce cu',
+    'standings.pointsWord': 'pct',
+    'standings.loadError': 'Nu am putut încărca clasamentul',
   };
 
   static const Map<String, String> _en = {
@@ -315,6 +355,9 @@ class L10n extends ChangeNotifier {
     'nav.dashboard': 'DASHBOARD',
     'nav.standings': 'STANDINGS',
     'nav.chat': 'CHAT',
+
+    // Branding
+    'branding.tagline': 'Tactical Intelligence',
 
     // Auth — login
     'login.tagline': 'TACTICAL INTELLIGENCE PLATFORM',
@@ -546,6 +589,33 @@ class L10n extends ChangeNotifier {
     'team.applyingLineup': 'Re-optimising lineup…',
     'team.selTag': 'SEL',
     'team.selExplain': 'selection score (the model picks on this)',
+    'team.rating': 'RATING',
+
+    // Player stat labels (radar + efficiency)
+    'stat.saves': 'Saves',
+    'stat.cleanSheet': 'Clean Sht',
+    'stat.sweeping': 'Sweeping',
+    'stat.aerial': 'Aerial',
+    'stat.passing': 'Passing',
+    'stat.form': 'Form',
+    'stat.duels': 'Duels',
+    'stat.clears': 'Clears',
+    'stat.intercept': 'Intercept',
+    'stat.blocks': 'Blocks',
+    'stat.progress': 'Progress',
+    'stat.keyPass': 'Key Pass',
+    'stat.recover': 'Recover',
+    'stat.dribbles': 'Dribbles',
+    'stat.goals': 'Goals',
+    'stat.shots': 'Shots',
+    'stat.crosses': 'Crosses',
+    'stat.boxTouches': 'Box Tch',
+    'stat.passPct': 'Pass %',
+    'stat.aerialPct': 'Aerial %',
+    'stat.duelsPct': 'Duels %',
+    'stat.defPct': 'Def %',
+    'stat.dribblePct': 'Dribble %',
+    'stat.shotPct': 'Shot %',
 
     // Standings
     'standings.tabRegular': 'REGULAR',
@@ -561,5 +631,15 @@ class L10n extends ChangeNotifier {
     'standings.colLosses': 'L',
     'standings.colGD': 'GD',
     'standings.colPts': 'PTS',
+    'standings.heroLine1': 'LEAGUE',
+    'standings.heroLine2': 'STANDINGS',
+    'standings.leagueName': 'SUPERLIGA ROMANIA',
+    'standings.yourClubLine': 'YOUR CLUB  ·  SUPERLIGA',
+    'standings.rank': 'RANK',
+    'standings.colClub': 'CLUB',
+    'standings.pointsToLeader': 'POINTS TO LEADER',
+    'standings.leadsWith': 'leads with',
+    'standings.pointsWord': 'pts',
+    'standings.loadError': 'Could not load standings',
   };
 }

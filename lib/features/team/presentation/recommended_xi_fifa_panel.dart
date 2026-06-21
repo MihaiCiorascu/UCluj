@@ -868,42 +868,42 @@ List<_FifaAttr> _outputAttrs(MatchPreviewPlayer p) {
 
   if (p.roleGroup == 'GK') {
     return [
-      _FifaAttr('Saves', pct('per90_gkSaves')),
-      _FifaAttr('Clean Sht', pct('per90_gkCleanSheets')),
-      _FifaAttr('Sweeping', pct('per90_gkSuccessfulExits')),
-      _FifaAttr('Aerial', pct('per90_gkAerialDuelsWon')),
-      _FifaAttr('Passing', pct('per90_successfulPasses')),
-      _FifaAttr('Form', pct('recent_form_score')),
+      _FifaAttr(L10n.t('stat.saves'), pct('per90_gkSaves')),
+      _FifaAttr(L10n.t('stat.cleanSheet'), pct('per90_gkCleanSheets')),
+      _FifaAttr(L10n.t('stat.sweeping'), pct('per90_gkSuccessfulExits')),
+      _FifaAttr(L10n.t('stat.aerial'), pct('per90_gkAerialDuelsWon')),
+      _FifaAttr(L10n.t('stat.passing'), pct('per90_successfulPasses')),
+      _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
     ];
   }
 
   switch (p.roleGroup) {
     case 'DEF':
       return [
-        _FifaAttr('Passing', pct('per90_successfulPasses')),
-        _FifaAttr('Duels', pct('per90_defensiveDuelsWon')),
-        _FifaAttr('Aerial', pct('per90_aerialDuelsWon')),
-        _FifaAttr('Clears', pct('per90_clearances')),
-        _FifaAttr('Intercept', pct('per90_interceptions')),
-        _FifaAttr('Blocks', pct('per90_shotsBlocked')),
+        _FifaAttr(L10n.t('stat.passing'), pct('per90_successfulPasses')),
+        _FifaAttr(L10n.t('stat.duels'), pct('per90_defensiveDuelsWon')),
+        _FifaAttr(L10n.t('stat.aerial'), pct('per90_aerialDuelsWon')),
+        _FifaAttr(L10n.t('stat.clears'), pct('per90_clearances')),
+        _FifaAttr(L10n.t('stat.intercept'), pct('per90_interceptions')),
+        _FifaAttr(L10n.t('stat.blocks'), pct('per90_shotsBlocked')),
       ];
     case 'MID':
       return [
-        _FifaAttr('Passing', pct('per90_successfulPasses')),
-        _FifaAttr('Progress', pct('per90_progressivePasses')),
-        _FifaAttr('Key Pass', pct('per90_keyPasses')),
-        _FifaAttr('Recover', pct('per90_recoveries')),
-        _FifaAttr('Duels', pct('per90_defensiveDuelsWon')),
-        _FifaAttr('Dribbles', pct('per90_successfulDribbles')),
+        _FifaAttr(L10n.t('stat.passing'), pct('per90_successfulPasses')),
+        _FifaAttr(L10n.t('stat.progress'), pct('per90_progressivePasses')),
+        _FifaAttr(L10n.t('stat.keyPass'), pct('per90_keyPasses')),
+        _FifaAttr(L10n.t('stat.recover'), pct('per90_recoveries')),
+        _FifaAttr(L10n.t('stat.duels'), pct('per90_defensiveDuelsWon')),
+        _FifaAttr(L10n.t('stat.dribbles'), pct('per90_successfulDribbles')),
       ];
     default: // FWD
       return [
-        _FifaAttr('Goals', pct('per90_goals')),
-        _FifaAttr('Shots', pct('per90_shots')),
-        _FifaAttr('Dribbles', pct('per90_successfulDribbles')),
-        _FifaAttr('Key Pass', pct('per90_keyPasses')),
-        _FifaAttr('Crosses', pct('per90_successfulCrosses')),
-        _FifaAttr('Box Tch', pct('per90_touchInBox')),
+        _FifaAttr(L10n.t('stat.goals'), pct('per90_goals')),
+        _FifaAttr(L10n.t('stat.shots'), pct('per90_shots')),
+        _FifaAttr(L10n.t('stat.dribbles'), pct('per90_successfulDribbles')),
+        _FifaAttr(L10n.t('stat.keyPass'), pct('per90_keyPasses')),
+        _FifaAttr(L10n.t('stat.crosses'), pct('per90_successfulCrosses')),
+        _FifaAttr(L10n.t('stat.boxTouches'), pct('per90_touchInBox')),
       ];
   }
 }
@@ -915,36 +915,36 @@ List<_FifaAttr> _efficiencyAttrs(MatchPreviewPlayer p) {
 
   if (p.roleGroup == 'GK') {
     return [
-      _FifaAttr('Pass %', pct('pass_accuracy')),
-      _FifaAttr('Aerial %', pct('aerial_win_rate')),
-      _FifaAttr('Form', pct('recent_form_score')),
+      _FifaAttr(L10n.t('stat.passPct'), pct('pass_accuracy')),
+      _FifaAttr(L10n.t('stat.aerialPct'), pct('aerial_win_rate')),
+      _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
     ];
   }
 
   switch (p.roleGroup) {
     case 'DEF':
       return [
-        _FifaAttr('Duels %', pct('duel_win_rate')),
-        _FifaAttr('Aerial %', pct('aerial_win_rate')),
-        _FifaAttr('Def %', pct('def_action_success')),
-        _FifaAttr('Pass %', pct('pass_accuracy')),
-        _FifaAttr('Form', pct('recent_form_score')),
+        _FifaAttr(L10n.t('stat.duelsPct'), pct('duel_win_rate')),
+        _FifaAttr(L10n.t('stat.aerialPct'), pct('aerial_win_rate')),
+        _FifaAttr(L10n.t('stat.defPct'), pct('def_action_success')),
+        _FifaAttr(L10n.t('stat.passPct'), pct('pass_accuracy')),
+        _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
       ];
     case 'MID':
       return [
-        _FifaAttr('Pass %', pct('pass_accuracy')),
-        _FifaAttr('Dribble %', pct('dribble_success')),
-        _FifaAttr('Duels %', pct('duel_win_rate')),
-        _FifaAttr('Def %', pct('def_action_success')),
-        _FifaAttr('Form', pct('recent_form_score')),
+        _FifaAttr(L10n.t('stat.passPct'), pct('pass_accuracy')),
+        _FifaAttr(L10n.t('stat.dribblePct'), pct('dribble_success')),
+        _FifaAttr(L10n.t('stat.duelsPct'), pct('duel_win_rate')),
+        _FifaAttr(L10n.t('stat.defPct'), pct('def_action_success')),
+        _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
       ];
     default: // FWD
       return [
-        _FifaAttr('Shot %', pct('shot_accuracy')),
-        _FifaAttr('Dribble %', pct('dribble_success')),
-        _FifaAttr('Duels %', pct('duel_win_rate')),
-        _FifaAttr('Pass %', pct('pass_accuracy')),
-        _FifaAttr('Form', pct('recent_form_score')),
+        _FifaAttr(L10n.t('stat.shotPct'), pct('shot_accuracy')),
+        _FifaAttr(L10n.t('stat.dribblePct'), pct('dribble_success')),
+        _FifaAttr(L10n.t('stat.duelsPct'), pct('duel_win_rate')),
+        _FifaAttr(L10n.t('stat.passPct'), pct('pass_accuracy')),
+        _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
       ];
   }
 }
@@ -1121,7 +1121,7 @@ class _PlayerDetailColumn extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'RATING',
+                      L10n.t('team.rating'),
                       style: TypographyTokens.sectionLabel.copyWith(
                         fontSize: 8,
                         color: c.textMuted,
@@ -1253,11 +1253,16 @@ class _PlayerDetailColumn extends StatelessWidget {
           // Label
           SizedBox(
             width: 70,
-            child: Text(
-              a.label,
-              style: TypographyTokens.body.copyWith(
-                fontSize: 11,
-                color: c.textSecondary,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                a.label,
+                maxLines: 1,
+                style: TypographyTokens.body.copyWith(
+                  fontSize: 11,
+                  color: c.textSecondary,
+                ),
               ),
             ),
           ),
