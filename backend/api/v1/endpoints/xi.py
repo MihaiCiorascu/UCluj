@@ -56,6 +56,9 @@ class MatchPreviewRequest(BaseModel):
     # Home team override (defaults to the user's club); set when previewing a
     # fixture that does not involve the user's team.
     home_team: Optional[str] = None
+    # Upcoming fixture date (ISO). Used only to show rest-days before the real
+    # next match; ignored if absent or unparseable.
+    fixture_date: Optional[str] = None
 
 
 class OpponentTeam(BaseModel):
@@ -95,6 +98,7 @@ def match_preview(
     opponent_name: str = Query(..., description="Opponent team name as it appears in fixtures"),
     formation: str = Query("auto", description="A curated formation key, or 'auto' to auto-pick the best shape"),
     home_team: Optional[str] = Query(None, description="Home team override (defaults to the user's club)"),
+    fixture_date: Optional[str] = Query(None, description="Upcoming fixture date (ISO); for rest-days display only"),
     xi_svc: XiService = Depends(get_xi_service),
     feature_svc: FeatureService = Depends(get_feature_service),
     _user=Depends(get_current_user),
@@ -105,6 +109,7 @@ def match_preview(
             opponent_name=opponent_name,
             formation=formation,
             main_df=feature_svc._df,
+            fixture_date=fixture_date,
             **_home_kwargs(home_team, _user),
         )
     except Exception as e:
@@ -132,6 +137,7 @@ def match_preview_post(
             formation=body.formation,
             main_df=feature_svc._df,
             locked=_coerce_locked(body.locked),
+            fixture_date=body.fixture_date,
             **_home_kwargs(body.home_team, _user),
         )
     except Exception as e:

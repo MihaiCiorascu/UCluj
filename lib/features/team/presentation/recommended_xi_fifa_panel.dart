@@ -48,6 +48,7 @@ class RecommendedXiFifaPanel extends StatefulWidget {
     required this.formation,
     this.opponentName,
     this.homeTeam,
+    this.fixtureDate,
     this.xiRepository,
     this.onPreviewChanged,
     this.onShowOpponentChanged,
@@ -67,6 +68,11 @@ class RecommendedXiFifaPanel extends StatefulWidget {
   /// every edit keeps the re-optimised XI framed on the same team. Also used to
   /// label the toggle by team name for those matches.
   final String? homeTeam;
+
+  /// Upcoming fixture date (ISO ``YYYY-MM-DD``). Passed to the preview request
+  /// so the player card shows rest-days before the real next match. Optional;
+  /// the backend leaves rest-days unchanged when absent.
+  final String? fixtureDate;
 
   /// Repository used for the flexible-XI POST round-trips. Defaults to a fresh
   /// [XiRepository] when interactivity is enabled and none is injected.
@@ -200,6 +206,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         formation: _resolvedFormation,
         locked: Map<int, int>.from(_locked),
         homeTeam: widget.homeTeam,
+        fixtureDate: widget.fixtureDate,
       );
       if (!mounted) return;
       setState(() {
