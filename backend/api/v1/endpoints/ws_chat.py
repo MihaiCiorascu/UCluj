@@ -14,6 +14,7 @@ from db.engine import async_session as session_factory
 from db.models import Message, User, ChatGroup
 from core.security import get_current_user
 from services.ws_fanout_service import push_to_channel, push_to_users
+from services import avatar_service
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -316,12 +317,23 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
-    file_id = str(uuid.uuid4())
     ext = os.path.splitext(file.filename or "")[1]
+    data = await file.read()
+
+    # Durable S3 storage (reuses the avatars bucket under avatars/chat/) so chat
+    # images survive App Runner redeploys. Fall back to the ephemeral local disk
+    # only when S3 is unconfigured or the upload fails, preserving old behaviour.
+    if avatar_service.chat_files_enabled():
+        try:
+            url = avatar_service.upload_chat_file(data, file.content_type or "", ext)
+            return {"url": url, "type": file.content_type}
+        except Exception:
+            pass
+
+    file_id = str(uuid.uuid4())
     filename = f"{file_id}{ext}"
     file_path = os.path.join(UPLOAD_DIR, filename)
-
     with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+        buffer.write(data)
 
     return {"url": f"/uploads/{filename}", "type": file.content_type}
