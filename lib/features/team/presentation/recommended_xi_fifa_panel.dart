@@ -1240,7 +1240,7 @@ class _PlayerDetailColumn extends StatelessWidget {
           Expanded(
             child: Container(
               height: 8,
-              color: c.surfaceHigh,
+              color: c.isDark ? c.surfaceHigh : c.surfaceLow,
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: t,
@@ -1873,6 +1873,7 @@ class FifaPlayerRadar extends StatelessWidget {
         labels: labels,
         accentColor: accentColor ?? c.accent,
         labelColor: labelColor ?? c.textMuted,
+        isDark: c.isDark,
       ),
       child: const SizedBox.expand(),
     );
@@ -1885,12 +1886,14 @@ class FifaRadarPainter extends CustomPainter {
     required this.labels,
     required this.accentColor,
     required this.labelColor,
+    required this.isDark,
   });
 
   final List<double> values;
   final List<String> labels;
   final Color accentColor;
   final Color labelColor;
+  final bool isDark;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1929,7 +1932,9 @@ class FifaRadarPainter extends CustomPainter {
     }
 
     final fill = Paint()
-      ..color = accentColor.withValues(alpha: 0.25)
+      // Stronger fill on the light theme so the role silhouette reads on the
+      // pale radar panel; unchanged on the dark theme.
+      ..color = accentColor.withValues(alpha: isDark ? 0.25 : 0.42)
       ..style = PaintingStyle.fill;
     final border = Paint()
       ..color = accentColor
@@ -1965,5 +1970,6 @@ class FifaRadarPainter extends CustomPainter {
   bool shouldRepaint(covariant FifaRadarPainter oldDelegate) =>
       oldDelegate.values != values ||
       oldDelegate.accentColor != accentColor ||
-      oldDelegate.labelColor != labelColor;
+      oldDelegate.labelColor != labelColor ||
+      oldDelegate.isDark != isDark;
 }

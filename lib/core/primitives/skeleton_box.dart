@@ -46,7 +46,7 @@ class _SkeletonBoxState extends State<SkeletonBox>
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final base = c.surfaceHigh;
+    final base = c.isDark ? c.surfaceHigh : c.surfaceLow;
     final highlight = Color.alphaBlend(
       c.textMuted.withValues(alpha: c.isDark ? 0.16 : 0.22),
       base,
