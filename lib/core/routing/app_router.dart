@@ -52,6 +52,7 @@ class _AppShellState extends State<AppShell> {
           onProfileTap: _openProfile,
           trackedTeam: widget.authState.user?.teamName,
           apiClient: widget.authState.api,
+          avatarUrl: widget.authState.user?.avatarUrl,
         );
       case AppTab.chat:
         return ChatScreen(

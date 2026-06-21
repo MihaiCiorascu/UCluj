@@ -196,6 +196,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       currentTab: AppTab.dashboard,
       onTabSelected: widget.onTabSelected,
       onProfileTap: widget.onProfileTap,
+      avatarUrl: widget.authState.user?.avatarUrl,
       body: GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.primaryVelocity == null) return;
