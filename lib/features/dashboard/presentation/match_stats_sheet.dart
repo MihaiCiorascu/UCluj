@@ -2017,9 +2017,7 @@ class _ActualLineupPitchPanel extends StatelessWidget {
             children: [
               CustomPaint(
                 painter: FifaPitchPainter(
-                  // Concluded matches use a lighter pitch so a played fixture
-                  // reads as distinct from the upcoming-match preview pitch.
-                  surface: _kConcludedPitchSurface,
+                  surface: tokens.pitchSurface,
                   line: tokens.pitchLine,
                   halo: tokens.pitchHalo,
                   accent: tokens.accent,
@@ -2233,11 +2231,6 @@ class _ActualPlayerChip extends StatelessWidget {
 // A real-world football yellow is a fixed signal colour with no equivalent in the
 // brand palette, so it stays a documented, theme-invariant const (the red card
 // uses the c.negative token).
-// Concluded-match pitch: a lighter slate than the upcoming-match navy pitch, so
-// a played fixture reads as distinct. Kept dark enough that the white pitch
-// lines and the on-pitch text stay legible.
-const Color _kConcludedPitchSurface = Color(0xFF1C3C5A);
-
 const Color _kCardYellow = Color(0xFFEBC400);
 
 class _EventMark {
