@@ -19,27 +19,27 @@ class ColorTokens {
   // ── Light palette ──────────────────────────────────────────────────────
   // The page background is a sky-blue gradient; cards are pale glassy
   // panels with a crisp white top edge; primary CTAs are deep cobalt.
-  static const Color lightSurfaceBaseTop = Color(0xFFEBF3FF);
-  static const Color lightSurfaceBaseBottom = Color(0xFFC7DDF5);
+  static const Color lightSurfaceBaseTop = Color(0xFFE8EFF8);
+  static const Color lightSurfaceBaseBottom = Color(0xFFD2DEEE);
   static const Color lightSurfaceElevatedTop = Color(0xFFFFFFFF);
-  static const Color lightSurfaceElevatedBottom = Color(0xFFDCE8F8);
+  static const Color lightSurfaceElevatedBottom = Color(0xFFEAF1FB);
 
   /// Per-card pale solid (used where a gradient isn't required).
-  static const Color lightSurfaceLow = Color(0xFFF4F8FE);
-  static const Color lightSurfaceHigh = Color(0xFFE6EFFB);
+  static const Color lightSurfaceLow = Color(0xFFDCE7F4);
+  static const Color lightSurfaceHigh = Color(0xFFFFFFFF);
 
-  static const Color lightPrimary = Color(0xFF0047AB);
-  static const Color lightPrimaryDeep = Color(0xFF003D99);
+  static const Color lightPrimary = Color(0xFF0E50C9);
+  static const Color lightPrimaryDeep = Color(0xFF0A3FA0);
   static const Color lightPrimaryGloss = Color(0x66FFFFFF);
   static const Color lightOnPrimary = Color(0xFFFFFFFF);
 
-  static const Color lightChrome = Color(0xFFC0CCDA);
-  static const Color lightChromeDeep = Color(0xFF8A98A8);
+  static const Color lightChrome = Color(0xFFB5C4D6);
+  static const Color lightChromeDeep = Color(0xFF7F8FA1);
   static const Color lightGlow = Color(0xFF42A5F5);
 
   static const Color lightTextPrimary = Color(0xFF0A1929);
-  static const Color lightTextMuted = Color(0xFF5A6B7C);
-  static const Color lightDivider = Color(0x22000000);
+  static const Color lightTextMuted = Color(0xFF4F6175);
+  static const Color lightDivider = Color(0x2E1F3147);
 
   // ── Dark palette ───────────────────────────────────────────────────────
   static const Color darkSurfaceBaseTop = Color(0xFF0A1929);

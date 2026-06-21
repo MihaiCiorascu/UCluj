@@ -1907,7 +1907,9 @@ class FifaRadarPainter extends CustomPainter {
     }
 
     final grid = Paint()
-      ..color = Colors.white.withValues(alpha: 0.15)
+      // Derive from labelColor (light on the dark theme, dark on the light
+      // theme) so the radar grid stays visible on both surfaces.
+      ..color = labelColor.withValues(alpha: 0.18)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
