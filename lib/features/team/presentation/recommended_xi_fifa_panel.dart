@@ -48,6 +48,7 @@ class RecommendedXiFifaPanel extends StatefulWidget {
     required this.formation,
     this.opponentName,
     this.homeTeam,
+    this.fixtureDate,
     this.xiRepository,
     this.onPreviewChanged,
     this.onShowOpponentChanged,
@@ -67,6 +68,11 @@ class RecommendedXiFifaPanel extends StatefulWidget {
   /// every edit keeps the re-optimised XI framed on the same team. Also used to
   /// label the toggle by team name for those matches.
   final String? homeTeam;
+
+  /// Upcoming fixture date (ISO ``YYYY-MM-DD``). Passed to the preview request
+  /// so the player card shows rest-days before the real next match. Optional;
+  /// the backend leaves rest-days unchanged when absent.
+  final String? fixtureDate;
 
   /// Repository used for the flexible-XI POST round-trips. Defaults to a fresh
   /// [XiRepository] when interactivity is enabled and none is injected.
@@ -200,6 +206,7 @@ class _RecommendedXiFifaPanelState extends State<RecommendedXiFifaPanel> {
         formation: _resolvedFormation,
         locked: Map<int, int>.from(_locked),
         homeTeam: widget.homeTeam,
+        fixtureDate: widget.fixtureDate,
       );
       if (!mounted) return;
       setState(() {
@@ -868,42 +875,42 @@ List<_FifaAttr> _outputAttrs(MatchPreviewPlayer p) {
 
   if (p.roleGroup == 'GK') {
     return [
-      _FifaAttr('Saves', pct('per90_gkSaves')),
-      _FifaAttr('Clean Sht', pct('per90_gkCleanSheets')),
-      _FifaAttr('Sweeping', pct('per90_gkSuccessfulExits')),
-      _FifaAttr('Aerial', pct('per90_gkAerialDuelsWon')),
-      _FifaAttr('Passing', pct('per90_successfulPasses')),
-      _FifaAttr('Form', pct('recent_form_score')),
+      _FifaAttr(L10n.t('stat.saves'), pct('per90_gkSaves')),
+      _FifaAttr(L10n.t('stat.cleanSheet'), pct('per90_gkCleanSheets')),
+      _FifaAttr(L10n.t('stat.sweeping'), pct('per90_gkSuccessfulExits')),
+      _FifaAttr(L10n.t('stat.aerial'), pct('per90_gkAerialDuelsWon')),
+      _FifaAttr(L10n.t('stat.passing'), pct('per90_successfulPasses')),
+      _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
     ];
   }
 
   switch (p.roleGroup) {
     case 'DEF':
       return [
-        _FifaAttr('Passing', pct('per90_successfulPasses')),
-        _FifaAttr('Duels', pct('per90_defensiveDuelsWon')),
-        _FifaAttr('Aerial', pct('per90_aerialDuelsWon')),
-        _FifaAttr('Clears', pct('per90_clearances')),
-        _FifaAttr('Intercept', pct('per90_interceptions')),
-        _FifaAttr('Blocks', pct('per90_shotsBlocked')),
+        _FifaAttr(L10n.t('stat.passing'), pct('per90_successfulPasses')),
+        _FifaAttr(L10n.t('stat.duels'), pct('per90_defensiveDuelsWon')),
+        _FifaAttr(L10n.t('stat.aerial'), pct('per90_aerialDuelsWon')),
+        _FifaAttr(L10n.t('stat.clears'), pct('per90_clearances')),
+        _FifaAttr(L10n.t('stat.intercept'), pct('per90_interceptions')),
+        _FifaAttr(L10n.t('stat.blocks'), pct('per90_shotsBlocked')),
       ];
     case 'MID':
       return [
-        _FifaAttr('Passing', pct('per90_successfulPasses')),
-        _FifaAttr('Progress', pct('per90_progressivePasses')),
-        _FifaAttr('Key Pass', pct('per90_keyPasses')),
-        _FifaAttr('Recover', pct('per90_recoveries')),
-        _FifaAttr('Duels', pct('per90_defensiveDuelsWon')),
-        _FifaAttr('Dribbles', pct('per90_successfulDribbles')),
+        _FifaAttr(L10n.t('stat.passing'), pct('per90_successfulPasses')),
+        _FifaAttr(L10n.t('stat.progress'), pct('per90_progressivePasses')),
+        _FifaAttr(L10n.t('stat.keyPass'), pct('per90_keyPasses')),
+        _FifaAttr(L10n.t('stat.recover'), pct('per90_recoveries')),
+        _FifaAttr(L10n.t('stat.duels'), pct('per90_defensiveDuelsWon')),
+        _FifaAttr(L10n.t('stat.dribbles'), pct('per90_successfulDribbles')),
       ];
     default: // FWD
       return [
-        _FifaAttr('Goals', pct('per90_goals')),
-        _FifaAttr('Shots', pct('per90_shots')),
-        _FifaAttr('Dribbles', pct('per90_successfulDribbles')),
-        _FifaAttr('Key Pass', pct('per90_keyPasses')),
-        _FifaAttr('Crosses', pct('per90_successfulCrosses')),
-        _FifaAttr('Box Tch', pct('per90_touchInBox')),
+        _FifaAttr(L10n.t('stat.goals'), pct('per90_goals')),
+        _FifaAttr(L10n.t('stat.shots'), pct('per90_shots')),
+        _FifaAttr(L10n.t('stat.dribbles'), pct('per90_successfulDribbles')),
+        _FifaAttr(L10n.t('stat.keyPass'), pct('per90_keyPasses')),
+        _FifaAttr(L10n.t('stat.crosses'), pct('per90_successfulCrosses')),
+        _FifaAttr(L10n.t('stat.boxTouches'), pct('per90_touchInBox')),
       ];
   }
 }
@@ -915,36 +922,36 @@ List<_FifaAttr> _efficiencyAttrs(MatchPreviewPlayer p) {
 
   if (p.roleGroup == 'GK') {
     return [
-      _FifaAttr('Pass %', pct('pass_accuracy')),
-      _FifaAttr('Aerial %', pct('aerial_win_rate')),
-      _FifaAttr('Form', pct('recent_form_score')),
+      _FifaAttr(L10n.t('stat.passPct'), pct('pass_accuracy')),
+      _FifaAttr(L10n.t('stat.aerialPct'), pct('aerial_win_rate')),
+      _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
     ];
   }
 
   switch (p.roleGroup) {
     case 'DEF':
       return [
-        _FifaAttr('Duels %', pct('duel_win_rate')),
-        _FifaAttr('Aerial %', pct('aerial_win_rate')),
-        _FifaAttr('Def %', pct('def_action_success')),
-        _FifaAttr('Pass %', pct('pass_accuracy')),
-        _FifaAttr('Form', pct('recent_form_score')),
+        _FifaAttr(L10n.t('stat.duelsPct'), pct('duel_win_rate')),
+        _FifaAttr(L10n.t('stat.aerialPct'), pct('aerial_win_rate')),
+        _FifaAttr(L10n.t('stat.defPct'), pct('def_action_success')),
+        _FifaAttr(L10n.t('stat.passPct'), pct('pass_accuracy')),
+        _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
       ];
     case 'MID':
       return [
-        _FifaAttr('Pass %', pct('pass_accuracy')),
-        _FifaAttr('Dribble %', pct('dribble_success')),
-        _FifaAttr('Duels %', pct('duel_win_rate')),
-        _FifaAttr('Def %', pct('def_action_success')),
-        _FifaAttr('Form', pct('recent_form_score')),
+        _FifaAttr(L10n.t('stat.passPct'), pct('pass_accuracy')),
+        _FifaAttr(L10n.t('stat.dribblePct'), pct('dribble_success')),
+        _FifaAttr(L10n.t('stat.duelsPct'), pct('duel_win_rate')),
+        _FifaAttr(L10n.t('stat.defPct'), pct('def_action_success')),
+        _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
       ];
     default: // FWD
       return [
-        _FifaAttr('Shot %', pct('shot_accuracy')),
-        _FifaAttr('Dribble %', pct('dribble_success')),
-        _FifaAttr('Duels %', pct('duel_win_rate')),
-        _FifaAttr('Pass %', pct('pass_accuracy')),
-        _FifaAttr('Form', pct('recent_form_score')),
+        _FifaAttr(L10n.t('stat.shotPct'), pct('shot_accuracy')),
+        _FifaAttr(L10n.t('stat.dribblePct'), pct('dribble_success')),
+        _FifaAttr(L10n.t('stat.duelsPct'), pct('duel_win_rate')),
+        _FifaAttr(L10n.t('stat.passPct'), pct('pass_accuracy')),
+        _FifaAttr(L10n.t('stat.form'), pct('recent_form_score')),
       ];
   }
 }
@@ -1121,7 +1128,7 @@ class _PlayerDetailColumn extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'RATING',
+                      L10n.t('team.rating'),
                       style: TypographyTokens.sectionLabel.copyWith(
                         fontSize: 8,
                         color: c.textMuted,
@@ -1240,7 +1247,7 @@ class _PlayerDetailColumn extends StatelessWidget {
           Expanded(
             child: Container(
               height: 8,
-              color: c.surfaceHigh,
+              color: c.isDark ? c.surfaceHigh : c.surfaceLow,
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: t,
@@ -1253,11 +1260,16 @@ class _PlayerDetailColumn extends StatelessWidget {
           // Label
           SizedBox(
             width: 70,
-            child: Text(
-              a.label,
-              style: TypographyTokens.body.copyWith(
-                fontSize: 11,
-                color: c.textSecondary,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                a.label,
+                maxLines: 1,
+                style: TypographyTokens.body.copyWith(
+                  fontSize: 11,
+                  color: c.textSecondary,
+                ),
               ),
             ),
           ),
@@ -1868,6 +1880,7 @@ class FifaPlayerRadar extends StatelessWidget {
         labels: labels,
         accentColor: accentColor ?? c.accent,
         labelColor: labelColor ?? c.textMuted,
+        isDark: c.isDark,
       ),
       child: const SizedBox.expand(),
     );
@@ -1880,12 +1893,14 @@ class FifaRadarPainter extends CustomPainter {
     required this.labels,
     required this.accentColor,
     required this.labelColor,
+    required this.isDark,
   });
 
   final List<double> values;
   final List<String> labels;
   final Color accentColor;
   final Color labelColor;
+  final bool isDark;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -1902,7 +1917,9 @@ class FifaRadarPainter extends CustomPainter {
     }
 
     final grid = Paint()
-      ..color = Colors.white.withValues(alpha: 0.15)
+      // Derive from labelColor (light on the dark theme, dark on the light
+      // theme) so the radar grid stays visible on both surfaces.
+      ..color = labelColor.withValues(alpha: 0.18)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
@@ -1922,7 +1939,9 @@ class FifaRadarPainter extends CustomPainter {
     }
 
     final fill = Paint()
-      ..color = accentColor.withValues(alpha: 0.25)
+      // Stronger fill on the light theme so the role silhouette reads on the
+      // pale radar panel; unchanged on the dark theme.
+      ..color = accentColor.withValues(alpha: isDark ? 0.25 : 0.42)
       ..style = PaintingStyle.fill;
     final border = Paint()
       ..color = accentColor
@@ -1958,5 +1977,6 @@ class FifaRadarPainter extends CustomPainter {
   bool shouldRepaint(covariant FifaRadarPainter oldDelegate) =>
       oldDelegate.values != values ||
       oldDelegate.accentColor != accentColor ||
-      oldDelegate.labelColor != labelColor;
+      oldDelegate.labelColor != labelColor ||
+      oldDelegate.isDark != isDark;
 }

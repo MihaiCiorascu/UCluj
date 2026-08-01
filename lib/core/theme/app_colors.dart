@@ -158,13 +158,13 @@ class AppColorTokens {
 
   // ── Light palette (cobalt blue + chrome + pale-blue base) ───────────────
   static const AppColorTokens light = AppColorTokens(
-    surface:              Color(0xFFDFE9F6),
-    surfaceLow:           Color(0xFFEFF4FC),
-    surfaceHigh:          Color(0xFFD6E4F6),
-    surfaceBaseTop:       Color(0xFFDFE9F6),
-    surfaceBaseBottom:    Color(0xFFBED7F2),
+    surface:              Color(0xFFE8EFF8),
+    surfaceLow:           Color(0xFFDCE7F4),
+    surfaceHigh:          Color(0xFFFFFFFF),
+    surfaceBaseTop:       Color(0xFFE8EFF8),
+    surfaceBaseBottom:    Color(0xFFD2DEEE),
     surfaceElevatedTop:   Color(0xFFFFFFFF),
-    surfaceElevatedBottom:Color(0xFFDCE8F8),
+    surfaceElevatedBottom:Color(0xFFEAF1FB),
     primary:              Color(0xFF0E50C9),
     primaryDeep:          Color(0xFF0A3FA0),
     primaryGloss:         Color(0x66FFFFFF),
@@ -176,13 +176,13 @@ class AppColorTokens {
     // colliding with `accent`. Most call sites that wanted "the DEF role
     // colour" should migrate to `roleDefender` (same value, clearer intent).
     accentBlue:           Color(0xFF1A4F7A),
-    chrome:               Color(0xFFC0CCDA),
-    chromeDeep:           Color(0xFF8A98A8),
+    chrome:               Color(0xFFB5C4D6),
+    chromeDeep:           Color(0xFF7F8FA1),
     glow:                 Color(0xFF42A5F5),
     textPrimary:          Color(0xFF0A1929),
     textSecondary:        Color(0xFF1F3147),
-    textMuted:            Color(0xFF5A6B7C),
-    divider:              Color(0x22000000),
+    textMuted:            Color(0xFF4F6175),
+    divider:              Color(0x2E1F3147),
     negative:             Color(0xFFC62828),
     negativeSubtle:       Color(0x1AC62828),
     positive:             Color(0xFF2E7D32),
@@ -194,9 +194,10 @@ class AppColorTokens {
     roleDefender:         Color(0xFF1A4F7A),
     roleMidfielder:       Color(0xFF2E7D32),
     roleForward:          Color(0xFFC62828),
-    // Pitch surface stays deep navy across both themes so the pitch reads
-    // as a single product element regardless of the page palette.
-    pitchSurface:         Color(0xFF0A1929),
+    // Pitch surface: a lighter slate in the light theme so the pitch lifts off
+    // the pale page (both the upcoming-preview and concluded pitches use this).
+    // The dark theme keeps the deep navy below.
+    pitchSurface:         Color(0xFF1C3C5A),
     pitchLine:            Color(0xB3FFFFFF),
     pitchHalo:            Color(0x141E88E5),
     cardGlow:             Color(0x140E50C9),

@@ -148,6 +148,7 @@ class StandingsScreen extends StatefulWidget {
     this.onProfileTap,
     this.trackedTeam,
     this.apiClient,
+    this.avatarUrl,
     super.key,
   });
 
@@ -155,6 +156,7 @@ class StandingsScreen extends StatefulWidget {
   final VoidCallback? onProfileTap;
   final String? trackedTeam;
   final ApiClient? apiClient;
+  final String? avatarUrl;
 
   @override
   State<StandingsScreen> createState() => _StandingsScreenState();
@@ -225,7 +227,7 @@ class _StandingsScreenState extends State<StandingsScreen>
     }
     final startYear = now.month >= 7 ? now.year : now.year - 1;
     final endYy = ((startYear + 1) % 100).toString().padLeft(2, '0');
-    return 'SUPERLIGA ROMANIA  ·  $startYear/$endYy';
+    return '${L10n.t('standings.leagueName')}  ·  $startYear/$endYy';
   }
 
   _TeamStanding? _findTracked(List<_TeamStanding> list) {
@@ -249,6 +251,7 @@ class _StandingsScreenState extends State<StandingsScreen>
       currentTab: AppTab.standings,
       onTabSelected: widget.onTabSelected,
       onProfileTap: widget.onProfileTap,
+      avatarUrl: widget.avatarUrl,
       body: _loading
           // PR 14 loading sweep: a table-shaped skeleton replaces the bare
           // spinner so the standings open onto a layout that already matches
@@ -274,7 +277,7 @@ class _StandingsScreenState extends State<StandingsScreen>
           children: [
             Icon(Icons.error_outline, size: 40, color: c.negative),
             const SizedBox(height: SpacingTokens.md),
-            Text('Could not load standings',
+            Text(L10n.t('standings.loadError'),
                 style: TypographyTokens.headline.copyWith(color: c.negative)),
             const SizedBox(height: SpacingTokens.sm),
             Text(_error!,
@@ -283,7 +286,7 @@ class _StandingsScreenState extends State<StandingsScreen>
             const SizedBox(height: SpacingTokens.lg),
             TextButton(
               onPressed: _loadData,
-              child: Text('RETRY',
+              child: Text(L10n.t('dashboard.retry'),
                   style: TypographyTokens.sectionLabel.copyWith(color: c.accent)),
             ),
           ],
@@ -314,7 +317,7 @@ class _StandingsScreenState extends State<StandingsScreen>
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
-                    child: Text('LEAGUE',
+                    child: Text(L10n.t('standings.heroLine1'),
                         maxLines: 1,
                         style: TypographyTokens.displayHero.copyWith(
                             fontSize: 72, height: 0.9, color: c.textPrimary)),
@@ -322,7 +325,7 @@ class _StandingsScreenState extends State<StandingsScreen>
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
-                    child: Text('STANDINGS',
+                    child: Text(L10n.t('standings.heroLine2'),
                         maxLines: 1,
                         style: TypographyTokens.displayHero.copyWith(
                           fontSize: 72,
@@ -346,8 +349,7 @@ class _StandingsScreenState extends State<StandingsScreen>
             delegate: _TabBarDelegate(
               tabBar: TabBar(
                 controller: _tabController,
-                isScrollable: true,
-                tabAlignment: TabAlignment.start,
+                isScrollable: false,
                 indicator: BoxDecoration(
                   color: c.accent,
                   borderRadius: BorderRadius.circular(20),
@@ -360,9 +362,15 @@ class _StandingsScreenState extends State<StandingsScreen>
                 padding: const EdgeInsets.symmetric(
                     horizontal: SpacingTokens.md, vertical: SpacingTokens.sm),
                 tabs: [
-                  Tab(text: L10n.t('standings.tabRegular')),
-                  Tab(text: L10n.t('standings.tabChampionship')),
-                  Tab(text: L10n.t('standings.tabRelegation')),
+                  Tab(child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(L10n.t('standings.tabRegular')))),
+                  Tab(child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(L10n.t('standings.tabChampionship')))),
+                  Tab(child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(L10n.t('standings.tabRelegation')))),
                 ],
               ),
               surfaceColor: c.surface,
@@ -462,9 +470,9 @@ class _StandingsTabView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: SpacingTokens.md),
             child: _ContextCard(
-              label: 'POINTS TO LEADER',
+              label: L10n.t('standings.pointsToLeader'),
               value: '${rows.first.points - tracked!.points}',
-              note: '${rows.first.shortName} leads with ${rows.first.points} pts.',
+              note: '${rows.first.shortName} ${L10n.t('standings.leadsWith')} ${rows.first.points} ${L10n.t('standings.pointsWord')}.',
               isPositive: tracked!.pos == 1,
             ),
           ),
@@ -550,14 +558,22 @@ class _HeroClubCard extends StatelessWidget {
                       color: c.textPrimary,
                     )),
                 const SizedBox(height: 2),
-                Text('YOUR CLUB  ·  SUPERLIGA',
+                Text(L10n.t('standings.yourClubLine'),
                     style: TypographyTokens.sectionLabel
                         .copyWith(fontSize: 8, letterSpacing: 1.8, color: c.textMuted)),
               ],
             )),
           ]),
           const SizedBox(height: SpacingTokens.xl),
-          Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          // Scale the whole metric strip down to fit narrow cards so RANK, PTS,
+          // GD, and the V-E-Î record never overflow the rounded hero card.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
             // Ratio between rank (48 px) and the RANK label (12 px) is
             // ~4:1, matching the spec's display-lg / label-sm contrast.
             //
@@ -575,7 +591,7 @@ class _HeroClubCard extends StatelessWidget {
                 Text('#${team.pos}', style: TypographyTokens.statLarge.copyWith(
                     fontSize: 48, color: c.accent)),
                 const SizedBox(height: SpacingTokens.xxs),
-                Text('RANK',
+                Text(L10n.t('standings.rank'),
                     style: TypographyTokens.sectionLabel
                         .copyWith(fontSize: 12, letterSpacing: 2.4, color: c.textMuted)),
               ]),
@@ -586,7 +602,7 @@ class _HeroClubCard extends StatelessWidget {
             _metric('${team.gd > 0 ? "+" : ""}${team.gd}', 'GD', c),
             const SizedBox(width: SpacingTokens.xl),
             _metric('${team.wins}-${team.draws}-${team.losses}', L10n.t('standings.recordAbbr'), c),
-          ]),
+          ])),
         ],
       ),
     );
@@ -622,7 +638,7 @@ class _TableHeader extends StatelessWidget {
       child: Row(children: [
         SizedBox(width: 28, child: Text('#', style: s, textAlign: TextAlign.center)),
         const SizedBox(width: 22),
-        Expanded(child: Text('CLUB', style: s)),
+        Expanded(child: Text(L10n.t('standings.colClub'), style: s)),
         SizedBox(width: 26, child: Text(L10n.t('standings.colPlayed'), style: s, textAlign: TextAlign.center)),
         SizedBox(width: 26, child: Text(L10n.t('standings.colWins'), style: s, textAlign: TextAlign.center)),
         SizedBox(width: 26, child: Text(L10n.t('standings.colDraws'), style: s, textAlign: TextAlign.center)),
@@ -699,8 +715,11 @@ class _StandingsRow extends StatelessWidget {
               child: Icon(Icons.shield_outlined, size: 14, color: muted)),
         const SizedBox(width: SpacingTokens.xxs),
         Expanded(
-            child: Text(team.shortName.toUpperCase(),
-                style: nameStyle, overflow: TextOverflow.ellipsis)),
+            child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(team.shortName.toUpperCase(),
+                    style: nameStyle, maxLines: 1))),
         SizedBox(width: 26,
             child: Text('${team.played}', style: numStyle, textAlign: TextAlign.center)),
         SizedBox(width: 26,

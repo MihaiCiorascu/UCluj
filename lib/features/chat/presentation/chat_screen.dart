@@ -598,6 +598,7 @@ class _ChatScreenState extends State<ChatScreen> {
       currentTab: AppTab.chat,
       onTabSelected: widget.onTabSelected,
       onProfileTap: widget.onProfileTap,
+      avatarUrl: widget.authState?.user?.avatarUrl,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

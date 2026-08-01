@@ -294,6 +294,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
         opponentName: opponent,
         formation: _formation,
         homeTeam: homeOverride,
+        fixtureDate: f.displayDate,
       );
       if (mounted) {
         setState(() {
@@ -1552,6 +1553,7 @@ class _MatchStatsSheetState extends State<MatchStatsSheet> {
               : _formation,
           opponentName: _xiOpponent,
           homeTeam: widget.fixture.involvesSubject ? null : widget.fixture.homeTeam,
+          fixtureDate: widget.fixture.displayDate,
           xiRepository: _xiRepo,
           onPreviewChanged: (updated) {
             // Keep the sheet's copy in sync so a formation switch after an edit
@@ -2201,7 +2203,10 @@ class _ActualPlayerChip extends StatelessWidget {
             style: TypographyTokens.body.copyWith(
               fontSize: chipSize * 0.2,
               fontWeight: FontWeight.w700,
-              color: c.textPrimary,
+              // Fixed light colour so the surname reads on the (dark) pitch in
+              // both themes; c.textPrimary is dark navy in light mode and would
+              // vanish on the pitch.
+              color: Colors.white.withValues(alpha: 0.92),
               height: 1.05,
             ),
           ),
