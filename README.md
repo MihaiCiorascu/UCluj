@@ -16,9 +16,8 @@
 
 <p align="center">
   <b>Live demo:</b> decommissioned post-defence (AWS backend torn down to stop billing),
-  see the <a href="#architecture">architecture</a> below and the screenshots in
-  <a href="figures/dashboard.png">figures/dashboard.png</a> and
-  <a href="figures/FIFA_lineup.png">figures/FIFA_lineup.png</a> for a look at the running app.
+  see the <a href="#architecture">architecture</a> and the <a href="#screenshots">screenshots</a>
+  below for a look at the running app.
 </p>
 
 <p align="center">
@@ -33,6 +32,7 @@
 - [Thesis](#thesis)
 - [Architecture](#architecture)
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Machine learning](#machine-learning)
 - [Tech stack](#tech-stack)
 - [Project structure](#project-structure)
@@ -71,8 +71,8 @@ and Computer Science, Babes-Bolyai University Cluj-Napoca, under the supervision
 Anamaria.
 
 The thesis develops the full predictive-to-prescriptive pipeline, the constrained Monte Carlo tactical
-optimiser, and the player-level Starting XI predictor, and reports their evaluation on roughly 1,600
-Romanian Superliga matches across five seasons (2020 to 2025).
+optimiser, and the player-level Starting XI predictor, and reports their evaluation on 1,600 Romanian
+Superliga matches across five seasons, from 2020-2021 to 2024-2025.
 
 - **Read the thesis:** [docs/UmbraRo-Thesis.pdf](docs/UmbraRo-Thesis.pdf)
 - **Reproducible analysis:** the canonical numbers come from the notebooks in
@@ -100,6 +100,22 @@ Romanian Superliga matches across five seasons (2020 to 2025).
   verification code through its managed mailer by default, with Amazon SES configurable as the sender. Avatars use presigned Amazon S3 uploads, and instant chat fans out
   over an API Gateway WebSocket backed by a DynamoDB connections table.
 
+**System diagrams**, all generated from the real system and kept render-ready in
+[`design/diagrams/`](design/diagrams/):
+
+<p align="center">
+  <img src="figures/use_case.png" alt="UmbraRo use case diagram" width="260"/>
+  <img src="figures/db_schema.png" alt="RDS PostgreSQL schema" width="260"/>
+</p>
+<p align="center">
+  <img src="figures/auth_sequence.png" alt="Cognito sign-up and local-JWT exchange sequence" width="260"/>
+  <img src="figures/mi_sequence.png" alt="Match Analysis sheet request-flow sequence" width="260"/>
+</p>
+
+The use-case diagram covers one actor, the coaching and technical staff, and ten use cases. The database
+declares no foreign keys, so `db_schema.png` shows the links (`author_id`, `member_ids`, `team_name`) as
+application-level, not database-enforced.
+
 ## Features
 
 - **Win probability**, shown as the probability of a home win in the binary formulation.
@@ -111,27 +127,92 @@ Romanian Superliga matches across five seasons (2020 to 2025).
 - **Standings** in an editorial, premium league table.
 - **Command chat**, a direct, operational tactical interface rather than a social messenger.
 
+## Screenshots
+
+**Dashboard.** The user's club next fixture with its calibrated win probability and verdict tag, above
+the week's remaining fixtures.
+
+<p align="center">
+  <img src="figures/dashboard.png" alt="UmbraRo dashboard" width="260"/>
+</p>
+
+**Match Analysis, upcoming fixture** (FCSB vs. Universitatea Cluj): win chance, verdict, and key drivers,
+then the optimal tactical plan and levers above the recommended XI.
+
+<p align="center">
+  <img src="figures/match_sheet_a.png" alt="Match Analysis sheet, win chance and key drivers" width="260"/>
+  <img src="figures/match_sheet_b.png" alt="Match Analysis sheet, tactical plan and recommended XI" width="260"/>
+</p>
+
+**Match Analysis, completed fixture** (Universitatea Cluj vs. Oțelul Galați): the official statistics, and
+the real starting eleven with substitution minutes and goal indicators.
+
+<p align="center">
+  <img src="figures/completed_stats.png" alt="Completed match, official statistics" width="260"/>
+  <img src="figures/completed_lineup.png" alt="Completed match, real starting eleven" width="260"/>
+</p>
+
+**Starting XI / lineup pitch.** The recommended starting eleven, each chip showing the player's position,
+rating, and selection score, a per-player detail sheet with a within-position percentile radar and
+physical-state panel, and the FIFA-style pitch card view.
+
+<p align="center">
+  <img src="figures/recommended_xi.png" alt="Recommended starting XI on the pitch" width="260"/>
+  <img src="figures/player_sheet.png" alt="Per-player detail sheet" width="260"/>
+  <img src="figures/FIFA_lineup.png" alt="FIFA-style lineup pitch card" width="260"/>
+</p>
+
+**Standings.** The Superliga table with the user's club lifted into a highlighted header card showing
+rank, points, goal difference, and record.
+
+<p align="center">
+  <img src="figures/standings.png" alt="League standings" width="260"/>
+</p>
+
+**Team chat.** The club's general channel, with the group-creation control and the message composer.
+
+<p align="center">
+  <img src="figures/chat.png" alt="Team chat" width="260"/>
+</p>
+
 ## Machine learning
 
-The model is trained on roughly 1,600 Romanian Superliga matches across five seasons, from 2020 to
-2025. A central finding of the thesis is that predictive accuracy and prescriptive usefulness are
-distinct criteria. Logistic Regression is in fact the most accurate engineered model, yet inside the
-optimiser it concentrates almost its entire response in a single tactical lever and exaggerates the
-effect of changing it. The production engine is therefore **calibrated CatBoost**: marginally less
-accurate, but it spreads its sensitivity across the controllable variables and saturates rather than
-extrapolating, giving the bounded, realistic responses a tactical optimiser needs. Logistic Regression
-is kept as an interpretable forecasting benchmark. A one-feature Elo-only baseline is already as
-accurate as any engineered model, so the added features contribute mainly through calibration,
-explanation, and prescription rather than through raw predictive power.
+The model is trained on 1,600 Romanian Superliga matches across five seasons, from 2020-2021 to
+2024-2025. A central finding of the thesis is that predictive accuracy and prescriptive usefulness are
+distinct criteria. A one-feature Elo-only baseline already reaches 65.20% accuracy, a figure no
+engineered model surpasses. Among the engineered models, Logistic Regression is the most accurate
+(64.89% accuracy, Brier score 0.2256, ROC-AUC 0.6669), yet inside the optimiser it concentrates almost
+its entire response in a single tactical lever: raising shots to the 95th percentile alone moves its
+predicted win probability by about 17 percentage points. The production engine is therefore
+**calibrated CatBoost** (62.95% accuracy, Brier score 0.2329, expected calibration error 0.0517),
+marginally less accurate but far better distributed: the same sweep moves its prediction by 6.7, 5.6,
+5.2, and 2.8 percentage points for possession, shots, shots on target, and corners respectively, so a
+recommendation never collapses onto a single lever. Logistic Regression is kept as an interpretable
+forecasting benchmark. Since the added features do not raise raw accuracy above the Elo baseline, they
+contribute mainly through calibration, explanation, and prescription rather than through predictive
+power on their own.
 
 **Supported inputs** (rolling five-match aggregates and pre-match context): Elo difference,
 head-to-head record, rest days, possession, shots, shots on target, corners, goals scored, and goals
 conceded.
 
 **Prescriptive optimiser.** A constrained Monte Carlo search (N = 25,000) explores four controllable
-levers (possession, shots, shots on target, and corners) while goals scored and conceded stay frozen.
-It stays within historically plausible tactical ranges so that every recommendation is both
-statistically useful and football-plausible.
+levers (possession, shots, shots on target, and corners), each bounded to its 5th to 95th percentile
+training range plus two ratio constraints (shots on target between 20% and 70% of shots, corners
+between 15% and 80% of shots), while goals scored and conceded stay frozen at their real pre-match
+values. On representative fixtures the optimiser raises the estimated win probability by about 13.6
+percentage points on average, a predicted association from the model rather than a causal guarantee.
+
+**Starting XI selection.** A separate model, trained on a 278-match, 16-club Wyscout dataset from the
+Romanian Superliga (556 fixtures, 15,396 pooled player-fixture rows), combines per-90 performance
+normalisation, empirical-Bayes shrinkage, and a Hungarian-assignment selection rule with a pooled
+logistic-regression classifier. Under a strict rolling-origin, one-fixture-out validation across 428
+held-out fixtures it reaches a league-wide Jaccard@11 of 0.6227 (NDCG@11 0.8107), beating a
+top-by-minutes baseline (0.520) by 0.103 absolute. A separate ablation decomposes the model's own
+result honestly: of the 0.175 gap between this classifier and a hand-weighted heuristic composite
+(0.4476), 0.072 comes from the learned classifier architecture itself, and the remaining 0.103 comes
+from availability and recency signals that are, by the thesis's own account, partly autoregressive on
+the coach's past selection decisions rather than pure player evaluation.
 
 **What the model does not use.** To keep every output grounded in the training data, UmbraRo does not
 include biometrics, GPS or wearable tracking, player-level running load, expected-threat pipelines,
