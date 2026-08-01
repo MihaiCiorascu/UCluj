@@ -15,7 +15,10 @@
 </p>
 
 <p align="center">
-  <b>Live demo:</b> <a href="https://umbraro.d2j9yfctr6ipf6.amplifyapp.com">umbraro.d2j9yfctr6ipf6.amplifyapp.com</a>
+  <b>Live demo:</b> decommissioned post-defence (AWS backend torn down to stop billing),
+  see the <a href="#architecture">architecture</a> below and the screenshots in
+  <a href="figures/dashboard.png">figures/dashboard.png</a> and
+  <a href="figures/FIFA_lineup.png">figures/FIFA_lineup.png</a> for a look at the running app.
 </p>
 
 <p align="center">

@@ -5,14 +5,12 @@ name: Deploy backend
 # uses GitHub OIDC against the IAM role github-actions-ucluj-deploy, so there
 # are no long lived AWS keys stored in the repository.
 
+# Automatic push-triggered deploys are disabled: the App Runner service and its
+# RDS database were decommissioned after the thesis defence to stop AWS
+# billing. SERVICE_ARN/ECR_REPO below are kept as reference for how the
+# OIDC-based, keyless deploy pipeline worked. Re-enable the push trigger (and
+# refresh SERVICE_ARN/ECR_REPO) if the backend is redeployed.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'backend/**'
-      - 'data/All_Data.csv'
-      - 'data/reference/**'
-      - '.github/workflows/deploy-backend.yml'
   workflow_dispatch: {}
 
 concurrency:

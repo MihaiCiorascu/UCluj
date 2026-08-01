@@ -36,6 +36,13 @@ data/artifacts/
 data/*.executed.ipynb
 _sr_fixtures_cache.json
 _sr_standings_cache.json
+backend/app.db
+backend/check_db.py
+backend/fix_users.py
+backend/sync_msgs.py
+
+# Notebook pre-edit backups (ad-hoc, not for version control)
+scratchpad_pre_*.ipynb
 
 # Firebase
 .firebase/
