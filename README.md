@@ -67,7 +67,7 @@ The intelligence pipeline has four stages:
 
 UmbraRo is the deployed artefact of the bachelor thesis *UmbraRo: From Match Forecasting to Tactical
 Prescription and Lineup Selection for the Romanian Superliga*, submitted to the Faculty of Mathematics
-and Computer Science, Babes-Bolyai University Cluj-Napoca, under the supervision of Asist. dr. Briciu
+and Computer Science, Babes-Bolyai University Cluj-Napoca, under the supervision of Assist. PhD. Briciu
 Anamaria.
 
 The thesis develops the full predictive-to-prescriptive pipeline, the constrained Monte Carlo tactical
@@ -101,7 +101,7 @@ Superliga matches across five seasons, from 2020-2021 to 2024-2025.
   verification code through its managed mailer by default, with Amazon SES configurable as the sender. Avatars use presigned Amazon S3 uploads, and instant chat fans out
   over an API Gateway WebSocket backed by a DynamoDB connections table.
 
-**System diagrams**, all generated from the real system and kept render-ready in
+System diagrams, all generated from the real system and kept render-ready in
 [`design/diagrams/`](design/diagrams/):
 
 <p align="center">
@@ -130,46 +130,57 @@ application-level, not database-enforced.
 
 ## Screenshots
 
-**Dashboard.** The user's club next fixture with its calibrated win probability and verdict tag, above
-the week's remaining fixtures.
+#### Dashboard
+
+The user's club next fixture with its calibrated win probability and verdict tag, above the week's
+remaining fixtures.
 
 <p align="center">
   <img src="figures/dashboard.png" alt="UmbraRo dashboard" width="260"/>
 </p>
 
-**Match Analysis, upcoming fixture** (FCSB vs. Universitatea Cluj): win chance, verdict, and key drivers,
-then the optimal tactical plan and levers above the recommended XI.
+#### Match Analysis, upcoming fixture
+
+FCSB vs. Universitatea Cluj: win chance, verdict, and key drivers, then the optimal tactical plan and
+levers above the recommended XI.
 
 <p align="center">
   <img src="figures/match_sheet_a.png" alt="Match Analysis sheet, win chance and key drivers" width="260"/>
   <img src="figures/match_sheet_b.png" alt="Match Analysis sheet, tactical plan and recommended XI" width="260"/>
 </p>
 
-**Match Analysis, completed fixture** (Universitatea Cluj vs. Oțelul Galați): the official statistics, and
-the real starting eleven with substitution minutes and goal indicators.
+#### Match Analysis, completed fixture
+
+Universitatea Cluj vs. Oțelul Galați: the official statistics, and the real starting eleven with
+substitution minutes and goal indicators.
 
 <p align="center">
   <img src="figures/completed_stats.png" alt="Completed match, official statistics" width="260"/>
   <img src="figures/completed_lineup.png" alt="Completed match, real starting eleven" width="260"/>
 </p>
 
-**Starting XI / lineup pitch.** The recommended starting eleven, each chip showing the player's position,
-rating, and selection score, a per-player detail sheet with a within-position percentile radar and
-physical-state panel, and the FIFA-style pitch card view.
+#### Starting XI / lineup pitch
+
+The recommended starting eleven, each chip showing the player's position, rating, and selection score,
+and a per-player detail sheet with a within-position percentile radar and physical-state panel.
 
 <p align="center">
   <img src="figures/recommended_xi.png" alt="Recommended starting XI on the pitch" width="260"/>
   <img src="figures/player_sheet.png" alt="Per-player detail sheet" width="260"/>
 </p>
 
-**Standings.** The Superliga table with the user's club lifted into a highlighted header card showing
-rank, points, goal difference, and record.
+#### Standings
+
+The Superliga table with the user's club lifted into a highlighted header card showing rank, points,
+goal difference, and record.
 
 <p align="center">
   <img src="figures/standings.png" alt="League standings" width="260"/>
 </p>
 
-**Team chat.** The club's general channel, with the group-creation control and the message composer.
+#### Team chat
+
+The club's general channel, with the group-creation control and the message composer.
 
 <p align="center">
   <img src="figures/chat.png" alt="Team chat" width="260"/>
@@ -189,30 +200,30 @@ accuracy and prescriptive usefulness are distinct criteria.
 | Logistic Regression (best engineered model) | 64.89% | 0.2256 | 0.6669 | 0.0529 |
 | **CatBoost (deployed, calibrated)** | 62.95% | 0.2329 | 0.6350 | 0.0517 |
 
-Only two of the seven benchmarked classifiers are carried forward to this table. Naive Bayes and
-XGBoost were the weakest; the SVM outputs a distance from its decision boundary rather than a
-probability, which the downstream optimiser needs; the Multi-Layer Perceptron was the least stable
-across random seeds; and Random Forest is redundant with CatBoost's own tree-ensemble family, which
-additionally handles missing values natively. That leaves Logistic Regression, the most accurate, and
-CatBoost (300 iterations, depth 3, learning rate 0.02, Platt-sigmoid calibration over a 3-fold
-rolling-origin split), the one actually deployed.
+I carried forward only two of the seven benchmarked classifiers to this table. Naive Bayes and XGBoost
+were the weakest, the SVM gives a distance from its decision boundary rather than a probability, which
+everything downstream needs, the Multi-Layer Perceptron was the least stable across random seeds, and
+Random Forest is redundant with CatBoost's own tree-ensemble family, which additionally handles missing
+values natively. That leaves Logistic Regression, the most accurate, and CatBoost (300 iterations,
+depth 3, learning rate 0.02, Platt-sigmoid calibration over a 3-fold rolling-origin split), the one I
+actually deploy.
 
-A one-feature Elo-only baseline already reaches 65.20% accuracy, a figure no engineered model surpasses.
-Logistic Regression is the most accurate of the engineered models, yet inside the optimiser it
-concentrates almost its entire response in a single tactical lever: raising shots to the 95th percentile
-alone moves its predicted win probability by about 17 percentage points. **CatBoost is deployed instead**:
-marginally less accurate, but far better distributed. The same sweep moves its prediction by 6.7, 5.6,
-5.2, and 2.8 percentage points for possession, shots, shots on target, and corners respectively, so a
-recommendation never collapses onto a single lever, exactly the spread this sensitivity sweep shows:
+A one-feature Elo-only baseline already reaches 65.20% accuracy, a figure no engineered model surpasses,
+so I won't pretend the extra features predict more winners. Logistic Regression is the most accurate of
+the engineered models, yet inside the optimiser it concentrates almost its entire response in a single
+tactical lever: raising shots to the 95th percentile alone moves its predicted win probability by about
+17 percentage points. I deploy CatBoost instead: marginally less accurate, but far better distributed.
+The same sweep moves its prediction by 6.7, 5.6, 5.2, and 2.8 percentage points for possession, shots,
+shots on target, and corners respectively, so a recommendation never collapses onto a single lever,
+exactly the spread this sensitivity sweep shows:
 
 <p align="center">
   <img src="figures/sensitivity.png" alt="Tactical-lever sensitivity: Logistic Regression vs CatBoost" width="480"/>
 </p>
 
-Logistic Regression is kept as an interpretable forecasting benchmark. Since the added features do not
-raise raw accuracy above the Elo baseline, they contribute mainly through calibration, explanation, and
-prescription rather than through predictive power on their own, reflected in how closely the calibrated
-probabilities track real outcomes:
+Logistic Regression stays as an interpretable forecasting benchmark. Since the added features do not
+raise raw accuracy above the Elo baseline, they earn their place through calibration, explanation, and
+prescription instead, reflected in how closely the calibrated probabilities track real outcomes:
 
 <p align="center">
   <img src="figures/reliability_diagram.png" alt="Calibration reliability diagram, Logistic Regression vs CatBoost" width="420"/>
@@ -231,15 +242,15 @@ shots on target, and corners), each bounded to its 5th to 95th percentile traini
 constraints (shots on target between 20% and 70% of shots, corners between 15% and 80% of shots), while
 goals scored and conceded stay frozen at their real pre-match values.
 
-Three earlier designs were tried and discarded before this one held up: averaging the tactical stats of
-teams that had previously beaten the same opponent (too rigid), moving one lever at a time (unrealistic,
-since real tactical levers move together), and hand-built tactical archetypes such as pressing or
-counter-attacking (which just encoded the author's own assumptions back into the system).
+Getting here took three tries. I first averaged the tactical stats of teams that had previously beaten
+the same opponent, too rigid. Then I moved one lever at a time, but that gives unrealistic plans, since
+in football the levers move together. Then I hand-built tactical styles like pressing or
+counter-attacking, but those just baked in my own assumptions.
 
 On representative fixtures the optimiser raises the estimated win probability by about 13.6 percentage
-points on average. On the holdout season, fixtures whose real tactical numbers landed close to the
-optimiser's own blueprint won more often than the rest, a retrospective association rather than a
-causal claim, since the recommendation is a predicted effect from the model, not a guarantee:
+points on average. A retrospective check on the holdout season shows fixtures that hit the blueprint won
+more often than the rest, but that's a correlation, not proof: strong teams tend to both follow good
+plans and win, so a proper causal test is left as future work:
 
 <p align="center">
   <img src="figures/retrospective_check.png" alt="Retrospective check: blueprint-matching fixtures win more often" width="420"/>
@@ -251,10 +262,10 @@ Player data was provided by FC Universitatea Cluj, whose sporting director share
 statistics that power this layer. A separate model, trained on a 278-match, 16-club Wyscout dataset from
 the Romanian Superliga (556 fixtures, 15,396 pooled player-fixture rows), combines per-90 performance
 normalisation and empirical-Bayes shrinkage with a pooled logistic-regression classifier that outputs
-each player's probability of starting. The eleven starters are then placed by the Hungarian algorithm,
-which solves the whole formation at once rather than filling each slot greedily, one after another. A
-greedy fill is like seating a wedding: put the first guest in the best seat and the rest of the table
-suffers, so the Hungarian assignment optimises all eleven placements jointly instead.
+each player's probability of starting. The eleven starters are then placed by the Hungarian algorithm.
+Filling each slot greedily, one after another, is like seating a wedding: put the first guest in the
+best seat, the bride's, and you wreck the whole table. The Hungarian algorithm solves the whole board at
+once instead, for any formation.
 
 Under a strict rolling-origin, one-fixture-out validation across 428 held-out fixtures it reaches a
 league-wide Jaccard@11 of 0.6227 (NDCG@11 0.8107), beating a top-by-minutes baseline (0.520) by 0.103
@@ -373,4 +384,4 @@ Released under the MIT License. See [LICENSE](LICENSE).
 ## Author
 
 Built by Mihai Ciorascu as a bachelor thesis at Babes-Bolyai University, under the supervision of
-Asist. dr. Briciu Anamaria.
+Assist. PhD. Briciu Anamaria.
