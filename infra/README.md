@@ -3,9 +3,9 @@
 Infrastructure-as-code for the two pieces of the UmbraRo platform that AWS App
 Runner cannot host itself:
 
-1. **Avatars (Part B)** — durable, multi-device user profile pictures in S3,
+1. **Avatars (Part B)**, durable, multi-device user profile pictures in S3,
    uploaded by the browser straight to a backend-signed presigned PUT URL.
-2. **Instant chat (Part C)** — an API Gateway **WebSocket** API with a DynamoDB
+2. **Instant chat (Part C)**, an API Gateway **WebSocket** API with a DynamoDB
    connection registry and two Python Lambdas. App Runner is HTTP-only and
    cannot serve WebSockets, so this stack provides the real-time push transport.
    FastAPI on App Runner stays the brain: it persists messages to RDS and fans
@@ -40,7 +40,7 @@ resources and emits the outputs the backend and frontend read. App code in
 
 ---
 
-## CRITICAL auth detail — the `$connect` authorizer
+## CRITICAL auth detail: the `$connect` authorizer
 
 UmbraRo does **not** authenticate API calls with the Cognito token. Cognito is
 only used for the initial sign-in; the backend then issues its **own** local
@@ -52,7 +52,7 @@ JWT (see `backend/core/security.py`):
 
 The Flutter chat client puts that **local access token** in the WebSocket
 connect URL's `token` query-string parameter. Therefore the `$connect` Lambda
-validates **this** token with HS256 + the shared `JWT_SECRET` — it does **not**
+validates **this** token with HS256 + the shared `JWT_SECRET`. It does **not**
 call Cognito and does **not** accept Cognito tokens.
 
 > The `JwtSecret` you pass to this stack **must be byte-for-byte identical** to
@@ -75,7 +75,7 @@ and public-read surface), which is cleaner and lower-blast-radius.
 - **Reuse the existing bucket:** set
   `AvatarsBucketName=ucluj-player-photos` **and** `CreateAvatarsBucket=false`.
   CloudFormation cannot mutate a bucket it does not own, so in this mode the
-  stack skips the bucket, its CORS, and its policy — you apply those manually
+  stack skips the bucket, its CORS, and its policy, and you apply those manually
   (commands in *Manual bucket setup when reusing* below). The App Runner IAM
   policy and the public base URL output still target whatever bucket name you
   pass, so the config contract is identical either way.
@@ -90,14 +90,14 @@ Either way the public object URL is
 - AWS credentials for account `302432776212` with rights to create S3, DynamoDB,
   Lambda, API Gateway v2, and IAM resources.
 - One of:
-  - **AWS SAM CLI** (`sam`) — preferred; it builds and vendors the Lambda
+  - **AWS SAM CLI** (`sam`), preferred: it builds and vendors the Lambda
     dependency (PyJWT) for you, **or**
   - **AWS CLI v2** (`aws`) with the `cloudformation package` + `deploy`
     sub-commands and a staging S3 bucket for Lambda artifacts.
 
 ---
 
-## Provisioning — Option 1: AWS SAM (preferred)
+## Provisioning, option 1: AWS SAM (preferred)
 
 ```bash
 cd infra
@@ -127,7 +127,7 @@ the first run `sam deploy --parameter-overrides "JwtSecret=..."` is enough.
 
 ---
 
-## Provisioning — Option 2: pure AWS CLI (no SAM CLI installed)
+## Provisioning, option 2: pure AWS CLI (no SAM CLI installed)
 
 `template.yaml` uses the SAM transform, which `aws cloudformation deploy`
 expands server-side. You only need a staging bucket so the CLI can upload the
@@ -176,7 +176,7 @@ aws cloudformation deploy \
 
 ---
 
-## After deploy — attach the App Runner INSTANCE ROLE
+## After deploy: attach the App Runner INSTANCE ROLE
 
 App Runner runs your container under an **instance role** (distinct from the
 *access* role that pulls the ECR image). FastAPI uses the instance role's
@@ -224,7 +224,7 @@ Only needed if you set `CreateAvatarsBucket=false`. Apply CORS and the
 `avatars/*` public-read policy yourself:
 
 ```bash
-# CORS — allow the Amplify origin to PUT/GET.
+# CORS: allow the Amplify origin to PUT/GET.
 aws s3api put-bucket-cors --bucket ucluj-player-photos --region eu-central-1 \
   --cors-configuration '{
     "CORSRules": [{
@@ -237,7 +237,7 @@ aws s3api put-bucket-cors --bucket ucluj-player-photos --region eu-central-1 \
   }'
 
 # Public-read on avatars/* (merge into the bucket's existing policy if it
-# already has a players/* statement — do not overwrite it).
+# already has a players/* statement, do not overwrite it).
 aws s3api put-bucket-policy --bucket ucluj-player-photos --region eu-central-1 \
   --policy '{
     "Version": "2012-10-17",
@@ -265,14 +265,14 @@ aws cloudformation describe-stacks \
 
 | Output | Example value | Consumed by |
 |---|---|---|
-| `WebSocketConnectUrl` | `wss://{apiId}.execute-api.eu-central-1.amazonaws.com/prod` | **Frontend** — `config.json` key `wsConnectUrl`. Client appends `?channel={channelId}&token={localAccessJwt}`. |
-| `WebSocketManagementEndpoint` | `https://{apiId}.execute-api.eu-central-1.amazonaws.com/prod` | **Backend** — `WS_API_MANAGEMENT_ENDPOINT` (FastAPI `post_to_connection`). |
-| `ConnectionsTableName` | `umbraro-ws-connections` | **Backend** — `WS_CONNECTIONS_TABLE`. |
-| `AvatarsBucket` | `ucluj-user-avatars` | **Backend** — `AVATARS_S3_BUCKET`. |
+| `WebSocketConnectUrl` | `wss://{apiId}.execute-api.eu-central-1.amazonaws.com/prod` | **Frontend**: `config.json` key `wsConnectUrl`. Client appends `?channel={channelId}&token={localAccessJwt}`. |
+| `WebSocketManagementEndpoint` | `https://{apiId}.execute-api.eu-central-1.amazonaws.com/prod` | **Backend**: `WS_API_MANAGEMENT_ENDPOINT` (FastAPI `post_to_connection`). |
+| `ConnectionsTableName` | `umbraro-ws-connections` | **Backend**: `WS_CONNECTIONS_TABLE`. |
+| `AvatarsBucket` | `ucluj-user-avatars` | **Backend**: `AVATARS_S3_BUCKET`. |
 | `AvatarsPublicBaseUrl` | `https://ucluj-user-avatars.s3.eu-central-1.amazonaws.com` | Backend builds the public avatar URL (`<base>/avatars/<id>.jpg`). |
-| `AppRunnerAvatarsS3PolicyArn` | `arn:aws:iam::302432776212:policy/umbraro-apprunner-avatars-s3` | Ops — attach to App Runner instance role. |
-| `AppRunnerChatPolicyArn` | `arn:aws:iam::302432776212:policy/umbraro-apprunner-chat` | Ops — attach to App Runner instance role. |
-| `WebSocketApiId` | `{apiId}` | Ops — raw API id for building URLs. |
+| `AppRunnerAvatarsS3PolicyArn` | `arn:aws:iam::302432776212:policy/umbraro-apprunner-avatars-s3` | Ops: attach to App Runner instance role. |
+| `AppRunnerChatPolicyArn` | `arn:aws:iam::302432776212:policy/umbraro-apprunner-chat` | Ops: attach to App Runner instance role. |
+| `WebSocketApiId` | `{apiId}` | Ops: raw API id for building URLs. |
 
 ---
 
@@ -288,7 +288,7 @@ These are the exact names the application code uses. Set them after deploy.
 | `AVATARS_S3_REGION` | `eu-central-1` | Region of the avatars bucket. |
 | `WS_API_MANAGEMENT_ENDPOINT` | `WebSocketManagementEndpoint` | `https://{apiId}.execute-api.eu-central-1.amazonaws.com/prod`. Endpoint URL for the `apigatewaymanagementapi` boto3 client (`post_to_connection`). |
 | `WS_CONNECTIONS_TABLE` | `ConnectionsTableName` (`umbraro-ws-connections`) | DynamoDB table the backend `Query`s on `channel-index` to find connections to fan out to. |
-| `JWT_SECRET` | *(already set)* | Unchanged — but **the same value must be passed to this stack** as `JwtSecret` so the `$connect` Lambda validates the identical token. |
+| `JWT_SECRET` | *(already set)* | Unchanged, but **the same value must be passed to this stack** as `JwtSecret` so the `$connect` Lambda validates the identical token. |
 
 > The backend already reuses the `AWS_REGION` / instance-role credentials of App
 > Runner for boto3; no access keys are needed.

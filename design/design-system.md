@@ -3,7 +3,7 @@
 ## 1. Overview & Creative North Star
 The Creative North Star for this system is **"The Stoic Analyst."** This is a high-performance environment designed for elite football coaching, where the prestige of heritage meets the cold precision of modern biometrics. 
 
-To break away from "template" app design, this system rejects rounded corners and soft glows in favor of **Brutalist Precision**. We use intentional asymmetry and extreme typographic scale—placing massive, condensed data points against expansive negative space—to create an editorial feel that mimics high-end athletic journals. The interface should feel like a custom-machined tool: sharp, utilitarian, and expensive.
+To break away from "template" app design, this system rejects rounded corners and soft glows in favor of **Brutalist Precision**. We use intentional asymmetry and extreme typographic scale (massive, condensed data points against expansive negative space) to create an editorial feel that mimics high-end athletic journals. The interface should feel like a custom-machined tool, sharp and expensive.
 
 ## 2. Colors & Surface Architecture
 The palette is rooted in the deep shadows of the stadium tunnel, punctuated by the cobalt blue of early-2000s sports broadcasting.
@@ -31,9 +31,9 @@ The typographic system relies on the tension between the aggressive, condensed e
 *   **Scale Contrast:** To achieve an editorial look, a Headline-LG (2rem) should often sit immediately adjacent to a Label-SM (0.6875rem). This high-contrast pairing eliminates the "mid-tier" visual clutter common in generic apps.
 
 ## 4. Elevation & Precision
-In this system, "Elevation" is a misnomer. We utilize **Planar Precision**.
+In this system, "Elevation" is a misnomer. We use **Planar Precision**.
 
-*   **Sharp Edges Only:** Every component—from buttons to cards—must use a `0px` border radius. This communicates military-grade discipline.
+*   **Sharp Edges Only:** Every component, from buttons to cards, must use a `0px` border radius. This communicates military-grade discipline.
 *   **The 1px Hairline:** While sectioning is done via color shifts, internal list items (e.g., a roster of 22 players) may use a `1px` hairline divider using `chrome` (#5B6A7F) at 30% opacity. It should feel like a surgical incision, not a structural wall.
 *   **Negative Space as a Component:** Treat white space as a functional element. "Data Minimalism" requires that for every dense cluster of statistics, there is an equivalent "breathing zone" of pure `surface` color to prevent cognitive overload.
 
