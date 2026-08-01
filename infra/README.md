@@ -324,7 +324,7 @@ part of `template.yaml`.
 
 | File | Creates |
 |---|---|
-| `auth/cognito.yml` | `AWS::Cognito::UserPool` (`umbraro-user-pool`, email sign-in, emailed 6-digit confirmation via SES) + `UserPoolClient` (`umbraro-web-client`, SRP, no secret). No IAM. |
+| `auth/cognito.yml` | `AWS::Cognito::UserPool` (`umbraro-user-pool`, email sign-in, emailed 6-digit confirmation via Cognito's own mailer by default, or SES in `DEVELOPER` mode) + `UserPoolClient` (`umbraro-web-client`, SRP, no secret). No IAM. |
 | `auth/lambdas-auth-presignup.yml` | A Python Lambda (`umbraro-auth-pre-signup`) + its IAM role + the Cognito invoke permission. Optional, recommended. Deletes a still-`UNCONFIRMED` duplicate before each sign-up so a user who abandoned verification can sign up again with the same email. |
 | `auth/lambdas/auth_pre_signup/handler.py` | Canonical source for the Lambda (the template embeds the same code inline). |
 
@@ -332,7 +332,8 @@ The two stacks have a one-way dependency the other way round (the pool needs the
 Lambda ARN; the Lambda needs the pool id), so deploy in this order:
 
 ```bash
-# 0) One-time: verify the SES sender identity (then click the link AWS emails).
+# 0) Only for DEVELOPER mode: verify the SES sender identity (then click the link
+#    AWS emails). Skip this when keeping the COGNITO_DEFAULT mailer (the default).
 aws ses verify-email-identity --email-address mihaiciorascu11@gmail.com --region eu-central-1
 
 # 1) Create the pool WITHOUT the trigger. No IAM, so no --capabilities.
@@ -369,12 +370,20 @@ The two pool outputs feed both ends:
 While both `web/config.json` values are blank, the Flutter client runs the local
 email/password fallback instead of Cognito.
 
-### SES sandbox
+### Verification email delivery
 
-`EmailConfiguration` uses `DEVELOPER` mode (SES). While the account is in the SES
-sandbox, only **verified** recipient addresses receive the confirmation email, so
-verify the committee's test addresses, or request SES production access (~24h)
-before relying on arbitrary user emails.
+`EmailConfiguration` defaults to `COGNITO_DEFAULT` (`EmailSendingMode`): Cognito
+sends the confirmation code through its own mail service, which reaches **any**
+recipient even while SES is in the sandbox, but is capped at ~50 emails/day and
+uses a generic Amazon `From` address. This is the default so the committee's test
+addresses receive codes without any SES setup.
+
+For branded, high-volume sending, set `EmailSendingMode` to `DEVELOPER`, which
+routes the code through your SES identity (`SesFromAddress`) instead. That gives
+your own sender and far higher volume, but while the account is in the SES sandbox
+only **verified** recipient addresses receive the email, so verify the test
+addresses, or request SES production access (~24h), before relying on arbitrary
+user emails.
 
 ### PreSignUp trigger
 

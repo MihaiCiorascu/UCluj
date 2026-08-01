@@ -1,29 +1,13 @@
 """
-Opponent style-profile features for the Starting-XI predictor (Iteration J).
+Opponent style-profile features for the Starting-XI predictor.
 
-A coach's lineup decisions are not just a function of their own players'
-form — they also reflect the opponent's recent tactical profile. Against a
-team that presses high, the coach favours composed centre-backs and
-ball-retentive midfielders; against a low block, they favour progressive
-midfielders and wide creators. The previous version of the XI predictor
-ignored this context entirely; this module restores it.
+The opponent profile for a fixture is the opponent's rolling-5 vector from
+``data/All_Data.csv`` (possession, shots, SoT, corners, goals scored/conceded,
+points, yellow cards, goalkeeper saves), taken from the opponent's side of the
+fixture (:func:`Home_*_5` / :func:`Away_*_5`).
 
-The profile is computed from the team-level dataset ``data/All_Data.csv``,
-which carries rolling five-match averages of each team's possession,
-shots, shots-on-target, corners, goals scored / conceded, points,
-yellow cards, and goalkeeper saves at the moment of each fixture
-(:func:`Home_*_5` and :func:`Away_*_5` columns). For a given fixture, the
-*opponent profile* is simply the opponent's rolling-5 vector.
-
-References
-----------
-- Lago-Peñas, C. (2009). *The influence of match location, quality of
-  opposition, and match status on possession strategies in professional
-  association football.* Journal of Sports Sciences 27(13), 1463–1467.
-  Establishes that opponent quality conditions team behaviour.
-- Bornn, L., Cervone, D. and Fernández, J. (2018). *Soccer Analytics:
-  Unravelling the complexity of `the beautiful game'.* Significance 15(3),
-  26–29. Motivates context-aware analytics in association football.
+References: Lago-Peñas (2009), Journal of Sports Sciences 27(13), 1463-1467;
+Bornn, Cervone & Fernández (2018), Significance 15(3), 26-29.
 """
 
 from __future__ import annotations
@@ -35,11 +19,9 @@ import numpy as np
 import pandas as pd
 
 
-# ── Style profile columns ────────────────────────────────────────────────────
-# These are the rolling-5 features available in ``All_Data.csv``. The
-# profile is computed by selecting the opponent's side of the fixture
-# (home or away), which is determined by whether the home-team substring
-# matches the home- or away-team column.
+# Style profile columns
+# Rolling-5 features in ``All_Data.csv``, taken from the opponent's side of the
+# fixture (home or away, per the team-substring match against the team columns).
 
 OPPONENT_STYLE_COLUMNS_RAW: List[str] = [
     "Poss_5",        # rolling possession share, %
@@ -158,14 +140,10 @@ def cluster_opponent_styles(
 ) -> Dict[str, int]:
     """Cluster opponent style vectors with $k$-means into $k$ archetypes.
 
-    Returns a dict mapping ``match_id`` to its assigned cluster label
-    (an integer in :math:`\\{0, 1, \\dots, k-1\\}`). Style vectors with
-    missing values are imputed to the column mean before clustering.
-
-    The clustering is descriptive rather than predictive: it provides a
-    compact one-hot encoding (``opp_cluster_0`` … ``opp_cluster_{k-1}``)
-    that the supervised lineup classifier can consume in addition to the
-    raw rolling-5 columns.
+    Returns ``{match_id: cluster label}`` in :math:`\\{0, \\dots, k-1\\}`;
+    missing values are mean-imputed first. Descriptive, not predictive: it
+    yields a one-hot encoding (``opp_cluster_0`` .. ``opp_cluster_{k-1}``) the
+    lineup classifier can use alongside the raw rolling-5 columns.
     """
     try:
         from sklearn.cluster import KMeans
@@ -197,16 +175,11 @@ def build_opponent_profile_table(
     """Return one row per fixture with opponent-side features + cluster.
 
     Columns: ``match_id``, ``match_date``, ``opponent_name``,
-    ``is_home_fixture``, ``opp_poss_5``, ``opp_shots_5``, ``opp_sot_5``,
-    ``opp_corners_5``, ``opp_goals_5``, ``opp_conceded_5``,
-    ``opp_points_5``, ``opp_yellowcards_5``, ``opp_saves_5``, ``opp_elo``,
+    ``is_home_fixture``, the ``opp_*`` rolling-5 features, ``opp_elo``,
     ``opp_elo_diff``, ``opp_hfa``, and one-hot columns
-    ``opp_cluster_0`` … ``opp_cluster_{k-1}``.
-
-    The cluster IDs are assigned by k-means over the rolling-5 columns of
-    all of the team's fixtures, so the same opponent appearing twice
-    (once at each ground) is clustered separately by their *form at that
-    time* rather than by their identity.
+    ``opp_cluster_0`` .. ``opp_cluster_{k-1}``. Cluster IDs come from k-means
+    over the rolling-5 columns, so the same opponent at each ground is
+    clustered by its form at that time, not its identity.
     """
     all_data = load_all_data(csv_path)
     fixtures = extract_team_fixtures(all_data, team_name_substring)
@@ -236,47 +209,33 @@ def build_opponent_profile_table(
     return out
 
 
-# ── Heuristic-composite perturbations (optional plug-in) ──────────────────────
-#
-# When the heuristic composite is used (i.e. the supervised classifier is
-# disabled), the opponent cluster can still drive small perturbations to
-# the per-position composite weights. The perturbation table below is
-# author-set rather than learned, in the spirit of McHale, Scarf & Folker
-# (2012). It encodes football conventions:
-#
-# - Against a high-press / aggressive opponent: reward composed CBs (more
-#   pass_accuracy + def_action_success) and de-emphasise dribbling.
-# - Against a low-block opponent: reward progressive passing and shot
-#   accuracy for AM/W/WF (open-space exploitation).
-# - Against a counter-attacking opponent: reward DM recoveries (kill the
-#   transition).
-# - Against a possession-based opponent: neutral baseline.
-#
-# The cluster names are not learned from the data; they are author
-# annotations of what each k-means centroid tends to represent. Callers
-# that want to use this table should inspect the centroids and re-label
-# the clusters accordingly.
+# Heuristic-composite perturbations (optional plug-in)
+# When the heuristic composite is used instead of the supervised classifier, the
+# opponent cluster nudges the per-position composite weights. The table is
+# author-set, not learned, per McHale, Scarf & Folker (2012). Cluster names are
+# author annotations of what each centroid tends to represent, not learned
+# labels; callers should inspect the centroids and re-label as needed.
 
 OPPONENT_CLUSTER_PERTURBATIONS: Dict[int, Dict[str, Dict[str, float]]] = {
-    # Cluster 0 — "high-press attackers" (high shots + high possession + few cards)
+    # Cluster 0: "high-press attackers" (high shots + high possession + few cards)
     0: {
         "CB": {"pass_accuracy": +0.05, "def_action_success": +0.03, "dribble_success": -0.02},
         "DM": {"pass_accuracy": +0.03, "def_action_success": +0.03},
         "FB": {"pass_accuracy": +0.03, "duel_win_rate": -0.02},
     },
-    # Cluster 1 — "low-block defenders" (low possession + low shots + low concession)
+    # Cluster 1: "low-block defenders" (low possession + low shots + low concession)
     1: {
         "AM": {"shot_accuracy": +0.04, "dribble_success": +0.03},
         "W":  {"dribble_success": +0.04, "successfulCrosses": +0.02},
         "WF": {"shot_accuracy": +0.03, "dribble_success": +0.03},
         "ST": {"shot_accuracy": +0.04, "dribble_success": +0.02},
     },
-    # Cluster 2 — "counter-attackers" (low possession + many shots + few goals scored)
+    # Cluster 2: "counter-attackers" (low possession + many shots + few goals scored)
     2: {
         "DM": {"def_action_success": +0.05, "duel_win_rate": +0.03},
         "CB": {"def_action_success": +0.03, "duel_win_rate": +0.03},
         "FB": {"def_action_success": +0.03},
     },
-    # Cluster 3 — "balanced / possession-based" — no perturbation (baseline).
+    # Cluster 3: "balanced / possession-based", no perturbation (baseline).
     3: {},
 }

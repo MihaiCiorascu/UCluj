@@ -35,7 +35,7 @@ When the database is unreachable, the U Cluj team cannot be located, or
 the team has zero rows in ``sr_players`` (typical when the Sportradar
 profile sync has not been run recently), the script writes a stub::
 
-    {"status": "skipped — sportradar table empty or db unavailable",
+    {"status": "skipped, sportradar table empty or db unavailable",
      "reason": "<short message>", "entries": []}
 
 so the downstream cross-check (:mod:`backend.scripts.cross_check_positions_via_sportradar`)
@@ -109,7 +109,7 @@ def _resolve_sync_database_url() -> Tuple[str, str]:
 def _write_skipped(reason: str) -> None:
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     payload = {
-        "status": "skipped — sportradar table empty or db unavailable",
+        "status": "skipped, sportradar table empty or db unavailable",
         "reason": reason,
         "team_name_needle": TEAM_NAME_NEEDLE,
         "fetched_at": _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -200,7 +200,7 @@ def main() -> int:
             "DATABASE_URL and run POST /admin/sync/seasons/{season_id}/profiles "
             "with an active Sportradar API key."
         )
-        return 0  # exit 0 — graceful skip, mirrors fetch_transfermarkt_positions
+        return 0  # exit 0, graceful skip, mirrors fetch_transfermarkt_positions
 
     meta, players = result
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)

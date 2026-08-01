@@ -56,7 +56,7 @@ class MatchDetailSyncService:
         )
 
         logger.info(
-            "Match summary synced: %s — %d team stat blocks",
+            "Match summary synced: %s, %d team stat blocks",
             fixture_id, len(team_stats),
         )
         return detail
@@ -111,7 +111,7 @@ class MatchDetailSyncService:
                 players=players,
             ))
 
-        logger.info("Lineups synced: %s — %d teams", fixture_id, len(lineups))
+        logger.info("Lineups synced: %s, %d teams", fixture_id, len(lineups))
         return lineups
 
     async def sync_match_timeline(self, fixture_id: str) -> list[NormalizedTimelineEvent]:
@@ -170,7 +170,7 @@ class MatchDetailSyncService:
                 detail=detail_txt[:2000],
             ))
 
-        logger.info("Timeline synced: %s — %d events", fixture_id, len(out))
+        logger.info("Timeline synced: %s, %d events", fixture_id, len(out))
         return out
 
     async def sync_full_match_detail(self, fixture_id: str) -> NormalizedMatchDetail | None:

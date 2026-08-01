@@ -19,10 +19,10 @@ The output is consumed by ``train_lineup_classifier.py`` to build the
 binary-classification training table. Output path:
 ``backend/ml/data/lineup_history.json``.
 
-Refer to Iteration J of the project plan for the rationale: the
-supervised lineup classifier is the methodological complement to the
-heuristic composite — it learns directly which combinations of
-availability, position and opponent context the coach actually picks.
+Rationale: the supervised lineup classifier is the methodological
+complement to the heuristic composite, since it learns directly which
+combinations of availability, position and opponent context the coach
+actually picks.
 """
 
 from __future__ import annotations

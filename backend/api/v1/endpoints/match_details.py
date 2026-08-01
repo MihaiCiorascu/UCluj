@@ -26,7 +26,7 @@ router = APIRouter()
 _CACHE_DIR = Path(__file__).parent / "_sr_match_cache"
 _CACHE_TTL = 24 * 3600  # completed matches don't change
 
-# ── Official-position assignment for the actual (Sportradar) lineup ──────────
+# Official-position assignment for the actual (Sportradar) lineup
 # The recommended-XI pitch shows official positions; the post-match pitch should
 # read the same way. Sportradar gives a position string per player (sometimes
 # granular like "left back", sometimes only "defender") plus the team shape, so

@@ -44,8 +44,8 @@ Future<void> bootstrap() async {
   // as soon as the response lands without blocking the splash screen.
   // ignore: discarded_futures
   MetaState.instance.init(api);
-  // Iteration N — load the persisted light/dark preference before
-  // mounting the app so the first frame paints with the right palette.
+  // Load the persisted light/dark preference before mounting the app so
+  // the first frame paints with the right palette.
   final themeMode = await ThemeModeNotifier.load();
   runApp(UmbraRoApp(authState: authState, themeMode: themeMode));
 }

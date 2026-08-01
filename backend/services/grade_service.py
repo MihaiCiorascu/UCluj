@@ -46,7 +46,7 @@ from sportradar.team_registry import normalise, team_by_alias
 
 logger = logging.getLogger(__name__)
 
-# ── Grade calibration ────────────────────────────────────────────────────────
+# Grade calibration
 # The raw composite score from ``compute_performance_score`` is unbounded and
 # strongly position-dependent (a ball-playing centre-midfielder routinely scores
 # an order of magnitude higher than a striker on the same weighting scheme), so
@@ -88,7 +88,7 @@ def _scale_to_grade(raw: float, fine_group: str) -> float:
     return round(grade, 1)
 
 
-# ── Filename / match join ────────────────────────────────────────────────────
+# Filename / match join
 # "{Home} - {Away}, {HomeScore}-{AwayScore}[_{matchId}]_players_stats.json"
 _FILENAME_RE = re.compile(
     r"^(?P<home>.*?) - (?P<away>.*?), (?P<hs>\d+)-(?P<as>\d+)(?:_(?P<mid>\d+))?_players_stats\.json$"
@@ -117,7 +117,7 @@ class GradeService:
         self._file_index: Optional[dict[tuple[str, str, int, int], list[Path]]] = None
         self._name_to_wy: Optional[list[tuple[frozenset[str], frozenset[str], int]]] = None
 
-    # ── Index builders (cached) ──────────────────────────────────────────────
+    # Index builders (cached)
     def _ensure_file_index(self) -> None:
         if self._file_index is not None:
             return
@@ -161,7 +161,7 @@ class GradeService:
             logger.warning("GradeService: could not read %s", self._mapping_path, exc_info=True)
         self._name_to_wy = rows
 
-    # ── Public API ───────────────────────────────────────────────────────────
+    # Public API
     def grades_for_match(
         self,
         home_team: str,
@@ -243,7 +243,7 @@ class GradeService:
                 return grades_by_wy[filtered[0]]
         return None
 
-    # ── Internals ────────────────────────────────────────────────────────────
+    # Internals
     @staticmethod
     def _select_file(candidates: list[Path], wy_match_id: Optional[int]) -> Optional[Path]:
         if wy_match_id is not None:

@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../theme/glossy_widgets.dart';
 
-/// Iteration N — ``AppButton`` is the project-wide CTA. Both ``primary``
-/// and ``secondary`` variants now render with the glossy gradient surface
-/// from ``GlossyButton``. The public API (named constructors, ``label``,
-/// ``onPressed``) is preserved so consumers are not touched.
+/// Project-wide CTA. Both ``primary`` and ``secondary`` variants render
+/// with the glossy gradient surface from ``GlossyButton``.
 class AppButton extends StatelessWidget {
   const AppButton.primary({
     required this.label,
@@ -26,7 +24,7 @@ class AppButton extends StatelessWidget {
   final bool isPrimary;
 
   /// Optional per-team accent — biases the top sheen of primary buttons
-  /// toward the user's club colour. Iteration N.8.
+  /// toward the user's club colour.
   final Color? accentBias;
 
   @override

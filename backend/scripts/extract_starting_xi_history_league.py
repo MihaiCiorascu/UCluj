@@ -1,5 +1,5 @@
 """
-League-wide starting-XI history extractor (Iteration L.3a).
+League-wide starting-XI history extractor.
 
 Generalises ``extract_starting_xi_history.py`` (which was U Cluj-only)
 to every team in :data:`backend.sportradar.team_registry.SUPERLIGA_TEAMS`.
@@ -9,7 +9,7 @@ started the fixture for that team (``matchesInStart > 0``) and emits a
 combined JSON file with all sixteen teams' starting-XI histories.
 
 The combined file is the canonical training input for the league-wide
-supervised lineup classifier (Iteration L.3b + L.4).
+supervised lineup classifier.
 
 Output: ``backend/ml/data/lineup_history_league.json`` with structure::
 

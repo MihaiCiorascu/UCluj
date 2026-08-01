@@ -3,23 +3,22 @@ Single source of truth for the sixteen Romanian Superliga 2024-25 clubs.
 
 For each team the registry stores:
 
-* ``short``         — the display label used in the Flutter UI and the
+* ``short``, the display label used in the Flutter UI and the
                       retrospective-validation tables.
-* ``wy_substr``     — the substring used to identify the team's Wyscout
+* ``wy_substr``, the substring used to identify the team's Wyscout
                       match files in ``backend/ml/data/drive_cache/``.
                       Match files follow the ``"{home} - {away}, {score}_players_stats.json"``
                       naming convention, so a substring search against the
                       filename is sufficient.
-* ``sr_id``         — the team's Sportradar competitor ID, as populated
+* ``sr_id``, the team's Sportradar competitor ID, as populated
                       by ``backend/scripts/sync_sportradar_squad.py`` into
                       the ``sr_teams`` table.
-* ``aliases``       — optional alternative names sometimes used by the
+* ``aliases``, optional alternative names sometimes used by the
                       same team (e.g. ``"FCSB"`` vs ``"FCS Bucureşti"``).
-* ``country``       — kept for completeness; always ``"Romania"`` in this
-                      iteration.
+* ``country``, kept for completeness; always ``"Romania"`` here.
 
-The registry is the foundation of Iteration L's Superliga-wide
-generalisation. Every script that previously hardcoded ``"Universitatea
+The registry is the foundation of the Superliga-wide generalisation.
+Every script that previously hardcoded ``"Universitatea
 Cluj"`` / ``11571`` / ``sr:competitor:7734`` now iterates over
 :data:`SUPERLIGA_TEAMS` and uses :func:`team_by_short`,
 :func:`team_by_wy_substr`, or :func:`team_by_sr_id` to resolve a team
@@ -86,10 +85,10 @@ class TeamRef:
 # Sixteen Romanian Superliga 2024-25 clubs.
 #
 # The ``sr_id`` values come from the production ``sr_teams`` table after
-# Iteration K's sync (see ``backend/scripts/sync_sportradar_squad.py``).
+# the Sportradar sync (see ``backend/scripts/sync_sportradar_squad.py``).
 # The ``wy_substr`` values are verified against the drive_cache filenames
-# in Iteration L (every team has at least 30 match files under its
-# substring; the registry boots clean).
+# (every team has at least 30 match files under its substring; the
+# registry boots clean).
 SUPERLIGA_TEAMS: List[TeamRef] = [
     TeamRef(short="U Cluj",                wy_substr="Universitatea Cluj",
             sr_id="sr:competitor:7734",   aliases=("FC Universitatea Cluj", "Uni Cluj")),
@@ -126,7 +125,7 @@ SUPERLIGA_TEAMS: List[TeamRef] = [
 ]
 
 
-# ── Lookup helpers ───────────────────────────────────────────────────────────
+# Lookup helpers
 
 def team_by_short(short: str) -> Optional[TeamRef]:
     """Return the registry entry matching ``short`` (diacritic-insensitive)."""

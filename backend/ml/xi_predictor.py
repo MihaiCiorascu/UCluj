@@ -1,31 +1,10 @@
 """
 Starting-XI Predictor for UmbraRo.
 
-The predictor scores every available player by a position-aware composite of
-per-90 KPIs that has been (i) z-scored within the player's positional group,
-(ii) shrunk toward the position mean for low-sample players using an
-empirical-Bayes update, and (iii) exponentially decayed by recency when the
-recent-form input is available. The eleven highest-scoring players are then
-selected greedily under a fixed-formation slot constraint.
-
-The methodological choices are deliberate adaptations of published work:
-
-* Pappalardo et al. (2019), *PlayeRank: Data-driven performance evaluation and
-  player ranking in soccer*, ACM TIST 10(5):59, motivates position-relative
-  evaluation and per-90 KPI normalisation.
-* McHale, Scarf & Folker (2012), *On the development of a soccer player
-  performance rating system for the English Premier League*, Interfaces
-  42(4):339--351, justifies the weighted-KPI composite-score paradigm.
-* Brown (2008), *In-season prediction of batting averages: A field test of
-  empirical Bayes and Bayes methodologies*, Annals of Applied Statistics
-  2(1):113--152, is the canonical reference for the empirical-Bayes shrinkage
-  used here for small-sample players.
-* Decroos et al. (2019), *Actions Speak Louder Than Goals: Valuing Player
-  Actions in Soccer*, KDD 2019, is the natural action-level alternative the
-  current aggregated approach can be extended to in future work.
-* Constantinou (2019), *Dolores: a model that predicts football match outcomes
-  from all over the world*, Machine Learning 108:49--75, frames the broader
-  probabilistic-soccer-prediction setting.
+Scores every available player by a position-aware composite of per-90 KPIs,
+z-scored within the player's positional group and shrunk toward the position
+mean for low-sample players via an empirical-Bayes update. The eleven players
+are then assigned to formation slots under a one-to-one slot constraint.
 """
 
 from __future__ import annotations
@@ -48,10 +27,9 @@ except Exception:  # pragma: no cover - scipy is an optional dependency
 MAX_BENCH = 12
 
 
-# ── Formation library ─────────────────────────────────────────────────────────
-# Each entry maps a positional group to the number of slots it must fill. The
-# formations here mirror the Flutter ``kSupportedFormations`` list so every
-# option the coach can pick has a backend slot layout.
+# Formation library
+# Maps each positional group to its slot count. Mirrors the Flutter
+# ``kSupportedFormations`` list so every pickable option has a backend layout.
 FORMATIONS: Dict[str, Dict[str, int]] = {
     "4-4-2":   {"GK": 1, "DEF": 4, "MID": 4, "FWD": 2},
     "4-3-3":   {"GK": 1, "DEF": 4, "MID": 3, "FWD": 3},
@@ -73,13 +51,10 @@ FORMATIONS: Dict[str, Dict[str, int]] = {
     "5-4-1":   {"GK": 1, "DEF": 5, "MID": 4, "FWD": 1},
 }
 
-# Official-position slot templates. Each formation maps to an ordered list of
-# eleven (official_label, coarse_group) tuples. The order IS the slot_index:
-# the goalkeeper is index 0, then the lines run back to front (defence, then
-# midfield, then attack), and within each line the slots run left to right (in
-# the same left-to-right order the Flutter pitch template paints them). This
-# ordering is the single source of truth that lib/core/constants/
-# formation_slots.dart mirrors on the frontend; keep the two in sync.
+# Official-position slot templates: ordered (official_label, coarse_group)
+# tuples per formation. The order is the slot_index: GK at 0, then lines run
+# back to front (defence, midfield, attack), left to right within each line.
+# lib/core/constants/formation_slots.dart mirrors this order; keep the two in sync.
 FORMATION_SLOTS: Dict[str, List[tuple[str, str]]] = {
     "4-4-2": [
         ("GK", "GK"),
@@ -201,12 +176,9 @@ FORMATION_SLOTS: Dict[str, List[tuple[str, str]]] = {
     ],
 }
 
-# Curated set of formations actually offered to (and evaluated for) the coach.
-# The full :data:`FORMATION_SLOTS` library above is intentionally kept whole so
-# that concluded matches can still render their real Sportradar shapes (a shape
-# the opponent actually lined up in may be one of the templates outside this
-# curated set). Only these are presented as pickable options and only these are
-# searched by the auto-best-formation routine.
+# Formations offered to the coach and searched by the auto-best routine. The
+# full :data:`FORMATION_SLOTS` library is kept whole so concluded matches can
+# still render their real Sportradar shapes, which may fall outside this set.
 CURATED_FORMATIONS: List[str] = [
     "4-3-3",
     "4-2-3-1",
@@ -225,12 +197,10 @@ CURATED_FORMATIONS: List[str] = [
     "3-4-1-2",
 ]
 
-# Which fine-position groups (the ten-group Wyscout taxonomy: GK, CB, FB, WB,
-# DM, CM, AM, W, WF, ST) may legitimately fill a slot family. A slot family is
-# the official label stripped of its left/right/centre prefix (see
-# ``_slot_family``). The first group in each set is the natural fit; the rest
-# are acceptable adjacent roles so the assignment never fails for lack of a
-# perfect specialist.
+# Which fine-position groups (ten-group Wyscout taxonomy: GK, CB, FB, WB, DM,
+# CM, AM, W, WF, ST) may fill a slot family (the official label stripped of its
+# left/right/centre prefix, see ``_slot_family``). First group is the natural
+# fit; the rest are adjacent roles so assignment never fails for lack of a specialist.
 SLOT_ADMISSIBLE_FINE: Dict[str, set] = {
     "GK": {"GK"},
     "CB": {"CB", "FB"},
@@ -243,20 +213,15 @@ SLOT_ADMISSIBLE_FINE: Dict[str, set] = {
     "W":  {"W", "WF", "AM"},
     "WF": {"WF", "ST", "W"},
     "ST": {"ST", "WF", "W"},
-    # Second striker / withdrawn forward (SS, the "1-1" front pair's deeper
-    # man, or CF behind a target ST). A true forward, so the natural fit is a
-    # striker, but it is just as often a wide-forward or an advanced playmaker
-    # dropping in, so the AM and WF families are admitted alongside ST.
+    # Second striker / withdrawn forward: a forward, so ST is the natural fit,
+    # but often a wide-forward or advanced playmaker dropping in, hence AM and WF too.
     "SS": {"ST", "WF", "AM", "W"},
 }
 
 
 def _validate_formation_slots() -> None:
-    """Fail fast at import time if a slot template is internally inconsistent.
-
-    Each formation must have exactly eleven slots, a goalkeeper at index 0, and
-    a coarse-group breakdown that matches the count map in ``FORMATIONS``.
-    """
+    """Fail fast at import if a slot template is inconsistent: exactly eleven
+    slots, GK at index 0, coarse counts matching ``FORMATIONS``."""
     from collections import Counter
 
     for name, specs in FORMATION_SLOTS.items():
@@ -275,41 +240,27 @@ def _validate_formation_slots() -> None:
 
 _validate_formation_slots()
 
-# Position-specific composite-score weights. Each weight applies to a
-# z-scored, shrinkage-corrected feature; the linear combination is passed
-# through a tanh-based squash to remain in [0.25, 0.75] for the UI.
-#
-# Two parallel tables are maintained: COARSE_POSITION_WEIGHTS keeps the
-# four-group GK / DEF / MID / FWD path used by callers that have not yet
-# been updated, and FINE_POSITION_WEIGHTS covers the ten Wyscout-derived
-# fine groups (CB, FB, WB, DM, CM, AM, W, WF, ST, GK). The fine table is
-# used preferentially whenever the feature row carries a
-# ``position_group_fine`` column populated by
-# :func:`ml.feature_engineering.derive_primary_fine_position`.
+# Position-specific composite-score weights. Each weight applies to a z-scored,
+# shrinkage-corrected feature; the linear combination is tanh-squashed to stay
+# in [0.25, 0.75] for the UI. COARSE_POSITION_WEIGHTS keeps the four-group
+# GK / DEF / MID / FWD path; FINE_POSITION_WEIGHTS covers the ten Wyscout-derived
+# fine groups (CB, FB, WB, DM, CM, AM, W, WF, ST, GK) and is preferred whenever a
+# ``position_group_fine`` column is present (from
+# :func:`ml.feature_engineering.derive_primary_fine_position`).
 
-# Position-aware composite-score weights.
-#
-# Iteration J introduces an explicit ``availability_score`` weight: an
-# aggregate of (i) the player's share of minutes in the team's last five
-# fixtures, (ii) whether they started the most recent fixture, and (iii) a
-# long-gap penalty when more than three team fixtures have passed since
-# their last appearance (see
-# :func:`ml.feature_engineering.compute_availability_features`). The
-# availability column restores the participation signal that pure per-90
-# KPI normalisation throws away — top-by-minutes baselines win in part
-# because they are pure availability signals, and the per-position
-# composite was previously blind to this dimension.
+# The ``availability_score`` weight aggregates: (i) minutes share over the last
+# five fixtures, (ii) whether the player started the most recent fixture, and
+# (iii) a long-gap penalty (see
+# :func:`ml.feature_engineering.compute_availability_features`). It restores the
+# participation signal that per-90 KPI normalisation discards.
 #
 # Per-position availability weights:
-#   GK ≈ 0.10 — teams rotate goalkeepers infrequently, so a per-90 KPI
-#       comparison remains highly informative on its own.
-#   Outfield ≈ 0.20 — coaches rotate outfield slots based on fitness and
-#       tactical match-ups, so availability is a strong indicator.
-#   Strikers ≈ 0.25 — additionally rotated for opponent-specific reasons.
+#   GK ~ 0.10: goalkeepers rotate rarely, so per-90 KPIs stay informative alone.
+#   Outfield ~ 0.20: rotated on fitness and match-ups, so availability matters.
+#   Strikers ~ 0.25: additionally rotated for opponent-specific reasons.
 #
-# The remaining weights have been renormalised so each row still sums to
-# 1.0 for interpretability, even though the final composite is tanh-
-# squashed and would behave identically under a constant rescale.
+# Remaining weights are renormalised so each row sums to 1.0 for interpretability;
+# the tanh squash would behave identically under a constant rescale.
 
 COARSE_POSITION_WEIGHTS: Dict[str, Dict[str, float]] = {
     "GK": {
@@ -423,22 +374,18 @@ class StartingXIPredictor:
     Parameters
     ----------
     model_type : {"auto", "heuristic", "model"}, default "auto"
-        ``auto`` and ``heuristic`` both fall back to the position-aware
-        composite-score path. ``model`` is reserved for a future supervised
-        extension (e.g. a CatBoost regressor trained on historical lineup
-        labels) and currently behaves identically to ``heuristic`` until that
-        extension is added.
+        ``auto`` and ``heuristic`` use the position-aware composite-score path.
+        ``model`` is reserved for a future supervised extension and currently
+        behaves identically to ``heuristic``.
     shrinkage_pseudo_matches : float, default 3.0
         Pseudo-count ``k`` in the empirical-Bayes update
         ``(k * position_mean + n * raw) / (k + n)``. Following Brown (2008),
-        values around the per-player observation count provide moderate
-        shrinkage; ``k = 3`` is appropriate for a five-season squad sample.
+        ``k = 3`` gives moderate shrinkage for a five-season squad sample.
     decay_half_life_days : float, default 30.0
         Half-life of the exponential time decay applied when ``recent_form``
-        inputs include per-match timestamps. Larger values trust older matches
-        more.
+        inputs include per-match timestamps. Larger values trust older matches more.
     feature_cols : list of str, optional
-        Subset of feature columns used by the composite score. Defaults to
+        Feature columns used by the composite score. Defaults to
         ``DEFAULT_FEATURE_COLS``.
     """
 
@@ -447,21 +394,19 @@ class StartingXIPredictor:
     decay_half_life_days: float = 30.0
     feature_cols: List[str] = field(default_factory=lambda: list(DEFAULT_FEATURE_COLS))
 
-    # Fitted state — populated by .fit() and persisted by joblib.dump()
+    # Fitted state: populated by .fit() and persisted by joblib.dump()
     position_means: Dict[str, Dict[str, float]] = field(default_factory=dict)
     position_stds: Dict[str, Dict[str, float]] = field(default_factory=dict)
     is_fitted: bool = False
 
-    # Optional supervised lineup-classifier bundle (loaded lazily). When
-    # populated, the ``method="supervised"`` branch of
-    # :meth:`predict_xi` will use it to score players via the
-    # logistic-regression P(started|features) probability rather than the
-    # heuristic composite. Trained by
-    # ``backend/scripts/train_lineup_classifier.py`` (Iteration J.4) and
+    # Optional supervised lineup-classifier bundle (loaded lazily). When set, the
+    # ``method="supervised"`` branch of :meth:`predict_xi` scores players via the
+    # logistic-regression P(started|features) probability instead of the heuristic
+    # composite. Trained by ``backend/scripts/train_lineup_classifier.py`` and
     # persisted to ``backend/ml/xi_lineup_model.joblib``.
     supervised_bundle: Optional[Dict[str, Any]] = None
 
-    # ── Fit ───────────────────────────────────────────────────────────────────
+    # Fit
 
     def fit(
         self,
@@ -471,23 +416,20 @@ class StartingXIPredictor:
     ) -> "StartingXIPredictor":
         """Compute per-position means and standard deviations for z-scoring.
 
-        Two normalisation tables are populated. If the input ``df`` carries
-        a ``position_group_fine`` column (the new Wyscout-derived
-        ten-group taxonomy), per-fine-group means / stds are computed and
-        used preferentially at prediction time. The four-group
-        (``role_group``) table is also computed as a fallback so that rows
-        whose fine label is missing still score correctly.
+        Populates two tables. When ``df`` carries a ``position_group_fine``
+        column, per-fine-group means/stds are computed and preferred at
+        prediction time; the four-group ``role_group`` table is always computed
+        as a fallback for rows whose fine label is missing.
 
-        ``labels`` is accepted for API compatibility with a future
-        supervised path but is currently unused — the heuristic path is
-        unsupervised.
+        ``labels`` is accepted for API compatibility with a future supervised
+        path but is currently unused.
         """
         cols_present = [c for c in self.feature_cols if c in df.columns]
         if not cols_present:
             self.is_fitted = True
             return self
 
-        # Coarse (four-group) normalisation — always populated.
+        # Coarse (four-group) normalisation: always populated.
         for group in ("GK", "DEF", "MID", "FWD"):
             mask = df["role_group"].astype(str).str.upper() == group
             if not mask.any():
@@ -498,9 +440,8 @@ class StartingXIPredictor:
             self.position_means[group] = means.to_dict()
             self.position_stds[group] = stds.to_dict()
 
-        # Fine (ten-group) normalisation — populated only when the column
-        # is present. Groups with fewer than three observations are
-        # skipped because their standard deviation would be unstable.
+        # Fine (ten-group) normalisation: only when the column is present.
+        # Groups with fewer than three observations are skipped (unstable std).
         if "position_group_fine" in df.columns:
             for fine in ("GK", "CB", "FB", "WB", "DM", "CM", "AM", "W", "WF", "ST"):
                 mask = df["position_group_fine"].astype(str).str.upper() == fine
@@ -509,8 +450,7 @@ class StartingXIPredictor:
                 subset = df.loc[mask, cols_present].astype(float)
                 means = subset.mean(numeric_only=True)
                 stds = subset.std(numeric_only=True, ddof=0).replace(0, 1.0)
-                # Store under a "FINE:" prefix so the coarse and fine
-                # tables do not collide on the shared "GK" key.
+                # "FINE:" prefix so coarse and fine tables do not collide on "GK".
                 self.position_means[f"FINE:{fine}"] = means.to_dict()
                 self.position_stds[f"FINE:{fine}"] = stds.to_dict()
 
@@ -523,7 +463,7 @@ class StartingXIPredictor:
             )
         return self
 
-    # ── Internal scoring primitives ───────────────────────────────────────────
+    # Internal scoring primitives
 
     def _shrink(self, raw: float, n_matches: float, position_mean: float) -> float:
         """Empirical-Bayes shrinkage toward the position mean (Brown, 2008)."""
@@ -540,10 +480,9 @@ class StartingXIPredictor:
     def _composite_score(self, row: pd.Series) -> float:
         """Position-aware composite score in the [0.25, 0.75] band.
 
-        If the row carries a ``position_group_fine`` column and a matching
-        fine-group normalisation has been fitted, the fine-grained weight
-        table is used; otherwise the four-group coarse path is used as a
-        fallback.
+        Uses the fine-grained weight table when the row has a
+        ``position_group_fine`` column and a matching fine-group normalisation
+        was fitted; otherwise falls back to the four-group coarse path.
         """
         fine = str(row.get("position_group_fine", "") or "").upper()
         coarse = str(row.get("role_group", "MID")).upper() or "MID"
@@ -570,10 +509,10 @@ class StartingXIPredictor:
             z = self._z_score(shrunk, mean, std)
             z_sum += w * z
 
-        # Squash to a bounded range so the UI's 0–100 mapping is stable.
+        # Squash to a bounded range so the UI's 0 to 100 mapping is stable.
         return 0.5 + 0.25 * math.tanh(z_sum)
 
-    # ── Public selection API ──────────────────────────────────────────────────
+    # Public selection API
 
     def predict_xi(
         self,
@@ -616,10 +555,9 @@ class StartingXIPredictor:
                   "baseline_recent"}
             ``auto`` / ``composite`` run the heuristic composite-score
             path described in :meth:`_composite_score`. ``supervised``
-            uses the trained logistic-regression lineup classifier
-            (Iteration J.4) — this requires :attr:`supervised_bundle` to
-            be populated (typically via
-            ``joblib.load("xi_lineup_model.joblib")``). The two
+            uses the trained logistic-regression lineup classifier, which
+            requires :attr:`supervised_bundle` to be populated (typically
+            via ``joblib.load("xi_lineup_model.joblib")``). The two
             ``baseline_*`` methods are reference baselines that an
             examiner can compare against.
 
@@ -637,12 +575,11 @@ class StartingXIPredictor:
             raise ValueError("predict_xi expects a 'playerId' column.")
 
         method = method.lower()
-        # Iteration J.4: when ``method="auto"`` and a supervised bundle is
-        # loaded, prefer it over the heuristic composite — rolling-origin
-        # validation showed the supervised XI to reach Jaccard ~0.575
-        # versus 0.425 for the heuristic, and ~0.482 for the top-by-minutes
-        # baseline. ``method="composite"`` and ``method="heuristic"`` force
-        # the heuristic path for ablation purposes.
+        # When ``method="auto"`` and a supervised bundle is loaded, prefer it
+        # over the heuristic composite: rolling-origin validation showed the
+        # supervised XI reaching Jaccard ~0.575 versus 0.425 for the heuristic
+        # and ~0.482 for the top-by-minutes baseline. ``method="composite"``
+        # and ``method="heuristic"`` force the heuristic path for ablation.
         if method == "auto" and self.supervised_bundle is not None:
             method = "supervised"
         elif method in ("composite", "heuristic"):
@@ -654,12 +591,10 @@ class StartingXIPredictor:
             played = pool.get("matches_played", pd.Series(0, index=pool.index)).fillna(0).clip(upper=3)
             pool["predicted_score"] = recent * played
         elif method == "supervised":
-            # Use the optional supervised lineup classifier bundle. The
-            # classifier consumes a wider feature set than the heuristic
-            # composite (player aggregates + availability + opponent
-            # profile + position one-hot) and returns the probability that
-            # each candidate started the next U Cluj fixture. Fitted by
-            # ``backend/scripts/train_lineup_classifier.py`` (Iteration J.4).
+            # Optional supervised lineup classifier: consumes a wider feature set
+            # (player aggregates, availability, opponent profile, position one-hot)
+            # and returns P(started next fixture). Fitted by
+            # ``backend/scripts/train_lineup_classifier.py``.
             if self.supervised_bundle is None:
                 raise RuntimeError(
                     "method='supervised' requires the supervised bundle to be "
@@ -680,10 +615,10 @@ class StartingXIPredictor:
                         pool["role_group"].astype(str).str.upper() == "MID", "predicted_score"
                     ] *= adj.get("mid_weight", 1.0)
 
-        # Resolve the requested formation. ``"auto"`` searches the curated set
-        # for the shape with the highest total assignment objective on the
-        # already-scored pool (one tiny Hungarian solve per curated shape, the
-        # predicted scores are NOT recomputed). An explicit formation is used as given.
+        # Resolve the formation. ``"auto"`` searches the curated set for the
+        # highest total assignment objective on the already-scored pool (one
+        # Hungarian solve per shape, scores not recomputed). An explicit
+        # formation is used as given.
         formation_scores: Dict[str, float] = {}
         if str(formation).lower() == "auto":
             resolved_formation, xi_df, total_score, formation_scores = (
@@ -712,7 +647,7 @@ class StartingXIPredictor:
             "all_scored": pool.sort_values("predicted_score", ascending=False),
         }
 
-    # ── Auto-best-formation search (Part A) ───────────────────────────────────
+    # Auto-best-formation search
     def _best_formation(
         self,
         pool: pd.DataFrame,
@@ -720,17 +655,13 @@ class StartingXIPredictor:
     ) -> tuple[str, pd.DataFrame, float, Dict[str, float]]:
         """Pick the curated formation that maximises the assignment objective.
 
-        The pool is assumed to already carry ``predicted_score`` (scored once by
-        the caller). Each :data:`CURATED_FORMATIONS` shape is solved with
-        :meth:`_assign_xi` and the one with the highest ``total_score`` wins.
-        Predicted scores are never recomputed: this is just one tiny solve per
-        curated shape over the same scored pool.
+        The pool already carries ``predicted_score``. Each
+        :data:`CURATED_FORMATIONS` shape is solved with :meth:`_assign_xi` and
+        the highest ``total_score`` wins; scores are never recomputed.
 
         With ``locked`` set, a formation is skipped when any locked
-        ``slot_index`` falls outside that formation's eleven slots (the lock
-        cannot be honoured there). If every formation is skipped (a lock points
-        past every shape) the search falls back to ignoring the locks so an XI is
-        still produced.
+        ``slot_index`` falls outside its eleven slots. If every formation is
+        skipped, the search retries with the locks dropped so an XI still results.
 
         Returns ``(formation, xi_df, total_score, formation_scores)`` where
         ``formation_scores`` maps every evaluated formation to its objective for
@@ -747,7 +678,7 @@ class StartingXIPredictor:
             n_slots = len(self._formation_slot_specs(name))
             use_locked = locked
             if locked and max_locked_slot >= n_slots:
-                # A locked slot index does not exist in this shape — skip it.
+                # A locked slot index does not exist in this shape: skip it.
                 continue
             xi_df, total = self._assign_xi(pool, name, locked=use_locked)
             scores[name] = float(total)
@@ -757,9 +688,8 @@ class StartingXIPredictor:
                 best_xi = xi_df
 
         if best_name is None:
-            # Every curated shape was skipped because of an out-of-range lock.
-            # Retry the full search with the locks dropped so an XI still comes
-            # back rather than an empty assignment.
+            # Every shape was skipped by an out-of-range lock; retry without
+            # locks so an XI still comes back.
             for name in CURATED_FORMATIONS:
                 xi_df, total = self._assign_xi(pool, name, locked=None)
                 scores[name] = float(total)
@@ -779,19 +709,17 @@ class StartingXIPredictor:
     def predict_optimal_xi(self, *args, **kwargs) -> Dict[str, Any]:
         return self.predict_xi(*args, **kwargs)
 
-    # ── Supervised scoring (Iteration J.4) ───────────────────────────────────
+    # Supervised scoring
     def _score_supervised(self, pool: pd.DataFrame, opponent_short: Optional[str] = None) -> pd.Series:
         """Return the per-player supervised-classifier probability.
 
-        The supervised bundle (a dict of ``{model, scaler, feature_cols,
-        fine_groups, ...}`` produced by ``train_lineup_classifier_league.py``)
-        is consumed *as if every row were a candidate for the team's most recent
-        fixture*. Dynamic availability features are emitted upstream by
-        :func:`ml.feature_engineering.build_player_feature_vector`; the position
-        one-hot and the opponent-archetype x position interactions are derived
-        here from ``position_group_fine`` and ``opponent_short``. Any feature
-        column still missing is filled with zeros so the classifier can always
-        produce a probability.
+        The bundle (``{model, scaler, feature_cols, fine_groups, ...}`` from
+        ``train_lineup_classifier_league.py``) treats every row as a candidate
+        for the team's most recent fixture. Availability features come upstream
+        from :func:`ml.feature_engineering.build_player_feature_vector`; the
+        position one-hot and opponent-archetype x position interactions are
+        derived here from ``position_group_fine`` and ``opponent_short``. Missing
+        feature columns are filled with zeros.
         """
         if self.supervised_bundle is None:
             return pd.Series(0.0, index=pool.index)
@@ -808,10 +736,9 @@ class StartingXIPredictor:
             col = f"pos_{g}"
             if col not in pool.columns:
                 pool[col] = (fine_upper == g).astype(float)
-        # Opponent-archetype x position interaction (opponent-aware selection).
-        # This is the one opponent signal that varies across candidates within a
-        # fixture, so it is what actually shifts the picked XI by opponent. All
-        # zero when the opponent archetype is unknown -> graceful no-op.
+        # Opponent-archetype x position interaction: the one opponent signal that
+        # varies across candidates within a fixture, so it shifts the picked XI by
+        # opponent. All zero when the archetype is unknown (graceful no-op).
         inter_cols: List[str] = list(bundle.get("opp_interaction_cols") or [])
         if inter_cols:
             for col in inter_cols:
@@ -834,24 +761,14 @@ class StartingXIPredictor:
         proba = model.predict_proba(X_scaled)[:, 1]
         return pd.Series(proba, index=pool.index)
 
-    # ── Slot assignment (Iteration J.3 — Hungarian algorithm) ────────────────
+    # Slot assignment (Hungarian algorithm)
     #
-    # The previous greedy per-position fill ("sort by score within each role
-    # group, then take the top-N") is sensitive to the order in which roles
-    # are visited and can choose a globally sub-optimal eleven: if a player's
-    # second-best-position composite is much higher than the best alternative
-    # at that slot, the greedy fill might still pick a weaker player at the
-    # first slot considered. The Hungarian algorithm (Kuhn 1955) returns the
-    # globally optimal one-to-one assignment of players to slots in
-    # polynomial time, given a (player × slot) cost matrix.
-    #
-    # Here we build the cost matrix from negative composite scores (so the
-    # Hungarian minimisation is equivalent to score maximisation), with
-    # ``+inf`` placeholders for ineligible (player, slot) pairs (a player
-    # whose ``role_group`` does not match the slot's role). When
-    # :mod:`scipy.optimize` is unavailable, the implementation falls back to
-    # the previous greedy method so the predictor remains usable in
-    # minimal-dependency environments.
+    # A greedy per-position fill is order-sensitive and can pick a globally
+    # sub-optimal eleven. The Hungarian algorithm (Kuhn 1955) returns the
+    # globally optimal one-to-one player-to-slot assignment in polynomial time,
+    # given a (player x slot) cost matrix. The cost matrix uses negative composite
+    # scores (minimisation equals score maximisation), with finite penalties for
+    # ineligible pairs. Falls back to greedy when :mod:`scipy.optimize` is absent.
 
     def _assign_xi(
         self,
@@ -862,15 +779,11 @@ class StartingXIPredictor:
         """Assign eleven players to the formation's official position slots.
 
         The cost matrix has one row per candidate and one column per ordered
-        official slot (see :data:`FORMATION_SLOTS`). A player whose fine
-        position group is a natural fit for the slot (per
-        :data:`SLOT_ADMISSIBLE_FINE`) gets a cost of minus their predicted
-        score; a player whose fine group is not admissible but whose coarse
-        ``role_group`` matches the slot's coarse group gets the same cost plus
-        a small soft penalty, so a coarse match is allowed but dispreferred;
-        anything else is forbidden. The Hungarian algorithm then returns the
-        globally optimal one-to-one assignment, which maximises the summed
-        score under the official-position constraint.
+        official slot (see :data:`FORMATION_SLOTS`). A fine-position natural fit
+        (per :data:`SLOT_ADMISSIBLE_FINE`) costs minus the predicted score; a
+        coarse-only ``role_group`` match adds a soft penalty; anything else is
+        forbidden. The Hungarian solve then maximises the summed score under the
+        official-position constraint.
 
         Parameters
         ----------
@@ -880,31 +793,22 @@ class StartingXIPredictor:
             A :data:`FORMATION_SLOTS` key (or a parseable dash string).
         locked : dict[int, int], optional
             Mapping of ``slot_index -> playerId``. Each valid entry pins that
-            player to that slot before the Hungarian solve: the player and the
-            slot are removed from the open matrix, the remainder is solved
-            optimally, and the two are merged so locked players keep their slot
-            while everyone else re-optimises around them. Invalid locks are
-            ignored: a ``playerId`` not present in ``pool``, a ``slot_index`` out
-            of range for this formation, and duplicate slots (each slot may be
-            pinned once; a player pinned to two slots keeps only the first).
+            player to that slot: the player and slot are removed from the matrix,
+            the remainder is solved optimally, and the two are merged. Invalid
+            locks are ignored: a ``playerId`` not in ``pool``, an out-of-range
+            ``slot_index``, and duplicate pins (a player pinned twice keeps the first).
 
         Returns
         -------
         tuple[pd.DataFrame, float]
-            ``(xi_df, total_score)``. ``xi_df`` carries ``official_position``
-            and ``slot_index`` (the position on the pitch) plus a coarse
-            ``slot`` for back-compat, and is ordered by ``slot_index``.
-            ``total_score`` is the summed objective of the assignment: the sum
-            over the eleven assigned (player, slot) pairs of the pair's value
-            (the player's ``predicted_score`` minus the NEAR / SOFT / SIDE
-            position-fit penalty applied in the cost matrix). It is the quantity
-            the auto-best-formation routine maximises across formations. When
-            SciPy is unavailable, or the squad cannot fill every slot even under
-            the soft fallback, a greedy fill that guarantees eleven players is
-            used instead; its ``total_score`` is the summed raw predicted score
-            of the eleven (no penalty bookkeeping), which is sufficient because
-            the greedy path is a degenerate fallback, not part of the normal
-            best-formation comparison.
+            ``(xi_df, total_score)``. ``xi_df`` carries ``official_position`` and
+            ``slot_index`` plus a coarse ``slot`` for back-compat, ordered by
+            ``slot_index``. ``total_score`` sums the assigned pairs' values
+            (``predicted_score`` minus the NEAR / SOFT / SIDE penalty) and is the
+            quantity the auto-best-formation routine maximises. When SciPy is
+            absent, or the squad cannot fill every slot, a greedy fill guarantees
+            eleven and its ``total_score`` is the summed raw predicted score (no
+            penalty bookkeeping), sufficient because greedy is a degenerate fallback.
         """
         if pool.empty:
             return pd.DataFrame(), 0.0
@@ -912,12 +816,9 @@ class StartingXIPredictor:
         slot_specs = self._formation_slot_specs(formation)
         n_slots = len(slot_specs)
 
-        # ── Normalise the lock map: keep only valid (slot_index, playerId)
-        #    pairs. A lock is valid when the slot index is in range and the
-        #    player id is present in the pool. Each slot is pinned at most once
-        #    (the dict already guarantees unique slot keys); a player pinned to
-        #    more than one slot keeps the first slot seen and the rest of that
-        #    player's pins are dropped so a player is never double-assigned.
+        # Normalise the lock map: keep only valid (slot_index, playerId) pairs
+        # (slot in range, player present in pool). A player pinned to more than
+        # one slot keeps the first seen, so no player is double-assigned.
         valid_locks: Dict[int, int] = {}
         if locked:
             pool_pids = set(int(p) for p in pool.get("playerId", pd.Series(dtype=int)).tolist())
@@ -948,7 +849,7 @@ class StartingXIPredictor:
         scores = pool_indexed["predicted_score"].astype(float).to_numpy()
         pid_arr = pool_indexed["playerId"].astype(int).to_numpy()
         # Preferred pitch side per player (L/R/C). Defaults to central when the
-        # column is absent, so an older feature frame behaves exactly as before.
+        # column is absent, so an older feature frame behaves as before.
         side_arr = (
             pool_indexed.get("position_side", pd.Series("C", index=pool_indexed.index))
             .astype(str).str.upper().to_numpy()
@@ -958,14 +859,9 @@ class StartingXIPredictor:
         NEAR = 0.30  # penalty for an admissible but off-primary fine match (a CB at full-back).
         SOFT = 0.60  # penalty for a coarse-only match (no admissible fine overlap).
         SIDE = 0.15  # penalty for filling a sided slot with an opposite-flank player.
-        # predicted_score sits in a narrow band, so even NEAR dominates the score
-        # gaps between players. The effect: each player is placed in their PRIMARY
-        # fine position (fine group == slot family) whenever the squad allows, and
-        # only covers out of position when no specialist for that slot is free.
-        # SIDE (< NEAR) then breaks the tie on the correct flank: a right-sided
-        # player prefers the right slot, but playing the correct position on the
-        # wrong foot still beats covering out of position, and a clearly higher
-        # score still wins the slot regardless of side.
+        # predicted_score sits in a narrow band, so these penalties dominate the
+        # score gaps: players take their primary fine position when available,
+        # SIDE (< NEAR) breaks flank ties, and a clearly higher score still wins.
         cost = np.full((n_players, n_slots), BIG, dtype=float)
         for j, (label, coarse) in enumerate(slot_specs):
             family = self._slot_family(label)
@@ -978,7 +874,7 @@ class StartingXIPredictor:
             cost[secondary, j] = -scores[secondary] + NEAR
             cost[coarse_ok, j] = -scores[coarse_ok] + SOFT
             # Correct-flank preference: an opposite-side player in a sided slot
-            # pays SIDE on top of the family penalty. Central slots and central /
+            # pays SIDE on top of the family penalty. Central slots and central,
             # two-footed players are exempt. Applied only to assignable cells.
             slot_sd = self._slot_side(label)
             if slot_sd in ("L", "R"):
@@ -989,15 +885,11 @@ class StartingXIPredictor:
                 )
                 cost[wrong_side, j] += SIDE
 
-        # ── Pre-pin the locked pairs and solve the open remainder. The locked
-        #    players and locked slots are dropped from the Hungarian matrix; the
-        #    remaining players are assigned to the remaining slots optimally,
-        #    then the two sets of pairs are merged. A lock costs whatever its
-        #    cell costs in the full matrix (so an out-of-position locked player
-        #    still contributes the right penalty to ``total_score``), unless the
-        #    cell is forbidden (>= BIG/2), in which case the lock contributes the
-        #    bare ``-predicted_score`` (the coach's explicit choice overrides the
-        #    position-eligibility rule).
+        # Pre-pin the locked pairs and solve the open remainder. A lock costs its
+        # cell in the full matrix (so an out-of-position lock still contributes the
+        # right penalty to ``total_score``), unless the cell is forbidden (>= BIG/2),
+        # where it contributes the bare ``-predicted_score``: the coach's explicit
+        # choice overrides the position-eligibility rule.
         pid_to_row = {int(p): i for i, p in enumerate(pid_arr)}
         locked_rows = {pid_to_row[pid] for pid in valid_locks.values()}
         locked_slots = set(valid_locks.keys())
@@ -1049,12 +941,9 @@ class StartingXIPredictor:
     def _slot_family(label: str) -> str:
         """Map an official slot label to its admissibility family.
 
-        Strips the left / right / centre prefix so RB and LB share the FB
-        family, RCB and LCB share CB, RWB and LWB share WB, and so on. Order of
-        the checks matters: the more specific suffixes are tested first. The
-        second-striker label SS (the withdrawn forward in 4-4-1-1 / 4-3-1-2 /
-        4-1-2-1-2) maps to its own SS family, which admits the ST, WF and AM
-        fine groups; the old-school CF stays in the ST family.
+        Strips the left/right/centre prefix so RB and LB share FB, RCB and LCB
+        share CB, and so on. Check order matters: more specific suffixes first.
+        SS maps to its own family (admits ST, WF, AM); CF stays in ST.
         """
         l = (label or "").upper()
         if l == "GK":
@@ -1087,9 +976,8 @@ class StartingXIPredictor:
     def _slot_side(label: str) -> str:
         """Return the slot's pitch side: ``"L"``, ``"R"`` or ``"C"`` (central).
 
-        Official slot labels carry the side as a leading ``L`` / ``R`` (LB, LCB,
-        LWB, LM, LCM, LDM, LAM, LW, LST and the right mirrors); GK, DM, CM, CB,
-        CAM, CDM and ST are central.
+        Side is the leading ``L``/``R`` of the label (LB, LCB, LWB, and the right
+        mirrors); GK, DM, CM, CB, CAM, CDM and ST are central.
         """
         l = (label or "").upper()
         if l.startswith("L"):
@@ -1102,9 +990,9 @@ class StartingXIPredictor:
     def _formation_slot_specs(formation: str) -> List[tuple[str, str]]:
         """Return the ordered (official_label, coarse_group) slots for a formation.
 
-        Known formations use their :data:`FORMATION_SLOTS` template. An unknown
-        but parseable dash string falls back to generic coarse slots so the
-        assignment still runs (official label equals the coarse group).
+        Known formations use their :data:`FORMATION_SLOTS` template; an unknown
+        but parseable dash string falls back to generic coarse slots (official
+        label equals the coarse group).
         """
         if formation in FORMATION_SLOTS:
             return FORMATION_SLOTS[formation]
@@ -1120,17 +1008,14 @@ class StartingXIPredictor:
         slot_specs: List[tuple[str, str]],
         locked: Optional[Dict[int, int]] = None,
     ) -> tuple[pd.DataFrame, float]:
-        """SciPy-free fallback that still fills official slots and guarantees 11.
+        """SciPy-free fallback that fills official slots and guarantees eleven.
 
-        Each slot is filled, best-score first, by the highest unused player who
-        is fine-admissible, then by any unused player of the slot's coarse
-        group, and finally (a last backfill pass) by the best unused player of
-        any position, so the eleven are always returned in slot order. Any valid
-        locks (``slot_index -> playerId``) are pinned first and excluded from the
-        open fill, so locked players keep their slot. Returns ``(xi_df,
-        total_score)`` where ``total_score`` is the summed raw predicted score of
-        the eleven (the greedy path does not carry the Hungarian penalty
-        bookkeeping).
+        Each slot is filled best-score first: highest unused fine-admissible
+        player, then any unused coarse-group player, then a final backfill by
+        best unused player of any position. Valid locks (``slot_index ->
+        playerId``) are pinned first and excluded from the open fill. Returns
+        ``(xi_df, total_score)`` with ``total_score`` the summed raw predicted
+        score (no Hungarian penalty bookkeeping).
         """
         if pool.empty:
             return pd.DataFrame(), 0.0
@@ -1163,7 +1048,7 @@ class StartingXIPredictor:
                 seen.add(pid)
 
         def _side_ok(i: int, slot_sd: str) -> bool:
-            # A central slot, or a central / two-footed player, fits either flank.
+            # A central slot, or a central, two-footed player, fits either flank.
             if slot_sd == "C":
                 return True
             s = side[i]
@@ -1224,7 +1109,7 @@ class StartingXIPredictor:
         total_score = float(scores.iloc[rows].sum())
         return xi.reset_index(drop=True), total_score
 
-    # ── Helpers ──────────────────────────────────────────────────────────────
+    # Helpers
 
     @staticmethod
     def _resolve_formation(formation: str) -> Dict[str, int]:
@@ -1248,7 +1133,7 @@ class StartingXIPredictor:
             "mid_weight": 1.0 + opp_def / 1000.0,
         }
 
-    # ── Feature importance + validation ───────────────────────────────────────
+    # Feature importance and validation
 
     def get_feature_importance(self) -> Optional[pd.DataFrame]:
         """For the heuristic path, importance is the position-weight magnitude."""
@@ -1267,11 +1152,9 @@ class StartingXIPredictor:
     ) -> Dict[str, float]:
         """Retrospective Jaccard-overlap check against historical starting elevens.
 
-        For each historical fixture, ``predict_xi`` is run with the current
-        feature snapshot, and the predicted XI is compared to the actual
-        starting eleven (a list of ``playerId`` values). The mean
-        per-fixture Jaccard overlap is reported, along with per-fixture
-        values for downstream plotting.
+        Runs ``predict_xi`` per fixture and compares the predicted XI to the
+        actual starting eleven (``playerId`` values). Reports the mean
+        per-fixture Jaccard overlap plus the per-fixture values for plotting.
         """
         overlaps: List[float] = []
         for actual_ids in actual_lineups:
@@ -1291,13 +1174,11 @@ class StartingXIPredictor:
         }
 
 
-# ── Backward-compatible alias ─────────────────────────────────────────────────
-# Some older call sites referred to the class as ``XIPredictor``. This alias
-# keeps those imports working.
+# Backward-compatible alias for older call sites that used ``XIPredictor``.
 XIPredictor = StartingXIPredictor
 
 
-# ── Module-level helper used by xi_service.list_opponents and pipeline.run ──
+# Module-level helpers used by xi_service.list_opponents and pipeline.run
 
 def save_predictor(predictor: StartingXIPredictor, path: str) -> None:
     """Persist a fitted predictor (including the position normalisation table)."""

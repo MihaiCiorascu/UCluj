@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 
-/// Iteration N — reusable widgets for the early-2000s glossy aesthetic.
+/// Reusable widgets for the early-2000s glossy aesthetic.
 ///
-/// The four shapes the user's reference images (AI-generated Italian
-/// Serie A mockup, Juventus / Inter / Napoli glossy logos) demand are:
+/// The four shapes the reference images (Italian Serie A mockup, Juventus /
+/// Inter / Napoli glossy logos) demand are:
 ///
 /// * ``GlossyCard`` — a panel with a top-light → bottom-shaded gradient,
 ///   a 1-pixel white inner highlight at the top edge, a hairline chrome
@@ -110,7 +110,7 @@ class GlossyCard extends StatelessWidget {
 /// Primary or secondary CTA with the gloss-gradient fill.
 ///
 /// Accepts an optional ``accentBias`` so the per-team accent overlay can
-/// tint the top sheen (Iteration N.8).
+/// tint the top sheen.
 class GlossyButton extends StatelessWidget {
   const GlossyButton({
     required this.label,

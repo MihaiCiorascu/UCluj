@@ -55,17 +55,11 @@ class Settings(BaseSettings):
     demo_mode: bool = False
     demo_today: str = ""
 
-    # Iter-Q.3 follow-up: optimizer configurability.
-    # method: "mc" (production default, robust; always returns an in-distribution candidate)
-    #         "trust_constr" (opt-in; scipy interior-point per Byrd, Hribar & Nocedal 1999;
-    #                         ~4x fewer CatBoost evaluations in the convergent case; falls
-    #                         back to MC on failure so the coach never sees an error)
-    # seed: reproducibility for the MC sampler (Pineau et al. 2021).
-    # num_simulations: the thesis production value is N = 25,000, which keeps
-    # the standard deviation of the returned best probability below 0.002
-    # while staying sub-second per fixture after vectorisation. This is the
-    # single source of truth for N across the prescription and optimizer
-    # services; keep the Flutter footer string in sync with it.
+    # Optimizer configurability.
+    # method: "mc" is the default Monte Carlo sampler; "trust_constr" is an
+    # opt-in scipy interior-point solver that falls back to MC on failure.
+    # seed makes the MC sampler reproducible; num_simulations is the single
+    # source of truth for N across the prescription and optimizer services.
     optimizer_method: str = "mc"
     optimizer_seed: int = 42
     optimizer_num_simulations: int = 25000

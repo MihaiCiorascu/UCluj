@@ -8,9 +8,9 @@ committed JSON, so it never calls SofaScore or AWS and never needs boto3.
 
 Two lookups are supported:
 
-* ``url_for(wy_id)`` — direct by Wyscout id, used by the recommended-XI flow
+* ``url_for(wy_id)``, direct by Wyscout id, used by the recommended-XI flow
   whose players carry Wyscout ids.
-* ``url_for_name(name, team)`` — by display name, used by the completed-match
+* ``url_for_name(name, team)``, by display name, used by the completed-match
   flow whose players come from Sportradar ("Surname, Firstname") with no
   Wyscout id. Matching is diacritic-insensitive on surname + given name and
   refuses ambiguous matches (returns ``None``) so a wrong face never shows.

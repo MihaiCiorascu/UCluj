@@ -37,7 +37,7 @@ def assess_player(rec: Dict) -> Dict:
     min14 = float(rec.get("minutes_last_14d") or 0)
     start_rate = float(rec.get("season_start_rate") or 0)
 
-    # ── Fatigue risk (0-100), a transparent additive model ───────────────────
+    # Fatigue risk (0-100), a transparent additive model
     pts = 0.0
     # Acute:chronic workload spike. The danger zone is roughly above 1.5; the
     # "sweet spot" sits around 0.8-1.3 (Gabbett 2016).

@@ -1,5 +1,5 @@
 """
-League-wide Wyscout-vs-Sportradar position cross-check (Iteration L.2).
+League-wide Wyscout-vs-Sportradar position cross-check.
 
 Iterates over every team in :data:`backend.sportradar.team_registry.SUPERLIGA_TEAMS`,
 fetches Sportradar players from the local DB (populated by
@@ -9,16 +9,15 @@ and league-aggregate coarse-position match rates.
 
 Outputs:
 
-* ``backend/ml/data/sportradar_positions_league.json`` — one entry per
+* ``backend/ml/data/sportradar_positions_league.json``, one entry per
   Sportradar player across the league (~640 entries), grouped by team.
-* ``backend/ml/data/position_cross_check_league.csv`` — one row per
+* ``backend/ml/data/position_cross_check_league.csv``, one row per
   name-matched Wyscout player across the league, with both fine and
   coarse labels from both sources.
-* stdout — per-team match-rate table plus a league aggregate.
+* stdout, per-team match-rate table plus a league aggregate.
 
 Replaces (and supersedes) the single-team
-``cross_check_positions_via_sportradar.py`` script used in Iteration K
-for U Cluj only.
+``cross_check_positions_via_sportradar.py`` script used for U Cluj only.
 """
 
 from __future__ import annotations
@@ -54,7 +53,7 @@ OUT_JSON = ROOT / "ml" / "data" / "sportradar_positions_league.json"
 OUT_CSV = ROOT / "ml" / "data" / "position_cross_check_league.csv"
 
 
-# ── Sportradar → coarse 4-group mapping ──────────────────────────────────────
+# Sportradar → coarse 4-group mapping
 # Sportradar's competitor-profile feed emits only four broad position
 # strings (``goalkeeper``, ``defender``, ``midfielder``, ``forward``);
 # rarely it adds a granular label such as ``"Centre-Back"``. The fair

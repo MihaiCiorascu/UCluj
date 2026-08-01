@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import List, Dict, Optional
 
 
-# ─── Stat weights by position group ───────────────────────────────────────────
+# Stat weights by position group
 POSITION_STAT_WEIGHTS = {
     "GK": {
         "gkSaves": 3.0, "gkCleanSheets": 3.0, "gkShotsAgainst": -1.0,
@@ -49,12 +49,10 @@ ROLE_TO_GROUP = {
 }
 
 
-# ─── Fine-grained position taxonomy (Wyscout sub-positions) ──────────────────
-# The Wyscout JSON `positions[*].position.code` field carries one of 28
-# distinct codes; this map projects them into ten football-conventional fine
-# groups. The coarse map then projects the fine groups back to the four
-# formation-relevant groups so the existing slot-filling logic continues to
-# work for 4-3-3 / 4-4-2 / 3-5-2 etc.
+# Fine-grained position taxonomy (Wyscout sub-positions)
+# Maps the 28 Wyscout `positions[*].position.code` values into ten fine groups.
+# FINE_GROUP_TO_COARSE below projects those back to the four formation groups
+# so slot-filling keeps working for 4-3-3 / 4-4-2 / 3-5-2 etc.
 POSITION_CODE_TO_FINE_GROUP: Dict[str, str] = {
     # Goalkeeper
     "gk": "GK",
@@ -87,12 +85,10 @@ FINE_GROUP_TO_COARSE: Dict[str, str] = {
     "W":  "FWD", "WF": "FWD", "ST": "FWD",
 }
 
-# Fine-group KPI weight tables. Each weight applies to the per-90, raw KPI
-# from the Wyscout `total` block; weights are calibrated against football
-# convention (e.g. a wing-back is rewarded for crosses and forward runs, a
-# defensive midfielder for interceptions and recoveries). Weight magnitudes
-# remain in the [-5, +5] range used by the original four-group `POSITION_STAT_WEIGHTS`
-# to keep performance-score values comparable.
+# Fine-group KPI weight tables. Each weight applies to a per-90 raw KPI from the
+# Wyscout `total` block, calibrated by football convention (a wing-back rewarded
+# for crosses, a defensive midfielder for interceptions). Magnitudes stay in the
+# [-5, +5] range of POSITION_STAT_WEIGHTS so scores stay comparable.
 FINE_POSITION_STAT_WEIGHTS: Dict[str, Dict[str, float]] = {
     "GK": {
         "gkSaves": 3.0, "gkCleanSheets": 3.0, "gkSuccessfulExits": 2.0,
@@ -152,11 +148,9 @@ FINE_POSITION_STAT_WEIGHTS: Dict[str, Dict[str, float]] = {
 def derive_primary_fine_position(match_stats_list: List[Dict]) -> str:
     """Return the player's primary fine-position label.
 
-    The label is the fine group whose accumulated weight is largest across
-    all matches, where the weight contributed by each match is
-    ``minutes_in_match * percent_share`` (the `percent` field on the
-    Wyscout `positions[i]` entry). Falls back to ``MID`` when no parseable
-    position codes are present.
+    The label is the fine group with the largest accumulated weight, each match
+    contributing ``minutes_in_match * percent_share`` (the `percent` field on the
+    Wyscout `positions[i]` entry). Falls back to ``MID`` when no position codes parse.
     """
     from collections import Counter
     weights: Counter = Counter()
@@ -179,10 +173,8 @@ def derive_primary_fine_position(match_stats_list: List[Dict]) -> str:
 def _code_to_side(code: str) -> str:
     """Map a Wyscout position code to its pitch side: ``"L"``, ``"R"`` or ``"C"``.
 
-    Every flank code in :data:`POSITION_CODE_TO_FINE_GROUP` is prefixed ``l``
-    (lcb, lb, lwb, lw, ldmf, lcmf, lamf, lwf and their 3-/5-back variants) or
-    ``r`` (the right mirrors); the rest are central (gk, cb, cb3, dmf, cmf, amf,
-    cf, ss).
+    Flank codes are prefixed ``l`` or ``r`` (including 3-/5-back variants); the
+    rest (gk, cb, cb3, dmf, cmf, amf, cf, ss) are central.
     """
     c = (code or "").strip().lower()
     if c.startswith("l"):
@@ -196,13 +188,10 @@ def derive_primary_side(match_stats_list: List[Dict]) -> str:
     """Return the player's preferred pitch side: ``"L"``, ``"R"`` or ``"C"``.
 
     Mirrors :func:`derive_primary_fine_position`: each match contributes
-    ``minutes * percent/100`` to the side of every position code it carries. A
-    player is called left- or right-sided when one flank clearly dominates;
-    when there is no flank play, or the two flanks are within roughly even
-    shares (the dominant flank holds less than 60% of the L+R total, i.e. the
-    player is genuinely two-footed or used on both sides), the player is
-    treated as central / flexible (``"C"``) so the slot assignment applies no
-    side penalty either way.
+    ``minutes * percent/100`` to the side of every position code it carries. One
+    flank must hold at least 60% of the L+R total to be called dominant; otherwise
+    (no flank play, or roughly two-footed use) the player is central ``"C"`` so the
+    slot assignment applies no side penalty.
     """
     weights = {"L": 0.0, "R": 0.0, "C": 0.0}
     for match in match_stats_list:
@@ -232,52 +221,26 @@ def role_to_group(role_name: str) -> str:
     return "MID"  # default fallback
 
 
-# ─── Team chronology + availability helpers (Iteration J) ─────────────────────
-#
-# The composite-score path of the StartingXIPredictor previously ignored the
-# *availability* dimension of player evaluation: a player who had not appeared
-# in the last few team fixtures (injury, suspension, loss of coach favour, or
-# a tactical shift away from their role) was ranked indistinguishably from a
-# regular starter, as long as their per-90 KPI rates were similar. Empirical
-# validation against actual U Cluj starting elevens (Iteration I) showed this
-# was the dominant source of disagreement with the coach's selections:
-# top-by-minutes reached Jaccard $\approx 0.634$, while the fine-position
-# composite reached only $0.466$.
-#
-# The availability features below restore that signal. They are computed
-# *relative to the team's chronological fixture list*, not the player's own
-# appearance list, so a player who simply did not feature in the squad is
-# correctly penalised. The implementation respects the methodological
-# recommendation of Drew & Finch (2016, Sports Medicine), who argue that
-# training-load and availability signals are primary indicators of player
-# readiness and should not be discarded by per-90 normalisation.
+# Team chronology + availability helpers
+# The composite-score path ignored availability: a player absent from recent
+# fixtures ranked like a regular starter if his per-90 rates matched. The features
+# below restore that signal, computed against the team's chronological fixture list
+# rather than the player's own appearances, so a non-featuring player is penalised
+# (Drew & Finch 2016).
 
-# ─── Date-aware primary-club resolver (Iteration M: mid-season transfers) ─────
-#
-# ``get_team_squad_from_matches`` counts a player's appearances against a team's
-# match *filenames*, which double-counts mid-season movers: a player who left
-# club A for club B keeps showing up in A's stale fixtures *and* in B's recent
-# ones, so both squads claim them. M. Thiam (playerId 278515) is the canonical
-# case — he moved U Cluj -> FCSB in August 2025, yet the all-time appearance
-# count lists him in both squads.
-#
-# The resolver below assigns each player to exactly one club as of a reference
-# date. The signal it exploits is structural: in every match a player features
-# in, the registry substring of *their own* club is present in the filename
-# (the file is named ``"{home} - {away}, ..."`` and the player's club is one of
-# the two), while any given opponent's substring appears only in the single
-# head-to-head fixture. Across a recency window of a player's matches, therefore,
-# the registry team whose ``wy_substr`` is present in the most-recent of those
-# files is the player's primary club. Recency is preferred so that a transfer is
-# followed rather than averaged away: only matches dated strictly before
-# ``as_of_date`` are considered, and the window keeps a player's last
-# ``recent_n`` appearances unioned with everything inside ``window_days`` of
-# ``as_of_date`` (so a thin-but-recent run still resolves, and a dense recent
-# run is not diluted by older clubs). Within the window each appearance votes
-# with a *rank-based* geometric decay (``0.5 ** rank``, rank 0 = most recent),
-# so the last two-to-three matches dominate decisively: a very-recent 2-3 game
-# run at a new club outweighs a denser but older run at the former club, which
-# is what makes a fresh mid-season transfer resolve to the new club.
+# Date-aware primary-club resolver (mid-season transfers)
+# Counting appearances by match filename double-counts mid-season movers: a player
+# who left club A for B keeps showing in A's stale fixtures and B's recent ones.
+# M. Thiam (playerId 278515) is the canonical case: U Cluj -> FCSB, August 2025.
+# The resolver assigns each player one club as of a reference date. Structural
+# signal: the player's own club substring appears in every filename he features in
+# (``"{home} - {away}, ..."``), while any opponent appears only in the single
+# head-to-head fixture. Only matches dated strictly before ``as_of_date`` count;
+# the window keeps the last ``recent_n`` appearances unioned with everything inside
+# ``window_days``. Each appearance votes with rank-based geometric decay
+# (``0.5 ** rank``, rank 0 = most recent), so the last two-to-three matches
+# dominate and a fresh transfer resolves to the new club rather than being averaged
+# away.
 
 
 def primary_club_as_of(
@@ -288,37 +251,30 @@ def primary_club_as_of(
 ) -> Dict[int, str]:
     """Resolve each player's single primary club as of ``as_of_date``.
 
-    Returns ``{playerId: team_short}`` where ``team_short`` is the
-    :class:`~sportradar.team_registry.TeamRef` short label of the registry
-    club with the highest rank-decayed recency weight across the player's
-    in-window matches dated strictly before ``as_of_date`` (each match at
-    rank ``i`` most-recent-first contributes ``0.5 ** i``, so the player's
-    last few appearances dominate). A player who appears in no in-window,
-    dated match is omitted from the mapping (the caller treats an omission as
-    "unknown" and falls back to the legacy all-time behaviour).
+    Returns ``{playerId: team_short}`` for the registry club with the highest
+    rank-decayed recency weight across in-window matches dated strictly before
+    ``as_of_date`` (rank ``i`` most-recent-first contributes ``0.5 ** i``). Players
+    with no in-window dated match are omitted, and the caller falls back to the
+    legacy all-time behaviour for them.
 
     Parameters
     ----------
     match_stat_files
         Paths to the per-match player-stats JSON files (the drive_cache).
     as_of_date
-        A ``datetime.date`` (or ISO ``YYYY-MM-DD`` string). Only matches
-        dated strictly before this date are considered, so a transfer that
-        has not happened yet at the reference date does not leak backwards.
+        ``datetime.date`` or ISO ``YYYY-MM-DD`` string. Only matches strictly
+        before this date count, so a future transfer does not leak backwards.
     recent_n
-        The player's most recent ``recent_n`` dated appearances are always
-        included in the window, regardless of age. Default 15 (≈ half a
-        Superliga season), enough to resolve a club even for a player who
-        has been inactive recently.
+        Always-included most-recent dated appearances. Default 15 (half a
+        Superliga season), enough to resolve an inactive player.
     window_days
-        Any appearance within ``window_days`` of ``as_of_date`` is also
-        included, even beyond the ``recent_n`` cut. Default 150 days.
+        Also include any appearance within this many days of ``as_of_date``.
+        Default 150.
 
     Returns
     -------
     dict[int, str]
-        ``{playerId: team_short}`` for every player with at least one
-        in-window dated appearance.
+        ``{playerId: team_short}`` for every player with an in-window dated appearance.
     """
     from ml.match_dates import date_for, parse_date
     from sportradar.team_registry import SUPERLIGA_TEAMS, normalise as _norm  # type: ignore
@@ -358,17 +314,11 @@ def primary_club_as_of(
                 continue
             per_player.setdefault(int(pid), []).append((d, teams_in_file))
 
-    # Rank-based recency decay base. Matches are sorted most-recent-first and
-    # the match at rank ``i`` (0 = most recent) is weighted ``RANK_DECAY ** i``,
-    # so a player's last ~2-3 appearances dominate the vote decisively. With a
-    # base of 0.5 a fresh 2-match run at a new club (ranks 0,1 => 1.0 + 0.5 =
-    # 1.5) outvotes a denser 3-match run at the old club sitting just behind it
-    # (ranks 2,3,4 => 0.25 + 0.125 + 0.0625 = 0.4375), so a very-recent transfer
-    # is *followed* rather than averaged away, while a season-long stayer (every
-    # match the same club) still resolves to that club because it accrues every
-    # rank's weight. This is purely ordinal, so it is robust to schedule gaps:
-    # an injured player's most-recent matches still rank highest regardless of
-    # how many calendar days separate them from ``as_of``.
+    # Rank-based recency decay base. Match at rank ``i`` (0 = most recent) is
+    # weighted ``RANK_DECAY ** i``, so the last 2-3 appearances dominate. A fresh
+    # 2-match run at a new club (1.0 + 0.5 = 1.5) outvotes a denser 3-match run just
+    # behind it (0.25 + 0.125 + 0.0625 = 0.4375), while a season-long stayer still
+    # resolves to its club. Purely ordinal, so robust to schedule gaps.
     RANK_DECAY = 0.5
 
     result: Dict[int, str] = {}
@@ -377,15 +327,10 @@ def primary_club_as_of(
         windowed = [r for i, r in enumerate(rows) if i < recent_n or r[0] >= window_start]
         if not windowed:
             continue
-        # Recency-weighted vote: the in-window appearance at rank ``i`` (0 = most
-        # recent) adds ``RANK_DECAY ** i`` to *each* club whose normalised
-        # substring is in that match's filename. The player's own club is in
-        # every file, so it accrues weight from every match; an opponent is in
-        # only the single head-to-head file. A transfer is followed because the
-        # new club's most-recent matches sit at the lowest ranks and dominate
-        # the geometric sum even when the old club has more total in-window
-        # appearances, while a player who stayed all window still resolves to
-        # the club every match votes for.
+        # Recency-weighted vote: appearance at rank ``i`` adds ``RANK_DECAY ** i``
+        # to each club whose normalised substring is in that filename. The player's
+        # own club is in every file; an opponent only in the head-to-head one. A
+        # transfer is followed because the new club sits at the lowest ranks.
         weights: Dict[str, float] = {}
         for i, (_d, shorts) in enumerate(windowed):
             w = RANK_DECAY ** i
@@ -419,65 +364,41 @@ def get_team_squad_from_matches(
     min_appearances: int = 5,
     as_of_date=None,
 ) -> set:
-    """Identify a team's squad from appearance frequency in their match files.
+    """Identify a team's squad empirically from appearance frequency.
 
-    The Wyscout drive cache stores `currentTeamId` per player as the
-    *snapshot* team registration at the time the profile file was
-    exported, not the team a player was registered to at the time of
-    each match. For FC Universitatea Cluj specifically, the snapshot
-    spreads players across two team IDs (11571 and 60374) depending on
-    when each profile was last updated, so a single `currentTeamId ==
-    11571` filter misses the bulk of the actual first-team squad.
-
-    This helper sidesteps the issue by identifying the squad
-    empirically: a player is considered part of the team if they
-    appeared with non-zero minutes in at least ``min_appearances`` of
-    the team's most recent ``recent_n`` matches. Opponent players
-    typically appear in 1–2 team matches (head-to-head fixtures only),
-    so a threshold of ``min_appearances = 2`` strikes the right balance
-    between recall (capturing fringe / rotation players) and precision
-    (excluding opponent regulars).
+    Wyscout's per-player `currentTeamId` is a profile-export snapshot, not the
+    match-time registration; for FC Universitatea Cluj it spreads the squad across
+    two team IDs (11571 and 60374), so a single-ID filter misses most of the first
+    team. Instead a player counts as squad if they played non-zero minutes in at
+    least ``min_appearances`` matches. Opponents appear in only 1-2 head-to-head
+    fixtures, so the threshold separates squad from opponents.
 
     Parameters
     ----------
     match_stat_files
         List of paths to per-match player-stats JSON files.
     team_name_substring
-        Case-insensitive substring used to find the team's match files
-        in ``match_stat_files`` (each filename carries the home and
-        away team names).
+        Case-insensitive substring locating the team's match files (each filename
+        carries the home and away team names).
     recent_n
-        If provided, restrict the appearance count to the team's most
-        recent ``recent_n`` matches. When ``None`` (the default), the
-        full match history is used — appropriate when the dataset
-        already represents a single recent season.
+        If set, restrict the count to the team's most recent ``recent_n`` matches.
+        ``None`` (default) uses the full history, fine for a single-season dataset.
     min_appearances
-        Minimum non-zero-minute appearances required for inclusion.
-        Default ``5`` reflects the empirical appearance distribution
-        for FC Universitatea Cluj's 2024–25 season: opponents appear in
-        at most three U Cluj fixtures (twice in the regular season plus
-        one playoff meeting for top-six teams), while every U Cluj
-        squad member appears in seven or more. A threshold of five
-        therefore separates the two populations cleanly while still
-        capturing fringe / late-arriving squad players.
+        Minimum non-zero-minute appearances for inclusion. Default ``5`` reflects
+        FC Universitatea Cluj's 2024-25 distribution: opponents appear in at most
+        three fixtures, squad members in seven or more, so five separates them.
     as_of_date
-        Date-awareness switch for mid-season transfers. When ``None`` (the
-        default) the behaviour is exactly the all-time appearance count
-        documented above, byte-for-byte. When a ``datetime.date`` (or ISO
-        ``YYYY-MM-DD`` string) is supplied, the membership rule changes: a
-        player is in this team's squad iff (b) ``team_name_substring``'s
-        registry club is the player's *primary* club as of that date per
-        :func:`primary_club_as_of`, AND their TOTAL appearances across ALL
-        clubs (minutesOnField > 0, dated strictly *before* ``as_of_date``)
-        meet ``min_appearances``. Only matches dated strictly before
-        ``as_of_date`` count anywhere, so a future move does not leak
-        backwards. Filter (b) is what drops a transferred player from their
-        former club: M. Thiam's six stale U Cluj appearances (Jul–Aug 2025)
-        no longer keep him in the U Cluj squad once his primary recent club
-        has become FCSB. Applying the floor to the player's *total* games
-        rather than their games at *this* team is what keeps a freshly
-        transferred but established player in their new squad even with only
-        2-3 games there (e.g. Purece -> Metaloglobus, Braun -> CFR Cluj).
+        Date-awareness switch for mid-season transfers. ``None`` (default) is the
+        all-time count above, byte-for-byte. Given a ``datetime.date`` or ISO
+        ``YYYY-MM-DD`` string, a player is squad iff (b) this team is their
+        *primary* club at that date per :func:`primary_club_as_of` AND their TOTAL
+        appearances across ALL clubs (minutesOnField > 0, dated strictly before
+        ``as_of_date``) meet ``min_appearances``. Only pre-``as_of_date`` matches
+        count, so a future move does not leak backwards. Filter (b) drops movers
+        from their former club (M. Thiam's stale U Cluj games once his primary club
+        is FCSB); applying the floor to total games keeps a freshly transferred but
+        established player with only 2-3 new-club games (Purece -> Metaloglobus,
+        Braun -> CFR Cluj).
 
     Returns
     -------
@@ -485,10 +406,8 @@ def get_team_squad_from_matches(
         The squad's Wyscout player IDs.
     """
     from collections import Counter
-    # Iteration L: use diacritic-insensitive matching so Romanian club
-    # names like "Botoşani", "Oţelul", or "Argeș" line up regardless of
-    # whether the filesystem stores ş/ţ as cedilla (U+015F/0163) or
-    # comma-below (U+0219/021B).
+    # Diacritic-insensitive matching so Romanian club names (Botoşani, Oţelul,
+    # Argeș) line up whether stored with cedilla or comma-below diacritics.
     from sportradar.team_registry import normalise as _norm  # type: ignore
 
     chronology = get_team_match_chronology(match_stat_files, team_name_substring)
@@ -497,11 +416,9 @@ def get_team_squad_from_matches(
     else:
         recent_ids = None
 
-    # Iteration M: date-aware path. Resolve each player's single primary club
-    # as of the reference date, and resolve which registry short label this
-    # ``team_name_substring`` denotes, so the appearance count can be confined
-    # to the team's own current squad. When ``as_of_date`` is None both stay
-    # ``None`` and every legacy code path below is untouched.
+    # Date-aware path. Resolve each player's primary club and this team's registry
+    # short label, so the count is confined to the current squad. When
+    # ``as_of_date`` is None both stay ``None`` and the legacy path is untouched.
     primary_by_player: Optional[Dict[int, str]] = None
     this_team_short: Optional[str] = None
     total_appearances: Optional[Counter] = None
@@ -518,13 +435,11 @@ def get_team_squad_from_matches(
             ref = team_by_alias(team_name_substring)
             this_team_short = ref.short if ref is not None else None
 
-            # Iteration N: count each player's TOTAL appearances across ALL
-            # clubs (minutesOnField > 0, dated strictly before ``as_of_date``).
-            # The squad floor is applied to this total rather than to the
-            # player's games at *this* team, so an established player who has
-            # just transferred in is not dropped for having only 2-3 games at
-            # the new club. Opponent regulars (who have plenty of total games)
-            # are still excluded by the primary-club filter (b), not the floor.
+            # Count each player's TOTAL appearances across ALL clubs
+            # (minutesOnField > 0, dated strictly before ``as_of_date``). The floor
+            # applies to this total, not to games at this team, so a just-transferred
+            # player is not dropped for having only 2-3 new-club games. Opponent
+            # regulars are excluded by the primary-club filter (b), not the floor.
             total_appearances = Counter()
             for fp in match_stat_files:
                 try:
@@ -580,18 +495,13 @@ def get_team_squad_from_matches(
             continue
 
     if primary_by_player is not None and this_team_short is not None:
-        # Date-aware path. A player is in this team's squad iff (b) this team
-        # IS their primary recent club AND the squad floor on their *total*
-        # games is met. A player whose primary club resolved to a different
-        # registry team (a mover) is dropped; a player who could not be resolved
-        # at all (no in-window dated match) is kept, so date metadata gaps never
-        # reduce recall. Crucially the ``min_appearances`` floor is applied to
-        # ``total_appearances`` (games across ALL clubs before ``as_of_date``),
-        # not to the player's games at *this* team, so a recently-transferred
-        # but established player is retained even with only 2-3 games at the new
-        # club (e.g. Purece -> Metaloglobus, Braun -> CFR Cluj with 4 apps).
-        # Opponent regulars are still excluded by the primary-club test, not the
-        # floor.
+        # Date-aware path. A player is squad iff (b) this team is their primary club
+        # AND the floor on their TOTAL games is met. Movers (primary club resolved
+        # elsewhere) are dropped; unresolved players (no in-window match) are kept,
+        # so date-metadata gaps never reduce recall. The floor applies to
+        # ``total_appearances`` (all clubs before ``as_of_date``), not to this team's
+        # games, retaining a transferred player with only 2-3 new-club games (Purece
+        # -> Metaloglobus, Braun -> CFR Cluj). Opponents excluded by the primary test.
         floor = total_appearances if total_appearances is not None else appearances
         squad = {
             pid
@@ -610,22 +520,16 @@ def get_team_match_chronology(
     match_stat_files: List[str],
     team_name_substring: str,
 ) -> List[int]:
-    """Return the team's match IDs in chronological order.
+    """Return the team's match IDs in chronological order (most recent last).
 
-    Chronology is inferred from each match-stats JSON via the
-    ``(seasonId, roundId)`` pair on the first player entry. The match
-    files are filtered by checking that ``team_name_substring`` (case
-    insensitive) appears in the filename — this is robust because the
-    drive-cache files are named ``"{home} - {away}, {score}_players_stats.json"``.
-
-    The returned list is ordered so that the *most recent* match is the
-    last element. When a season-round pair is unparseable, the file is
-    silently skipped.
+    Chronology comes from the ``(seasonId, roundId)`` pair on the first player
+    entry of each match-stats JSON. Files are matched by ``team_name_substring``
+    (case-insensitive) in the filename, robust because drive-cache files are named
+    ``"{home} - {away}, {score}_players_stats.json"``. Files with an unparseable
+    season-round pair are skipped.
     """
-    # Iteration L: diacritic-insensitive substring match — required for
-    # Romanian club names like "Botoşani" / "Oţelul" / "Argeș" which can
-    # be stored with either cedilla or comma-below diacritics depending
-    # on the source.
+    # Diacritic-insensitive match for Romanian club names (Botoşani, Oţelul, Argeș)
+    # stored with either cedilla or comma-below diacritics.
     from sportradar.team_registry import normalise as _norm  # type: ignore
 
     candidates: List = []
@@ -854,17 +758,14 @@ def compute_load_features(
     }
 
 
-# ─── Methodological helpers ───────────────────────────────────────────────────
+# Methodological helpers
 
 def exponential_time_decay_weight(days_ago: float, half_life_days: float = 30.0) -> float:
     """Exponential time-decay weight for recent-form aggregation.
 
-    Returns ``exp(-ln(2) * days_ago / half_life_days)``. With the default
-    half-life of 30 days, a match played one month ago contributes half as
-    much to the recent-form score as a match played today. This is the
-    standard exponential-smoothing formulation; the choice of half-life is
-    informed by the typical Romanian Superliga match cadence (roughly one
-    fixture per week, so a 30-day window covers the most recent four matches).
+    Returns ``exp(-ln(2) * days_ago / half_life_days)``. At the default 30-day
+    half-life a match one month ago counts half a match played today. The half-life
+    matches the Superliga cadence (roughly weekly, so 30 days spans four matches).
     """
     if days_ago <= 0:
         return 1.0
@@ -880,14 +781,9 @@ def empirical_bayes_shrink(
 ) -> float:
     """Shrink ``raw_value`` toward ``position_mean`` for low-sample players.
 
-    Implements the standard empirical-Bayes update
-    ``(k * mu + n * x) / (k + n)`` where ``k`` is a pseudo-count chosen so
-    that a player with no observations falls back entirely to the position
-    mean while a player with ``n >> k`` observations is essentially
-    unchanged. The football-specific application of this formula in player
-    rating is treated by Brown (2008) in the context of in-season batting
-    averages; the same identity (with the same intuition: shrink toward the
-    group mean inversely with sample size) carries over directly.
+    Empirical-Bayes update ``(k * mu + n * x) / (k + n)`` where ``k`` is a
+    pseudo-count: no observations fall back to the position mean, ``n >> k`` stays
+    essentially unchanged (Brown 2008, in-season batting averages).
     """
     n = max(float(n_matches or 0), 0.0)
     k = float(pseudo_matches)
@@ -901,13 +797,11 @@ def z_score_within_position(
     columns: List[str],
     position_col: str = "role_group",
 ) -> pd.DataFrame:
-    """Return a copy of ``df`` with the given columns z-scored within each
-    positional group (``GK``, ``DEF``, ``MID``, ``FWD``).
+    """Return a copy of ``df`` with ``columns`` z-scored within each positional
+    group (``GK``, ``DEF``, ``MID``, ``FWD``).
 
-    Per Pappalardo et al. (2019), comparing players across positions on raw
-    KPIs is invalid because the empirical distribution of every KPI is
-    role-conditional. Standardising within position before any aggregation
-    is the recommended remedy.
+    KPI distributions are role-conditional, so cross-position raw comparison is
+    invalid; standardise within position before aggregating (Pappalardo et al. 2019).
     """
     out = df.copy()
     for group, group_df in out.groupby(position_col):
@@ -924,13 +818,11 @@ def z_score_within_position(
 
 
 def compute_performance_score(stats: Dict, role_group: str, fine_group: Optional[str] = None) -> float:
-    """Compute a weighted performance score for a player given their stats and role.
+    """Weighted performance score from a player's stats and role.
 
-    If a fine-grained position group is provided (e.g. ``"CB"``, ``"DM"``),
-    the corresponding :data:`FINE_POSITION_STAT_WEIGHTS` row is used. Otherwise
-    the function falls back to the four-group :data:`POSITION_STAT_WEIGHTS`
-    table for backward compatibility with callers that have not yet been
-    updated.
+    Uses the :data:`FINE_POSITION_STAT_WEIGHTS` row for ``fine_group`` when given
+    (e.g. ``"CB"``, ``"DM"``); otherwise falls back to the four-group
+    :data:`POSITION_STAT_WEIGHTS` table.
     """
     if fine_group and fine_group in FINE_POSITION_STAT_WEIGHTS:
         weights = FINE_POSITION_STAT_WEIGHTS[fine_group]
@@ -971,20 +863,18 @@ def build_player_feature_vector(
     as_of_date=None,
 ) -> Optional[Dict]:
     """
-    Merge player profile + aggregated match stats into a flat feature dict.
+    Merge player profile and aggregated match stats into a flat feature dict.
 
     Args:
         player_profile: The player JSON object (wyId, role, birthDate, etc.)
         match_stats_list: List of stat dicts (total block) from each match JSON
         opponent_team_id: If provided, can filter or weight recent form
         team_chronology: Optional list of the team's matchIds in chronological
-            order (oldest first, most recent last). When provided, the
-            availability features defined by
-            :func:`compute_availability_features` (``availability_last_5``,
+            order (oldest first, most recent last). When given, the
+            :func:`compute_availability_features` columns (``availability_last_5``,
             ``started_last_match``, ``match_gap_since_last_appearance``,
-            ``availability_score``) are added to the output dict. When
-            omitted, those columns default to neutral zero values so legacy
-            callers continue to receive a comparable schema.
+            ``availability_score``) are added; when omitted they default to zero
+            so legacy callers keep a comparable schema.
 
     Returns:
         Feature dict ready to be put in a DataFrame row, or None if no valid stats.
@@ -993,7 +883,7 @@ def build_player_feature_vector(
     if not valid_stats:
         return None
 
-    # ── Positions played (encoded as set of codes) ───────────────────────────
+    # Positions played (encoded as set of codes)
     all_positions = set()
     position_names = []
     for s in match_stats_list:
@@ -1012,14 +902,14 @@ def build_player_feature_vector(
     
     role_group = role_to_group(role_name)
 
-    # Fine-grained primary position, derived from the Wyscout per-match
-    # `positions` array (most-frequent code weighted by minutes played).
-    # We pass match_stats_list verbatim because the entries already contain
-    # `positions` and `minutesOnField` at the top level after `build_dataset_from_files`.
+    # Fine-grained primary position from the Wyscout per-match `positions` array
+    # (most-frequent code weighted by minutes). match_stats_list is passed verbatim:
+    # entries already carry `positions` and `minutesOnField` at the top level after
+    # `build_dataset_from_files`.
     position_group_fine = derive_primary_fine_position(match_stats_list)
     position_side = derive_primary_side(match_stats_list)
 
-    # ── Aggregate stats across matches ──────────────────────────────────────
+    # Aggregate stats across matches
     agg = {}
     count = len(valid_stats)
     all_keys = valid_stats[0].keys()
@@ -1036,33 +926,25 @@ def build_player_feature_vector(
     per90 = {k: round(v / minutes_total * 90, 4) for k, v in agg.items()
               if isinstance(v, (int, float))}
 
-    # ── Performance score ────────────────────────────────────────────────────
-    # Use the fine-grained position weights when the per-match position codes
-    # are available; otherwise fall back to the coarse role-group weights.
+    # Performance score: fine-grained weights when per-match codes exist, else
+    # coarse role-group weights.
     perf_score = compute_performance_score(agg, role_group, fine_group=position_group_fine)
 
-    # ── Efficiency metrics ───────────────────────────────────────────────────
+    # Efficiency metrics
     efficiency = compute_efficiency_metrics(agg)
 
-    # ── Recent form (exponentially decayed by recency) ───────────────────────
-    # If per-match dates are available we apply an exponential time decay with
-    # a 30-day half-life (see :func:`exponential_time_decay_weight`); otherwise
-    # we fall back to a simple unweighted average of the last three matches.
-    #
-    # Point-in-time correctness: the recency anchor is ``as_of_date`` (the
-    # simulated demo clock the caller predicts for) and falls back to the real
-    # wall clock only when no ``as_of_date`` was supplied (live / non-demo).
-    # Matches dated ON OR AFTER the anchor are excluded entirely: a player's
-    # post-anchor matches must not enter the recent-form window, and must not
-    # leak in as weight-1.0 entries. We therefore filter the candidate pool to
-    # matches strictly before the anchor FIRST, then take the last N, then
-    # apply the exponential decay relative to the anchor.
+    # Recent form (exponentially decayed by recency)
+    # With per-match dates, apply a 30-day-half-life decay
+    # (:func:`exponential_time_decay_weight`); else average the last three matches.
+    # Point-in-time: the anchor is ``as_of_date`` (the demo clock), falling back to
+    # the wall clock when absent. Matches on or after the anchor are excluded, so
+    # filter to strictly-before FIRST, take the last N, then decay to the anchor.
     from datetime import date, datetime  # local import to avoid hard dep at module top
     today = None
     try:
         if as_of_date is not None:
             # ``as_of_date`` is a date (XiService passes effective_now().date());
-            # normalise a datetime defensively to keep date-vs-datetime math safe.
+            # normalise a datetime defensively to keep date math safe.
             today = as_of_date.date() if isinstance(as_of_date, datetime) else as_of_date
         else:
             today = date.today()
@@ -1070,12 +952,10 @@ def build_player_feature_vector(
         today = None
 
     def _match_date(s):
-        # In the demo path (anchor present) we also consult ``match_date``, the
-        # authoritative date-bridge value that the dataset builder stamps onto
-        # each block, so the anchor can actually exclude/decay by real dates.
-        # In the live path (no anchor) we read only ``date``/``matchDate`` to
-        # preserve the original behaviour byte-for-byte: those keys are never
-        # set on these blocks, so the live recency weighting stays as before.
+        # Demo path (anchor present) also reads ``match_date``, the date-bridge value
+        # the dataset builder stamps on each block, so the anchor can exclude/decay by
+        # real dates. Live path reads only ``date``/``matchDate`` (never set here), so
+        # live recency weighting stays byte-for-byte as before.
         if as_of_date is not None:
             d = s.get("date") or s.get("matchDate") or s.get("match_date")
         else:
@@ -1093,11 +973,9 @@ def build_player_feature_vector(
             return None
         return None
 
-    # When a demo anchor is supplied, drop matches dated on or after it so
-    # post-anchor fixtures never enter the window. When ``as_of_date`` is None
-    # (live / non-demo) keep the prior behaviour EXACTLY: the whole valid-stats
-    # list is the candidate pool and no date exclusion is applied, so the live
-    # path is byte-for-byte unchanged.
+    # With a demo anchor, drop matches dated on or after it so post-anchor fixtures
+    # never enter the window. When ``as_of_date`` is None the whole valid-stats list
+    # is the candidate pool with no date exclusion, byte-for-byte unchanged.
     if as_of_date is not None and today is not None:
         candidate = [s for s in valid_stats
                      if (_match_date(s) is None) or (_match_date(s) < today)]
@@ -1128,11 +1006,9 @@ def build_player_feature_vector(
     else:
         recent_score = 0.0
 
-    # ── Age ──────────────────────────────────────────────────────────────────
-    # Age is measured as of the simulated demo clock (``as_of_date``) so the
-    # snapshot does not leak the real calendar; falls back to the real wall
-    # clock only when no ``as_of_date`` was supplied. ``today`` was already
-    # anchored above (``as_of_date`` when present, else ``date.today()``).
+    # Age
+    # Measured as of the demo clock (``as_of_date``) so the snapshot does not leak
+    # the real calendar; ``today`` was anchored above (else ``date.today()``).
     birth = player_profile.get("birthDate", "")
     age = 0
     if birth:
@@ -1144,17 +1020,14 @@ def build_player_feature_vector(
             pass
 
 
-    # ── Availability features (Iteration J) ──────────────────────────────────
-    # When the caller supplied a team-match chronology, derive availability
-    # features that compare the player's appearances to the team's most-recent
-    # fixture list. Without a chronology, neutral zeros are emitted so callers
-    # that did not opt in still receive a consistent column schema.
+    # Availability features
+    # With a team-match chronology, compare the player's appearances to the team's
+    # recent fixtures; without one, emit neutral zeros for a consistent schema.
     availability = compute_availability_features(match_stats_list, team_chronology)
 
-    # Point-in-time load / fatigue / age / role features. At inference every
-    # team match is "before" the upcoming fixture, so the whole chronology is
-    # the pre-fixture window and ``as_of_date`` is the date we predict for (the
-    # demo / current clock, passed by the caller; defaults to today).
+    # Point-in-time load / fatigue / age / role features. At inference every team
+    # match precedes the upcoming fixture, so the whole chronology is the pre-fixture
+    # window and ``as_of_date`` is the predicted date (defaults to today).
     _chrono_ids = set()
     for _m in (team_chronology or []):
         try:
@@ -1164,12 +1037,10 @@ def build_player_feature_vector(
     load = compute_load_features(
         match_stats_list, _chrono_ids, as_of_date, player_profile.get("birthDate", "")
     )
-    # Surface the FULL load block, including cumulative_minutes_before_fixture
-    # and cumulative_appearances. The leakage-free league model (Iteration L.5)
-    # is trained on these point-in-time, so inference must serve them too;
-    # zero-filling them (the previous behaviour) was a train-serve skew. At
-    # inference the team chronology is the whole pre-fixture window, so these
-    # are the player's cumulative minutes / appearances to date.
+    # Surface the FULL load block, including cumulative_minutes_before_fixture and
+    # cumulative_appearances. The leakage-free league model trains on these
+    # point-in-time, so inference must serve them; zero-filling was a train-serve
+    # skew. Here they are the player's cumulative minutes / appearances to date.
     _load_emit = dict(load)
 
     feature = {
@@ -1185,9 +1056,9 @@ def build_player_feature_vector(
         "total_minutes": minutes_total,
         "performance_score": perf_score,
         "recent_form_score": round(recent_score, 4),
-        # Raw aggregated volume counts (XI-pooled rates in the match-preview
-        # squad row need numerators/denominators, not just the per-player
-        # ratios). Additive only — the per90_*/efficiency fields are unchanged.
+        # Raw aggregated volume counts: XI-pooled rates in the match-preview squad
+        # row need numerators/denominators, not just per-player ratios. Additive
+        # only, the per90_*/efficiency fields are unchanged.
         "passes": agg.get("passes", 0),
         "successfulPasses": agg.get("successfulPasses", 0),
         "duels": agg.get("duels", 0),
@@ -1263,24 +1134,20 @@ def build_dataset_from_files(
             combined["total"] = dict(entry.get("total", {}))
             player_stats_map[pid].append(combined)
 
-    # Pre-compute team chronology if requested. The chronology is the team's
-    # matchIds sorted by (seasonId, roundId, matchId) — see
-    # :func:`get_team_match_chronology`.
+    # Pre-compute team chronology if requested: matchIds sorted by
+    # (seasonId, roundId, matchId), per :func:`get_team_match_chronology`.
     team_chronology: Optional[List[int]] = None
     if availability_team_substring:
         team_chronology = get_team_match_chronology(
             match_stat_files, availability_team_substring
         )
 
-    # Identify the team's actual squad empirically (see
-    # :func:`get_team_squad_from_matches` for the rationale — Wyscout's
-    # ``currentTeamId`` field is unreliable for FC Universitatea Cluj, with
-    # the squad spread across two team IDs because of profile-snapshot
-    # timing). Availability features are computed only for the empirically
-    # detected squad. Non-squad players (including U Cluj's opponents who
-    # appear in U Cluj match files) receive neutral zero values, which is
-    # the correct behaviour because their match-blocks for U Cluj fixtures
-    # represent appearances *against* U Cluj, not for U Cluj.
+    # Identify the team's squad empirically (:func:`get_team_squad_from_matches`;
+    # Wyscout's ``currentTeamId`` is unreliable for FC Universitatea Cluj, split
+    # across two team IDs by snapshot timing). Availability features are computed
+    # only for the detected squad. Non-squad players (including opponents in U Cluj
+    # match files) get neutral zeros, since their blocks are appearances *against*
+    # U Cluj, not for it.
     team_player_ids: set = set()
     if availability_team_substring and team_chronology:
         team_player_ids = get_team_squad_from_matches(

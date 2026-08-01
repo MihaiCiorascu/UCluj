@@ -297,7 +297,7 @@ async def sync_full_chain(
     }
 
 
-# ── COVERAGE / VALIDATION ───────────────────────────────────────────────────
+# COVERAGE / VALIDATION
 
 @router.post("/seasons/{season_id}/coverage")
 async def sync_season_coverage(season_id: str, db: AsyncSession = Depends(_db)):
@@ -561,7 +561,7 @@ async def read_sync_log(
     }
 
 
-# ── STATUS ───────────────────────────────────────────────────────────────────
+# STATUS
 
 @router.get("/status")
 async def sync_status(db: AsyncSession = Depends(_db)):

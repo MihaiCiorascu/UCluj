@@ -16,43 +16,43 @@ FEED_CATALOG: list[tuple[str, str, str, str]] = [
         "season_info",
         "seasons/{sid}/info.json",
         "season",
-        "CRITICAL — confirms coverage tier and available data types for this season",
+        "CRITICAL, confirms coverage tier and available data types for this season",
     ),
     (
         "season_competitors",
         "seasons/{sid}/competitors.json",
         "season_competitors",
-        "CRITICAL — provides all teams in the league, needed for standings/fixtures/dashboard",
+        "CRITICAL, provides all teams in the league, needed for standings/fixtures/dashboard",
     ),
     (
         "season_schedules",
         "seasons/{sid}/schedules.json",
         "schedules",
-        "CRITICAL — full fixture list for the season, needed for calendar/fixture screens",
+        "CRITICAL, full fixture list for the season, needed for calendar/fixture screens",
     ),
     (
         "season_standings",
         "seasons/{sid}/standings.json",
         "standings",
-        "HIGH — league table data, drives the standings screen",
+        "HIGH, league table data, drives the standings screen",
     ),
     (
         "season_summaries",
         "seasons/{sid}/summaries.json",
         "summaries",
-        "HIGH — bulk match results and stats, useful for batch syncing completed fixtures",
+        "HIGH, bulk match results and stats, useful for batch syncing completed fixtures",
     ),
     (
         "season_lineups",
         "seasons/{sid}/lineups.json",
         "lineups",
-        "MEDIUM — season-wide lineups, useful for team/match detail screens",
+        "MEDIUM, season-wide lineups, useful for team/match detail screens",
     ),
     (
         "season_leaders",
         "seasons/{sid}/leaders.json",
         "lists",
-        "LOW — top scorers/assists, nice-to-have for analytics but not core to UmbraRo",
+        "LOW, top scorers/assists, nice-to-have for analytics but not core to UmbraRo",
     ),
 ]
 
@@ -91,13 +91,13 @@ class CoverageValidationService:
 
                 profile_r = await self._probe(f"competitors/{tid_enc}/profile.json", "competitor")
                 profile_r.feed_name = "competitor_profile"
-                profile_r.umbraro_relevance = "HIGH — team venue, manager, full squad roster"
+                profile_r.umbraro_relevance = "HIGH, team venue, manager, full squad roster"
                 probes.append(profile_r)
                 summary["competitor_profile"] = profile_r.available
 
                 sched_r = await self._probe(f"competitors/{tid_enc}/schedules.json", "schedules")
                 sched_r.feed_name = "competitor_schedule"
-                sched_r.umbraro_relevance = "MEDIUM — team-specific past/future matches"
+                sched_r.umbraro_relevance = "MEDIUM, team-specific past/future matches"
                 probes.append(sched_r)
                 summary["competitor_schedule"] = sched_r.available
 
@@ -118,13 +118,13 @@ class CoverageValidationService:
 
                     sum_r = await self._probe(f"sport_events/{eid_enc}/summary.json", "sport_event_status")
                     sum_r.feed_name = "sport_event_summary"
-                    sum_r.umbraro_relevance = "CRITICAL — per-match stats (possession, shots, corners) used by the ML model"
+                    sum_r.umbraro_relevance = "CRITICAL, per-match stats (possession, shots, corners) used by the ML model"
                     probes.append(sum_r)
                     summary["sport_event_summary"] = sum_r.available
 
                     lin_r = await self._probe(f"sport_events/{eid_enc}/lineups.json", "lineups")
                     lin_r.feed_name = "sport_event_lineups"
-                    lin_r.umbraro_relevance = "MEDIUM — starting XI and formations for match detail view"
+                    lin_r.umbraro_relevance = "MEDIUM, starting XI and formations for match detail view"
                     probes.append(lin_r)
                     summary["sport_event_lineups"] = lin_r.available
 

@@ -49,15 +49,12 @@ class PrescriptionService:
         num_simulations: int | None = None,
         random_state: int | None = None,
     ) -> dict:
-        """Run the constrained Monte Carlo optimizer from the notebook (Cell 38).
+        """Run the constrained Monte Carlo optimizer.
 
         Returns baseline_prob, best_prob, improvement, and a human-readable
-        prescription string in English. When ``num_simulations`` or
-        ``random_state`` are not given they default to the thesis production
-        values from ``settings`` (N = 25,000, seed = 42), so the sample count
-        is configured in exactly one place. The loop builds every candidate
-        first and predicts the whole batch in a single CatBoost call, so the
-        larger N stays sub-second per fixture.
+        prescription string. When ``num_simulations`` or ``random_state`` are
+        not given they default to the values from ``settings``. Every candidate
+        is built first and predicted in a single batched CatBoost call.
         """
         if not self._model.is_ready:
             return {"text": "", "improvement": 0.0}
@@ -288,7 +285,7 @@ def _build_prescription_text(
         return _no_improvement_text(baseline_prob)
 
     header = (
-        f"OPTIMAL TACTICAL PLAN — projected probability {best_prob:.0%} "
+        f"OPTIMAL TACTICAL PLAN, projected probability {best_prob:.0%} "
         f"(+{improvement:.0%} vs baseline {baseline_prob:.0%}):"
     )
     return header + "\n" + "  |  ".join(lines)

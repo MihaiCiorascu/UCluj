@@ -1,8 +1,5 @@
-/// Single source of truth for the UmbraRo brand strings + logo asset paths.
-///
-/// Iteration N moved every hardcoded ``"U Cluj — Tactical Intelligence"``
-/// title and every hardcoded ``assets/teams/universitatea_cluj.png`` logo
-/// reference behind this config so the brand can be swapped in one place.
+/// Single source of truth for the UmbraRo brand strings and logo asset
+/// paths, so the brand can be swapped in one place.
 ///
 /// The user's selected club is a separate concept (lives on the auth state
 /// and surfaces as the per-team accent overlay); the UmbraRo identity is

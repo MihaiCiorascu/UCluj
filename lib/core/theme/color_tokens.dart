@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Iteration N — early-2000s sports-broadcast palette.
+/// Early-2000s sports-broadcast palette.
 ///
 /// Two palettes are defined here as raw constants: a *light* (default) and
 /// a *dark* variant. Widgets should normally consume colours via
@@ -68,7 +68,7 @@ class ColorTokens {
   static const Color negative = Color(0xFFC62828);
   static const Color warning = Color(0xFFF57C00);
 
-  // ── Legacy aliases (Iteration N back-compat) ──────────────────────────
+  // ── Legacy aliases (back-compat) ──────────────────────────────────────
   // Unmigrated call sites still reference these names. They now resolve
   // to the LIGHT palette equivalents so the app keeps rendering even in
   // places we haven't refactored yet.

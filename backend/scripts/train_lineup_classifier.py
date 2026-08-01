@@ -1,78 +1,15 @@
 """
-Train the supervised starting-XI lineup classifier (Iteration J.4).
+Train the supervised starting-XI lineup classifier.
 
 The classifier predicts a per-player ``P(started | fixture, player)``
 probability for each (player, fixture) pair. The eleven highest-probability
-players, subject to the formation slot constraint via Hungarian
-assignment, become the predicted starting XI.
-
-Feature design
---------------
-
-For each (player, fixture) pair we assemble:
-
-* **Static-ish player features** (full-season aggregates — a small,
-  measured leakage: a point-in-time rerun puts the rolling-origin Jaccard
-  at 0.557 versus 0.571 with these columns, an inflation under two Jaccard
-  points, documented in the thesis limitations; the dynamic features below
-  carry the dominant lineup signal):
-
-  - ``performance_score`` — Iteration H weighted-KPI composite.
-  - ``recent_form_score`` — Iteration H decayed recent-form aggregate.
-  - ``pass_accuracy``, ``duel_win_rate``, ``def_action_success``,
-    ``shot_accuracy``, ``dribble_success`` — efficiency metrics.
-  - ``total_minutes``, ``matches_played`` — exposure.
-
-* **Dynamic per-fixture features** (computed strictly using matches
-  before the fixture under prediction — no leakage):
-
-  - ``availability_last_5``, ``started_last_match``,
-    ``match_gap_since_last_appearance``, ``availability_score``.
-  - ``cumulative_minutes_before_fixture``, ``cumulative_appearances``.
-
-* **Opponent profile features** (from ``data/All_Data.csv`` via
-  :mod:`ml.opponent_profile`):
-
-  - ``opp_poss_5``, ``opp_shots_5``, ``opp_sot_5``, ``opp_corners_5``,
-    ``opp_goals_5``, ``opp_conceded_5``, ``opp_points_5``,
-    ``opp_yellowcards_5``, ``opp_saves_5``, ``opp_elo``,
-    ``opp_elo_diff``, ``opp_hfa``, ``opp_is_home_fixture``.
-  - One-hot opponent cluster: ``opp_cluster_0`` … ``opp_cluster_3``.
-
-* **Position one-hot** of ``position_group_fine`` (ten columns).
-
-The label is ``1`` if the player started the fixture for U Cluj,
-``0`` otherwise.
-
-Evaluation
-----------
-
-* **Rolling-origin one-fixture-out CV**: for each fixture $F_i$ at
-  chronology index $i \\geq i_{\\min}$, train on the (player, fixture)
-  rows of fixtures $F_0, F_1, \\dots, F_{i-1}$ only, then score every
-  squad player for fixture $F_i$, assign positions with Hungarian, and
-  compute the Jaccard overlap with the actual XI. Aggregate as
-  $\\text{mean}_i \\, \\text{Jaccard}_i$.
-* ``i_min = 8`` (we need at least eight fixtures of training data
-  before the first prediction to keep the training set non-trivial).
-
-Persistence
------------
-
-The fitted classifier, the column list, and the StandardScaler are
-saved to ``backend/ml/xi_lineup_model.joblib`` as a single bundle so the
-deployed predictor can load it and reproduce the per-player scoring
-exactly.
-
-References
-----------
-- McHale, I.G., Scarf, P.A. and Folker, D.E. (2012). *On the
-  development of a soccer player performance rating system for the
-  English Premier League.* Interfaces 42(4), 339–351.
-- Constantinou, A.C. (2019). *Dolores: a model that predicts football
-  match outcomes from all over the world.* Machine Learning 108, 49–75.
-- Bouthillier, X. et al. (2021). *Accounting for Variance in Machine
-  Learning Benchmarks.* MLSys.
+players, subject to the formation slot constraint via Hungarian assignment,
+become the predicted starting XI. Features cover player aggregates, dynamic
+pre-fixture availability, opponent profile, and a position one-hot; the label
+is ``1`` if the player started the fixture for U Cluj. Evaluation is a
+rolling-origin one-fixture-out CV scored by Jaccard overlap with the actual XI.
+The fitted classifier, column list, and StandardScaler are saved to
+``backend/ml/xi_lineup_model.joblib`` as a single bundle.
 """
 
 from __future__ import annotations
@@ -120,7 +57,7 @@ STATIC_PLAYER_COLS = [
 ]
 
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
+# Helpers
 
 def _load_lineup_history() -> Tuple[List[dict], List[int]]:
     if not LINEUP_HISTORY.exists():
@@ -196,7 +133,7 @@ def _build_training_table(
     chronology: List[int],
     opp_features_by_idx: Dict[int, Dict[str, float]],
 ) -> pd.DataFrame:
-    """Return one row per (player, fixture) with features + label.
+    """Return one row per (player, fixture) with features and label.
 
     ``static_features`` is the player-aggregated dataset (full season).
     ``opp_features_by_idx`` is a mapping chronology-index -> opp feature dict.
@@ -263,7 +200,7 @@ def _build_training_table(
     return pd.DataFrame(rows)
 
 
-# ── Hungarian XI assignment (mirror of xi_predictor._assign_xi) ──────────────
+# Hungarian XI assignment (mirror of xi_predictor._assign_xi)
 
 def _hungarian_xi(
     scored: pd.DataFrame,
@@ -310,10 +247,9 @@ def _hungarian_xi(
     return picked
 
 
-# ── Main ─────────────────────────────────────────────────────────────────────
+# Main
 
 def main() -> int:
-    print("Loading data …")
     profile_path = DRIVE / "players (1).json"
     profiles = load_player_profiles(str(profile_path))
     match_files = sorted(glob.glob(str(DRIVE / "*_players_stats.json")))
@@ -324,7 +260,7 @@ def main() -> int:
     print(f"  fixtures:   {len(chronology)}")
 
     if not LINEUP_HISTORY.exists():
-        print("Lineup history missing — running extract_starting_xi_history.py first")
+        print("Lineup history missing, running extract_starting_xi_history.py first")
         import subprocess
         rc = subprocess.run(
             [sys.executable, str(ROOT / "scripts" / "extract_starting_xi_history.py")],
@@ -334,18 +270,15 @@ def main() -> int:
             return rc
     fixtures, _ = _load_lineup_history()
 
-    print("Building static-feature dataset …")
     static_df = build_dataset_from_files(
         match_files, profiles,
         availability_team_substring=TEAM_SUBSTRING,
     )
 
-    print("Indexing per-match player blocks …")
     blocks_by_pid = _per_match_blocks(match_files)
 
-    print("Building opponent-profile table from All_Data.csv …")
     if not ALL_DATA_CSV.exists():
-        print(f"All_Data.csv missing at {ALL_DATA_CSV} — proceeding with zero opp features",
+        print(f"All_Data.csv missing at {ALL_DATA_CSV}, proceeding with zero opp features",
               file=sys.stderr)
         opp_table = pd.DataFrame()
     else:
@@ -369,7 +302,6 @@ def main() -> int:
                 for c in feature_cols
             }
 
-    print("Building training table …")
     table = _build_training_table(
         fixtures, squad_ids, static_df, blocks_by_pid,
         chronology, opp_features_by_idx,
@@ -378,14 +310,13 @@ def main() -> int:
     print(f"  positives: {int(table['started'].sum())} / {len(table)} "
           f"({table['started'].mean():.2%})")
 
-    # ── Feature columns ──────────────────────────────────────────────────────
+    # Feature columns.
     feature_cols = [c for c in table.columns
                     if c not in ("playerId", "match_id", "fixture_idx", "started")
                     and table[c].dtype in (np.float64, np.float32, np.int64, np.int32)]
     print(f"  feature cols: {len(feature_cols)}")
 
-    # ── Rolling-origin one-fixture-out CV ─────────────────────────────────────
-    print("Running rolling-origin CV …")
+    # Rolling-origin one-fixture-out CV.
     from sklearn.linear_model import LogisticRegression
     from sklearn.preprocessing import StandardScaler
 
@@ -436,8 +367,7 @@ def main() -> int:
     std_jacc = float(np.std(overlaps)) if overlaps else 0.0
     print(f"\nRolling-origin Jaccard: {mean_jacc:.4f} +/- {std_jacc:.4f} (n={len(overlaps)})")
 
-    # ── Final model fit on ALL data ─────────────────────────────────────────
-    print("\nFitting final model on the full dataset …")
+    # Final model fit on all data.
     X_all = table[feature_cols].to_numpy()
     y_all = table["started"].to_numpy()
     final_scaler = StandardScaler().fit(X_all)

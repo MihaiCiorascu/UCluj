@@ -1,30 +1,24 @@
 """
-League-wide supervised lineup classifier (Iteration L.3b + L.4).
+League-wide supervised lineup classifier.
 
-Generalises the U Cluj-only ``train_lineup_classifier.py`` to all
-sixteen Romanian Superliga teams. Key additions over the single-team
-version:
+Generalises the U Cluj-only ``train_lineup_classifier.py`` to all sixteen
+Romanian Superliga teams. Key additions over the single-team version:
 
-1. **Pooled training rows** — every team's (player, fixture) pairs are
-   stacked into a single training matrix. Sample size grows from
-   ~945 rows (U Cluj only) to roughly 16 × 35 × 27 ≈ 15,000 rows.
-2. **Team one-hot** — a 16-column block encodes which team owns each
-   row, letting the classifier learn per-team selection idiosyncrasies
-   without losing the cross-team signal.
-3. **Opponent-XI cascade features** — for each (player, fixture) row,
-   nine columns summarise the *actual* opposing team's starting XI in
-   that fixture (sum of per-90 goals, per-90 shots on target, per-90
-   key passes, per-90 def actions, per-90 aerial duels won, plus
-   GK/DEF/MID/FWD counts). At inference time these are filled from the
-   *predicted* opponent XI in a two-stage cascade (predict opponent XI
-   first, then the home XI conditioned on it).
-4. **Rolling-origin CV** — for each held-out (team, fixture_idx ≥
-   I_MIN) cell, train on every cell strictly earlier in calendar order
-   *across all teams* and score the held-out cell's candidates.
+1. Pooled training rows: every team's (player, fixture) pairs are stacked into
+   a single training matrix.
+2. Team one-hot: a 16-column block encodes which team owns each row, letting
+   the classifier learn per-team selection idiosyncrasies without losing the
+   cross-team signal.
+3. Opponent-XI cascade features: for each (player, fixture) row, nine columns
+   summarise the opposing team's starting XI in that fixture (per-90 KPI sums
+   plus GK/DEF/MID/FWD counts). At inference time these are filled from the
+   predicted opponent XI in a two-stage cascade.
+4. Rolling-origin CV: for each held-out (team, fixture) cell, train on every
+   cell strictly earlier in calendar order across all teams.
 
-Persisted as ``backend/ml/xi_lineup_model_league.joblib``. The
-single-team U Cluj bundle ``xi_lineup_model.joblib`` is kept on disk
-unchanged for the §3.6.4 ablation table.
+Persisted as ``backend/ml/xi_lineup_model_league.joblib``. The single-team
+U Cluj bundle ``xi_lineup_model.joblib`` is kept on disk unchanged for the
+ablation table.
 """
 
 from __future__ import annotations
@@ -84,11 +78,11 @@ STATIC_PLAYER_COLS = [
     "total_minutes", "matches_played",
 ]
 
-# Point-in-time load / fatigue / age block (leakage-free retrain, Iteration L.5).
-# Added to each (player, fixture) row alongside the now point-in-time static
+# Point-in-time load / fatigue / age block (leakage-free).
+# Added to each (player, fixture) row alongside the point-in-time static
 # columns; the feature_cols auto-detector then picks them up. They restore the
 # availability / regularity signal that the leakage-free static columns no
-# longer encode (the full-season statics previously leaked it).
+# longer encode.
 LOAD_FEATURE_COLS = [
     "age_at_fixture", "season_start_rate", "rest_days", "minutes_last_14d",
     "matches_last_10d", "acute_load", "chronic_load", "acwr", "minutes_trend",
@@ -104,7 +98,7 @@ OPP_XI_SUM_COLS = [
 ]
 
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
+# Helpers
 
 _FNAME_RE = re.compile(r"^(?P<home>.*?) - (?P<away>.*?), \d+-\d+")
 
@@ -164,7 +158,6 @@ def _build_static_df_per_team(
     """
     out: Dict[str, pd.DataFrame] = {}
     for t in teams:
-        print(f"  building static df for {t.short} ...", flush=True)
         df = build_dataset_from_files(
             match_files, profiles,
             availability_team_substring=t.wy_substr,
@@ -408,36 +401,30 @@ def _hungarian_xi(scored: pd.DataFrame, formation: Dict[str, int]) -> List[int]:
 
 
 def main() -> int:
-    print("Loading data ...")
     profiles = load_player_profiles(str(DRIVE / "players (1).json"))
     match_files = sorted(glob.glob(str(DRIVE / "*_players_stats.json")))
     print(f"  {len(match_files)} match files, {len(profiles)} player profiles.")
 
     if not LINEUP_HISTORY.exists():
-        print("Lineup history missing — run extract_starting_xi_history_league.py first.")
+        print("Lineup history missing, run extract_starting_xi_history_league.py first.")
         return 1
     with LINEUP_HISTORY.open("r", encoding="utf-8") as f:
         league_history = json.load(f)
 
     print(f"League history: {league_history['n_teams']} teams.")
 
-    print("\nBuilding per-team static feature dataframes (this is the slow step) ...")
     static_by_team = _build_static_df_per_team(SUPERLIGA_TEAMS, profiles, match_files)
     print(f"  built {len(static_by_team)} static DataFrames.")
 
-    print("\nBuilding combined per-player blocks (point-in-time source) ...")
     combined_by_pid = _combined_blocks_by_pid(match_files)
     print(f"  indexed {len(combined_by_pid)} player histories.")
 
-    print("\nBuilding opponent-XI lookup ...")
     opp_xi_lookup = _build_opp_xi_lookup(league_history, static_by_team)
     print(f"  populated opp_xi for {len(opp_xi_lookup)} (matchId, team) pairs.")
 
-    print("\nFitting opponent style clusters (latest rolling-5 + Elo, k-means) ...")
     cluster_bundle = fit_team_clusters(team_style_vectors(str(ALL_DATA_CSV)), k=4)
     print(f"  team -> archetype: {cluster_bundle['team_cluster']}")
 
-    print("\nAssembling POINT-IN-TIME (leakage-free) training rows ...")
     table = _build_training_rows(
         league_history, static_by_team, combined_by_pid, profiles, opp_xi_lookup,
         cluster_bundle,
@@ -446,7 +433,7 @@ def main() -> int:
     print(f"  positives: {int(table['started'].sum())}/{len(table)} "
           f"({table['started'].mean():.2%})")
 
-    # Feature columns — exclude bookkeeping columns + categorical strings.
+    # Feature columns, excluding bookkeeping columns and categorical strings.
     skip_cols = {"playerId", "team_short", "match_id", "fixture_idx",
                  "season_id", "round_id", "started"}
     feature_cols = [c for c in table.columns
@@ -454,18 +441,17 @@ def main() -> int:
                     and table[c].dtype in (np.float64, np.float32, np.int64, np.int32)]
     print(f"  feature cols: {len(feature_cols)}")
 
-    print("\nRunning rolling-origin per-team CV ...")
     from sklearn.linear_model import LogisticRegression
     from sklearn.preprocessing import StandardScaler
 
-    # Sort by chronological order — Sportradar's matchId is monotonically
+    # Sort by chronological order. Sportradar's matchId is monotonically
     # increasing in fixture date (verified empirically across the 2024-25
-    # regular season + playoffs), so it is the natural chronological key.
+    # regular season and playoffs), so it is the natural chronological key.
     # ``round_id`` would be wrong: Sportradar emits one round_id per stage
     # (one for the whole regular season, one for the playoff round), so a
-    # ``round_id < rid`` filter would silently include all 16 × 30 regular-
-    # season rows in the *first* held-out fixture's training set and empty
-    # ones for the rest.
+    # ``round_id < rid`` filter would silently include all regular-season
+    # rows in the first held-out fixture's training set and empty ones for
+    # the rest.
     table_sorted = table.sort_values(["match_id"]).reset_index(drop=True)
 
     per_team_overlaps: Dict[str, List[float]] = {t.short: [] for t in SUPERLIGA_TEAMS}
@@ -546,8 +532,7 @@ def main() -> int:
           f"{float(np.mean(league_overlaps)):14.4f} "
           f"{float(np.std(league_overlaps)):6.4f}")
 
-    # ── Final model fit on ALL data ─────────────────────────────────────────
-    print("\nFitting final model on the full league dataset ...")
+    # Final model fit on all data.
     X_all = table_sorted[feature_cols].to_numpy()
     y_all = table_sorted["started"].to_numpy()
     final_scaler = StandardScaler().fit(X_all)

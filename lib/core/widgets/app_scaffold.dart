@@ -10,8 +10,8 @@ import 'app_bottom_nav.dart';
 import 'team_accent_scope.dart';
 import 'user_badge.dart';
 
-/// Iteration N — application chrome rebuilt around UmbraRo branding +
-/// the glossy app bar. The header now carries the UmbraRo logo, the
+/// Application chrome built around UmbraRo branding and the glossy app
+/// bar. The header carries the UmbraRo logo, the
 /// "UMBRARO / TACTICAL INTELLIGENCE" wordmark, and (when a team is in
 /// scope) a thin per-team accent strip beneath the gloss bar.
 class AppScaffold extends StatelessWidget {

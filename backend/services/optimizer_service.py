@@ -20,13 +20,13 @@ DEFAULT_SIMULATIONS = 1_000
 class OptimizerService:
     """Constrained tactical optimizer with two interchangeable backends.
 
-    Default backend: ``mc`` — seeded Monte Carlo sampling over the feasible
+    Default backend: ``mc``, seeded Monte Carlo sampling over the feasible
     region (production-safer; always returns an in-distribution candidate).
     Seed and sample count are configured via ``settings.optimizer_seed`` and
     ``settings.optimizer_num_simulations``. Reproducibility per
     Pineau et al. (2021, JMLR 22:164).
 
-    Opt-in backend: ``trust_constr`` — scipy ``trust-constr`` interior-point
+    Opt-in backend: ``trust_constr``, scipy ``trust-constr`` interior-point
     solver per Byrd, Hribar & Nocedal (1999, SIAM Journal on Optimization
     9(4):877-900). Sample-efficient (~4x fewer CatBoost evaluations in the
     convergent case) and deterministic per fixture. Reformulates the
@@ -82,7 +82,7 @@ class OptimizerService:
         result["fallback_used"] = self._method == "trust_constr"
         return result
 
-    # ── MC backend (default) ────────────────────────────────────────────────
+    # MC backend (default)
 
     def _optimize_mc(self, baseline_features: pd.DataFrame, num_simulations: int) -> dict:
         # Vectorised conditional Monte Carlo. Candidates are drawn by the shared
@@ -170,7 +170,7 @@ class OptimizerService:
             "valid_simulations": valid_count,
         }
 
-    # ── trust-constr backend (opt-in via UMBRARO_OPTIMIZER_METHOD=trust_constr) ─
+    # trust-constr backend (opt-in via UMBRARO_OPTIMIZER_METHOD=trust_constr)
 
     def _optimize_trust_constr(self, baseline_features: pd.DataFrame) -> dict:
         baseline_prob = self._model.predict_proba(baseline_features)
@@ -281,7 +281,7 @@ class OptimizerService:
             "iterations": int(result.nit),
         }
 
-    # ── Shared bounds / diagnosis helpers ───────────────────────────────────
+    # Shared bounds / diagnosis helpers
 
     def _fallback_bounds(self, features: pd.DataFrame) -> dict:
         row = features.iloc[0]

@@ -8,8 +8,8 @@ which (per team) fetches ``/competitors/{tid}/profile.json`` and upserts
 the result into ``sr_teams`` + ``sr_players`` via
 :func:`backend.sportradar.repository.upsert_profile`.
 
-After this script succeeds the cross-check pipeline (already in the repo
-from Iteration K) becomes runnable end-to-end::
+After this script succeeds the cross-check pipeline (already in the repo)
+becomes runnable end-to-end::
 
     python backend/scripts/sync_sportradar_squad.py            # populate DB
     python backend/scripts/fetch_sportradar_positions.py       # write snapshot
@@ -17,16 +17,16 @@ from Iteration K) becomes runnable end-to-end::
 
 Hardcoded fallbacks (used only when discovery fails):
 
-* Competition: ``sr:competition:152`` — Romania Superliga
-* Season:      ``sr:season:131507`` — 2025/26 (cross-referenced from
+* Competition: ``sr:competition:152``, Romania Superliga
+* Season:      ``sr:season:131507``, 2025/26 (cross-referenced from
   ``backend/api/v1/endpoints/standings.py``)
 
 Exit codes:
 
-* ``0`` — sync completed successfully.
-* ``1`` — Sportradar API key invalid / 403.
-* ``2`` — Sportradar unreachable / no competitions returned.
-* ``3`` — sync raised an exception midway (the partial state is still
+* ``0``, sync completed successfully.
+* ``1``, Sportradar API key invalid / 403.
+* ``2``, Sportradar unreachable / no competitions returned.
+* ``3``, sync raised an exception midway (the partial state is still
   committed; rerun safely).
 """
 
@@ -70,9 +70,9 @@ async def _smoke_test_key(client: SportradarClient) -> bool:
         _print(f"FAIL: Sportradar rejected the key ({exc}).")
         return False
     if not data or not data.get("competitions"):
-        _print("FAIL: /competitions.json returned nothing — Sportradar may be unreachable.")
+        _print("FAIL: /competitions.json returned nothing, Sportradar may be unreachable.")
         return False
-    _print(f"OK: API key verified — {len(data.get('competitions', []))} competitions returned.")
+    _print(f"OK: API key verified, {len(data.get('competitions', []))} competitions returned.")
     return True
 
 
@@ -170,14 +170,14 @@ async def _run_sync(client: SportradarClient, season_id: str) -> int:
             f"name='{ucluj_row[1]}', squad size = {ucluj_squad}."
         )
     else:
-        _print("WARN: No sr_teams row matched 'Universitatea Cluj' — sync ran but "
+        _print("WARN: No sr_teams row matched 'Universitatea Cluj', sync ran but "
                "the team is missing from the season's competitor list.")
         rc = 3
     return rc
 
 
 async def _main() -> int:
-    _print("Sportradar squad sync — FC Universitatea Cluj")
+    _print("Sportradar squad sync, FC Universitatea Cluj")
     client = SportradarClient()
     if not await _smoke_test_key(client):
         return 1

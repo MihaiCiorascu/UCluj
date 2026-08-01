@@ -64,7 +64,7 @@ FEATURE_LABELS_AWAY: dict[str, str] = {
     "Away_YellowCards_5": "Discipline (Yellow Cards)",
     "Home_Saves_5": "Opponent GK Saves",
     "Away_Saves_5": "Goalkeeper Saves",
-    # OPTIMIZABLE_LABELS are Home_* features — when away they're opponent's
+    # OPTIMIZABLE_LABELS are Home_* features, when away they're opponent's
     "Home_Poss_5": "Opponent Possession",
     "Home_Shots_5": "Opponent Shots",
     "Home_SoT_5": "Opponent SoT",

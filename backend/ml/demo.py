@@ -1,5 +1,5 @@
 """
-demo.py — Quick demo using the uploaded Arges vs Botosani match file.
+demo.py, Quick demo using the uploaded Arges vs Botosani match file.
 
 This simulates what the pipeline does when you feed it multiple match files.
 Run from the football_xi/ directory:
@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from utils.feature_engineering import build_dataset_from_files, load_match_stats_json
 from models.xi_predictor import StartingXIPredictor, FORMATIONS
 
-# ── Paths ──────────────────────────────────────────────────────────────────────
+# Paths
 MATCH_FILE = "/mnt/user-data/uploads/Arges__-_Botos_ani__0-0_players_stats.json"
 
 # Player profile for D. Aftene (provided by user)
@@ -34,7 +34,7 @@ SAMPLE_PROFILES = {
     }
 }
 
-# ── Demo: assign mock team IDs from the match data ────────────────────────────
+# Demo: assign mock team IDs from the match data
 def extract_team_assignments(match_file: str, sample_profiles: dict) -> dict:
     """
     Since the match file doesn't encode teamId per player,
@@ -64,7 +64,7 @@ def extract_team_assignments(match_file: str, sample_profiles: dict) -> dict:
 
 def main():
     print("=" * 60)
-    print("  Football Starting XI Predictor — DEMO")
+    print("  Football Starting XI Predictor, DEMO")
     print("=" * 60)
 
     # 1. Build feature dataset from the single sample file
@@ -84,15 +84,15 @@ def main():
     print(f"[Demo] Your team (Arges, ID {my_team_id}): {len(my_team)} players")
     print(f"[Demo] Opponent (Botosani, ID {opp_team_id}): {len(opp_team)} players")
 
-    # 3. Train predictor (unsupervised — no labels from a single match)
+    # 3. Train predictor (unsupervised, no labels from a single match)
     predictor = StartingXIPredictor(model_type="rf")
     predictor.fit(df, labels=None, verbose=True)
 
     # 4. Predict XI for 4-3-3
     for formation in ["4-3-3", "4-4-2", "3-5-2"]:
-        print(f"\n{'─'*60}")
+        print(f"\n{'-'*60}")
         print(f"  FORMATION: {formation}")
-        print(f"{'─'*60}")
+        print(f"{'-'*60}")
         result = predictor.predict_xi(
             df=my_team,
             formation=formation,

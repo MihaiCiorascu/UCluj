@@ -558,9 +558,8 @@ class _HeroClubCard extends StatelessWidget {
           ]),
           const SizedBox(height: SpacingTokens.xl),
           Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            // Iteration N polish: ratio between rank (48 px) and the RANK
-            // label (12 px) is now ~4:1, closer to the Stoic Analyst spec's
-            // display-lg / label-sm contrast than the previous 7:1.
+            // Ratio between rank (48 px) and the RANK label (12 px) is
+            // ~4:1, matching the spec's display-lg / label-sm contrast.
             //
             // PR 13 header polish: the rank sits in a pod with a 3 px cobalt
             // left rule so it reads as the anchor metric of the hero card,
@@ -666,9 +665,9 @@ class _StandingsRow extends StatelessWidget {
       fontWeight: hl ? FontWeight.w700 : FontWeight.w400,
     );
 
-    // Iteration N polish: when GD = 0 and the row is not highlighted, drop to
-    // textMuted so the neutral case does not collide with the PCT column,
-    // which otherwise renders in the same `primary` colour.
+    // When GD = 0 and the row is not highlighted, drop to textMuted so the
+    // neutral case does not collide with the PCT column, which otherwise
+    // renders in the same `primary` colour.
     final gdColor = hl
         ? c.accent
         : team.gd > 0

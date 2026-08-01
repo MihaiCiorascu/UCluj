@@ -2,9 +2,9 @@
 Cross-check Wyscout-derived fine positions against the Transfermarkt snapshot.
 
 Reads:
-  - ``ml/data/drive_cache/players (1).json`` — Wyscout profiles for the
+  - ``ml/data/drive_cache/players (1).json``, Wyscout profiles for the
     FC Universitatea Cluj squad.
-  - ``ml/data/transfermarkt_positions.json`` — produced by
+  - ``ml/data/transfermarkt_positions.json``, produced by
     :mod:`scripts.fetch_transfermarkt_positions`.
 
 Writes a CSV (``ml/data/position_cross_check.csv``) with one row per

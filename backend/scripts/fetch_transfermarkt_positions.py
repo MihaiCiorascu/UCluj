@@ -84,7 +84,7 @@ def main() -> int:
         # Write an empty stub so the cross-check script can still report cleanly.
         OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
         with OUT_PATH.open("w", encoding="utf-8") as f:
-            json.dump({"status": "skipped — wrapper not installed", "entries": {}}, f, indent=2)
+            json.dump({"status": "skipped, wrapper not installed", "entries": {}}, f, indent=2)
         return 1
 
     squad = _load_ucluj_squad()

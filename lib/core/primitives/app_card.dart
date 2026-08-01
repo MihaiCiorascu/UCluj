@@ -4,11 +4,8 @@ import '../theme/app_colors.dart';
 import '../theme/glossy_widgets.dart';
 import '../theme/spacing_tokens.dart';
 
-/// Iteration N — ``AppCard`` is the project-wide stat / info container.
-/// It now renders as a ``GlossyCard`` (gradient surface, chrome border,
-/// soft drop-shadow). The public API (`child`, `padding`, optional
-/// `backgroundColor`) is preserved so the eleven screens consuming it
-/// pick up the new aesthetic without per-call-site edits.
+/// Project-wide stat / info container. Renders as a ``GlossyCard``
+/// (gradient surface, chrome border, soft drop-shadow).
 ///
 /// If a caller passes ``backgroundColor`` explicitly, we honour it as a
 /// flat solid (used in rare cases where the glossy gradient looks wrong,

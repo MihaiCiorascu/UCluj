@@ -11,14 +11,14 @@ from local files, so a concluded match renders without any network call.
 
 Data sources (all committed under ``backend/ml/data``):
 
-* ``drive_cache/*_players_stats.json`` — per-match Wyscout player stat blocks.
+* ``drive_cache/*_players_stats.json``, per-match Wyscout player stat blocks.
   Each file's ``players[0].matchId`` is the Wyscout match id; that builds the
   ``{matchId(str) -> filepath}`` index (:func:`build_drive_cache_index`).
-* ``superliga_2025_26_fixtures.json`` (via :mod:`services.baked_fixtures`) — the
+* ``superliga_2025_26_fixtures.json`` (via :mod:`services.baked_fixtures`), the
   fixture's ``home_team`` / ``away_team`` registry shorts and date.
-* ``matchid_to_date.json`` (via :mod:`ml.match_dates`) — the match calendar date.
-* ``drive_cache/players (1).json`` — Wyscout player profiles (name, role).
-* ``wyscout_to_sofascore.json`` — photo URLs + the grade name index.
+* ``matchid_to_date.json`` (via :mod:`ml.match_dates`), the match calendar date.
+* ``drive_cache/players (1).json``, Wyscout player profiles (name, role).
+* ``wyscout_to_sofascore.json``, photo URLs + the grade name index.
 
 Home/away split. Each player in the match file is assigned to a club AS OF THE
 MATCH DATE with the date-aware resolver
@@ -167,7 +167,7 @@ def _attach_sub_minutes(match_id, home_players: list[dict], away_players: list[d
                 p["came_on_minute"], p["came_on_stoppage"] = hit
 
 
-# ── drive_cache match-id index ────────────────────────────────────────────────
+# drive_cache match-id index
 _INDEX_CACHE: Optional[dict[str, str]] = None
 _PROFILES_CACHE: Optional[dict[int, dict]] = None
 _SQUAD_CACHE: dict[str, set] = {}
@@ -236,7 +236,7 @@ def _all_time_squad(team: TeamRef) -> set:
     return _SQUAD_CACHE[team.short]
 
 
-# ── Wyscout fine-position name (for official-slot assignment) ─────────────────
+# Wyscout fine-position name (for official-slot assignment)
 # Most-played Wyscout position NAME per player, so ``match_details``'s
 # ``_assign_official_positions`` -> ``_fine_from_sr_position`` keyword mapping
 # resolves the fine slot (it already understands "Centre Back", "Defensive
@@ -276,7 +276,7 @@ def _coarse_from_name(name: str) -> str:
     return "M"
 
 
-# ── Team-stat aggregation ─────────────────────────────────────────────────────
+# Team-stat aggregation
 def _aggregate_team_stats(player_totals: list[dict]) -> dict:
     """Aggregate one side's per-player ``total`` blocks into team statistics.
 
@@ -332,7 +332,7 @@ def _aggregate_team_stats(player_totals: list[dict]) -> dict:
     }
 
 
-# ── Official team stats (baked from Sportradar summaries) ─────────────────────
+# Official team stats (baked from Sportradar summaries)
 _BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 _TEAM_STATS_PATH = os.path.join(_BACKEND_ROOT, "ml", "data", "matchid_to_team_stats.json")
 _TEAM_STATS_CACHE: Optional[dict] = None
@@ -359,7 +359,7 @@ def _official_team_stats(match_id: str) -> Optional[dict]:
     return _TEAM_STATS_CACHE.get(str(match_id))
 
 
-# ── Public entry point ────────────────────────────────────────────────────────
+# Public entry point
 def build_offline_match_details(match_id: str, grade_service, photo_service) -> Optional[dict]:
     """Build the ``/match-details`` payload for a Wyscout match id, or ``None``.
 

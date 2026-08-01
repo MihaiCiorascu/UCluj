@@ -1,6 +1,6 @@
 """
-Football Starting XI Predictor — Main Pipeline
-==============================================
+Football Starting XI Predictor, main pipeline.
+
 Usage:
     python pipeline.py \
         --my-team-id 11571 \
@@ -10,7 +10,7 @@ Usage:
         --player-profiles ./data/player_profiles.json \
         --output ./output_xi.json
 
-Or import and call programmatically — see bottom of file for example.
+Or import and call programmatically, see bottom of file for example.
 """
 
 import argparse
@@ -25,7 +25,7 @@ from typing import Dict, List, Optional
 import pandas as pd
 import numpy as np
 
-# ── Local imports ──────────────────────────────────────────────────────────────
+# Local imports
 sys.path.insert(0, str(Path(__file__).parent))
 from feature_engineering import (
     build_dataset_from_files,
@@ -40,7 +40,7 @@ from drive_loader import (
 )
 
 
-# ─── Helper: load player profiles ─────────────────────────────────────────────
+# Helper: load player profiles
 
 def load_player_profiles(filepath: str) -> Dict[int, Dict]:
     """
@@ -72,7 +72,7 @@ def load_team_assignments(filepath: str) -> Dict[int, int]:
     return {int(k): int(v) for k, v in raw.items()}
 
 
-# ─── Core pipeline function ────────────────────────────────────────────────────
+# Core pipeline function
 
 def run_pipeline(
     my_team_id: int,
@@ -90,21 +90,13 @@ def run_pipeline(
     force_redownload: bool = False,
 ) -> Dict:
     """
-    Full end-to-end pipeline.
-
-    Steps:
-      0. (Optional) Download training data from Google Drive
-      1. Discover match stat files
-      2. Load player profiles
-      3. Build feature dataset
-      4. Assign team IDs (from file or extracted from stats)
-      5. Train/load model
-      6. Predict starting XI for your team vs opponent
-      7. Print and optionally save results
+    Full end-to-end pipeline: (optional) Drive download, discover match files,
+    load profiles, build features, assign team IDs, train/load model, predict
+    the XI vs opponent, then print/save.
 
     Returns dict with xi, bench, scores.
     """
-    # ── 0. Download from Google Drive (if requested) ───────────────────────
+    # 0. Download from Google Drive (if requested)
     if drive_folder_id:
         cache = download_drive_folder(drive_folder_id, drive_cache_dir, force_redownload)
         discovered_stats_dir, discovered_profiles = discover_data_paths(cache)
@@ -113,34 +105,34 @@ def run_pipeline(
         if not player_profiles_path and discovered_profiles:
             player_profiles_path = discovered_profiles
         if verbose:
-            print(f"[Drive] match_stats_dir  → {match_stats_dir}")
-            print(f"[Drive] player_profiles  → {player_profiles_path or '(none found)'}")
+            print(f"match_stats_dir  → {match_stats_dir}")
+            print(f"player_profiles  → {player_profiles_path or '(none found)'}")
 
     if not match_stats_dir:
         raise ValueError("Provide --match-stats-dir or --drive-folder-id so the pipeline knows where to find data.")
 
-    # ── 1. Find match files ────────────────────────────────────────────────
+    # 1. Find match files
     match_files = sorted(glob.glob(os.path.join(match_stats_dir, "*.json")))
     if not match_files:
         raise FileNotFoundError(f"No JSON files found in: {match_stats_dir}")
     if verbose:
-        print(f"[Pipeline] Found {len(match_files)} match stat file(s)")
+        print(f"Found {len(match_files)} match stat file(s)")
 
-    # ── 2. Load player profiles ────────────────────────────────────────────
+    # 2. Load player profiles
     player_profiles: Dict[int, Dict] = {}
     if player_profiles_path and os.path.exists(player_profiles_path):
         player_profiles = load_player_profiles(player_profiles_path)
         if verbose:
-            print(f"[Pipeline] Loaded {len(player_profiles)} player profiles")
+            print(f"Loaded {len(player_profiles)} player profiles")
 
-    # ── 3. Build feature dataset ───────────────────────────────────────────
+    # 3. Build feature dataset
     df = build_dataset_from_files(match_files, player_profiles)
     if df.empty:
-        raise ValueError("Feature dataset is empty — check your match stat files.")
+        raise ValueError("Feature dataset is empty, check your match stat files.")
     if verbose:
-        print(f"[Pipeline] Dataset: {len(df)} players, {len(df.columns)} features")
+        print(f"Dataset: {len(df)} players, {len(df.columns)} features")
 
-    # ── 4. Assign team IDs ─────────────────────────────────────────────────
+    # 4. Assign team IDs
     # Try loading from external file, then from profiles, then from match stats
     team_map = load_team_assignments(team_assignments_path or "")
 
@@ -157,22 +149,22 @@ def run_pipeline(
     opp_team_df = df[df["teamId"] == opponent_team_id].copy() if opponent_team_id else pd.DataFrame()
 
     if my_team_df.empty:
-        print(f"[Warning] No players found for team ID {my_team_id}. Using all players.")
+        print(f"Warning: no players found for team ID {my_team_id}. Using all players.")
         my_team_df = df.copy()
 
     if verbose:
-        print(f"[Pipeline] Your team ({my_team_id}): {len(my_team_df)} players")
+        print(f"Your team ({my_team_id}): {len(my_team_df)} players")
         if opponent_team_id:
-            print(f"[Pipeline] Opponent ({opponent_team_id}): {len(opp_team_df)} players")
+            print(f"Opponent ({opponent_team_id}): {len(opp_team_df)} players")
 
-    # ── 5. Build or load model ─────────────────────────────────────────────
+    # 5. Build or load model
     predictor = StartingXIPredictor(model_type="auto")
 
     if model_load_path and os.path.exists(model_load_path):
         with open(model_load_path, "rb") as f:
             predictor = pickle.load(f)
         if verbose:
-            print(f"[Pipeline] Loaded model from {model_load_path}")
+            print(f"Loaded model from {model_load_path}")
     else:
         # Try to create training labels:
         # If we have historical matchesInStart data, use it
@@ -188,7 +180,7 @@ def run_pipeline(
                         labels = labels.reindex(df.index).fillna(0).astype(int)
                 except Exception as e:
                     if verbose:
-                        print(f"[Pipeline] Could not build proxy labels: {e}")
+                        print(f"Could not build proxy labels: {e}")
                     labels = None
             predictor.fit(df, labels=labels, verbose=verbose)
         else:
@@ -198,9 +190,9 @@ def run_pipeline(
             with open(model_save_path, "wb") as f:
                 pickle.dump(predictor, f)
             if verbose:
-                print(f"[Pipeline] Model saved to {model_save_path}")
+                print(f"Model saved to {model_save_path}")
 
-    # ── 6. Predict XI ──────────────────────────────────────────────────────
+    # 6. Predict XI
     result = predictor.predict_xi(
         df=my_team_df,
         formation=formation,
@@ -208,28 +200,28 @@ def run_pipeline(
         opponent_df=opp_team_df if not opp_team_df.empty else None,
     )
 
-    # ── 7. Format & print ──────────────────────────────────────────────────
+    # 7. Format and print
     if verbose:
         _print_xi(result, my_team_id, opponent_team_id)
 
-    # ── 8. Feature importance ──────────────────────────────────────────────
+    # 8. Feature importance
     fi = predictor.get_feature_importance()
     if fi is not None and verbose:
-        print("\n── Top 10 Feature Importances ──────────────────────────────")
+        print("\nTop 10 Feature Importances")
         print(fi.head(10).to_string(index=False))
 
-    # ── 9. Save output ─────────────────────────────────────────────────────
+    # 9. Save output
     output = _format_output(result, my_team_id, opponent_team_id)
     if output_path:
         with open(output_path, "w") as f:
             json.dump(output, f, indent=2)
         if verbose:
-            print(f"\n[Pipeline] Results saved to {output_path}")
+            print(f"\nResults saved to {output_path}")
 
     return output
 
 
-# ─── Proxy label builder ───────────────────────────────────────────────────────
+# Proxy label builder
 
 def _build_proxy_labels(
     match_files: List[str],
@@ -259,17 +251,15 @@ def _build_proxy_labels(
     return pd.Series(start_rate).apply(lambda x: 1 if x >= 0.5 else 0)
 
 
-# ─── Formatting helpers ────────────────────────────────────────────────────────
+# Formatting helpers
 
 def _print_xi(result: Dict, my_team_id: int, opponent_team_id: Optional[int]):
     formation = result["formation"]
     xi = result["xi"]
     bench = result["bench"]
 
-    print(f"\n{'='*60}")
-    print(f"  PREDICTED STARTING XI  |  Formation: {formation}")
+    print(f"\nPREDICTED STARTING XI  |  Formation: {formation}")
     print(f"  Your Team: {my_team_id}  |  Opponent: {opponent_team_id or 'Unknown'}")
-    print(f"{'='*60}")
 
     order = ["GK", "DEF", "MID", "FWD"]
     for group in order:
@@ -284,15 +274,12 @@ def _print_xi(result: Dict, my_team_id: int, opponent_team_id: Optional[int]):
             mins = int(row.get("total_minutes", 0))
             print(f"    {name:<25} | {role:<25} | Score: {score:.3f} | Mins: {mins}")
 
-    print(f"\n{'─'*60}")
-    print("  BENCH (top 7 remaining)")
-    print(f"{'─'*60}")
+    print("\nBENCH (top 7 remaining)")
     for _, row in bench.iterrows():
         name = row.get("shortName") or row.get("playerId")
         score = row.get("predicted_score", 0)
         group = row.get("role_group", "")
         print(f"    {name:<25} | {group} | Score: {score:.3f}")
-    print(f"{'='*60}\n")
 
 
 def _format_output(result: Dict, my_team_id: int, opponent_team_id: Optional[int]) -> Dict:
@@ -330,7 +317,7 @@ def _format_output(result: Dict, my_team_id: int, opponent_team_id: Optional[int
     }
 
 
-# ─── CLI Entry Point ───────────────────────────────────────────────────────────
+# CLI entry point
 
 def main():
     parser = argparse.ArgumentParser(

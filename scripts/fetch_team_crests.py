@@ -1,7 +1,7 @@
 """
-Iteration P — Re-fetch all sixteen Romanian Superliga club crests from
-Wikipedia at high resolution and normalise them to a 1024x1024 transparent
-square canvas in ``assets/teams/<slug>.png``.
+Re-fetch all sixteen Romanian Superliga club crests from Wikipedia at
+high resolution and normalise them to a 1024x1024 transparent square
+canvas in ``assets/teams/<slug>.png``.
 
 Why: the existing crests are 300-960 px sources that look pixelated when
 displayed at any size beyond a tiny dropdown thumbnail (the user flagged
@@ -26,7 +26,7 @@ Licensing note: each crest is uploaded to Wikipedia under a fair-use
 rationale for use *as the team's identifying mark*. The UmbraRo app uses
 them for the same purpose (identifying the team in the squad picker,
 fixtures dashboard, etc.). Same posture as the previous low-resolution
-versions already in the repo — replacing with higher-resolution versions
+versions already in the repo, replacing with higher-resolution versions
 of the same logos does not change the licensing posture.
 """
 
@@ -106,7 +106,7 @@ def _maybe_upgrade_to_2048(url: str) -> str:
 
 
 def _resolve_image_url(page: str, fallback: str | None) -> tuple[str | None, str]:
-    """Return (image_url, source_label) — upgraded to a 2048 px thumbnail
+    """Return (image_url, source_label), upgraded to a 2048 px thumbnail
     whenever the URL pattern allows it."""
     for candidate in (page, fallback):
         if candidate is None:

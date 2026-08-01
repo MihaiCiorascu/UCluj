@@ -59,7 +59,7 @@ class SportradarClient:
 
                 if resp.status_code == 403:
                     logger.error("SR 403: access denied for %s", path)
-                    raise SportradarError(403, "Access denied — check API key and access level")
+                    raise SportradarError(403, "Access denied, check API key and access level")
 
                 if resp.status_code == 429 or resp.status_code >= 500:
                     wait = 2 ** attempt
@@ -128,7 +128,7 @@ class SportradarClient:
         return await self.get(f"sport_events/{eid}/timeline.json")
 
     async def daily_schedules(self, date_iso: str) -> dict | None:
-        """date_iso: YYYY-MM-DD — `/schedules/{date}/schedules.json`"""
+        """date_iso: YYYY-MM-DD, `/schedules/{date}/schedules.json`"""
         return await self.get(f"schedules/{date_iso}/schedules.json")
 
     async def competitor_schedules(self, competitor_id: str) -> dict | None:

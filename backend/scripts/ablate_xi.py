@@ -1,26 +1,14 @@
 """
-[M-10] availability_last_5 ablation + Heuristic Composite fresh measurement.
+availability_last_5 ablation plus a fresh Heuristic Composite measurement.
 
-Three arms, single-pass rolling-origin CV on the same 428 cells the Iter-S
-comparison used (commit 4c79005):
+Runs rolling-origin CV across three arms:
+  Arm A, LR-full: the deployed model with all features.
+  Arm B, LR-no-availability: same model class and hyperparameters, with the
+    availability and recency features dropped (the leak surface).
+  Arm C, Heuristic Composite: re-implements the per-position weighted-KPI
+    scorer from backend/ml/xi_predictor.py using FINE_POSITION_WEIGHTS.
 
-  Arm A — LR-full:           the deployed model; all 51 features
-  Arm B — LR-no-availability: same model class + hyperparameters; AVAILABILITY
-                              features dropped (availability_last_5, started_last_match,
-                              match_gap_since_last_appearance, cumulative_minutes_before_fixture,
-                              cumulative_appearances)
-  Arm C — Heuristic Composite: re-implements the per-position weighted-KPI scorer
-                               from backend/ml/xi_predictor.py using FINE_POSITION_WEIGHTS;
-                               replaces the stale 0.425 historical reference
-
-Closes:
-  - M-10 (originally "availability_last_5 ablation"; now expanded to also
-    address Iter-S limitation #1 by measuring the heuristic on the L-iteration
-    dataset)
-  - Iter-S limitation #1 (Heuristic Composite was not measured in Iter-S)
-  - Iter-S limitation #4 (availability_last_5 not ablated)
-
-Cite for the leakage framing: Kaufman, Rosset, Perlich & Stitelman (2012),
+Leakage framing follows Kaufman, Rosset, Perlich and Stitelman (2012),
 "Leakage in Data Mining: Formulation, Detection, and Avoidance", ACM TKDD 6(4):15.
 
 Run:
@@ -30,9 +18,6 @@ Run:
 Output:
     Stdout: per-arm aggregate Jaccard@11 + NDCG@11 + decision interpretation
     JSON: backend/scripts/_m10_results.json (gitignored)
-
-Estimated runtime: ~30-60 minutes (3 arms × 428 cells; LR is fast,
-Heuristic Composite has no fit cost).
 """
 from __future__ import annotations
 
@@ -95,7 +80,7 @@ COARSE_FROM_FINE = {
 }
 
 
-# ── Metrics ─────────────────────────────────────────────────────────────────
+# Metrics
 
 
 def _jaccard_at_11(pred_set: set, actual: set) -> float:
@@ -121,7 +106,7 @@ def _score_to_xi_set(scores: np.ndarray, role_groups: pd.Series, player_ids: pd.
     return set(_hungarian_xi(test_df, formation=FORMATION))
 
 
-# ── Arm C: Heuristic Composite scorer ──────────────────────────────────────
+# Arm C: Heuristic Composite scorer
 
 
 def _heuristic_score(
@@ -132,14 +117,11 @@ def _heuristic_score(
 ) -> np.ndarray:
     """Re-implement the xi_predictor.py heuristic composite scorer.
 
-    Per-player score = sum over kpi of weight[fine_position, kpi] * z_score(kpi, fine_position)
+    Per-player score = sum over kpi of weight[fine_position, kpi] * z_score(kpi, fine_position),
     where z_score is computed on the train fold's KPI distribution within
     each fine position group. KPIs the position weight dict references that
     aren't in feature_cols are silently skipped (e.g., availability_score
     if the training table doesn't carry it directly).
-
-    Used as Arm C — fresh measurement of the deployed heuristic on the
-    L-iteration data, replacing the stale 0.425 historical comment.
     """
     n_test = len(test_df)
     scores = np.zeros(n_test, dtype=float)
@@ -185,7 +167,7 @@ def _heuristic_score(
     return scores
 
 
-# ── Per-cell evaluator ─────────────────────────────────────────────────────
+# Per-cell evaluator
 
 
 def _evaluate_lr(
@@ -242,38 +224,29 @@ def _evaluate_heuristic(
                 "ok": False, "err": f"Heuristic: {type(exc).__name__}: {exc}"}
 
 
-# ── Main CV loop ────────────────────────────────────────────────────────────
+# Main CV loop
 
 
 def run_cv() -> dict:
-    print("=" * 70)
-    print("[M-10] availability_last_5 ablation + Heuristic Composite measurement")
-    print("=" * 70)
-    print()
-    print("Loading data ...")
     profiles = load_player_profiles(str(DRIVE / "players (1).json"))
     match_files = sorted(glob.glob(str(DRIVE / "*_players_stats.json")))
     print(f"  {len(match_files)} match files, {len(profiles)} player profiles.")
 
     if not LINEUP_HISTORY.exists():
-        raise FileNotFoundError("Lineup history missing — run extract_starting_xi_history_league.py first.")
+        raise FileNotFoundError("Lineup history missing, run extract_starting_xi_history_league.py first.")
     with LINEUP_HISTORY.open("r", encoding="utf-8") as f:
         league_history = json.load(f)
     print(f"  league history: {league_history['n_teams']} teams.")
 
-    print("\nBuilding per-team static DataFrames (slow) ...")
     static_by_team = _build_static_df_per_team(SUPERLIGA_TEAMS, profiles, match_files)
     print(f"  built {len(static_by_team)} static DataFrames.")
 
-    print("\nIndexing per-match player blocks ...")
     blocks_by_pid = _per_match_blocks(match_files)
     print(f"  indexed {len(blocks_by_pid)} player histories.")
 
-    print("\nBuilding opponent-XI lookup ...")
     opp_xi_lookup = _build_opp_xi_lookup(league_history, static_by_team)
     print(f"  populated opp_xi for {len(opp_xi_lookup)} (matchId, team) pairs.")
 
-    print("\nAssembling training rows ...")
     table = _build_training_rows(league_history, static_by_team, blocks_by_pid, opp_xi_lookup)
     print(f"  training table shape: {table.shape}")
 
@@ -312,7 +285,6 @@ def run_cv() -> dict:
 
     per_arm_records: Dict[str, List[dict]] = {arm: [] for arm in ("LR_full", "LR_no_avail", "Heuristic")}
 
-    print("\n--- Running rolling-origin CV across 3 arms ---")
     cell_count = 0
     started = time.time()
     for team in SUPERLIGA_TEAMS:
@@ -399,9 +371,7 @@ def run_cv() -> dict:
 
 def print_report(results: dict) -> None:
     print()
-    print("=" * 80)
-    print("[M-10] PER-ARM AGGREGATES")
-    print("=" * 80)
+    print("PER-ARM AGGREGATES")
     rows = []
     for arm, recs in results["per_arm_records"].items():
         ok = [r for r in recs if r.get("ok")]
@@ -425,33 +395,29 @@ def print_report(results: dict) -> None:
     if "LR_full" in by_arm and "LR_no_avail" in by_arm:
         delta = by_arm["LR_full"]["jaccard_mean"] - by_arm["LR_no_avail"]["jaccard_mean"]
         print()
-        print("=" * 80)
-        print("[M-10] LEAKAGE DELTA (Arm A LR_full minus Arm B LR_no_avail)")
-        print("=" * 80)
+        print("LEAKAGE DELTA (Arm A LR_full minus Arm B LR_no_avail)")
         print(f"  Jaccard delta: {delta:+.4f} ({delta*100:+.2f}pp)")
         if abs(delta) < 0.01:
-            print("  Interpretation: leakage is ACADEMIC — feature contributes < 1pp.")
+            print("  Interpretation: leakage is academic, feature contributes < 1pp.")
         elif abs(delta) < 0.03:
-            print("  Interpretation: leakage is REAL BUT MODEST (1-3pp). Document; cite Kaufman et al. (2012).")
+            print("  Interpretation: leakage is real but modest (1-3pp). Document and cite Kaufman et al. (2012).")
         else:
-            print("  Interpretation: leakage is SUBSTANTIAL (>3pp). Re-cite Iter-S Jaccard with caveat.")
+            print("  Interpretation: leakage is substantial (>3pp). Re-cite the Jaccard figure with a caveat.")
 
     if "Heuristic" in by_arm and "LR_full" in by_arm:
         h = by_arm["Heuristic"]["jaccard_mean"]
         lr = by_arm["LR_full"]["jaccard_mean"]
         print()
-        print("=" * 80)
-        print("[M-10] FRESH HEURISTIC COMPOSITE vs LR-FULL")
-        print("=" * 80)
+        print("FRESH HEURISTIC COMPOSITE vs LR-FULL")
         print(f"  Heuristic Composite Jaccard: {h:.4f}")
         print(f"  LR_full Jaccard:             {lr:.4f}")
         print(f"  Supervised advantage:        {(lr - h)*100:+.2f}pp")
         if h < 0.50:
-            print("  Interpretation: heuristic clearly weaker; supervised LR wins unambiguously.")
+            print("  Interpretation: heuristic clearly weaker, supervised LR wins unambiguously.")
         elif h < 0.60:
-            print("  Interpretation: heuristic is competitive; supervised edge is narrower than the historical narrative.")
+            print("  Interpretation: heuristic is competitive, supervised edge is narrower than the historical narrative.")
         else:
-            print("  Interpretation: heuristic essentially matches supervised LR — surprising; warrants deeper investigation.")
+            print("  Interpretation: heuristic essentially matches supervised LR, warrants deeper investigation.")
 
 
 def save_results_json(results: dict, path: Path) -> None:
@@ -465,7 +431,7 @@ def save_results_json(results: dict, path: Path) -> None:
         "per_arm_records": results["per_arm_records"],
     }
     path.write_text(json.dumps(payload, indent=2, default=float), encoding="utf-8")
-    print(f"\n[M-10] Wrote results JSON: {path}")
+    print(f"\nWrote results JSON: {path}")
 
 
 def main() -> int:

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/superliga_teams.dart';
 
-/// Iteration N.8 — per-team accent overlay.
+/// Per-team accent overlay.
 ///
 /// An ``InheritedWidget`` that carries the logged-in user's selected team
 /// down the widget tree. Descendants ask for the team's colours via

@@ -250,7 +250,7 @@ async def _compute_week(
                     )
 
                     if involves_subject:
-                        # ── Subject fixture: subject-centric diagnostic + blueprint ──
+                        # Subject fixture: subject-centric diagnostic + blueprint
                         subject_is_home = _is_subject(home_team, subject)
                         # P(subject win) computed DIRECTLY by placing the subject in
                         # the home slot of the feature vector, whether it actually
@@ -304,11 +304,11 @@ async def _compute_week(
                         item["narrative"] = narrative
                         item["prescription"] = prescription
                     else:
-                        # ── Non-subject fixture: neutral 3-way odds, no diagnostic ──
+                        # Non-subject fixture: neutral 3-way odds, no diagnostic
                         # Two independent BINARY calls (each team placed in the
                         # home slot) give P(home win) and P(away win) directly;
                         # the draw is the documented residual mass. This is NOT a
-                        # 3-way classifier — it is two binary predictions plus a
+                        # 3-way classifier, it is two binary predictions plus a
                         # leftover. We do NOT apply the U-Cluj complement here.
                         home_win = feature_svc.win_prob(model_svc, home_lookup, away_lookup)
                         away_win = feature_svc.win_prob(model_svc, away_lookup, home_lookup)
@@ -392,7 +392,7 @@ async def _fetch_all_sr_fixtures() -> list[dict]:
         home_score = status.get("home_score")
         away_score = status.get("away_score")
 
-        # Skip past matches with no score — they were postponed/cancelled
+        # Skip past matches with no score, they were postponed/cancelled
         match_dt = _parse_dt(kickoff)
         if match_dt < now and home_score is None:
             continue

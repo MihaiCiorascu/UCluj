@@ -84,9 +84,9 @@ def discover_data_paths(cache_dir: Path) -> Tuple[str, Optional[str]]:
       - player_profiles  : path to the player-profiles JSON (or None)
 
     Heuristic:
-      • A file is treated as a player-profile if it contains a list of objects
+      - A file is treated as a player-profile if it contains a list of objects
         with a "wyId" key, OR a dict whose values have "currentTeamId" / "role".
-      • Everything else is treated as match-stat data.
+      - Everything else is treated as match-stat data.
     """
     all_jsons = list(cache_dir.rglob("*.json"))
     if not all_jsons:

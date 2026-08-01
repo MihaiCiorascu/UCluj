@@ -4,7 +4,7 @@ Local archive of every paper cited in `../thesis/references.bib`. Filenames matc
 
 **Total: 46 PDFs + 2 HTML snapshots downloaded. After the 2026-06-11 completion pass (see bottom), only 2 cited entries lack a local PDF: `elo1978rating` (book, kept by author choice) and `friedman2001greedy` (freely available, but auto-download blocked by a JavaScript challenge, grab manually).**
 
-Generated 2026-05-19 by three parallel general-purpose agents (Tier 1+2 open-access, Tier 3 gated-but-hunted, Tier 4+5+6 classics+books+web). All PDFs verified to start with `%PDF-` magic bytes; sizes range 237 KB – 19 MB.
+Citation archive assembled on 2026-05-19. All PDFs verified to start with `%PDF-` magic bytes; sizes range 237 KB to 19 MB.
 
 ## Legend
 

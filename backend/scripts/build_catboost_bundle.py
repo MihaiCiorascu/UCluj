@@ -14,29 +14,29 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ml.feature_config import BASE_FEATURES, OPTIONAL_FEATURES, OPTIMIZABLE_FEATURES, TARGET_COL
 
 
-# Iter-Q methodology constants. Keep aligned with data/TheNotebook.ipynb.
+# Methodology constants. Keep aligned with data/TheNotebook.ipynb.
 
-# Iter-Q.2.b: explicit CHRONOLOGICAL HOLDOUT split — train on pre-SPLIT_DATE
-# fixtures, holdout = post-SPLIT_DATE. Same split as the notebook reports
-# Table 3.2 metrics against.
+# Explicit chronological holdout split: train on pre-SPLIT_DATE fixtures,
+# holdout = post-SPLIT_DATE. Same split the notebook reports Table 3.6
+# metrics against.
 SPLIT_DATE = "2024-07-01"
 
-# Iter-Q.2.a: Platt sigmoid + TimeSeriesSplit CV for both LR and tree models,
+# Platt sigmoid + TimeSeriesSplit CV for both LR and tree models,
 # consolidated to one calibration strategy across the thesis comparison.
 CALIBRATION_METHOD = "sigmoid"
-CALIBRATION_N_SPLITS = 5
+CALIBRATION_N_SPLITS = 3
 
-# Iter-Q.1 / Iter-Q.2.e: train-fold-only preprocessing for bounds, medians,
-# calibration. Bumped from v1 because the bundle now carries a calibrated
-# wrapper as `model` instead of a bare CatBoost classifier.
+# Train-fold-only preprocessing for bounds, medians, and calibration. The
+# bundle carries a calibrated wrapper as `model` instead of a bare CatBoost
+# classifier.
 SCHEMA_VERSION = "uhack-catboost-v2-calibrated"
 
 
 def _build_bounds(df: pd.DataFrame) -> dict[str, dict[str, float]]:
-    """Compute 10th/90th percentile bounds per optimizable feature.
+    """Compute 5th/95th percentile bounds per optimizable feature.
 
-    Per Iter-Q.2.e, the caller must pass ``train_df`` (not the full pool) so
-    the bounds do not leak holdout statistics into the deployed optimizer.
+    The caller must pass ``train_df`` (not the full pool) so the bounds do
+    not leak holdout statistics into the deployed optimizer.
     """
     bounds: dict[str, dict[str, float]] = {}
     for feat in OPTIMIZABLE_FEATURES:
@@ -45,8 +45,8 @@ def _build_bounds(df: pd.DataFrame) -> dict[str, dict[str, float]]:
         col = pd.to_numeric(df[feat], errors="coerce").dropna()
         if col.empty:
             continue
-        lo = float(col.quantile(0.10))
-        hi = float(col.quantile(0.90))
+        lo = float(col.quantile(0.05))
+        hi = float(col.quantile(0.95))
         if hi <= lo:
             hi = float(col.max())
             lo = float(col.min())
@@ -58,20 +58,19 @@ def build_bundle(data_csv: Path, output_joblib: Path) -> dict[str, Any]:
     """Build the deployment bundle that mirrors the notebook's research pipeline.
 
     The served bundle contains:
-      * ``model`` — a ``CalibratedClassifierCV`` wrapping CatBoost with Platt
+      * ``model``, a ``CalibratedClassifierCV`` wrapping CatBoost with Platt
         sigmoid + ``TimeSeriesSplit`` CV, fitted on the chronological train
         fold. ``ModelService.predict_proba`` consumes this unchanged
         (sklearn API identical to bare CatBoost).
-      * ``raw_model`` — a separately fitted ``CatBoostClassifier`` on the
+      * ``raw_model``, a separately fitted ``CatBoostClassifier`` on the
         same train fold, used by ``ModelService.local_contributions`` for
         SHAP via ``shap.TreeExplainer`` (which needs the raw tree model,
         not the calibrated wrapper).
-      * ``bounds`` and ``medians`` — derived from the train fold only, so
+      * ``bounds`` and ``medians``, derived from the train fold only, so
         the optimizer's quantile bounds and imputation defaults do not
         leak holdout statistics.
-      * ``provenance`` — a small dict naming the split date, calibration
-        method, CV scheme, and train/holdout sizes; surfaced by
-        ``scripts/harvest_iter_q_metrics.py`` for thesis Chapter 3.6.
+      * ``provenance``, a small dict naming the split date, calibration
+        method, CV scheme, and train/holdout sizes.
     """
     df = pd.read_csv(data_csv)
 
@@ -80,7 +79,7 @@ def build_bundle(data_csv: Path, output_joblib: Path) -> dict[str, Any]:
         # AGENTS.md §4 and the scope-reduction defence in scientific-validity.md.
         df[TARGET_COL] = (df["home_score"] > df["away_score"]).astype(int)
 
-    # ── Chronological split ─────────────────────────────────────────────────
+    # Chronological split
     df["match_date"] = pd.to_datetime(df["match_date"], errors="coerce")
     train_df = df[df["match_date"] < SPLIT_DATE].copy()
     holdout_df = df[df["match_date"] >= SPLIT_DATE].copy()
@@ -95,24 +94,23 @@ def build_bundle(data_csv: Path, output_joblib: Path) -> dict[str, Any]:
     if not feature_cols:
         raise RuntimeError("No expected model features found in dataset.")
 
-    # ── Train-fold-only preprocessing (Iter-Q.1, Iter-Q.2.e) ────────────────
+    # Train-fold-only preprocessing
     X_train = train_df[feature_cols].apply(pd.to_numeric, errors="coerce")
     y_train = pd.to_numeric(train_df[TARGET_COL], errors="coerce").fillna(0).astype(int)
 
     medians = {c: float(v) for c, v in X_train.median(numeric_only=True).to_dict().items()}
     X_train = X_train.fillna(medians)
 
-    # ── Calibrated model (Iter-Q.2.a) ───────────────────────────────────────
+    # Calibrated model
     # CalibratedClassifierCV refits the base CatBoost inside each
     # TimeSeriesSplit fold and learns a sigmoid mapping from CV out-of-fold
     # scores to calibrated probabilities. The wrapper.predict_proba exposes
     # the same (n, 2) API as the bare CatBoost.
     base_model = CatBoostClassifier(
-        iterations=700,
-        depth=6,
-        learning_rate=0.05,
+        iterations=300,
+        depth=3,
+        learning_rate=0.02,
         loss_function="Logloss",
-        eval_metric="AUC",
         random_seed=42,
         verbose=False,
     )
@@ -124,7 +122,7 @@ def build_bundle(data_csv: Path, output_joblib: Path) -> dict[str, Any]:
     )
     calibrated.fit(X_train, y_train)
 
-    # ── Raw model for SHAP (Iter-Q.2.f) ─────────────────────────────────────
+    # Raw model for SHAP
     # shap.TreeExplainer (and CatBoost's own get_feature_importance with
     # type="ShapValues") need the underlying tree model, not the calibrated
     # wrapper. Fit a separate copy on the same train fold so
@@ -132,11 +130,10 @@ def build_bundle(data_csv: Path, output_joblib: Path) -> dict[str, Any]:
     # SHAP values describe a CatBoost trained on the same data the
     # calibrated wrapper saw inside its CV folds.
     raw_model = CatBoostClassifier(
-        iterations=700,
-        depth=6,
-        learning_rate=0.05,
+        iterations=300,
+        depth=3,
+        learning_rate=0.02,
         loss_function="Logloss",
-        eval_metric="AUC",
         random_seed=42,
         verbose=False,
     )
@@ -148,8 +145,8 @@ def build_bundle(data_csv: Path, output_joblib: Path) -> dict[str, Any]:
         "raw_model": raw_model,             # SHAP via raw CatBoost
         "imputer": None,                    # medians applied at inference per-row
         "feature_cols": feature_cols,
-        "bounds": _build_bounds(train_df),  # train-fold-only per Iter-Q.2.e
-        "medians": medians,                 # train-fold-only per Iter-Q.1
+        "bounds": _build_bounds(train_df),  # train-fold-only
+        "medians": medians,                 # train-fold-only
         "provenance": {
             "split_date": SPLIT_DATE,
             "calibration_method": CALIBRATION_METHOD,

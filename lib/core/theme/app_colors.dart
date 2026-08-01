@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
-/// Theme-aware colour palette — Iteration N glossy + Iteration L+ scope merge.
+/// Theme-aware colour palette: glossy tokens plus the scope merge.
 ///
 /// The class structure is preserved from the earlier dark-theme migration
 /// (constructor-based ``AppColorTokens`` distributed via the
 /// ``AppColorsScope`` InheritedWidget) so the existing screens that read
 /// ``c.textSecondary`` / ``c.cardGlow`` / ``c.negativeSubtle`` keep
-/// compiling. The colour *values* and the additional glossy fields
+/// compiling. The colour values and the additional glossy fields
 /// (``primary``, ``primaryDeep``, ``chrome``, ``glow``, ``surface*Top/Bottom``,
-/// gradient helpers) come from Iteration N — they replace the U Cluj gold
-/// with the early-2000s sports-broadcast cobalt blue and expose the
-/// gradient surfaces the glossy widgets consume.
+/// gradient helpers) replace the U Cluj gold with the early-2000s
+/// sports-broadcast cobalt blue and expose the gradient surfaces the glossy
+/// widgets consume.
 class AppColorTokens {
   const AppColorTokens({
     // ── Surfaces (flat aliases for legacy call sites) ────────────────────
     required this.surface,
     required this.surfaceLow,
     required this.surfaceHigh,
-    // ── Iteration N gradient endpoints ───────────────────────────────────
+    // ── Gradient endpoints ───────────────────────────────────────────────
     required this.surfaceBaseTop,
     required this.surfaceBaseBottom,
     required this.surfaceElevatedTop,
@@ -32,7 +32,7 @@ class AppColorTokens {
     required this.accentStrong,
     required this.onAccent,
     required this.accentBlue,
-    // ── Chrome + glow (Iteration N glossy primitives) ────────────────────
+    // ── Chrome + glow (glossy primitives) ────────────────────────────────
     required this.chrome,
     required this.chromeDeep,
     required this.glow,
@@ -60,7 +60,7 @@ class AppColorTokens {
     required this.pitchSurface,
     required this.pitchLine,
     required this.pitchHalo,
-    // ── Iteration H legacy ───────────────────────────────────────────────
+    // ── Legacy glow field ────────────────────────────────────────────────
     required this.cardGlow,
     required this.brightness,
   });
@@ -131,7 +131,7 @@ class AppColorTokens {
   Color get track =>
       isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06);
 
-  // ── Iteration N gradient helpers ─────────────────────────────────────────
+  // ── Gradient helpers ─────────────────────────────────────────────────────
   LinearGradient get surfaceBaseGradient => LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
@@ -156,7 +156,7 @@ class AppColorTokens {
         ],
       );
 
-  // ── Light palette (Iteration N — cobalt blue + chrome + pale-blue base) ─
+  // ── Light palette (cobalt blue + chrome + pale-blue base) ───────────────
   static const AppColorTokens light = AppColorTokens(
     surface:              Color(0xFFDFE9F6),
     surfaceLow:           Color(0xFFEFF4FC),
@@ -203,7 +203,7 @@ class AppColorTokens {
     brightness:           Brightness.light,
   );
 
-  // ── Dark palette (Iteration N — deep navy + brighter cobalt) ────────────
+  // ── Dark palette (deep navy + brighter cobalt) ──────────────────────────
   static const AppColorTokens dark = AppColorTokens(
     surface:              Color(0xFF0A1929),
     surfaceLow:           Color(0xFF0F1B2D),

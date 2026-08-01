@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Iteration N — light/dark theme-mode preference, persisted via
-/// SharedPreferences so the choice survives across app launches.
+/// Light/dark theme-mode preference, persisted via SharedPreferences so the
+/// choice survives across app launches.
 ///
 /// The notifier is initialised once at app boot (``bootstrap()`` reads the
 /// stored value before constructing ``UmbraRoApp``). After construction
@@ -34,8 +34,8 @@ class ThemeModeNotifier extends ChangeNotifier {
     return setMode(next);
   }
 
-  /// Read the persisted preference (or fall back to ``ThemeMode.light`` —
-  /// the default per Iteration N) and return a primed notifier.
+  /// Read the persisted preference (or fall back to ``ThemeMode.light``, the
+  /// default) and return a primed notifier.
   static Future<ThemeModeNotifier> load() async {
     try {
       final prefs = await SharedPreferences.getInstance();

@@ -6,18 +6,18 @@ This is the Sportradar analogue of
 cross-check path: Sportradar is one of the project's contracted data
 providers (see :mod:`backend.sportradar`), so reading the local
 ``sr_players`` projection of its competitor-profile feed is
-contractually clean — unlike the Transfermarkt path which relies on a
+contractually clean, unlike the Transfermarkt path which relies on a
 ToS-restricted scrape.
 
 Inputs
 ------
 
-* ``ml/data/drive_cache/players (1).json`` — Wyscout profiles for the
+* ``ml/data/drive_cache/players (1).json``, Wyscout profiles for the
   FC Universitatea Cluj squad. Used together with the per-match files
   in ``ml/data/drive_cache/*_players_stats.json`` to derive each
   player's primary fine-position label
   (see :func:`ml.feature_engineering.derive_primary_fine_position`).
-* ``ml/data/sportradar_positions.json`` — produced by
+* ``ml/data/sportradar_positions.json``, produced by
   :mod:`backend.scripts.fetch_sportradar_positions`. Carries one
   ``{"id", "name", "position", "jersey_number", "nationality"}`` row
   per U Cluj player as Sportradar sees them.
@@ -80,7 +80,7 @@ OUT_CSV = ROOT / "ml" / "data" / "position_cross_check_sportradar.csv"
 TEAM_NAME_NEEDLE = "Universitatea Cluj"
 
 
-# ── Sportradar -> coarse 4-group position mapping ────────────────────────────
+# Sportradar -> coarse 4-group position mapping
 #
 # Sportradar's competitor-profile endpoint emits only four broad position
 # strings (``goalkeeper``, ``defender``, ``midfielder``, ``forward``), so
@@ -135,7 +135,7 @@ SPORTRADAR_TO_COARSE: Dict[str, str] = {
 UCLUJ_TEAM_ID = 11571  # Wyscout team identifier; kept for backward compatibility.
 
 
-# ── Name normalisation ────────────────────────────────────────────────────────
+# Name normalisation
 
 def _strip_diacritics(s: str) -> str:
     return "".join(
@@ -149,15 +149,15 @@ def _normalise_last_name(name: str) -> str:
 
     Handles three name formats produced by the two upstream sources:
 
-    * **Wyscout ``shortName``** — ``"A. Chipciu"``, ``"O. El Sawy"``,
+    * **Wyscout ``shortName``**, ``"A. Chipciu"``, ``"O. El Sawy"``,
       ``"Miguel Silva"``. Format: ``"<initial>. <last name>"`` or
       occasionally ``"<first> <last>"`` for foreign players. The last
       name is everything after the first ``.`` if a dot is present;
       otherwise the whole-name tail after the first whitespace.
-    * **Sportradar ``name``** — ``"Bic, Ovidiu"``, ``"El Sawy, Omar"``,
+    * **Sportradar ``name``**, ``"Bic, Ovidiu"``, ``"El Sawy, Omar"``,
       ``"Van der Werff, Jasper"``. Format: ``"<last name>, <first
       name>"``. The last name is everything *before* the first ``,``.
-    * **Edge case** — a single-token name falls through as itself.
+    * **Edge case**, a single-token name falls through as itself.
 
     The result is lower-cased, diacritic-stripped, and internal
     whitespace is collapsed to a single space.
@@ -222,8 +222,8 @@ def main() -> int:
         return 0
 
     # Identify the empirical U Cluj squad using the same procedure that
-    # the predictor uses — this ensures the two sides of the cross-check
-    # reference the same set of players (see Iteration J empirical squad
+    # the predictor uses; this ensures the two sides of the cross-check
+    # reference the same set of players (see the empirical squad
     # detection in feature_engineering.get_team_squad_from_matches).
     profiles = load_player_profiles(str(DRIVE / "players (1).json"))
     match_files = sorted(glob.glob(str(DRIVE / "*_players_stats.json")))

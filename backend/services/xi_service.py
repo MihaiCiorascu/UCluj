@@ -1,18 +1,11 @@
 """
 Starting-XI service for UmbraRo.
 
-Iteration L generalisation: ``XiService`` now accepts a per-request
-``home_team_substring`` (or a team short label or Sportradar ID) and
-returns the predicted XI for that team. The previous U Cluj-only path
-is preserved as the default — every method falls back to U Cluj when
-the caller does not specify a team. The Flutter app keeps working
-unchanged, but any of the sixteen Romanian Superliga teams can now be
-queried.
-
-Per-team feature DataFrames are cached on the service instance so that
-repeat calls for the same team stay fast (the cold path costs roughly
-five seconds while the league dataset is materialised and the per-team
-availability features are computed).
+``XiService`` accepts a per-request ``home_team_substring`` (or a team short
+label or Sportradar ID) and returns the predicted XI for that team. When no
+team is given it defaults to U Cluj, so any of the sixteen Romanian Superliga
+teams can be queried. Per-team feature DataFrames are cached on the service
+instance so repeat calls for the same team stay fast.
 """
 
 from __future__ import annotations
@@ -41,7 +34,7 @@ from sportradar.team_registry import (
 )
 
 # Wyscout team IDs (used historically by the front-end for team selection).
-# Retained for backwards compatibility — new code should prefer
+# Retained for backwards compatibility, new code should prefer
 # :data:`sportradar.team_registry.SUPERLIGA_TEAMS`.
 FIXTURE_NAME_TO_ID: dict[str, int] = {
     "U Cluj": 11571,
@@ -66,20 +59,16 @@ FIXTURE_NAME_TO_ID: dict[str, int] = {
 
 
 # Columns shown on the player card / radar. Each is normalised into a
-# within-position league percentile (0-100) so a striker is ranked against
-# strikers and a left-back against left-backs, never across roles. These are
-# all real Wyscout-derived aggregates already emitted by feature_engineering.
+# within-position league percentile (0-100) so a player is ranked against peers
+# in the same role. All are Wyscout-derived aggregates from feature_engineering.
 _RAW_COLS = [
     "performance_score", "recent_form_score",
     "pass_accuracy", "duel_win_rate",
     "shot_accuracy", "dribble_success", "def_action_success", "aerial_win_rate",
     "per90_goals", "per90_assists", "per90_keyPasses", "per90_shots",
     "per90_interceptions", "per90_gkSaves", "per90_gkCleanSheets",
-    # Output / volume drivers (per-90 raw counts). These are the stats that
-    # actually build performance_score, so the card can show WHY a player earns
-    # their rating (the radar), kept distinct from the efficiency rates above
-    # (the "quality per action" strip). All confirmed present in the Wyscout
-    # total block.
+    # Output / volume drivers (per-90 raw counts) that build performance_score,
+    # kept distinct from the efficiency rates above.
     "per90_defensiveDuelsWon", "per90_aerialDuelsWon", "per90_clearances",
     "per90_recoveries", "per90_shotsBlocked", "per90_successfulPasses",
     "per90_progressivePasses", "per90_successfulCrosses", "per90_successfulDribbles",
@@ -88,21 +77,17 @@ _RAW_COLS = [
 ]
 
 # A fine position group needs at least this many league players for a stable
-# percentile; below it (for example wing-backs, of which the league has only a
-# handful) the player is ranked against the coarse group instead.
+# percentile; below it the player is ranked against the coarse group instead.
 _MIN_FINE_GROUP = 15
 # Minimum minutes for a player to enter the percentile reference pool. Rate
-# stats (duel %, pass %, per-90s) from tiny samples are noise, and including
-# them made the within-position percentiles and the derived rating jumpy, e.g.
-# a regular centre-back reading an 11th-percentile duel rate against fringe
-# players with fluky high rates. Regulars only give a stable, fair reference.
+# stats from tiny samples are noise, so restricting to regulars gives a stable,
+# fair reference.
 _MIN_MINUTES = 450
 
 # Columns pulled from the feature frame into each player record before
 # ``_normalise_player`` attaches the within-position percentiles + rating.
 # Mirrors ml.pipeline._format_output so the standalone XI screen and the match
-# preview carry the same fields, and includes the per-90 output drivers so the
-# radar can be built from the rating's own components.
+# preview carry the same fields, including the per-90 output drivers.
 _PLAYER_COLS = [
     "playerId", "shortName", "role", "role_group",
     "position_group_fine", "position_side", "official_position", "slot_index",
@@ -178,10 +163,9 @@ class XiService:
             with open(model_path, "rb") as f:
                 self.predictor = pickle.load(f)
 
-        # Iteration J.4: Auto-load the supervised lineup-classifier bundle
-        # alongside the heuristic predictor. Iteration L will replace this
-        # path with the league-wide bundle (``xi_lineup_model_league.joblib``)
-        # once the pooled supervised model is retrained.
+        # Auto-load the supervised lineup-classifier bundle alongside the
+        # heuristic predictor, preferring the league-wide bundle
+        # (``xi_lineup_model_league.joblib``) when it is present.
         league_bundle = os.path.join(
             os.path.dirname(model_path), "xi_lineup_model_league.joblib"
         )
@@ -196,7 +180,7 @@ class XiService:
             except Exception:
                 pass
 
-    # ── Team-registry helpers ────────────────────────────────────────────────
+    # Team-registry helpers
 
     def _resolve_home_team(
         self,
@@ -225,7 +209,7 @@ class XiService:
             )
         return team_by_alias(self.DEFAULT_HOME_TEAM_SUBSTRING) or SUPERLIGA_TEAMS[0]
 
-    # ── Feature-DataFrame builder (cached per home team) ─────────────────────
+    # Feature-DataFrame builder (cached per home team)
 
     @staticmethod
     def _asof_date():
@@ -256,8 +240,7 @@ class XiService:
         # Availability features are computed against *this* home team's
         # chronological fixture list. A player who does not belong to
         # the home team's empirical squad receives neutral availability
-        # zeros — the same convention as the per-U Cluj implementation
-        # used in Iterations J and K.
+        # zeros.
         df = build_dataset_from_files(
             match_files,
             self._profiles,
@@ -282,7 +265,7 @@ class XiService:
         self._squad_by_team[cache_key] = squad_ids
         return df
 
-    # ── League-relative normalisation (within fine position group) ────────────
+    # League-relative normalisation (within fine position group)
 
     def _get_league_df(self) -> pd.DataFrame:
         """Return one row per league player, used as the percentile reference.
@@ -409,13 +392,13 @@ class XiService:
         the row under "the 11 most likely starters" actually reflects them. The
         four cells all read on a 0-100 scale:
 
-        * ``avg_performance_score`` / ``avg_recent_form`` — the mean over the XI
+        * ``avg_performance_score`` / ``avg_recent_form``, the mean over the XI
           of each player's within-position league percentile (0-100) for
           ``performance_score`` / ``recent_form_score``, using the same
           fine-or-coarse position-group basis as :meth:`_normalise_player` and
           the radar. A percentile index, not the raw composite, so it sits on
           the same scale as the true pass/duel percentages.
-        * ``avg_pass_accuracy`` / ``avg_duel_win_rate`` — pooled (volume-weighted)
+        * ``avg_pass_accuracy`` / ``avg_duel_win_rate``, pooled (volume-weighted)
           team rates, ``100 * sum(successfulPasses)/sum(passes)`` and
           ``100 * sum(duelsWon)/sum(duels)`` over the XI, so a 2-duel sub no
           longer counts the same as a 400-duel centre-back. Falls back to the
@@ -435,8 +418,8 @@ class XiService:
 
         self._ensure_percentile_tables()
 
-        # ── Form / Performance → within-position percentile (mirror of
-        #    _normalise_player's fine-or-coarse group selection) ───────────────
+        # Form / Performance: within-position percentile (mirror of
+        #    _normalise_player's fine-or-coarse group selection)
         perf_pcts: List[float] = []
         form_pcts: List[float] = []
         for _, row in xi_df.iterrows():
@@ -464,8 +447,8 @@ class XiService:
         avg_perf = round(float(np.mean(perf_pcts)), 1) if perf_pcts else 0.0
         avg_form = round(float(np.mean(form_pcts)), 1) if form_pcts else 0.0
 
-        # ── Passing / Duels → pooled volume-weighted team rate, with a
-        #    mean-of-ratios fallback when the raw counts are unavailable ───────
+        # Passing / Duels: pooled volume-weighted team rate, with a
+        #    mean-of-ratios fallback when the raw counts are unavailable
         def _pooled_rate(num_col: str, den_col: str, ratio_col: str) -> float:
             if num_col in xi_df.columns and den_col in xi_df.columns:
                 den = float(
@@ -552,7 +535,7 @@ class XiService:
         )
         return {"xi": xi_df, "bench": bench_df}
 
-    # ── Public API ───────────────────────────────────────────────────────────
+    # Public API
 
     def predict_xi(
         self,
@@ -714,7 +697,7 @@ class XiService:
         # for the "Cel mai bun XI" view shown alongside the predicted lineup.
         best = self._best_xi_by_rating(my_team_df, resolved_formation)
 
-        # Team aggregate stats — scoped to the predicted XI (the eleven shown),
+        # Team aggregate stats, scoped to the predicted XI (the eleven shown),
         # volume-weighted for pass/duel and 0-100 percentile-normalised for
         # form/performance (see :meth:`_squad_stats`). The top scorer / creator
         # remain whole-squad highlights (separate fields), unchanged.
@@ -728,7 +711,7 @@ class XiService:
                     team_stats[key] = str(row.get("shortName", ""))
                     team_stats[f"{key}_stat"] = round(float(row.get(stat, 0)), 2)
 
-        # Opponent aggregate stats — same XI-scoped basis. The opponent has no
+        # Opponent aggregate stats, same XI-scoped basis. The opponent has no
         # XI in ``result`` (only used for opponent adjustments above), so derive
         # its predicted eleven on the same Hungarian path before aggregating.
         opponent_stats: Dict = self._squad_stats(None)
@@ -826,8 +809,8 @@ class XiService:
 
     def list_opponents(self, min_players: int = 20,
                        home_team_substring: Optional[str] = None) -> list[dict]:
-        """Return opponent options. Iteration L: prefer the team registry
-        over the legacy ``currentTeamId`` count."""
+        """Return opponent options, preferring the team registry over the
+        legacy ``currentTeamId`` count."""
         home = self._resolve_home_team(home_team_substring=home_team_substring)
 
         # Primary path: team registry (returns all sixteen Superliga clubs
@@ -843,7 +826,7 @@ class XiService:
         ]
         return sorted(opponents, key=lambda item: item["name"])
 
-    # ── New Iteration L public method: list all Superliga teams ─────────────
+    # Public method: list all Superliga teams
     def list_home_teams(self) -> list[dict]:
         """Return every Romanian Superliga team eligible as the home team."""
         return [

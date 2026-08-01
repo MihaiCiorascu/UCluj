@@ -1,24 +1,16 @@
 """Opponent style archetypes for opponent-aware XI selection.
 
-The lineup model is a per-player linear classifier whose pick is decided by the
-*within-fixture* ranking of candidates. A feature that is identical for every
-candidate in a fixture (such as a raw opponent stat) cannot change that ranking,
-so opponent context only influences selection when it is crossed with a
-*player* attribute. This module supplies the opponent half of that interaction:
-a small set of style archetypes the opponent club belongs to.
+The lineup model ranks candidates within a fixture, so a raw opponent stat
+(constant across candidates) cannot shift the pick; opponent context matters
+only when crossed with a player attribute. This module supplies the opponent
+half: the style archetype the opponent club belongs to.
 
-Each Superliga club is summarised by its most-recent rolling-5 profile and Elo
-from ``data/All_Data.csv`` (the same source the win-probability model uses), and
-the sixteen clubs are partitioned into ``k`` archetypes by k-means. Because the
-2025-26 fixtures the lineup model trains on are not in All_Data, the profile is
-the club's latest available five-match form rather than a per-fixture
-point-in-time value; the clustering is deterministic (fixed seed) so train and
-serve assign the same archetype to a club.
-
-The archetype is then crossed with each candidate's fine position group at train
-and serve time (``oppcl{c}_pos{g}``), which is what lets the selection actually
-respond to the opponent (e.g. favouring ball-retentive players against a
-high-press archetype), following Lago-Peñas [LPML+10] and Bornn et al. [BCF18].
+Each Superliga club is summarised by its latest rolling-5 profile and Elo from
+``data/All_Data.csv`` and clustered into ``k`` archetypes by k-means (fixed seed,
+so train and serve agree). The 2025-26 lineup fixtures are not in All_Data, so
+the profile is the club's latest five-match form, not a point-in-time value. The
+archetype is crossed with each candidate's fine position group (``oppcl{c}_pos{g}``)
+at train and serve, following Lago-Peñas [LPML+10] and Bornn et al. [BCF18].
 """
 
 from __future__ import annotations
@@ -110,11 +102,9 @@ def cluster_for_team(bundle: dict, team_short: Optional[str]) -> Optional[int]:
     return bundle.get("team_cluster", {}).get(team_short)
 
 
-# Player STYLE attributes crossed with the opponent archetype. A position one-hot
-# would be constant within a position group (so it could only shift the shape);
-# these vary player-to-player, letting the model re-rank candidates WITHIN a
-# position by opponent (e.g. favour ball-retentive, high pass-accuracy players
-# against one archetype), which is what actually changes the picked XI.
+# Player STYLE attributes crossed with the opponent archetype. Unlike a position
+# one-hot (constant within a position group), these vary per player, so the model
+# can re-rank candidates within a position by opponent, changing the picked XI.
 INTERACTION_ATTRS: List[str] = [
     "pass_accuracy", "duel_win_rate", "def_action_success",
     "shot_accuracy", "dribble_success",

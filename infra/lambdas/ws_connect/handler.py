@@ -38,7 +38,7 @@ import os
 import time
 
 import boto3
-import jwt  # PyJWT — verifies the same HS256 token python-jose produces.
+import jwt  # PyJWT, verifies the same HS256 token python-jose produces.
 
 # ---------------------------------------------------------------------------
 # Configuration (injected as Lambda environment variables by the CFN template).

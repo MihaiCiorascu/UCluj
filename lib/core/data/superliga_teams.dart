@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 ///
 /// Each entry pairs the team's short label (the exact string the backend
 /// auth API expects as ``teamName``), the team's badge asset path, and
-/// the official club colours used by the per-team accent overlay
-/// (Iteration N.8). The colour list was provided by the user and
-/// cross-checked against the clubs' visual identities; tricolor teams
-/// (Oţelul Galaţi, FC Hermannstadt, FC Botoşani) carry a third colour
-/// via ``tertiaryColor``.
+/// the official club colours used by the per-team accent overlay.
+/// Tricolor teams (Oţelul Galaţi, FC Hermannstadt, FC Botoşani) carry a
+/// third colour via ``tertiaryColor``.
 class SuperligaTeam {
   const SuperligaTeam({
     required this.short,

@@ -17,12 +17,12 @@ _FALLBACK_RATIO_BOUNDS: dict[str, dict[str, float]] = {
     "corners_per_shots": {"low": 0.15, "high": 0.80},
 }
 
-# Empirical band: 2.5th-97.5th percentile, i.e. the central 95% of observed
+# Empirical band: 5th-95th percentile, i.e. the central 95% of observed
 # Romanian Superliga rolling-5 ratios. Tighter than the old hand-picked
 # extremes, so the optimiser stays on the realistic football manifold instead
 # of inflating uplift at implausible shot-conversion rates.
-_LOW_Q = 0.025
-_HIGH_Q = 0.975
+_LOW_Q = 0.05
+_HIGH_Q = 0.95
 
 
 @lru_cache(maxsize=1)
@@ -36,7 +36,7 @@ def get_ratio_bounds() -> dict[str, dict[str, float]]:
       * ``sot_per_shots``     = ``Home_SoT_5 / Home_Shots_5``
       * ``corners_per_shots`` = ``Home_Corners_5 / Home_Shots_5``
 
-    (only where ``Home_Shots_5 > 0``), and returns the 2.5th/97.5th percentile
+    (only where ``Home_Shots_5 > 0``), and returns the 5th/95th percentile
     of each as ``{"low": ..., "high": ...}``. Cached for the process lifetime,
     so the CSV is parsed once. Falls back to the historical hardcoded ratios if
     the CSV is unavailable or a ratio cannot be computed, so the optimiser never

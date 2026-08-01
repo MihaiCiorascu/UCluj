@@ -93,7 +93,7 @@ class TeamSyncService:
         )
 
         logger.info(
-            "Profile synced: %s — %d players, venue=%s, manager=%s",
+            "Profile synced: %s, %d players, venue=%s, manager=%s",
             profile.name,
             len(players),
             profile.venue.name if profile.venue else "N/A",

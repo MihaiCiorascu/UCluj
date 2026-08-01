@@ -58,7 +58,7 @@ async def log_sync(
     await session.flush()
 
 
-# ── COMPETITION ──────────────────────────────────────────────────────────────
+# COMPETITION
 
 async def upsert_competition(session: AsyncSession, comp: SRCompetition):
     existing = await session.get(SrCompetition, comp.id)
@@ -78,7 +78,7 @@ async def upsert_competition(session: AsyncSession, comp: SRCompetition):
     await log_sync(session, "competition", comp.id, "upsert", 1)
 
 
-# ── SEASONS ──────────────────────────────────────────────────────────────────
+# SEASONS
 
 async def upsert_seasons(session: AsyncSession, seasons: list[SRSeason]):
     for s in seasons:
@@ -101,7 +101,7 @@ async def upsert_seasons(session: AsyncSession, seasons: list[SRSeason]):
     await log_sync(session, "seasons", seasons[0].competition_id if seasons else "", "upsert", len(seasons))
 
 
-# ── SEASON COVERAGE ──────────────────────────────────────────────────────────
+# SEASON COVERAGE
 
 async def upsert_season_coverage(
     session: AsyncSession,
@@ -148,7 +148,7 @@ async def upsert_season_coverage(
     await log_sync(session, "season_coverage", cov.season_id, "upsert", 1)
 
 
-# ── TEAMS ────────────────────────────────────────────────────────────────────
+# TEAMS
 
 async def upsert_teams(session: AsyncSession, teams: list[NormalizedTeam]):
     for t in teams:
@@ -180,7 +180,7 @@ async def upsert_teams(session: AsyncSession, teams: list[NormalizedTeam]):
     await log_sync(session, "teams", "", "upsert", len(teams))
 
 
-# ── PROFILES (team + players) ────────────────────────────────────────────────
+# PROFILES (team + players)
 
 async def upsert_profile(session: AsyncSession, profile: NormalizedCompetitorProfile):
     existing = await session.get(SrTeam, profile.sr_id)
@@ -235,7 +235,7 @@ async def upsert_profile(session: AsyncSession, profile: NormalizedCompetitorPro
     await log_sync(session, "profile", profile.sr_id, "upsert", 1 + len(profile.players))
 
 
-# ── FIXTURES ─────────────────────────────────────────────────────────────────
+# FIXTURES
 
 async def upsert_fixtures(session: AsyncSession, fixtures: list[NormalizedFixture]):
     for f in fixtures:
@@ -273,7 +273,7 @@ async def upsert_fixtures(session: AsyncSession, fixtures: list[NormalizedFixtur
     await log_sync(session, "fixtures", sid, "upsert", len(fixtures))
 
 
-# ── STANDINGS ────────────────────────────────────────────────────────────────
+# STANDINGS
 
 async def upsert_all_standings(
     session: AsyncSession,
@@ -307,7 +307,7 @@ async def upsert_all_standings(
     await log_sync(session, "standings", season_id, "replace", total)
 
 
-# ── MATCH STATS ──────────────────────────────────────────────────────────────
+# MATCH STATS
 
 async def upsert_match_stats(session: AsyncSession, fixture_id: str, stats: list[NormalizedMatchStats]):
     await session.execute(delete(SrMatchStats).where(SrMatchStats.fixture_id == fixture_id))
@@ -331,7 +331,7 @@ async def upsert_match_stats(session: AsyncSession, fixture_id: str, stats: list
     await log_sync(session, "match_stats", fixture_id, "replace", len(stats))
 
 
-# ── LINEUPS ──────────────────────────────────────────────────────────────────
+# LINEUPS
 
 async def upsert_lineups(session: AsyncSession, fixture_id: str, lineups: list[NormalizedLineup]):
     await session.execute(delete(SrLineup).where(SrLineup.fixture_id == fixture_id))
@@ -347,7 +347,7 @@ async def upsert_lineups(session: AsyncSession, fixture_id: str, lineups: list[N
     await log_sync(session, "lineups", fixture_id, "replace", len(lineups))
 
 
-# ── TIMELINE ─────────────────────────────────────────────────────────────────
+# TIMELINE
 
 async def upsert_timeline_events(
     session: AsyncSession,
