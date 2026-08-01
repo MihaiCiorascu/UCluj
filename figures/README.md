@@ -1,54 +1,59 @@
-# Thesis Figures — UmbraRo
+# Figures
 
-Image assets referenced by `thesis/chapter_3.tex` and `thesis/chapter_4.tex`. Filenames match the `\includegraphics{figures/<name>}` calls in the chapters exactly.
+Every image referenced by the thesis (`docs/UmbraRo-Thesis.pdf`) and by the root `README.md`. Filenames
+match the `\includegraphics{figures/<name>}` calls in the thesis chapters exactly. Numbers below are
+quoted from the final submitted thesis, not estimated.
 
-Companion to `citations/` (cited papers), `design/` (audit and inventory docs), and `thesis/` (the manuscript itself).
+## Team-level model (Chapter 3: predictive and prescriptive pipeline)
 
-## Chapter 3 figures
+| File | Depicts |
+|---|---|
+| `tsne.png` | Two-dimensional t-SNE projection of the engineered pre-match feature space, coloured by the binary target. |
+| `multi_seed_boxplot.png` | Holdout accuracy distribution across five independent random seeds for the three stochastic classifiers (Random Forest, CatBoost, MLP). |
+| `confusion_matrix.png` | Confusion matrix of the calibrated CatBoost model on the 2024-2025 holdout season (133 correct Not Home Win, 62 correct Home Win, 124 misclassifications; accuracy 61.13%). |
+| `reliability_diagram.png` | Reliability diagram for calibrated Logistic Regression and calibrated CatBoost on the holdout season. |
+| `feature_importance_catboost.png` | Top-fifteen feature importances reported by the CatBoost model (gain). |
+| `shap_summary.png` | SHAP summary plot for the raw CatBoost model on the 2024-2025 holdout. |
+| `N_scaling.png` | Constrained Monte Carlo optimiser scaling on the UTA Arad vs. FCSB fixture: mean wall-clock per call and standard deviation of the returned best probability, across N from 1,000 to 100,000. |
+| `retrospective_check.png` | Empirical home-win rate on the 2024-2025 holdout, split by whether the home team closely matched the optimiser's recommended blueprint (48.1% hit vs. 39.4% miss, a +8.7pp lift). |
+| `sensitivity.png` | Tactical-lever sensitivity of the two calibrated models on the UTA Arad vs. FCSB fixture: each panel sweeps one controllable lever across its 5th-95th training percentile, holding the others fixed. |
 
-| File | Chapter reference | Description |
+## Supplementary (not in the final compiled thesis; kept for reference)
+
+| File | Depicts |
+|---|---|
+| `importance_lr_pure_tactical.png` | Logistic Regression feature importance restricted to pure tactical features (no Elo / head-to-head / rest days). |
+| `importance_rf_pure_tactical.png` | Random Forest feature importance under the same pure-tactical restriction. |
+| `feature_importance_initial.png` | An earlier feature-importance ranking kept as a reference snapshot. |
+
+## Starting XI (Chapter 4: player-level model)
+
+| File | Depicts |
+|---|---|
+| `xi_validation.csv` | Per-fixture Starting XI validation data underlying Chapter 4's Jaccard@11 tables (rolling-origin one-fixture-out validation, league-wide mean 0.6227 across 428 held-out cells). |
+
+Chapter 4 reports its results in tables only; it has no image figures of its own.
+
+## Application screenshots (Chapter 5: the UmbraRo app)
+
+| File | Depicts |
+|---|---|
+| `dashboard.png` | Dashboard: the user's club next fixture with its calibrated win probability and verdict tag, above the week's remaining fixtures. |
+| `match_sheet_a.png`, `match_sheet_b.png` | Match Analysis sheet for an upcoming fixture (FCSB vs. Universitatea Cluj): (a) win chance, verdict, and key drivers, and (b) the optimal tactical plan and levers above the recommended XI. |
+| `completed_stats.png`, `completed_lineup.png` | Completed-match view (Universitatea Cluj vs. Oțelul Galați): (a) the official statistics, and (b) the real starting eleven with substitution minutes and goal indicators. |
+| `recommended_xi.png`, `player_sheet.png` | The lineup pitch: (a) the recommended starting eleven for an upcoming fixture, each chip showing the player's position, rating, and selection score, and (b) a per-player detail sheet with a within-position percentile radar, efficiency bars, an overall rating and selection score, and a physical-state panel. |
+| `FIFA_lineup.png` | The FIFA-style pitch card view of a club's starting eleven. |
+| `standings.png` | League standings: the Superliga table with the user's club lifted into a highlighted header card showing rank, points, goal difference, and record. |
+| `chat.png` | Team communication: the club's general channel, with the group-creation control and the message composer. |
+
+## System diagrams (Chapter 5: architecture)
+
+| File | Depicts | Editable source |
 |---|---|---|
-| `tsne.png` | `fig:tsne` (§3.3) | t-SNE projection of the engineered pre-match feature space; classes heavily interleaved, supporting the "limited intrinsic separability" claim |
-| `multi_seed_boxplot.png` | `fig:multi_seed` (§3.4) | Holdout accuracy across 5 random seeds for LR (saga), RF (n=300, d=4), XGBoost, CatBoost, MLP |
-| `confusion_matrix.png` | `fig:confusion_matrix` (§3.4) | Calibrated CatBoost on the 2024-25 holdout (TN=143, FP=44, FN=71, TP=61) |
-| `reliability_diagram.png` | `fig:reliability` (§3.4) | Calibrated CatBoost + Calibrated LR vs perfect-calibration diagonal |
-| `feature_importance_catboost.png` | `fig:feature_importance` (§3.4) | Top-15 CatBoost gain-importance features |
-| `shap_summary.png` | `fig:shap` (§3.4) | SHAP summary plot for the raw CatBoost model on the 2024-25 holdout |
-| `N_scaling.png` | `fig:n_scaling` (§3.4) | Optimiser latency + variance vs N (twin plots): 14 ms @ N=1k → 111 ms @ N=100k; std falls from 0.0073 @ N=1k to 0.0011 @ N=50k |
-| `retrospective_check.png` | `fig:retrospective` (§3.4) | Hit-blueprint cohort (0.512) vs not-hit (0.380) bar chart on the 2024-25 holdout (+13.3 pp empirical lift) |
+| `use_case.png` | UML use-case diagram: one actor (the coaching and technical staff) and ten use cases. | (none; drawn directly for the thesis) |
+| `db_schema.png` | Relational schema in AWS RDS PostgreSQL (`users`, `messages`, `chat_groups`); links are enforced in the application layer, since the database declares no foreign keys. | `design/diagrams/db_schema.dbml` |
+| `auth_sequence.png` | Cognito-mediated sign-up and local-JWT exchange for a first-time user. | `design/diagrams/auth_sequence.puml` |
+| `mi_sequence.png` | Request flow behind the Match Analysis sheet, from the cached dashboard-load computation to the on-tap fetch for an upcoming or completed match. | `design/diagrams/mi_sequence.puml` |
 
-## Chapter 4 figures
-
-| File | Chapter reference | Description |
-|---|---|---|
-| `dashboard.png` | `fig:dashboard_card` (§4.4.1) | UmbraRo dashboard fixture card — upcoming match with win probability + completed match with score |
-| `FIFA_lineup.png` | `fig:pitch_lineup` (§4.4.3) | FIFA-style pitch panel with U Cluj 4-3-3 lineup |
-
-## Supplementary (currently not included in the chapter; kept for optional use)
-
-| File | Description |
-|---|---|
-| `importance_lr_pure_tactical.png` | Logistic Regression feature importance restricted to **pure tactical features** (no Elo / H2H / RestDays). Top-10: Home_Shots_5, Home_Goals_5, Away_Corners_5, Home_Poss_5, Home_Saves_5, Away_Conceded_5, Home_Corners_5, Away_Goals_5, Home_Conceded_5, Home_YellowCards_5. Could supplement §3.4 SHAP discussion to show what the linear model finds important when restricted to tactical features alone. |
-| `importance_rf_pure_tactical.png` | Random Forest feature importance under the same pure-tactical restriction. Top-10: Home_SoT_5, Home_Shots_5, Home_Poss_5, Home_Corners_5, Away_Poss_5, Away_Shots_5, Away_Corners_5, Away_Conceded_5, Away_SoT_5, Home_Saves_5. Companion to the LR version above. |
-| `feature_importance_initial.png` | Earlier feature-importance ranking kept as a reference snapshot. |
-| `fig_3_1.eps` | EPS-format figure (likely print-quality variant of the pipeline diagram or t-SNE). |
-
-## Data artefact (not a figure, but lives alongside)
-
-| File | Description |
-|---|---|
-| `xi_validation.csv` | Per-fixture XI validation data underlying Chapter 3 §3.6 Table 8. 35 U Cluj 2024-25 fixtures × 6 scoring methods (Jaccard@11) + per-position recall breakdown. Aggregate means in the CSV reproduce the chapter's claims to floating-point precision (top-by-minutes 0.4823 ≈ 0.482, recent-form 0.2897 ≈ 0.290, composite-no-availability 0.2834 ≈ 0.283, composite+availability 0.4250, supervised single-club 0.5752 ≈ 0.575 on idx ≥ 8). Mirrored in Overleaf's `figures/` folder so the validation evidence travels with the chapter. |
-
-## Pending
-
-- `ch3_pipeline.png` — referenced by `chapter_3.tex` Figure `fig:method_pipeline` but currently rendered as a `\fbox{}` text placeholder; user to add later when the diagram is generated.
-
-## How figures connect to research artefacts
-
-| Figure | Source |
-|---|---|
-| `tsne.png`, `multi_seed_boxplot.png`, `confusion_matrix.png`, `reliability_diagram.png`, `feature_importance_catboost.png`, `shap_summary.png` | Notebook cells in `data/TheNotebook.executed.ipynb` (Brier/ECE, confusion matrix, bootstrap CI, grid search) |
-| `N_scaling.png` | Notebook N-sweep cell on the UTA Arad vs FCSB fixture |
-| `retrospective_check.png` | Notebook retrospective cell on the 2024-25 holdout (317 fixtures) |
-| `dashboard.png`, `FIFA_lineup.png` | Flutter app screenshots |
-| `importance_lr_pure_tactical.png`, `importance_rf_pure_tactical.png` | Feature-importance variants exported from notebook (alternative model + feature-subset configurations) |
+`../docs/architecture.png` (not in this folder) is the high-level three-tier architecture diagram embedded
+at the top of the root `README.md`.
