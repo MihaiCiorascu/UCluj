@@ -177,45 +177,77 @@ rank, points, goal difference, and record.
 ## Machine learning
 
 The model is trained on 1,600 Romanian Superliga matches across five seasons, from 2020-2021 to
-2024-2025. A central finding of the thesis is that predictive accuracy and prescriptive usefulness are
-distinct criteria. A one-feature Elo-only baseline already reaches 65.20% accuracy, a figure no
-engineered model surpasses. Among the engineered models, Logistic Regression is the most accurate
-(64.89% accuracy, Brier score 0.2256, ROC-AUC 0.6669), yet inside the optimiser it concentrates almost
-its entire response in a single tactical lever: raising shots to the 95th percentile alone moves its
-predicted win probability by about 17 percentage points. The production engine is therefore
-**calibrated CatBoost** (62.95% accuracy, Brier score 0.2329, expected calibration error 0.0517),
-marginally less accurate but far better distributed: the same sweep moves its prediction by 6.7, 5.6,
+2024-2025. Seven classifiers were benchmarked, and a central finding of the thesis is that predictive
+accuracy and prescriptive usefulness are distinct criteria.
+
+### Model comparison
+
+| Model | Accuracy | Brier score | ROC-AUC | ECE |
+|---|---|---|---|---|
+| Elo-only baseline (1 feature) | 65.20% | 0.2241 | 0.6699 | - |
+| Logistic Regression (best engineered model) | 64.89% | 0.2256 | 0.6669 | 0.0529 |
+| **CatBoost (deployed, calibrated)** | 62.95% | 0.2329 | 0.6350 | 0.0517 |
+
+A one-feature Elo-only baseline already reaches 65.20% accuracy, a figure no engineered model surpasses.
+Logistic Regression is the most accurate of the engineered models, yet inside the optimiser it
+concentrates almost its entire response in a single tactical lever: raising shots to the 95th percentile
+alone moves its predicted win probability by about 17 percentage points. **CatBoost is deployed instead**:
+marginally less accurate, but far better distributed. The same sweep moves its prediction by 6.7, 5.6,
 5.2, and 2.8 percentage points for possession, shots, shots on target, and corners respectively, so a
-recommendation never collapses onto a single lever. Logistic Regression is kept as an interpretable
-forecasting benchmark. Since the added features do not raise raw accuracy above the Elo baseline, they
-contribute mainly through calibration, explanation, and prescription rather than through predictive
-power on their own.
+recommendation never collapses onto a single lever, exactly the spread this sensitivity sweep shows:
+
+<p align="center">
+  <img src="figures/sensitivity.png" alt="Tactical-lever sensitivity: Logistic Regression vs CatBoost" width="480"/>
+</p>
+
+Logistic Regression is kept as an interpretable forecasting benchmark. Since the added features do not
+raise raw accuracy above the Elo baseline, they contribute mainly through calibration, explanation, and
+prescription rather than through predictive power on their own, reflected in how closely the calibrated
+probabilities track real outcomes:
+
+<p align="center">
+  <img src="figures/reliability_diagram.png" alt="Calibration reliability diagram, Logistic Regression vs CatBoost" width="420"/>
+</p>
 
 **Supported inputs** (rolling five-match aggregates and pre-match context): Elo difference,
 head-to-head record, rest days, possession, shots, shots on target, corners, goals scored, and goals
 conceded.
 
-**Prescriptive optimiser.** A constrained Monte Carlo search (N = 25,000) explores four controllable
-levers (possession, shots, shots on target, and corners), each bounded to its 5th to 95th percentile
-training range plus two ratio constraints (shots on target between 20% and 70% of shots, corners
-between 15% and 80% of shots), while goals scored and conceded stay frozen at their real pre-match
-values. On representative fixtures the optimiser raises the estimated win probability by about 13.6
-percentage points on average, a predicted association from the model rather than a causal guarantee.
+### Prescriptive optimiser
 
-**Starting XI selection.** A separate model, trained on a 278-match, 16-club Wyscout dataset from the
-Romanian Superliga (556 fixtures, 15,396 pooled player-fixture rows), combines per-90 performance
-normalisation, empirical-Bayes shrinkage, and a Hungarian-assignment selection rule with a pooled
-logistic-regression classifier. Under a strict rolling-origin, one-fixture-out validation across 428
-held-out fixtures it reaches a league-wide Jaccard@11 of 0.6227 (NDCG@11 0.8107), beating a
-top-by-minutes baseline (0.520) by 0.103 absolute. A separate ablation decomposes the model's own
-result honestly: of the 0.175 gap between this classifier and a hand-weighted heuristic composite
-(0.4476), 0.072 comes from the learned classifier architecture itself, and the remaining 0.103 comes
-from availability and recency signals that are, by the thesis's own account, partly autoregressive on
-the coach's past selection decisions rather than pure player evaluation.
+A constrained Monte Carlo search (N = 25,000) explores four controllable levers (possession, shots,
+shots on target, and corners), each bounded to its 5th to 95th percentile training range plus two ratio
+constraints (shots on target between 20% and 70% of shots, corners between 15% and 80% of shots), while
+goals scored and conceded stay frozen at their real pre-match values.
 
-**What the model does not use.** To keep every output grounded in the training data, UmbraRo does not
-include biometrics, GPS or wearable tracking, player-level running load, expected-threat pipelines,
-passing-network models, three-way home/draw/away classification, or any betting-odds framing.
+On representative fixtures the optimiser raises the estimated win probability by about 13.6 percentage
+points on average. On the holdout season, fixtures whose real tactical numbers landed close to the
+optimiser's own blueprint won more often than the rest, a retrospective association rather than a
+causal claim, since the recommendation is a predicted effect from the model, not a guarantee:
+
+<p align="center">
+  <img src="figures/retrospective_check.png" alt="Retrospective check: blueprint-matching fixtures win more often" width="420"/>
+</p>
+
+### Starting XI selection
+
+A separate model, trained on a 278-match, 16-club Wyscout dataset from the Romanian Superliga (556
+fixtures, 15,396 pooled player-fixture rows), combines per-90 performance normalisation, empirical-Bayes
+shrinkage, and a Hungarian-assignment selection rule with a pooled logistic-regression classifier. Under
+a strict rolling-origin, one-fixture-out validation across 428 held-out fixtures it reaches a league-wide
+Jaccard@11 of 0.6227 (NDCG@11 0.8107), beating a top-by-minutes baseline (0.520) by 0.103 absolute.
+
+A separate ablation decomposes the model's own result honestly: of the 0.175 gap between this classifier
+and a hand-weighted heuristic composite (0.4476), 0.072 comes from the learned classifier architecture
+itself, and the remaining 0.103 comes from availability and recency signals that are, by the thesis's
+own account, partly autoregressive on the coach's past selection decisions rather than pure player
+evaluation.
+
+### What the model does not use
+
+To keep every output grounded in the training data, UmbraRo does not include biometrics, GPS or wearable
+tracking, player-level running load, expected-threat pipelines, passing-network models, three-way
+home/draw/away classification, or any betting-odds framing.
 
 ## Tech stack
 
