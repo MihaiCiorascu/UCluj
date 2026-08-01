@@ -1,6 +1,6 @@
 # Citation Archive for the UmbraRo Bachelor Thesis
 
-Local archive of every paper cited in `../thesis/references.bib`. Filenames match BibTeX cite keys (e.g. `piza2005futbol.pdf` ↔ `\cite{piza2005futbol}`).
+Local archive of every paper cited in the thesis bibliography. Filenames match BibTeX cite keys (e.g. `piza2005futbol.pdf` ↔ `\cite{piza2005futbol}`).
 
 **Total: 46 PDFs + 2 HTML snapshots downloaded. After the 2026-06-11 completion pass (see bottom), only 2 cited entries lack a local PDF: `elo1978rating` (book, kept by author choice) and `friedman2001greedy` (freely available, but auto-download blocked by a JavaScript challenge, grab manually).**
 

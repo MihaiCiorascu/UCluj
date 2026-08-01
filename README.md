@@ -303,7 +303,7 @@ backend/        FastAPI service: api/v1/endpoints, services, data loaders, ml bu
 android/        Native Android target (release APK)
 web/            Web entrypoint and runtime config.json
 data/           Research dataset and notebooks (canonical thesis numbers)
-design/         Design system, product specification, and diagram sources
+design/         Design system, backend contract, and diagram sources
 docs/           Final bachelor thesis (PDF)
 infra/          Infrastructure templates (Cognito, WebSocket, Lambdas)
 scripts/        Developer and data-pipeline utilities
