@@ -159,7 +159,6 @@ physical-state panel, and the FIFA-style pitch card view.
 <p align="center">
   <img src="figures/recommended_xi.png" alt="Recommended starting XI on the pitch" width="260"/>
   <img src="figures/player_sheet.png" alt="Per-player detail sheet" width="260"/>
-  <img src="figures/FIFA_lineup.png" alt="FIFA-style lineup pitch card" width="260"/>
 </p>
 
 **Standings.** The Superliga table with the user's club lifted into a highlighted header card showing
